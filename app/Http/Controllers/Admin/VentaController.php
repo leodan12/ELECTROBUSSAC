@@ -1,0 +1,251 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Models\Venta;
+use App\Models\Company;
+use App\Models\Cliente;
+use App\Models\Product;
+use App\Models\Detalleventa;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\VentaFormRequest;
+
+class VentaController extends Controller
+{
+    public function index()
+    {
+        $ventas = Venta::orderBy('id', 'desc')->get();
+        return view('admin.venta.index', compact('ventas'));
+    }
+
+    public function create()
+    {
+        $companies = Company::all();
+        $clientes = Cliente::all();
+        $products = Product::all();
+        return view('admin.venta.create',compact('companies','products','clientes'));
+    }
+
+    public function store(VentaFormRequest $request)
+    {
+ 
+        $validatedData = $request->validated();
+        $company = Company::findOrFail($validatedData['company_id']);
+        $cliente = Cliente::findOrFail($validatedData['cliente_id']);
+       
+        $fecha = $validatedData['fecha'];
+        $moneda = $validatedData['moneda'];
+        $costoventa = $validatedData['costoventa'];
+        $formapago = $validatedData['formapago'];
+        $factura = $validatedData['factura'];
+
+        $venta = new Venta;
+
+        $venta->company_id = $company->id;
+        $venta->cliente_id = $cliente->id;
+        $venta->fecha = $fecha; 
+        $venta->costoventa = $costoventa;
+        $venta->formapago = $formapago;
+        $venta->moneda = $moneda;
+        $venta->factura = $factura;
+
+        //no obligatorios
+        $observacion = $validatedData['observacion'];
+        $tasacambio = $validatedData['tasacambio'];
+        $fechav = $validatedData['fechav'];
+
+        $venta->observacion = $observacion;
+        if($formapago== 'credito'){
+            $venta->fechav = $fechav;
+        }
+        if($moneda== 'dolares'){
+            $venta->tasacambio = $tasacambio;
+        }
+        
+        //guardamos la venta y los detalles
+        if (  $venta->save() ) {
+            $product = $request->Lproduct;
+            $cantidad = $request->Lcantidad;
+            $preciounitario = $request->Lpreciounitario;
+            $servicio = $request->Lservicio;
+            $preciofinal = $request->Lpreciofinal;
+            $preciounitariomo = $request->Lpreciounitariomo;
+            if ($product !== null) {
+                for ($i = 0; $i < count($product); $i++) {
+
+                    $Detalleventa = new Detalleventa;
+                    $Detalleventa->venta_id = $venta->id;
+                    $Detalleventa->product_id = $product[$i];
+                    $Detalleventa->cantidad = $cantidad[$i];
+                    $Detalleventa->preciounitario = $preciounitario[$i];
+                    $Detalleventa->preciounitariomo = $preciounitariomo[$i];
+                    $Detalleventa->servicio= $servicio[$i];
+                    $Detalleventa->preciofinal = $preciofinal[$i];
+                    $Detalleventa->save();
+                }
+                return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
+            }
+            return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
+        }
+       
+    }
+
+    public function edit(int $venta_id)
+    {
+        $companies = Company::all();
+        $clientes = Cliente::all();
+        $products = Product::all();
+
+       
+        $venta = Venta::findOrFail($venta_id);
+        $detallesventa = DB::table('detalleventas as dv')
+            ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->select('dv.id as iddetalleventa','dv.cantidad', 'dv.preciounitario','dv.preciounitariomo','dv.servicio','dv.preciofinal','p.id as idproducto','p.nombre as producto')
+            ->where('v.id', '=', $venta_id)->get();
+        //return $detallesventa;
+        return view('admin.venta.edit', compact('products','venta','companies','clientes','detallesventa'));
+    } 
+
+    public function update(VentaFormRequest $request ,int $venta_id)
+    {
+        $validatedData = $request->validated();
+        $company = Company::findOrFail($validatedData['company_id']);
+        $cliente = Cliente::findOrFail($validatedData['cliente_id']);
+       
+        $fecha = $validatedData['fecha'];
+        $moneda = $validatedData['moneda'];
+        $costoventa = $validatedData['costoventa'];
+        $formapago = $validatedData['formapago'];
+        $factura = $validatedData['factura'];
+
+        $venta =  Venta::findOrFail($venta_id);
+
+        $venta->company_id = $company->id;
+        $venta->cliente_id = $cliente->id;
+        $venta->fecha = $fecha; 
+        $venta->costoventa = $costoventa;
+        $venta->formapago = $formapago;
+        $venta->moneda = $moneda;
+        $venta->factura = $factura;
+
+        //no obligatorios
+        $observacion = $validatedData['observacion'];
+        $tasacambio = $validatedData['tasacambio'];
+        $fechav = $validatedData['fechav'];
+
+        $venta->observacion = $observacion;
+        if($formapago== 'credito'){
+            $venta->fechav = $fechav;
+        } elseif($formapago == 'contado'){
+            $venta->fechav = null;
+        }
+
+        if($moneda== 'dolares'){
+            $venta->tasacambio = $tasacambio;
+        }elseif($moneda == 'soles'){
+            $venta->tasacambio = null;
+        }
+        
+        //guardamos la venta y los detalles
+        if (  $venta->update() ) {
+            $product = $request->Lproduct;
+            $cantidad = $request->Lcantidad;
+            $preciounitario = $request->Lpreciounitario;
+            $servicio = $request->Lservicio;
+            $preciofinal = $request->Lpreciofinal;
+            $preciounitariomo = $request->Lpreciounitariomo;
+            if ($product !== null) {
+                for ($i = 0; $i < count($product); $i++) {
+
+                    $Detalleventa = new Detalleventa;
+                    $Detalleventa->venta_id = $venta->id;
+                    $Detalleventa->product_id = $product[$i];
+                    $Detalleventa->cantidad = $cantidad[$i];
+                    $Detalleventa->preciounitario = $preciounitario[$i];
+                    $Detalleventa->preciounitariomo = $preciounitariomo[$i];
+                    $Detalleventa->servicio= $servicio[$i];
+                    $Detalleventa->preciofinal = $preciofinal[$i];
+                    $Detalleventa->save();
+                }
+                return redirect('admin/venta')->with('message','Venta Actualizada Satisfactoriamente');
+            }
+
+        return redirect('admin/venta')->with('message','Venta Actualizada Satisfactoriamente');
+        }
+    } 
+
+    public function show($id)
+    {
+
+        $venta = DB::table('ventas as v')
+            ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+            ->join('companies as c', 'v.company_id', '=', 'c.id')
+            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            
+            ->select(
+                'v.fecha',
+                'v.factura',
+                'v.formapago',
+                'v.moneda',
+                'v.costoventa',
+                'v.fechav',
+                'v.tasacambio',
+                'v.observacion',
+
+                'c.nombre as company',
+                'cl.nombre as cliente',
+                'p.nombre as producto',
+                'dv.cantidad',
+                'dv.preciounitario',
+                'dv.preciounitariomo',
+                'dv.servicio',
+                'dv.preciofinal'
+                
+            )
+            ->where('v.id', '=', $id)->get();
+
+        return  $venta;
+    }
+
+    public function destroy(int $venta_id)
+    {
+        $venta = Venta::findOrFail($venta_id);
+        $venta->delete();
+        return redirect()->back()->with('message','Venta Eliminada');
+     }
+     
+    public function destroydetalleventa($id)
+    {
+        //buscamos el registro con el id enviado por la URL
+        $detalleventa = Detalleventa::find($id);
+        if($detalleventa){
+            $venta = DB::table('detalleventas as dv')
+                ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
+                ->select('v.costoventa','dv.preciofinal','v.id')
+                ->where('dv.id', '=', $id)->first();
+            if($detalleventa->delete()){
+                $costof = $venta->costoventa;
+                $detalle = $venta->preciofinal;
+                $idventa = $venta->id;
+                
+               
+                $ventaedit = Venta::findOrFail($idventa);
+                $ventaedit->costoventa =$costof -$detalle;
+                $ventaedit->update();
+
+
+
+                return 1;
+            }else { return 0;}
+        }else { return 2;}
+        
+
+
+    }
+
+    
+}

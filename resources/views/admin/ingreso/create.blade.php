@@ -1,0 +1,297 @@
+@extends('layouts.admin')
+
+
+@section('content')
+
+<div class="row">
+    <div class="col-md-12">
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            <p>Corrige los siguientes errores:</p>
+            <ul>
+                                @foreach ($errors->all() as $message)
+                                    <li>{{ $message }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+    @endif
+        <div class="card">
+            <div class="card-header">
+                <h4>AÑADIR INGRESO
+                    <a href="{{ url('admin/venta') }}" class="btn btn-danger text-white float-end">VOLVER</a>
+                </h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                    <div class="col-md-6 mb-3">
+                            <label>FECHA</label>
+                            <input type="date" name="fecha" id="fecha" class="form-control" />
+                            @error('fecha') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>NUMERO DE FACTURA</label>
+                            <input type="text" name="factura" id="factura" class="form-control" />
+                            @error('factura') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>FORMA DE PAGO</label>
+                            <select name="formapago" id="formapago" class="form-control" >
+                            <option selected disabled>Seleccion una opción</option>
+                            <option value="credito">Credito</option>
+                            <option value="contado">Contado</option>
+                            </select>
+                            @error('formapago') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label>FECHA DE VENCIMIENTO</label>
+                            <input type="date" name="fechav" id="fechav" class="form-control" />
+                            @error('fechav') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>MONEDA</label>
+                            <select name="moneda" id="moneda" class="form-control" >
+                            <option selected disabled>Seleccion una opción</option>
+                            <option value="Dolares Americanos">Dolares Americanos</option>
+                            <option value="Soles">Soles</option>
+                            </select>
+                            @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>TASA DE CAMBIO</label>
+                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>EMPRESA</label>
+                            <select class="form-control select2" name="company_id">
+                                <option value="">Seleccione una opción</option>    
+                                @foreach ($companies as $company)
+                                
+                                <option value="{{ $company->id }}">{{ $company->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>PROVEEDOR</label>
+                            <select class="form-control select2" name="cliente_id">
+                                <option value="">Seleccione una opción</option>    
+                                @foreach ($clientes as $cliente)
+                                
+                                <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>PRECIO DE LA VENTA </label>
+                            <input type="number" name="costoventa" id= "costoventa" readonly step="0.01" class="form-control" />
+                            
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label>OBSERVACION</label>
+                            <input type="text" name="observacion" id="observacion" class="form-control" />
+                            @error('observacion') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <hr>
+                        <h4>Agregar Detalle de la Venta</h4>
+                        <div class="col-md-6 mb-3">
+                            <label>PRODUCTO</label>
+                            <select class="form-control select2" name="product" id="product">
+                                <option disabled selected>Seleccione una opción</option>    
+                                @foreach ($products as $product)
+                                <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label>CANTIDAD</label>
+                            <input type="number" name="cantidad" id="cantidad" class="form-control" />
+                            @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>PRECIO UNITARIO (REFERENCIAL)</label>
+                            <input type="number" name="preciounitario" id="preciounitario" readonly class="form-control" />
+                            @error('preciounitario') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>PRECIO UNITARIO</label>
+                            <input type="number" name="preciounitariomo" id="preciounitariomo" class="form-control" />
+                            @error('preciounitariom') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>SERVICIO ADICIONAL</label>
+                            <input type="number" name="servicio" id="servicio"class="form-control" />
+                            @error('servicio') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>PRECIO TOTAL POR PRODUCTO</label>
+                            <input type="number" name="preciofinal" id="preciofinal" readonly class="form-control" />
+                            @error('preciofinal') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
+                        <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
+                        <div class="table-responsive">
+                        <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
+                            <thead class="fw-bold text-primary">
+                                <tr>
+                                    <th>PRODUCTO</th>
+                                    <th>CANTIDAD</th>
+                                    <th>PRECIO UNITARIO</th>
+                                    <th>SERVICIO ADICIONAL</th>
+                                    <th>PRECIO FINAL DEL PRODUCTO</th>
+                                    <th>ELIMINAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                        <hr>
+                        <div class="col-md-12 mb-3">
+                            <button type= "submit" class="btn btn-primary text-white float-end">Guardar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+@push('script')
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+
+    var indice = 0;
+    var ventatotal = 0;
+    var preciounit = 0;
+    var nameproduct = 0;
+    var preciototalI=0;
+
+    $(document).ready(function() {
+        //Para poner automaticamente la fecha actual
+       var hoy = new Date();  
+       var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+       document.getElementById("fecha").value = fechaActual;
+        
+       var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+       document.getElementById("fechav").value = fechaActual2;
+       
+
+
+       document.getElementById("cantidad").onchange = function() {
+       preciofinal();
+       };
+       document.getElementById("servicio").onchange = function() {
+        preciofinal();
+       };
+
+       function preciofinal() {
+         
+         var cantidad = $('[name="cantidad"]').val(); 
+     
+         var servicio = $('[name="servicio"]').val();
+         if(cantidad.length != 0  && servicio.length != 0){
+              
+                     
+                     preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(cantidad) * parseFloat(servicio)));
+                     
+                     document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
+         }
+    }
+
+        var tabla = document.getElementById(detallesVenta);
+       
+        $('#addDetalleBatch').click(function() {
+          
+            //datos del detalleSensor
+            var product = $('[name="product"]').val();
+            var cantidad = $('[name="cantidad"]').val();
+            var preciounitario = $('[name="preciounitario"]').val();
+            var servicio = $('[name="servicio"]').val();
+            var preciofinal = $('[name="preciofinal"]').val();
+             
+            //alertas para los detallesBatch
+            
+            if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
+            var LVenta = [];
+            var tam = LVenta.length;
+            LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal);
+        
+                filaDetalle ='<tr id="fila' + indice + 
+                '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
+                '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
+                '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+ LVenta[3]+ 
+                '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+ LVenta[4]+
+                '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ LVenta[5]+ 
+                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
+               
+                $("#detallesVenta>tbody").append(filaDetalle);
+
+                indice++;
+                ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
+
+                document.getElementById('cantidad').value = "";
+                document.getElementById('servicio').value = "";
+                document.getElementById('preciofinal').value = "";
+                document.getElementById('costoventa').value = ventatotal;
+        });
+        $("#product").change(function () {
+       
+       $("#product option:selected").each(function () { 
+           $price = $(this).data("price");
+           $named = $(this).data("name");
+           preciounit = $price;
+           document.getElementById('preciounitario').value = $price;
+           document.getElementById('cantidad').value = "";
+           document.getElementById('servicio').value = "";
+           document.getElementById('preciofinal').value = "";
+           nameproduct = $named;
+           //alert(nameprod);
+   });  });
+
+   $("#producto_id").change(function () {
+       
+       $("#producto_id option:selected").each(function () { 
+           $price = $(this).data("price");
+           $named = $(this).data("name");
+           preciounit = $price;
+           nameprod = $named;
+           //alert(nameprod);
+   });  });
+
+});
+    function eliminarFila(ind) {
+        var resta =0;
+          //document.getElementById('preciot' + ind).value();
+          resta = $('[id="preciof' + ind+'"]').val();
+          //alert(resta);
+          ventatotal = ventatotal - resta;
+
+    $('#fila' + ind).remove();
+        indice-- ;
+    // damos el valor
+    document.getElementById('costoventa').value = ventatotal;
+    //alert(resta);
+
+    return false;
+} 
+
+    $(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Buscar opción",
+        allowClear: true,
+        minimumResultsForSearch: 1,
+        dropdownAutoWidth: true
+    });
+});
+</script>
+
+
+
+</script>
+@endpush
+
