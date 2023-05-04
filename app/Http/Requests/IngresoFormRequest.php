@@ -41,9 +41,25 @@ class IngresoFormRequest extends FormRequest
                 
                 'string'
             ],
+            'formapago' => [
+                'required', 
+                'string'
+            ],
 
             'costoventa' => [
                 'required',
+            ],
+            'factura' => [
+                'required',
+            ],
+            'observacion' => [
+                'nullable',
+            ],
+            'tasacambio' => [
+                'nullable',
+            ],
+            'fechav' => [
+                'nullable',
             ],
 
         ];

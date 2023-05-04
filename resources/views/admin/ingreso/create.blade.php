@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                             <label class="form-label is-required">CLIENTE</label>
+                             <label class="form-label is-required">PROVEEDOR</label>
                             <select  class="form-select   borde" name="cliente_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)

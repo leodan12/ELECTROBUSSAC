@@ -203,7 +203,7 @@
                 document.getElementById('divtasacambio').style.display = 'inline';
                 document.getElementById("verTipocambio").value=data[0].tasacambio;   
             }
-            if(data[0].tasacambio == null){
+            if(data[0].observacion == null){
                 document.getElementById('divobservacion').style.display = 'none';
             }else{ 
                 document.getElementById('divobservacion').style.display = 'inline';

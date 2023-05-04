@@ -18,18 +18,18 @@
 
                 <div class="card-body">
                 <div>
-                        <input type="text" class="form-control" id="input-search" placeholder="Filtrar por producto...">
+                        <input type="text" class="form-control" id="input-search" placeholder="Filtrar por cliente...">
                     </div>
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>FACTURA</th>
-                                <th>FECHA</th> 
+                                <th>FECHA</th>
+                                <th>CLIENTE</th>
                                 <th>EMPRESA</th>
-                                <th>PROVEEDOR</th>
                                 <th>MONEDA</th>
-                                <th>FORMA PAGO</th>
+                                <th>FORMA DE PAGO</th>
                                 <th>COSTO DE LA COMPRA</th>
                                 <th>ACCIONES</th>
                             </tr>
@@ -42,23 +42,27 @@
                                 <td>{{$ingreso->factura}}</td>
                                 <td>{{$ingreso->fecha}}</td>
                                 <td>
-                                    @if($ingreso->company)
-                                        {{$ingreso->company->nombre}}
-                                    @else
-                                        No esta la empresa registrada
-                                    @endif
-                                </td>
-                                <td>
                                     @if($ingreso->cliente)
                                         {{$ingreso->cliente->nombre}}
                                     @else
                                         No esta la empresa registrada
                                     @endif
                                 </td>
-                                
+                                <td>
+                                    @if($ingreso->company)
+                                        {{$ingreso->company->nombre}}
+                                    @else
+                                        No esta la empresa registrada
+                                    @endif
+                                </td>
                                 <td> {{$ingreso->moneda}}</td>
-                                <td>  {{$ingreso->formapago}}</td>
+                                <td> {{$ingreso->formapago}}</td>
+                                @if($ingreso->moneda == 'soles')
                                 <td>S/. {{$ingreso->costoventa}}</td>
+                                @elseif($ingreso->moneda == 'dolares')
+                                <td>$. {{$ingreso->costoventa}}</td>
+                                @endif
+                                
                                 
                                 <td>
                                     <a href="{{ url('admin/ingreso/'.$ingreso->id.'/edit')}}" class="btn btn-success">Editar</a>
@@ -83,37 +87,69 @@
                         
                     </div>
                 </div>
-                <div class="modal fade modal-lg" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog">
+                <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Inventario</h1>
+                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Ingreso</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                                <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="fecha" class="col-form-label">PRODUCTO:</label>
-                                    <input type="text" class="form-control " id="verProducto" readonly>
+                                <div class="col-md-4   mb-5">
+                                    <label for="fecha" class="col-form-label">FECHA:</label>
+                                    <input type="text" class="form-control " id="verFecha" readonly>
                                 </div>
-                                <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="descripcion" class="col-form-label">STOCK MINIMO:</label>
-                                    <input type="number" class="form-control" id="verStockminimo" readonly>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="descripcion" class="col-form-label">NUMERO FACTURA:</label>
+                                    <input type="text" class="form-control" id="verFactura" readonly>
                                 </div>
-                                <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="costoCompra" class="col-form-label">STOCK TOTAL:</label>
-                                    <input type="number" class="form-control" id="verStocktotal" readonly>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="costoCompra" class="col-form-label">FORMA PAGO:</label>
+                                    <input type="text" class="form-control" id="verFormapago" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5 " id="divfechav">
+                                    <label for="costoCompra" class="col-form-label">FECHA VENCIMIENTO:</label>
+                                    <input type="text" class="form-control" id="verFechav" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="moneda" class="col-form-label">MONEDA:</label>
+                                    <input type="text" class="form-control " id="verMoneda" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5" id="divtasacambio">
+                                    <label for="moneda" class="col-form-label">TIPO DE CAMBIO:</label>
+                                    <input type="text" class="form-control " id="verTipocambio" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="empresa" class="col-form-label">EMPRESA:</label>
+                                    <input type="text" class="form-control " id="verEmpresa" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="cliente" class="col-form-label">CLIENTE:</label>
+                                    <input type="text" class="form-control " id="verCliente" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5">
+                                    <label for="moneda" class="col-form-label">PRECIO COMPRA:</label>
+                                    <input type="text" class="form-control " id="verPrecioventa" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-5" id="divobservacion">
+                                    <label for="moneda" class="col-form-label">OBSERVACION:</label>
+                                    <input type="text" class="form-control " id="verObservacion" readonly>
                                 </div>
                                  
                             </div>
                         </form>
                         <div class="table-responsive">
-                        <table class="table table-row-bordered gy-5 gs-5" id="detallesInventario">
+                        <table class="table table-row-bordered gy-5 gs-5" id="detallesventa">
                             <thead class="fw-bold text-primary">
                                 <tr>
-                                    <th>Empresa</th>
-                                    <th>Stock por Empresa</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario(referencial)</th>
+                                    <th>precio Unitario</th>
+                                    <th>Servicio Adicional</th>
+                                    <th>Costo Productos</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,25 +178,53 @@
 
         const button = event.relatedTarget
         const id = button.getAttribute('data-id')
-        var urlinventario = "{{ url('admin/inventario/show') }}";
-        $.get(urlinventario + '/' + id, function(data) {
+        var urlventa = "{{ url('admin/ingreso/show') }}";
+        $.get(urlventa + '/' + id, function(data) {
             console.log(data);
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` 
-            document.getElementById("verProducto").value=data[0].nombre;  
-            document.getElementById("verStockminimo").value=data[0].stockminimo;  
-            document.getElementById("verStocktotal").value=data[0].stocktotal;  
-  ;  
+            document.getElementById("verFecha").value=data[0].fecha;  
+            document.getElementById("verFactura").value=data[0].factura;   
+            document.getElementById("verMoneda").value=data[0].moneda;  
+            document.getElementById("verFormapago").value=data[0].formapago; 
+            document.getElementById("verEmpresa").value=data[0].company; 
+            document.getElementById("verCliente").value=data[0].cliente; 
+            document.getElementById("verPrecioventa").value=data[0].costoventa;  
+
+            if(data[0].fechav == null){
+                document.getElementById('divfechav').style.display = 'none';
+            }else{ 
+                document.getElementById('divfechav').style.display = 'inline';
+                document.getElementById("verFechav").value=data[0].fechav;  
+            }
+            if(data[0].tasacambio == null){
+                document.getElementById('divtasacambio').style.display = 'none';
+            }else{ 
+                document.getElementById('divtasacambio').style.display = 'inline';
+                document.getElementById("verTipocambio").value=data[0].tasacambio;   
+            }
+            if(data[0].observacion == null){
+                document.getElementById('divobservacion').style.display = 'none';
+            }else{ 
+                document.getElementById('divobservacion').style.display = 'inline';
+                document.getElementById("verObservacion").value=data[0].observacion;  
+            }
+            
+            
              
-            var tabla = document.getElementById(detallesInventario);
-            $('#detallesInventario tbody tr').slice().remove();
+            var tabla = document.getElementById(detallesventa);
+            $('#detallesventa tbody tr').slice().remove();
             for(var i =0 ; i<data.length;i++){
                 filaDetalle ='<tr id="fila' + i + 
-                '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].nombrempresa  + '"required>'+ data[i].nombrempresa+
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].stockempresa + '"required>'+ data[i].stockempresa+ 
+                '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+ data[i].preciounitario+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+ data[i].preciounitariomo+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+ data[i].servicio+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+ data[i].preciofinal+ 
                 '</td></tr>';
                
-                $("#detallesInventario>tbody").append(filaDetalle);
+                $("#detallesventa>tbody").append(filaDetalle);
             }
                  
         });
@@ -176,7 +240,7 @@
             let tableBody = document.getElementById("tbody-mantenimientos");
             let tableRows = tableBody.getElementsByTagName("tr");
             for(let i = 0; i < tableRows.length; i++){
-                let textoConsulta = tableRows[i].cells[2].textContent.toString().toLowerCase();
+                let textoConsulta = tableRows[i].cells[3].textContent.toString().toLowerCase();
                 if(textoConsulta.indexOf(inputText) === -1){
                     tableRows[i].style.visibility = "collapse";
                 }else{
@@ -190,7 +254,11 @@
 
 @endsection
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+    <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
+
+
     <script>
         $('.formulario-eliminar').submit(function(e){
             e.preventDefault();

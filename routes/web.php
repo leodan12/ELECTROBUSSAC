@@ -103,7 +103,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/ingreso/{ingreso_id}/edit','edit');
         Route::put('/ingreso/{ingreso_id}','update');
         Route::get('ingreso/{ingreso_id}/delete','destroy');
-        Route::get('/deletedetalleingreso/{id}', [IngresoController::class, 'destroydetalleingreso']);
+        Route::get('/deletedetalleingreso/{id}', 'destroydetalleingreso');
         Route::get('/ingreso/show/{id}', 'show');//ver  
     });
 });
