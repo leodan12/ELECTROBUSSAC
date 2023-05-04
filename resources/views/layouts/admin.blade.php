@@ -58,6 +58,7 @@
     <script src="{{ asset('admin/js/select2.min.js') }}"></script>
     
     <!-- End custom js for this page-->
+    <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
     @livewireScripts
     @stack('script')
     @yield('js')

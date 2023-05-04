@@ -227,6 +227,7 @@
 @push('script')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 
     var indice = 0;
@@ -392,28 +393,37 @@
 
     function eliminarFila(ind,lugardato,iddetalle) {
         if(lugardato=="db"){
-            if( confirm("eliminar registro") )
-             {
-            //alert(iddetalle);
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+ 
             $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) {
                 //alert(data[0]);
-                if(data[0]==1){
-                    
-                    alert("registro eliminado");  
-                    quitarFila(ind);
-                    $("#btnvolver").prop("disabled", true);
+                if(data[0]==1){ 
+            Swal.fire({
+                text: "Registro Eliminado",
+                icon: "success"
+            });  
+                quitarFila(ind);
+                
                 }else if(data[0]==0){
                     alert("no se puede eliminar");  
                 }else if(data[0]==2){
                     alert("registro no encontrado");  
-                }
-
-            });    }
+                } 
+            });     
+            } 
+            })  
             }else{
             quitarFila(ind);
-        }
-
-        
+        } 
     return false;
 } 
 

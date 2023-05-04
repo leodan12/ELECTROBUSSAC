@@ -15,7 +15,6 @@
                         <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir venta</a>
                     </h4>
                 </div>
-
                 <div class="card-body">
                 <div>
                         <input type="text" class="form-control" id="input-search" placeholder="Filtrar por cliente...">
