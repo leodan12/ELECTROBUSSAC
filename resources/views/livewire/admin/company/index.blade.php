@@ -5,7 +5,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Proveedor Eliminado</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Empresa</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form wire:submit.prevent="destroyCompany" >
@@ -29,8 +29,8 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>PROVEEDORES
-                        <a href="{{ url('admin/company/create') }}" class="btn btn-primary float-end">Añadir Proveedor</a>
+                    <h4>MIS EMPRESAS
+                        <a href="{{ url('admin/company/create') }}" class="btn btn-primary float-end">Añadir Empresa</a>
                     </h4>
                 </div>
                 <div class="card-body">

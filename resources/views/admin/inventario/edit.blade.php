@@ -1,6 +1,7 @@
 @extends('layouts.admin')
-
-
+@push('css')
+ <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
+@endpush
 @section('content')
 
 <div class="row">
@@ -27,9 +28,9 @@
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label>PRODUCTO</label>
-                            <select class="form-control select2" name="product_id">
-                                <option selected disabled>Seleccione una opción</option>    
+                            <label class="form-label is-required">PRODUCTO</label>
+                            <select class="form-select select2 borde" name="product_id" required>
+                                <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($products as $product)
                                 
                                 <option value="{{ $product->id }}" {{$product->id == $inventario->product_id ? 'selected':''}}>{{$product->nombre}}</option>
@@ -37,34 +38,34 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>STOCK MINIMO</label>
-                            <input type="number" name="stockminimo" value="{{ $inventario->stockminimo }}" class="form-control" />
+                            <label class="form-label is-required">STOCK MINIMO</label>
+                            <input type="number" name="stockminimo" value="{{ $inventario->stockminimo }}" class="form-control borde" required />
                             @error('stockminimo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>STOCK TOTAL</label>
+                            <label class="form-label is-required">STOCK TOTAL</label>
                             <input type="number" name="stocktotal" id="stocktotal" value="{{ $inventario->stocktotal }}" readonly class="form-control" />
                             
                         </div>
                     
                         <div class="col-md-12 mb-3">
-                            <label>Status</label><br>
+                            <label class="form-label">Status</label><br>
                             <input type="checkbox" name="status"  />
                         </div>
                         <hr>
                         <h5>Agregar Detalle de Inventario</h5>
                         <div class="col-md-6 mb-3">
-                            <label>EMPRESA</label>
-                            <select class="form-control select2" name="empresa" id="empresa">
-                                <option disabled selected>Seleccione una opción</option>    
+                            <label class="form-label">EMPRESA</label>
+                            <select class="form-select select2 borde" name="empresa" id="empresa">
+                                <option value="" class="silver" >Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}" data-name="{{$company->nombre}}">{{$company->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>STOCK POR EMPRESA</label>
-                            <input type="number" name="stockempresa" id="stockempresa" class="form-control" />
+                            <label class="form-label">STOCK POR EMPRESA</label>
+                            <input type="number" name="stockempresa" id="stockempresa" class="form-control borde" />
                             @error('stockempresa') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         @php $ind=0 ; @endphp
@@ -133,7 +134,7 @@ if (pv == 0) {
            
             
            //alertas para los detallesBatch
-           
+           if (!empresa) {  alert("Seleccione una empresa"); return;   }
            if (!stockempresa) {  alert("ingrese un stockempresa"); return;   }
            var LDInventario = [];
            var tam = LDInventario.length;
@@ -149,15 +150,19 @@ if (pv == 0) {
                var mistocktotal = $('[name="stocktotal"]').val();
                stocktotal = parseInt(stockempresa)+parseInt(mistocktotal);
                document.getElementById('stocktotal').value = stocktotal;
+               document.getElementById('stockempresa').value = null; 
        };
        $("#empresa").change(function () {
       
       $("#empresa option:selected").each(function () { 
           $named = $(this).data("name");
           nameempresa = $named;
+          document.getElementById('stockempresa').value = 1; 
           //alert(nameempresa);
   });  
   });
+
+  
 
 function eliminarFila(idBD, ind,stockemp) {
 
@@ -195,16 +200,14 @@ function quitarFila(ind) {
     
     $(document).ready(function() {
     $('.select2').select2({
-        placeholder: "Buscar opción",
+        placeholder: "Buscar y Seleccionar Opción",
         allowClear: true,
         minimumResultsForSearch: 1,
-        dropdownAutoWidth: true
+        dropdownAutoWidth: false
     });
 });
 </script>
 
-
-
-</script>
+ 
 @endpush
 

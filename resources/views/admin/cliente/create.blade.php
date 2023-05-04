@@ -18,7 +18,7 @@
     @endif
         <div class="card">
             <div class="card-header">
-                <h4>AÑADIR CLIENTE
+                <h4>AÑADIR CLIENTE / PROVEEDOR
                     <a href="{{ url('admin/cliente') }}" class="btn btn-primary text-white float-end">VOLVER</a>
                 </h4>
             </div>

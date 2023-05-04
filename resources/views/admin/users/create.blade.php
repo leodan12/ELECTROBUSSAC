@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@push('css')
+ <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
+@endpush
 @section('content')
 
 <div class="row">
@@ -27,30 +29,31 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label>NOMBRE</label>
-                            <input type="text" name="name" class="form-control" />
+                            <label class="form-label is-required">NOMBRE</label>
+                            <input type="text" name="name" class="form-control borde" required />
                             @error('name') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>EMAIL</label>
-                            <input type="email" name="email" class="form-control" />
+                            <label class="form-label is-required">EMAIL</label>
+                            <input type="email" name="email" class="form-control borde" required/>
                             @error('email') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>CONTRASEÑA</label>
-                            <input type="password" name="password" class="form-control" />
+                            <label class="form-label is-required">CONTRASEÑA</label>
+                            <input type="password" name="password" class="form-control borde" required />
                             @error('password') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label>Seleccionar Rol</label>
-                            <select name="role_as" class="form-control">
-                                <option value="">Seleccione Rol</option>
+                            <label class="form-label is-required">Seleccionar Rol</label>
+                            <select name="role_as" class="form-select borde" required>
+                                <option value="" class="silver">Seleccione Rol</option>
                                 <option value="0">Usuario</option>
                                 <option value="1">Administrador</option>
                             </select>
-                        <div class="col-md-12 mb-3">
-                            <button type= "submit" class="btn btn-primary text-white float-end">Guardar</button>
-                        </div>
+                       
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <button type= "submit" class="btn btn-primary text-white float-end">Guardar</button>
                     </div>
                 </form>
             </div>

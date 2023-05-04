@@ -22,7 +22,17 @@ class InventarioController extends Controller
 
     public function create()
     {
-        $products = Product::all()->where('status','=',0);
+        //$products = Product::all()->where('status','=',0);
+
+        $products = DB::table('products as p') 
+            ->leftjoin('inventarios as i', 'i.product_id', '=', 'p.id') 
+            ->select(
+                'p.nombre',
+                'p.id'
+                
+            )->where('i.id','=',null)
+            ->get();
+
         $companies = Company::all();
         return view('admin.inventario.create',compact('products','companies'));
     }

@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required">CATEGORIA</label>
-                            <select class="form-select borde" name="category_id" required>
+                            <select class="form-select select2 borde" name="category_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($categories as $category)
                                 
@@ -110,12 +110,12 @@ function IGVtotal() {
 </script>
 
 <script>
-    $(document).ready(function() {
+     $(document).ready(function() {
     $('.select2').select2({
-        placeholder: "Buscar opción",
+        placeholder: "Buscar y Seleccionar Opción",
         allowClear: true,
         minimumResultsForSearch: 1,
-        dropdownAutoWidth: true
+        dropdownAutoWidth: false
     });
 });
 </script>

@@ -29,7 +29,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required" >CATEGORIA</label>
-                            <select name="category_id" class="form-select borde" required>
+                            <select name="category_id" class="form-select select2 borde" required>
                                 <option value="" class="silver">Seleccione una opción</option>  
                                 @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" {{$category->id == $product->category_id ? 'selected':''}}>
@@ -94,8 +94,16 @@ $(document).ready(function() {
        document.getElementById("cantidad").onchange = function() {
         IGVtotal();
        };
+
+       $('.select2').select2({
+        placeholder: "Buscar y Seleccionar Opción",
+        allowClear: true,
+        minimumResultsForSearch: 1,
+        dropdownAutoWidth: false
+    });
     });
 
+     
     
 function IGVtotal() {
         preciototal=0;

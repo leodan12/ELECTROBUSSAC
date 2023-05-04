@@ -24,10 +24,13 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>FECHA</th>
-                                <th>CLIENTE</th>
+                                <th>FACTURA</th>
+                                <th>FECHA</th> 
                                 <th>EMPRESA</th>
-                                <th>COSTO DE LA VENTA</th>
+                                <th>PROVEEDOR</th>
+                                <th>MONEDA</th>
+                                <th>FORMA PAGO</th>
+                                <th>COSTO DE LA COMPRA</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
@@ -36,14 +39,8 @@
                             @forelse ($ingresos as $ingreso)
                             <tr>
                                 <td>{{$ingreso->id}}</td>
+                                <td>{{$ingreso->factura}}</td>
                                 <td>{{$ingreso->fecha}}</td>
-                                <td>
-                                    @if($ingreso->cliente)
-                                        {{$ingreso->cliente->nombre}}
-                                    @else
-                                        No esta la empresa registrada
-                                    @endif
-                                </td>
                                 <td>
                                     @if($ingreso->company)
                                         {{$ingreso->company->nombre}}
@@ -51,11 +48,20 @@
                                         No esta la empresa registrada
                                     @endif
                                 </td>
+                                <td>
+                                    @if($ingreso->cliente)
+                                        {{$ingreso->cliente->nombre}}
+                                    @else
+                                        No esta la empresa registrada
+                                    @endif
+                                </td>
                                 
+                                <td> {{$ingreso->moneda}}</td>
+                                <td>  {{$ingreso->formapago}}</td>
                                 <td>S/. {{$ingreso->costoventa}}</td>
                                 
                                 <td>
-                                    <a href="{{ url('admin/ingreso/'.$ingreso>id.'/edit')}}" class="btn btn-success">Editar</a>
+                                    <a href="{{ url('admin/ingreso/'.$ingreso->id.'/edit')}}" class="btn btn-success">Editar</a>
                                     <button type="button" class="btn btn-secondary" data-id="{{$ingreso->id}}" data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
                                     <form action="{{ url('admin/ingreso/'.$ingreso->id.'/delete') }}" class="d-inline formulario-eliminar">
                                     <button type="submit" class="btn btn-danger formulario-eliminar">

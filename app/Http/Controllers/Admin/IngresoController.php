@@ -16,7 +16,7 @@ class IngresoController extends Controller
 {
     public function index()
     {
-        $ingresos = Ingreso::all();
+        $ingresos = Ingreso::orderBy('id', 'desc')->get();
         return view('admin.ingreso.index', compact('ingresos'));
     }
 

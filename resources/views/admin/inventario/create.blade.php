@@ -3,7 +3,6 @@
  <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
-
 <div class="row">
     <div class="col-md-12">
     @if (count($errors) > 0)
@@ -28,7 +27,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required">PRODUCTO</label>
-                            <select class="form-select borde" name="product_id" required>
+                            <select class="form-select select2 borde" name="product_id"  required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($products as $product) 
                                 <option value="{{ $product->id }}">{{ $product->nombre }}</option>
@@ -37,7 +36,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">STOCK MINIMO</label>
-                            <input type="number" name="stockminimo" class="form-control borde" required />
+                            <input type="number" name="stockminimo" id="stockminimo" class="form-control borde" required />
                             @error('stockminimo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
@@ -54,7 +53,7 @@
                         <h5>Agregar Detalle de Inventario</h5>
                         <div class="col-md-6 mb-3">
                             <label  class="form-label">EMPRESA</label>
-                            <select class="form-select borde" name="empresa" id="empresa">
+                            <select class="form-select select2 borde" name="empresa" id="empresa">
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}" data-name="{{$company->nombre}}">{{ $company->nombre }}</option>
@@ -63,7 +62,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label  class="form-label">STOCK POR EMPRESA</label>
-                            <input type="number" name="stockempresa" id="stockempresa" class="form-control borde" />
+                            <input type="number" name="stockempresa" step="1" min="0" id="stockempresa" class="form-control borde" />
                             @error('stockempresa') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         
@@ -84,7 +83,7 @@
                     </div>
                         <hr>
                         <div class="col-md-12 mb-3">
-                            <button type= "submit" class="btn btn-primary text-white float-end">Guardar</button>
+                            <button type= "submit"  id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end">Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -98,15 +97,17 @@
 
 @push('script')
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 
     var indice = 0;
     var nameempresa = 0;
-    var stocktotal = 0;
-
-
-        var tabla = document.getElementById(detallesCompra);
+    var stocktotal = 0; 
+    var estadoguardar=0;
+    var tabla = document.getElementById(detallesCompra);
        
+    document.getElementById('stockminimo').value = 1;  
+
         $('#addDetalleBatch').click(function() {
           
             //datos del detalleSensor
@@ -116,7 +117,9 @@
              
             //alertas para los detallesBatch
             
-            if (!stockempresa) {  alert("ingrese un stockempresa"); return;   }
+            if (!empresa) {  alert("Seleccione una empresa"); return;   }
+            if (!stockempresa) {  alert("ingrese un stock para la empresa"); return;   }
+            $("#empresa option:contains('Seleccione una opción')").attr('selected',false);  
             var LDInventario = [];
             var tam = LDInventario.length;
             LDInventario.push(empresa,stockempresa,nameempresa);
@@ -127,15 +130,20 @@
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
                
                 $("#detallesCompra>tbody").append(filaDetalle);
+                $("#empresa option:contains('Seleccione una opción')").attr('selected',true);   
+                document.getElementById('stockempresa').value = "";
                 indice++;
                 stocktotal = parseInt(stocktotal) + parseInt(stockempresa);
                 document.getElementById('stocktotal').value = stocktotal;
+                var funcion="agregar";
+                botonguardar(funcion);
         });
         $("#empresa").change(function () {
        
        $("#empresa option:selected").each(function () { 
            $named = $(this).data("name");
            nameempresa = $named;
+           document.getElementById('stockempresa').value = 1; 
            //alert(nameempresa);
    });  
    });
@@ -153,24 +161,43 @@
     // damos el valor
     document.getElementById('stocktotal').value = stocktotal;
     //alert(resta);
+    var funcion="eliminar";
+    botonguardar(funcion);
 
     return false;
 } 
+ 
 
     
 
-    $(document).ready(function() {
+$(document).ready(function() {
+    $("#btnguardar").prop("disabled", true);
+});
+
+function botonguardar(funcion){
+
+    if(funcion == "eliminar"){
+        estadoguardar--;
+    }else if(funcion == "agregar"){
+        estadoguardar++;
+    }
+    if(estadoguardar == 0){
+        $("#btnguardar").prop("disabled", true);
+    }else if(estadoguardar > 0){
+        $("#btnguardar").prop("disabled", false);
+    }    
+}
+$(document).ready(function() {
     $('.select2').select2({
-        placeholder: "Buscar opción",
+        placeholder: "Buscar y Seleccionar Opción",
         allowClear: true,
         minimumResultsForSearch: 1,
-        dropdownAutoWidth: true
+        dropdownAutoWidth: false
     });
 });
 </script>
 
 
-
-</script>
+ 
 @endpush
 

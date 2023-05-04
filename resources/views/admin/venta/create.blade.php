@@ -1,13 +1,8 @@
 @extends('layouts.admin')
-
-
 @push('css')
  <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
- 
 @endpush
-
 @section('content')
-
 <div class="row">
     <div class="col-md-12">
     @if (count($errors) > 0)
@@ -71,19 +66,20 @@
                              <label id="labeltasacambio" class="form-label">TASA DE CAMBIO</label>
                             <input type="number" name="tasacambio" id= "tasacambio" step="0.01" readonly class="form-control borde" />
                         </div>
+                        
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select borde" name="company_id" required>
+                            <select  class="form-select   borde" name="company_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($companies as $company)
-                                
                                 <option value="{{ $company->id }}">{{ $company->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">CLIENTE</label>
-                            <select  class="form-select borde" name="cliente_id" required>
+                            <select  class="form-select   borde" name="cliente_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 
@@ -105,7 +101,7 @@
                         <h4>Agregar Detalle de la Venta</h4>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select borde" name="product" id="product">
+                            <select  class="form-select select2 borde" name="product" id="product">
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($products as $product)
                                 <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
@@ -158,7 +154,7 @@
                     </div>
                         <hr>
                         <div class="col-md-12 mb-3">
-                            <button type= "submit" id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end">Guardar</button>
+                             <button type= "submit" id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end">Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -184,14 +180,21 @@
 
     $(document).ready(function() {
 
+       /* $('.select2').select2({
+        placeholder: "Buscar y Seleccionar Opción",
+        allowClear: true,
+        minimumResultsForSearch: 1,
+        dropdownAutoWidth: false
+        });*/
+
         $("#btnguardar").prop("disabled", true);
         //Para poner automaticamente la fecha actual
        var hoy = new Date();  
        var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
        document.getElementById("fecha").value = fechaActual;
         
-       var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
-       document.getElementById("fechav").value = fechaActual2;
+       //var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+       //document.getElementById("fechav").value = fechaActual2;
        
        document.getElementById("cantidad").onchange = function() {
        preciofinal();

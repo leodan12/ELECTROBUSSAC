@@ -15,13 +15,13 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/company') }}">
               <i class="mdi mdi-chart-pie menu-icon"></i>
-              <span class="menu-title">PROVEEDORES</span>
+              <span class="menu-title">MIS EMPRESAS</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/cliente') }}">
               <i class="mdi mdi-chart-pie menu-icon"></i>
-              <span class="menu-title">CLIENTES</span>
+              <span class="menu-title">CLIENTES/PROVEEDORES</span>
             </a>
           </li>
           <li class="nav-item">
