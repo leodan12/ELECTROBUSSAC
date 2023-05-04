@@ -25,5 +25,6 @@ class CategoriaSeeder extends Seeder
             'nombre' => 'CAMARAS',
             'status' => 0,
         ]); 
+  
     }
 }

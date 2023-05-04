@@ -37,5 +37,6 @@ class VentaSeeder extends Seeder
             'fecha' => "2023-05-02",
            // 'fechav' => "2023-05-02",
         ]); 
+        
     }
 }
