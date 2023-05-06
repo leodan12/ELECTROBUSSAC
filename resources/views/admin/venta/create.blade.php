@@ -185,8 +185,7 @@
         $("#company_id").change(function(){
         var company = $(this).val();
         $('#product').removeAttr('disabled');
-        $.get('/admin/venta/productosxempresa/'+company, function(data){
-          console.log(data);
+        $.get('/admin/venta/productosxempresa/'+company, function(data){ 
             var producto_select = '<option value="" disabled selected>Seleccione una opcion</option>'
               for (var i=0; i<data.length;i++){
                 producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
@@ -194,8 +193,7 @@
               $("#product").html(producto_select);
         });
         $('#cliente_id').removeAttr('disabled');
-        $.get('/admin/venta/comboempresacliente/'+company, function(data){
-          console.log(data);
+        $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
             var producto_select = '<option value="" disabled selected>Seleccione una opcion</option>'
               for (var i=0; i<data.length;i++){
                 producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
