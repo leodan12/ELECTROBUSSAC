@@ -14,44 +14,53 @@ class CompaniesSeeder extends Seeder
     public function run() 
     {
         Company::create([
-            'nombre' => 'COMPAÑIA 1',
-            'ruc' => '11111111111',
+            'nombre' => 'ELECTROBUS SAC',
+            'ruc' => '20477263284',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania1@gmail.com',
             'status' => 0,
           ]);
           Company::create([
-            'nombre' => 'COMPAÑIA 2',
-            'ruc' => '22222222222',
+            'nombre' => 'MABEL ELIZABETH AGUIRRE ABANTO',
+            'ruc' => '10180914892',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania2@gmail.com',
             'status' => 0,
           ]);
           Company::create([
-            'nombre' => 'COMPAÑIA 3',
-            'ruc' => '33333333333',
+            'nombre' => 'DELMY RUFINO ALFARO ALFARO',
+            'ruc' => '10178232024',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania3@gmail.com',
             'status' => 0,
           ]);
           Company::create([
-            'nombre' => 'COMPAÑIA 4',
-            'ruc' => '44444444444',
+            'nombre' => 'MARGORY JOSHELYN ALFARO AGUIRRE',
+            'ruc' => '10712354998',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania4@gmail.com',
             'status' => 0,
           ]);
           Company::create([
-            'nombre' => 'COMPAÑIA 5',
-            'ruc' => '55555555555',
+            'nombre' => 'TATIANA BELKER JARA DIEGUEZ',
+            'ruc' => '10464286832',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania5@gmail.com',
             'status' => 0,
           ]);
+          Company::create([
+            'nombre' => 'EKIBUS EIRL',
+            'ruc' => '20603295251',
+            'direccion' => 'sin direccion',
+            'telefono' => '987654321',
+            'email' => 'compania5@gmail.com',
+            'status' => 0,
+          ]);
+
     }
 }

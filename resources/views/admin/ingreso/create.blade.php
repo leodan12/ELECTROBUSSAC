@@ -201,9 +201,7 @@
 
 
       });
-
-
-
+ 
         $("#btnguardar").prop("disabled", true);
         //Para poner automaticamente la fecha actual
        var hoy = new Date();  
