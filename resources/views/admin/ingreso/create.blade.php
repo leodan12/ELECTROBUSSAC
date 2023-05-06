@@ -69,8 +69,8 @@
                         
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select   borde" name="company_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                            <select  class="form-select   borde" name="company_id" id="company_id" required>
+                                <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}">{{ $company->nombre }}</option>
                                 @endforeach
@@ -80,7 +80,7 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">PROVEEDOR</label>
                             <select  class="form-select   borde" name="cliente_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 
                                 <option value="{{ $cliente->id }}">{{ $cliente->nombre }}</option>
@@ -101,8 +101,8 @@
                         <h4>Agregar Detalle de la Compra</h4>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select select2 borde" name="product" id="product">
-                                <option value="" class="silver">Seleccione una opción</option>    
+                            <select  class="form-select select2 borde" name="product" id="product"  >
+                                <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($products as $product)
                                 <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
                                 @endforeach
@@ -186,6 +186,24 @@
         minimumResultsForSearch: 1,
         dropdownAutoWidth: false
         });*/
+
+        //para diferente comprador y vendedor
+        $("#company_id").change(function(){
+        var company = $(this).val(); 
+        $('#cliente_id').removeAttr('disabled');
+        $.get('/admin/venta/comboempresacliente/'+company, function(data){
+          console.log(data);
+            var producto_select = '<option value="" disabled selected>Seleccione una opcion</option>'
+              for (var i=0; i<data.length;i++){
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+              }
+              $("#cliente_id").html(producto_select);
+        });
+
+
+      });
+
+
 
         $("#btnguardar").prop("disabled", true);
         //Para poner automaticamente la fecha actual

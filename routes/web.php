@@ -93,6 +93,8 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('venta/{venta_id}/delete','destroy');
         Route::get('/deletedetalleventa/{id}',  'destroydetalleventa');
         Route::get('/venta/show/{id}', 'show');//ver  
+        Route::get('/venta/comboempresacliente/{id}', 'comboempresacliente');//para no seleccionar en una venta la misma empresa y cliente  
+        Route::get('/venta/productosxempresa/{id}', 'productosxempresa'); //devuelve los productos con stock de una empresa
     });
 
     //Ruta de ingresos

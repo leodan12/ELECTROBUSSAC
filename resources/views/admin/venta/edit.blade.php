@@ -111,7 +111,7 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
                             <select  class="form-select borde" name="company_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 
                                 <option value="{{ $company->id }}" {{$company->id==$venta->company_id ? 'selected':''}} >{{ $company->nombre }}</option>

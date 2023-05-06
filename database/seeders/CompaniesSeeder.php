@@ -15,7 +15,7 @@ class CompaniesSeeder extends Seeder
     {
         Company::create([
             'nombre' => 'COMPAÑIA 1',
-            'ruc' => '10234567854',
+            'ruc' => '11111111111',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania1@gmail.com',
@@ -23,7 +23,7 @@ class CompaniesSeeder extends Seeder
           ]);
           Company::create([
             'nombre' => 'COMPAÑIA 2',
-            'ruc' => '10457848954',
+            'ruc' => '22222222222',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania2@gmail.com',
@@ -31,7 +31,7 @@ class CompaniesSeeder extends Seeder
           ]);
           Company::create([
             'nombre' => 'COMPAÑIA 3',
-            'ruc' => '10896544724',
+            'ruc' => '33333333333',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania3@gmail.com',
@@ -39,7 +39,7 @@ class CompaniesSeeder extends Seeder
           ]);
           Company::create([
             'nombre' => 'COMPAÑIA 4',
-            'ruc' => '10945643254',
+            'ruc' => '44444444444',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania4@gmail.com',
@@ -47,7 +47,7 @@ class CompaniesSeeder extends Seeder
           ]);
           Company::create([
             'nombre' => 'COMPAÑIA 5',
-            'ruc' => '10945632544',
+            'ruc' => '55555555555',
             'direccion' => 'sin direccion',
             'telefono' => '987654321',
             'email' => 'compania5@gmail.com',

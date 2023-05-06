@@ -161,9 +161,14 @@ class IngresoController extends Controller
 
     public function edit(int $ingreso_id)
     {
-        $companies = Company::all();
+        //$companies = Company::all();
         $clientes = Cliente::all();
         $products = Product::all();
+        $companies = DB::table('companies as c')
+        ->join('ingresos as i', 'i.company_id', '=', 'c.id')
+        ->select('c.id','c.nombre','c.ruc')
+        ->where('i.id', '=', $ingreso_id)
+        ->get();
 
        
         $ingreso = Ingreso::findOrFail($ingreso_id);

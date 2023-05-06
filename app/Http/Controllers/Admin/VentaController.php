@@ -94,12 +94,25 @@ class VentaController extends Controller
 
     public function edit(int $venta_id)
     {
-        $companies = Company::all();
+        
+        $venta = Venta::findOrFail($venta_id);
+        //$companies = Company::all();
+        $companies = DB::table('companies as c')
+        ->join('ventas as v', 'v.company_id', '=', 'c.id')
+        ->select('c.id','c.nombre','c.ruc')
+        ->where('v.id', '=', $venta_id)
+        ->get();
         $clientes = Cliente::all();
-        $products = Product::all();
+        //$products = Product::all();
+
+        $products = DB::table('detalleinventarios as di')
+                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                ->join('companies as c', 'di.company_id', '=', 'c.id')
+                ->join('products as p', 'i.product_id', '=', 'p.id')
+                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa')
+                ->where('c.id', '=', $venta->company_id)->get();
 
        
-        $venta = Venta::findOrFail($venta_id);
         $detallesventa = DB::table('detalleventas as dv')
             ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
@@ -245,6 +258,32 @@ class VentaController extends Controller
         
 
 
+    }
+
+    public function productosxempresa($id)
+    {
+        //buscamos el registro con el id enviado por la URL
+        //$empresa = Company::find($id);
+        $products = DB::table('detalleinventarios as di')
+                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                ->join('companies as c', 'di.company_id', '=', 'c.id')
+                ->join('products as p', 'i.product_id', '=', 'p.id')
+                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa')
+                ->where('c.id', '=', $id)->get();
+
+        return $products;
+    }
+
+    public function comboempresacliente($id)
+    {
+        //buscamos el registro con el id enviado por la URL
+        $empresa = Company::find($id);
+
+        $products = DB::table('clientes as c') 
+                ->select('c.id','c.nombre')
+                ->where('c.ruc', '!=', $empresa->ruc)->get();
+
+        return $products;
     }
 
     

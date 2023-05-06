@@ -29,7 +29,7 @@
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required">CATEGORIA</label>
                             <select class="form-select select2 borde" name="category_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($categories as $category)
                                 
                                 <option value="{{ $category->id }}">{{ $category->nombre }}</option>
