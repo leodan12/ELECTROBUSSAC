@@ -28,7 +28,7 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required">CATEGORIA</label>
-                            <select class="form-select select2 borde" name="category_id" required>
+                            <select class="form-select select2" id="category_id" name="category_id" required data-show-subtext="true" data-live-search="true">
                                 <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($categories as $category)
                                 
@@ -88,12 +88,14 @@
 @endsection
 
 @push('script')
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
 <script type="text/javascript">
 $(document).ready(function() {
        document.getElementById("cantidad").onchange = function() {
         IGVtotal();
-       };
+       }; 
+    $('.select2').select2();
+ 
     });
 
     
@@ -109,15 +111,5 @@ function IGVtotal() {
 }
 </script>
 
-<script>
-     $(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Buscar y Seleccionar Opción",
-        allowClear: true,
-        minimumResultsForSearch: 1,
-        dropdownAutoWidth: false
-    });
-});
-</script>
 @endpush
 

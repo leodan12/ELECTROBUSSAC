@@ -21,7 +21,7 @@
                     <div>
                         <input type="text" class="form-control" id="input-search" placeholder="Filtrar por nombre...">
                     </div>
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="mitabla" name="mitabla" >
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -137,6 +137,8 @@
 </div>
 
 @push('script')
+<script src="{{ asset('admin/midatatable.js') }}"></script> 
+ 
 <script>
     document.getElementById("input-search").addEventListener("input",onInputChange)
     const mimodal = document.getElementById('mimodal')

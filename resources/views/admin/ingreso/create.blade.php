@@ -39,7 +39,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FORMA DE PAGO</label>
                             <select name="formapago" id="formapago" class="form-select borde" required  >
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             <option value="credito" data-formapago="credito"  >Credito</option>
                             <option value="contado" data-formapago="contado">Contado</option>
                             </select>
@@ -56,7 +56,7 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">MONEDA</label>
                             <select name="moneda" id="moneda"  class="form-select borde"  required>
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             <option value="dolares" data-moneda="dolares" >Dolares Americanos</option>
                             <option value="soles" data-moneda="soles" >Soles</option>
                             </select>
@@ -69,7 +69,7 @@
                         
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select   borde" name="company_id" id="company_id" required>
+                            <select  class="form-select select2  borde" name="company_id" id="company_id" required>
                                 <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -79,7 +79,7 @@
 
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">PROVEEDOR</label>
-                            <select  class="form-select   borde" name="cliente_id"  id="cliente_id"required>
+                            <select  class="form-select select2  borde" name="cliente_id"  id="cliente_id"required>
                                 <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 
@@ -167,9 +167,7 @@
 @endsection
 
 @push('script')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script type="text/javascript">
+ <script type="text/javascript">
 
     var indice = 0;
     var ventatotal = 0;
@@ -180,12 +178,7 @@
 
     $(document).ready(function() {
 
-       /* $('.select2').select2({
-        placeholder: "Buscar y Seleccionar Opción",
-        allowClear: true,
-        minimumResultsForSearch: 1,
-        dropdownAutoWidth: false
-        });*/
+        $('.select2').select2({  }); 
 
         //para diferente comprador y vendedor
         $("#company_id").change(function(){
@@ -198,7 +191,6 @@
               }
               $("#cliente_id").html(producto_select);
         });
-
 
       });
  
@@ -254,7 +246,7 @@
             if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
 
             
-            $("#product option:contains('Seleccione una opción')").attr('selected',false);  
+            //$("#product option:contains('Seleccione una opción')").attr('selected',false);  
             var LVenta = [];
             var tam = LVenta.length;
             LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo);
@@ -273,7 +265,8 @@
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
 
-                $("#product option:contains('Seleccione una opción')").attr('selected',true);   
+                $('#product').val(null).trigger('change');
+                //$("#product option:contains('Seleccione una opción')").attr('selected',true);   
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";

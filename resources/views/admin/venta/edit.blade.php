@@ -58,7 +58,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FORMA DE PAGO</label>
                             <select name="formapago" id="formapago" class="form-select borde" required  >
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             @if($venta->formapago == "credito")
                             <option value="credito" data-formapago="credito" selected >Credito</option>
                             <option value="contado" data-formapago="contado">Contado</option>
@@ -87,7 +87,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">MONEDA</label>
                             <select name="moneda" id="moneda"  class="form-select borde"  required>
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             @if($venta->moneda == "soles")
                                 <option value="dolares" data-moneda="dolares" >Dolares Americanos</option>
                                 <option value="soles" data-moneda="soles" selected>Soles</option>
@@ -110,7 +110,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select borde" name="company_id" required>
+                            <select  class="form-select select2 borde" name="company_id" required>
                                 <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 
@@ -120,8 +120,8 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">CLIENTE</label>
-                            <select  class="form-select borde" name="cliente_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                            <select  class="form-select select2 borde" name="cliente_id" required>
+                                <option value="" select disabled>Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 <option value="{{ $cliente->id }}" {{$cliente->id==$venta->cliente_id ? 'selected':''}} >{{ $cliente->nombre }}</option>
                                 @endforeach
@@ -142,7 +142,7 @@
                         <h4>Agregar Detalle de la Venta</h4>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select borde" name="product" id="product">
+                            <select  class="form-select select2 borde" name="product" id="product">
                                 <option  class="silver" value="">Seleccione una opción</option>    
                                 @foreach ($products as $product)
                                 <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
@@ -180,7 +180,7 @@
                        
                         <div class="table-responsive">
                         <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
-                            <thead class="fw-bold text-primary">
+                            <thead class="fw-bold text-primary" name="mitabla" id="mitabla">
                                 <tr>
                                     <th>PRODUCTO</th>
                                     <th>CANTIDAD</th>
@@ -229,8 +229,6 @@
 @endsection
 
 @push('script')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
  
 <script type="text/javascript">
 
@@ -250,7 +248,7 @@
     ventatotal =costoventa;
     $(document).ready(function() {
  
-      
+        $('.select2').select2({  }); 
        document.getElementById("cantidad").onchange = function() {
        preciofinal();
        };
@@ -361,7 +359,7 @@
             if (!product) {  alert("Seleccione un producto"); return;   }
             if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
             if (!preciounitariomo) {  alert("Ingrese un precio"); return;   }
-            $("#product option:contains('Seleccione una opción')").attr('selected',false);
+            
             var LVenta = [];
             var tam = LVenta.length;
             var datodb ="local";
@@ -380,7 +378,7 @@
 
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-                $("#product option:contains('Seleccione una opción')").attr('selected',true);
+                $('#product').val(null).trigger('change');
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";

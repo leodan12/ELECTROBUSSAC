@@ -96,8 +96,7 @@
 @endsection
 
 @push('script')
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
+ 
 <script type="text/javascript">
 
     var indice = 0;
@@ -171,6 +170,7 @@
     
 
 $(document).ready(function() {
+    $('.select2').select2();
     $("#btnguardar").prop("disabled", true);
 });
 
@@ -187,14 +187,7 @@ function botonguardar(funcion){
         $("#btnguardar").prop("disabled", false);
     }    
 }
-$(document).ready(function() {
-    $('.select2').select2({
-        placeholder: "Buscar y Seleccionar Opción",
-        allowClear: true,
-        minimumResultsForSearch: 1,
-        dropdownAutoWidth: false
-    });
-});
+
 </script>
 
 

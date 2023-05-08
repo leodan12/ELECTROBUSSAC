@@ -110,7 +110,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select borde" name="company_id" required>
+                            <select  class="form-select select2 borde" name="company_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">CLIENTE</label>
-                            <select  class="form-select borde" name="cliente_id" required>
+                            <select  class="form-select select2 borde" name="cliente_id" required>
                                 <option value="" class="silver">Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 <option value="{{ $cliente->id }}" {{$cliente->id==$ingreso->cliente_id ? 'selected':''}} >{{ $cliente->nombre }}</option>
@@ -142,7 +142,7 @@
                         <h4>Agregar Detalle del Ingreso</h4>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select borde" name="product" id="product">
+                            <select  class="form-select select2 borde" name="product" id="product">
                                 <option  class="silver" value="">Seleccione una opción</option>    
                                 @foreach ($products as $product)
                                 <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
@@ -225,9 +225,7 @@
 @endsection
 
 @push('script')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
+ 
 <script type="text/javascript">
 
     var indice = 0;
@@ -246,7 +244,7 @@
     ventatotal =costoventa;
     $(document).ready(function() {
  
-      
+        $('.select2').select2({  }); 
        document.getElementById("cantidad").onchange = function() {
        preciofinal();
        };
@@ -376,7 +374,7 @@
 
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-                $("#product option:contains('Seleccione una opción')").attr('selected',true);
+                $('#product').val(null).trigger('change');
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";

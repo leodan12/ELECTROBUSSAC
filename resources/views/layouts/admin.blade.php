@@ -20,10 +20,8 @@
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
     <!-- endinject -->
     <link rel="shortcut icon" href="{{ asset('admin/images/favicon.png') }}" />
-    <!-- Agregar el link del archivo CSS de select2 -->
-    <link rel="stylesheet" href="{{ asset('admin/css/select2.min.css') }}" />
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
-
+   
+     
     @livewireStyles
     @stack('css')
 </head>
@@ -55,10 +53,16 @@
     <script src="{{ asset('admin/js/data-table.js') }}"></script>
     <script src="{{ asset('admin/js/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('admin/js/dataTables.bootstrap4.js') }}"></script>
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
+   <!-- <script src="{{ asset('admin/js/select2.min.js') }}"></script>-->
     
-    <!-- End custom js for this page-->
+    <!-- js para la alerta-->
     <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+     Agregar el link del archivo CSS de select2 -->
+    <link rel="stylesheet" href="{{ asset('admin/css/select2.min.css') }}" />
+    <script src="{{ asset('admin/js/select2.min.js') }}"></script> 
+    
     @livewireScripts
     @stack('script')
     @yield('js')

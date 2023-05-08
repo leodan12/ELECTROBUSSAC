@@ -39,7 +39,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FORMA DE PAGO</label>
                             <select name="formapago" id="formapago" class="form-select borde" required  >
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             <option value="credito" data-formapago="credito"  >Credito</option>
                             <option value="contado" data-formapago="contado">Contado</option>
                             </select>
@@ -56,7 +56,7 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">MONEDA</label>
                             <select name="moneda" id="moneda"  class="form-select borde"  required>
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccione una opción</option>
                             <option value="dolares" data-moneda="dolares" >Dolares Americanos</option>
                             <option value="soles" data-moneda="soles" >Soles</option>
                             </select>
@@ -69,7 +69,7 @@
                         
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select   borde" name="company_id" id="company_id" required>
+                            <select  class="form-select select2  borde" name="company_id" id="company_id" required>
                                 <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -79,8 +79,8 @@
 
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">CLIENTE</label>
-                            <select  class="form-select   borde" name="cliente_id" id="cliente_id" required disabled>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                            <select  class="form-select select2  borde" name="cliente_id" id="cliente_id" required disabled>
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 
                             </select>
                         </div>
@@ -162,9 +162,7 @@
 @endsection
 
 @push('script')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script type="text/javascript">
+ <script type="text/javascript">
 
     var indice = 0;
     var ventatotal = 0;
@@ -175,18 +173,13 @@
 
     $(document).ready(function() {
 
-       /* $('.select2').select2({
-        placeholder: "Buscar y Seleccionar Opción",
-        allowClear: true,
-        minimumResultsForSearch: 1,
-        dropdownAutoWidth: false
-        });*/
+         $('.select2').select2({  });  
         //accion para diferente comprador y vendedor y para productos x empresa
         $("#company_id").change(function(){
         var company = $(this).val();
         $('#product').removeAttr('disabled');
         $.get('/admin/venta/productosxempresa/'+company, function(data){ 
-            var producto_select = '<option value="" disabled selected>Seleccione una opcion</option>'
+            var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
               for (var i=0; i<data.length;i++){
                 producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
               }
@@ -194,14 +187,18 @@
         });
         $('#cliente_id').removeAttr('disabled');
         $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
-            var producto_select = '<option value="" disabled selected>Seleccione una opcion</option>'
+            var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
               for (var i=0; i<data.length;i++){
                 producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
               }
               $("#cliente_id").html(producto_select);
         });
-
-
+        if(indice>0){
+            var indice2=indice;
+        for(var i=0;i<indice2;i++){ 
+            eliminarFila(i);
+        } 
+    } 
       });
 
         $("#btnguardar").prop("disabled", true);
@@ -255,8 +252,7 @@
             if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
             if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
 
-            
-            $("#product option:contains('Seleccione una opción')").attr('selected',false);  
+             
             var LVenta = [];
             var tam = LVenta.length;
             LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo);
@@ -273,9 +269,11 @@
                 $("#detallesVenta>tbody").append(filaDetalle);
 
                 indice++;
+                //alert(indice);
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-
-                $("#product option:contains('Seleccione una opción')").attr('selected',true);   
+ 
+                $('#product').val(null).trigger('change');
+                
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";
@@ -351,7 +349,8 @@
             } 
    });  });
 
- 
+  
+
 });
 
     
