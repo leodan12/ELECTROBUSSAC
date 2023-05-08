@@ -18,9 +18,7 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    <div>
-                        <input type="text" class="form-control" id="input-search" placeholder="Filtrar por nombre...">
-                    </div>
+                    
                     <table class="table table-bordered table-striped" id="mitabla" name="mitabla" >
                         <thead>
                             <tr>
@@ -140,7 +138,6 @@
 <script src="{{ asset('admin/midatatable.js') }}"></script> 
  
 <script>
-    document.getElementById("input-search").addEventListener("input",onInputChange)
     const mimodal = document.getElementById('mimodal')
     mimodal.addEventListener('show.bs.modal', event => {
 
@@ -169,28 +166,12 @@
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
         });
-
-        function onInputChange(){
-            let inputText = document.getElementById("input-search").value.toString().toLowerCase();
-            /*console.log(inputText);*/
-            let tableBody = document.getElementById("tbody-mantenimientos");
-            let tableRows = tableBody.getElementsByTagName("tr");
-            for(let i = 0; i < tableRows.length; i++){
-                let textoConsulta = tableRows[i].cells[2].textContent.toString().toLowerCase();
-                if(textoConsulta.indexOf(inputText) === -1){
-                    tableRows[i].style.visibility = "collapse";
-                }else{
-                    tableRows[i].style.visibility = "";
-                }
-            
-            }
-        }
+ 
     </script>
 @endpush
 @endsection
 
-@section('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@section('js') 
     <script>
         $('.formulario-eliminar').submit(function(e){
             e.preventDefault();

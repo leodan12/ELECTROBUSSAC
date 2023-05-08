@@ -161,7 +161,7 @@
             let tableBody = document.getElementById("tbody-mantenimientos");
             let tableRows = tableBody.getElementsByTagName("tr");
             for(let i = 0; i < tableRows.length; i++){
-                let textoConsulta = tableRows[i].cells[2].textContent.toString().toLowerCase();
+                let textoConsulta = tableRows[i].cells[1].textContent.toString().toLowerCase();
                 if(textoConsulta.indexOf(inputText) === -1){
                     tableRows[i].style.visibility = "collapse";
                 }else{

@@ -109,7 +109,7 @@ class VentaController extends Controller
                 ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
                 ->join('companies as c', 'di.company_id', '=', 'c.id')
                 ->join('products as p', 'i.product_id', '=', 'p.id')
-                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa')
+                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
                 ->where('c.id', '=', $venta->company_id)->get();
 
        
@@ -268,7 +268,7 @@ class VentaController extends Controller
                 ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
                 ->join('companies as c', 'di.company_id', '=', 'c.id')
                 ->join('products as p', 'i.product_id', '=', 'p.id')
-                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa')
+                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
                 ->where('c.id', '=', $id)->get();
 
         return $products;

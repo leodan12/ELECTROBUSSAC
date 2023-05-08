@@ -50,6 +50,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/cliente/{cliente}/edit','edit');
         Route::put('/cliente/{cliente}','update');
         Route::get('/cliente/show/{id}', 'show');//ver
+        Route::get('cliente/{product_id}/delete','destroy');
     });   
     //Rutas de los Productos
     Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function(){

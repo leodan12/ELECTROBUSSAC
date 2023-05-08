@@ -104,7 +104,7 @@
                             </select>  
                         </div>
                         <div class="col-md-6 mb-3">
-                             <label class="form-label">CANTIDAD</label>
+                             <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control borde" />
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -181,7 +181,7 @@
         $.get('/admin/venta/productosxempresa/'+company, function(data){ 
             var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
               for (var i=0; i<data.length;i++){
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
               }
               $("#product").html(producto_select);
         });
@@ -189,7 +189,7 @@
         $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
             var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
               for (var i=0; i<data.length;i++){
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" >'+data[i].nombre+'</option>';
               }
               $("#cliente_id").html(producto_select);
         });
@@ -273,7 +273,7 @@
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
  
                 $('#product').val(null).trigger('change');
-                
+                document.getElementById('labelcantidad').innerHTML = "CANTIDAD";
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";
@@ -291,6 +291,14 @@
        $("#product option:selected").each(function () { 
             $price = $(this).data("price");
             $named = $(this).data("name");
+            $moneda = $(this).data("moneda");
+            $stock = $(this).data("stock"); 
+         
+            //alert(stocke);
+            document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+  $stock+")";
+            var cant = document.getElementById('cantidad') ;
+            cant.setAttribute("max",$stock);
+            cant.setAttribute("min",1);
             if($price != null){
                 preciounit = $price;
                 document.getElementById('preciounitario').value = $price;

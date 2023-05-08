@@ -76,7 +76,6 @@
 
 @push('script')
 <script src="{{ asset('admin/midatatable.js') }}"></script> 
- 
 @endpush
 
 @endsection

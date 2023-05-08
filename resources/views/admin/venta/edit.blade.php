@@ -145,12 +145,12 @@
                             <select  class="form-select select2 borde" name="product" id="product">
                                 <option  class="silver" value="">Seleccione una opción</option>    
                                 @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
+                                <option value="{{ $product->id }}" data-stock="{{$product->stockempresa}}"  data-moneda="{{$product->moneda}}" data-name="{{$product->nombre}}"  data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                             <label class="form-label">CANTIDAD</label>
+                             <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control borde" />
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -281,6 +281,14 @@
        $("#product option:selected").each(function () { 
            $price = $(this).data("price");
            $named = $(this).data("name");
+           $moneda = $(this).data("moneda");
+            $stock = $(this).data("stock"); 
+         
+            //alert(stocke);
+            document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+  $stock+")";
+            var cant = document.getElementById('cantidad') ;
+            cant.setAttribute("max",$stock);
+            cant.setAttribute("min",1);
            preciounit = $price;
            document.getElementById('preciounitario').value = $price;
            document.getElementById('preciounitariomo').value = $price;
@@ -379,6 +387,7 @@
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
                 $('#product').val(null).trigger('change');
+                document.getElementById('labelcantidad').innerHTML = "CANTIDAD";
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";

@@ -8,11 +8,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ClienteFormRequest;
 use Illuminate\Support\Facades\DB;
 
+
 class ClienteController extends Controller
 {
     public function index()
     {
-        return view('admin.cliente.index');
+        $clientes = Cliente::all()->where('status','=',0);
+        //$clientes = Cliente::orderBy('id', 'asc')->get();
+        return view('admin.cliente.index', compact('clientes'));
     }
 
     public function create()
@@ -67,4 +70,13 @@ class ClienteController extends Controller
         
             return  $cliente ;
     }
+    public function destroy(int $product_id)
+    {
+        $cliente = Cliente::findOrFail($product_id);
+        $cliente->status=1;
+        $cliente->update();
+        return redirect()->back()->with('message','Cliente Eliminado');
+
+        
+     }
 }
