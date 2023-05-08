@@ -59,7 +59,7 @@
                             <label class="form-label is-required">TIPO DE MONEDA</label>
                             <select name="moneda" class="form-select borde" required>
                                 <option value="">Seleccione Tipo de Moneda</option>
-                                <option value="dolares americanos" {{ $product->moneda == 'dolares americanos' ? 'selected':''}}>Dolares Americanos</option>
+                                <option value="dolares" {{ $product->moneda == 'dolares' ? 'selected':''}}>Dolares Americanos</option>
                                 <option value="soles" {{ $product->moneda == 'soles' ? 'selected':''}}>Soles</option>
                             </select>
                         </div>

@@ -58,8 +58,8 @@
                             <label  class="form-label is-required">Tipo de Moneda</label>
                             <select name="moneda" id="moneda" class="form-select" required>
                             <option value="" class="silver">Seleccion una opción</option>
-                            <option value="Dolares Americanos">Dolares Americanos</option>
-                            <option value="Soles">Soles</option>
+                            <option value="dolares">Dolares Americanos</option>
+                            <option value="soles">Soles</option>
                             </select>
                             @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>

@@ -64,12 +64,12 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label id="labeltasacambio" class="form-label">TASA DE CAMBIO</label>
-                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01" readonly class="form-control borde" />
+                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01"  class="form-control borde" min="1"/>
                         </div>
                         
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
-                            <select  class="form-select select2  borde" name="company_id" id="company_id" required>
+                            <select  class="form-select select2  borde" name="company_id" id="company_id" required disabled>
                                 <option value="" disabled selected>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -109,17 +109,17 @@
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">PRECIO UNITARIO (REFERENCIAL)</label>
+                             <label class="form-label"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
                             <input type="number" name="preciounitario" id="preciounitario" readonly class="form-control borde" />
                             @error('preciounitario') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">PRECIO UNITARIO</label>
+                             <label class="form-label" id="labelpreciounitario">PRECIO UNITARIO</label>
                             <input type="number" name="preciounitariomo" id="preciounitariomo" class="form-control borde" />
                             @error('preciounitariomo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">SERVICIO ADICIONAL</label>
+                             <label class="form-label" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
                             <input type="number" name="servicio" id="servicio"class="form-control borde" />
                             @error('servicio') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -170,10 +170,17 @@
     var nameproduct = 0;
     var preciototalI=0;
     var estadoguardar=0;
+    var monedafactura="";
+    var monedaproducto="";
+    var monedaantigua=0;
+    var indicex=0;
 
     $(document).ready(function() {
 
+        document.getElementById('tasacambio').value = "3.71";
+ 
          $('.select2').select2({  });  
+         
         //accion para diferente comprador y vendedor y para productos x empresa
         $("#company_id").change(function(){
         var company = $(this).val();
@@ -194,7 +201,7 @@
               $("#cliente_id").html(producto_select);
         });
         if(indice>0){
-            var indice2=indice;
+            var indice2=indicex;
         for(var i=0;i<indice2;i++){ 
             eliminarFila(i);
         } 
@@ -207,8 +214,8 @@
        var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
        document.getElementById("fecha").value = fechaActual;
         
-       //var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
-       //document.getElementById("fechav").value = fechaActual2;
+       var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 2).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+       document.getElementById("fechav").value = fechaActual2;
        
        document.getElementById("cantidad").onchange = function() {
        preciofinal();
@@ -269,45 +276,87 @@
                 $("#detallesVenta>tbody").append(filaDetalle);
 
                 indice++;
+                indicex++;
                 //alert(indice);
-                ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
+                var mitasacambio = $('[name="tasacambio"]').val(); 
+                var miconversion = 0; 
+                // if(monedafactura=="dolares" && monedaproducto=="dolares"){
+                     miconversion=parseFloat(preciototalI);
+                // }else if(monedafactura=="dolares" && monedaproducto=="soles"){
+                //     miconversion=parseFloat(preciototalI/mitasacambio).toFixed(2);
+                // }else if(monedafactura=="soles" && monedaproducto=="soles"){
+                //     miconversion=parseFloat(preciototalI);
+                // }else if(monedafactura=="soles" && monedaproducto=="dolares"){
+                //     miconversion=parseFloat(preciototalI*mitasacambio).toFixed(2);
+                // }
+                ventatotal = parseFloat(ventatotal) + parseFloat(miconversion);
  
                 $('#product').val(null).trigger('change');
                 document.getElementById('labelcantidad').innerHTML = "CANTIDAD";
+                document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: ";
+                document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): ";
+                document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL:";
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
                 document.getElementById('preciofinal').value = "";
                 document.getElementById('preciounitario').value = "";
                 document.getElementById('preciounitariomo').value = "";
-                document.getElementById('costoventa').value = ventatotal;
 
+                document.getElementById('costoventa').value = ventatotal;
+                monedaproducto="";
                  
                 var funcion="agregar";
                 botonguardar(funcion);
         });
         
         $("#product").change(function () {
-       
+            
        $("#product option:selected").each(function () { 
             $price = $(this).data("price");
             $named = $(this).data("name");
             $moneda = $(this).data("moneda");
             $stock = $(this).data("stock"); 
-         
+            monedaproducto=$moneda;
             //alert(stocke);
+            var mitasacambio1 = $('[name="tasacambio"]').val();
+            //var mimoneda1 = $('[name="moneda"]').val();
+            
             document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+  $stock+")";
+            
             var cant = document.getElementById('cantidad') ;
             cant.setAttribute("max",$stock);
             cant.setAttribute("min",1);
             if($price != null){
                 preciounit = $price;
-                document.getElementById('preciounitario').value = $price;
-                document.getElementById('preciounitariomo').value = $price;
+                if(monedaproducto=="dolares" && monedafactura=="dolares"){
+                    preciototalI = $price;
+                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitariomo').value = $price;
+                    document.getElementById('preciofinal').value = $price; 
+                }else if(monedaproducto=="soles" && monedafactura=="soles"){
+                    preciototalI = $price;
+                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitariomo').value = $price; 
+                    document.getElementById('preciofinal').value = $price; 
+                }else if(monedaproducto=="dolares" && monedafactura=="soles"){
+                    preciototalI = ($price*mitasacambio1).toFixed(2);
+                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2); 
+                }
+                else if(monedaproducto=="soles" && monedafactura=="dolares"){
+                    preciototalI = ($price/mitasacambio1).toFixed(2);;
+                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
+                }
+                document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): "+  monedaproducto;
+                document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: "+  monedafactura;
+                document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL: "+  monedafactura;
                 document.getElementById('cantidad').value = 1;
                 document.getElementById('servicio').value = 0;
-                document.getElementById('preciofinal').value = $price;
                 nameproduct = $named;
-                preciototalI = $price;}
+                }
            else if($price == null){
                 document.getElementById('cantidad').value = "";
                 document.getElementById('servicio').value = "";
@@ -315,6 +364,8 @@
                 document.getElementById('preciounitario').value = "";
                 document.getElementById('preciounitariomo').value = "";
            }
+
+
            //alert(nameprod);
    });  });
 
@@ -339,38 +390,37 @@
 
     //para cambiar la moneda de pago y deshabilitar la tasa de cambio
    $("#moneda").change(function () {
+    $('#company_id').removeAttr('disabled');
        $("#moneda option:selected").each(function () {
-        $mimoneda = $(this).data("moneda"); 
-        if ($mimoneda == "soles") {
-                //alert("selecciono soles");
-                $("#tasacambio").prop("readonly", true);
-                $("#tasacambio").prop("required", false);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className -= " is-required";
+        $mimoneda = $(this).data("moneda");  
+        
+         
+        if(monedaantigua=0){
+            monedafactura=$mimoneda;
+            monedaantigua=1;
+        }else{
+            monedaantigua=monedafactura;
+            monedafactura=$mimoneda;
+            var indice3=indicex;
+            for(var i=0;i<indice3;i++){
+                eliminarTabla(i);
+            }
+            
+        }
 
-            } else if ($mimoneda == "dolares"){
-                $("#tasacambio").prop("readonly", false);
-                $("#tasacambio").prop("required", true);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className += " is-required";
-
-            } 
    });  });
 
   
 
 });
-
-    
-      
-   
+ 
 
     function eliminarFila(ind) {
         var resta =0;
           //document.getElementById('preciot' + ind).value();
           resta = $('[id="preciof' + ind+'"]').val();
           //alert(resta);
-          ventatotal = ventatotal - resta;
+          ventatotal = (ventatotal - resta).toFixed(2);
 
     $('#fila' + ind).remove();
         indice-- ;
@@ -381,6 +431,25 @@
     var funcion="eliminar";
     botonguardar(funcion);
 
+    return false;
+} 
+function eliminarTabla(ind) {
+    
+     $('#fila' + ind).remove();
+        indice-- ;
+     
+    // damos el valor
+    document.getElementById('costoventa').value = 0
+    //alert(resta);
+
+    var funcion="eliminar";
+    botonguardar(funcion);
+ 
+     ventatotal = 0;
+     preciounit = 0;
+     nameproduct = 0;
+     preciototalI=0; 
+      
     return false;
 } 
 

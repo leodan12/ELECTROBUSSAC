@@ -30,7 +30,7 @@ class ProductSeeder extends Seeder
             'codigo' => 'a120',
             'unidad' => 'unidades',
             'und' => 'unidades',
-            'moneda' => 'dolares americanos',
+            'moneda' => 'dolares',
             'NoIGV' => 200,
             'SiIGV' => 236,
             'status' => 0,
