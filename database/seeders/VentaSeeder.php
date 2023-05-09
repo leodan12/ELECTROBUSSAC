@@ -31,7 +31,7 @@ class VentaSeeder extends Seeder
             'formapago' => "contado", 
             //'observacion' => "",
             'costoventa' => 4600,
-           // 'tasacambio' => ,
+            'tasacambio' => 3.71,
             'company_id' => 3,
             'cliente_id' => 4,
             'fecha' => "2023-05-02",

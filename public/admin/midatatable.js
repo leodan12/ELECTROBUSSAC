@@ -22,6 +22,6 @@ $('#mitabla').DataTable({
        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
    }
-},  "order": [[ 0, "desc" ]],
-"responsive": true
+},  "order": [[ 0, "desc" ]], 
+scrollX: true,
 });

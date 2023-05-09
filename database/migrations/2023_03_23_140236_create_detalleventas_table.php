@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('venta_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('cantidad');
-            $table->integer('preciounitario');
-            $table->integer('preciounitariomo');
-            $table->integer('servicio');
-            $table->integer('preciofinal');
+            $table->double('preciounitario');
+            $table->double('preciounitariomo');
+            $table->double('servicio');
+            $table->double('preciofinal');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade');
             $table->timestamps();

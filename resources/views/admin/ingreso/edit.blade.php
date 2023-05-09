@@ -1,23 +1,7 @@
 @extends('layouts.admin')
-
-
 @push('css')
-<style>
-    .borde {
-        border: 1px solid silver ; 
-    }
-    .silver {
-        color: silver ; 
-    }
-    .is-required:after {
-        content: '*';
-        margin-left: 3px;
-        color: red;
-        font-weight: bold;
-    }
-</style>
+ <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
 @endpush
-
 @section('content')
 
 <div class="row">
@@ -58,7 +42,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FORMA DE PAGO</label>
                             <select name="formapago" id="formapago" class="form-select borde" required  >
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             @if($ingreso->formapago == "credito")
                             <option value="credito" data-formapago="credito" selected >Credito</option>
                             <option value="contado" data-formapago="contado">Contado</option>
@@ -87,31 +71,27 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">MONEDA</label>
                             <select name="moneda" id="moneda"  class="form-select borde"  required>
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             @if($ingreso->moneda == "soles")
-                                <option value="dolares" data-moneda="dolares" >Dolares Americanos</option>
+                                {{-- <option value="dolares" data-moneda="dolares" >Dolares Americanos</option> --}}
                                 <option value="soles" data-moneda="soles" selected>Soles</option>
                             @elseif($ingreso->moneda == "dolares")
                                 <option value="dolares" data-moneda="dolares" selected>Dolares Americanos</option>
-                                <option value="soles" data-moneda="soles" >Soles</option>
+                                {{-- <option value="soles" data-moneda="soles" >Soles</option> --}}
                             @endif
  
                             </select>
                             @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            @if($ingreso->moneda == "soles")
-                                <label id="labeltasacambio" class="form-label ">TASA DE CAMBIO</label>
+                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id= "tasacambio" step="0.01" readonly  class="form-control borde" value="{{ $ingreso->tasacambio }}"/>
-                            @elseif($ingreso->moneda == "dolares")
-                                <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id= "tasacambio" step="0.01"   class="form-control borde" value="{{ $ingreso->tasacambio }}"/>
-                            @endif
+                             
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
                             <select  class="form-select select2 borde" name="company_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 
                                 <option value="{{ $company->id }}" {{$company->id==$ingreso->company_id ? 'selected':''}} >{{ $company->nombre }}</option>
@@ -121,7 +101,7 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">CLIENTE</label>
                             <select  class="form-select select2 borde" name="cliente_id" required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($clientes as $cliente)
                                 <option value="{{ $cliente->id }}" {{$cliente->id==$ingreso->cliente_id ? 'selected':''}} >{{ $cliente->nombre }}</option>
                                 @endforeach
@@ -130,7 +110,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">PRECIO DE LA COMPRA </label>
-                            <input type="number" name="costoventa" id= "costoventa"  step="0.01" class="form-control borde required" required readonly value="{{ $ingreso->costoventa }}"/>
+                            <input type="number" name="costoventa" id= "costoventa" min="0.1"  step="0.01" class="form-control borde required" required readonly value="{{ $ingreso->costoventa }}"/>
                             
                         </div>
                         <div class="col-md-12 mb-3">
@@ -142,10 +122,10 @@
                         <h4>Agregar Detalle del Ingreso</h4>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select select2 borde" name="product" id="product">
-                                <option  class="silver" value="">Seleccione una opción</option>    
+                            <select  class="form-select select2 borde" name="product" id="product" >
+                                <option  selected disabled value="">Seleccione una opción</option>    
                                 @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
+                                <option value="{{ $product->id }}" data-name="{{$product->nombre}}" data-moneda="{{$product->moneda}}" data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -155,23 +135,23 @@
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">PRECIO UNITARIO (REFERENCIAL)</label>
-                            <input type="number" name="preciounitario" id="preciounitario" readonly class="form-control borde" />
+                             <label class="form-label" id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL)</label>
+                            <input type="number" name="preciounitario" min="0.1" step="0.01" id="preciounitario" readonly class="form-control borde" />
                             @error('preciounitario') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">PRECIO UNITARIO</label>
-                            <input type="number" name="preciounitariomo" id="preciounitariomo" class="form-control borde" />
+                             <label class="form-label"  id="labelpreciounitario">PRECIO UNITARIO</label>
+                            <input type="number" name="preciounitariomo" min="0.1" step="0.01" id="preciounitariomo" class="form-control borde" />
                             @error('preciounitariomo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">SERVICIO ADICIONAL</label>
-                            <input type="number" name="servicio" id="servicio"class="form-control borde" />
+                             <label class="form-label" id="labelservicio">SERVICIO ADICIONAL</label>
+                            <input type="number" name="servicio" min="0.1" step="0.01" id="servicio"class="form-control borde" />
                             @error('servicio') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
                              <label class="form-label">PRECIO TOTAL POR PRODUCTO</label>
-                            <input type="number" name="preciofinal" id="preciofinal" readonly class="form-control borde" />
+                            <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
                             @error('preciofinal') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         @php $ind=0 ; @endphp
@@ -234,7 +214,9 @@
     var nameproduct = 0;
     var preciototalI=0;
     var estadoguardar=0;
-    var detallesborrados = [];
+    var monedafactura="";
+    var monedaproducto=""; 
+
 
     estadoguardar = @json($detalles);
     //alert(estadoguardar);
@@ -272,20 +254,55 @@
         //var tabla = document.getElementById(detallesVenta);
         
          
-        $("#product").change(function () {
-       
+    $("#product").change(function () { 
        $("#product option:selected").each(function () { 
-           $price = $(this).data("price");
+        $price = $(this).data("price");
            $named = $(this).data("name");
-           preciounit = $price;
-           document.getElementById('preciounitario').value = $price;
-           document.getElementById('preciounitariomo').value = $price;
-           document.getElementById('cantidad').value = 1;
-           document.getElementById('servicio').value = 0;
-           document.getElementById('preciofinal').value = $price;
-           nameproduct = $named;
-           preciototalI = $price;
-           //alert(nameprod);
+           $moneda = $(this).data("moneda"); 
+            monedaproducto=$moneda;
+            monedafactura = $('[name="moneda"]').val();
+            //alert(stocke);
+            var mitasacambio1 = $('[name="tasacambio"]').val();
+            var cant = document.getElementById('cantidad') ; 
+            cant.setAttribute("min",1);
+            if($price != null){
+                preciounit = $price;
+                if(monedaproducto=="dolares" && monedafactura=="dolares"){
+                    preciototalI = $price;
+                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitariomo').value = $price;
+                    document.getElementById('preciofinal').value = $price; 
+                }else if(monedaproducto=="soles" && monedafactura=="soles"){
+                    preciototalI = $price;
+                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitariomo').value = $price; 
+                    document.getElementById('preciofinal').value = $price; 
+                }else if(monedaproducto=="dolares" && monedafactura=="soles"){
+                    preciototalI = ($price*mitasacambio1).toFixed(2);
+                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2); 
+                }
+                else if(monedaproducto=="soles" && monedafactura=="dolares"){
+                    preciototalI = ($price/mitasacambio1).toFixed(2);;
+                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
+                }
+                document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): "+  monedaproducto;
+                document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: "+  monedafactura;
+                document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL: "+  monedafactura;
+                document.getElementById('cantidad').value = 1;
+                document.getElementById('servicio').value = 0;
+                nameproduct = $named;
+                }
+           else if($price == null){
+                document.getElementById('cantidad').value = "";
+                document.getElementById('servicio').value = "";
+                document.getElementById('preciofinal').value = "";
+                document.getElementById('preciounitario').value = "";
+                document.getElementById('preciounitariomo').value = "";
+           }
    });  });
 
    //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
@@ -308,24 +325,7 @@
     });
 
     //para cambiar la moneda de pago y deshabilitar la tasa de cambio
-   $("#moneda").change(function () {
-       $("#moneda option:selected").each(function () {
-        $mimoneda = $(this).data("moneda"); 
-        if ($mimoneda == "soles") {
-                //alert("selecciono soles");
-                $("#tasacambio").prop("readonly", true);
-                $("#tasacambio").prop("required", false);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className -= " is-required";
-
-            } else if ($mimoneda == "dolares"){
-                $("#tasacambio").prop("readonly", false);
-                $("#tasacambio").prop("required", true);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className += " is-required";
-
-            } 
-   });  });
+   
 
  
 });

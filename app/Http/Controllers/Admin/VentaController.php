@@ -56,13 +56,14 @@ class VentaController extends Controller
         $tasacambio = $validatedData['tasacambio'];
         $fechav = $validatedData['fechav'];
 
+        $venta->tasacambio = $tasacambio;
         $venta->observacion = $observacion;
         if($formapago== 'credito'){
             $venta->fechav = $fechav;
         }
-        if($moneda== 'dolares'){
-            $venta->tasacambio = $tasacambio;
-        }
+        
+           
+         
         
         //guardamos la venta y los detalles
         if (  $venta->save() ) {
@@ -269,7 +270,8 @@ class VentaController extends Controller
                 ->join('companies as c', 'di.company_id', '=', 'c.id')
                 ->join('products as p', 'i.product_id', '=', 'p.id')
                 ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
-                ->where('c.id', '=', $id)->get();
+                ->where('c.id', '=', $id)
+                ->where('di.stockempresa', '>', 0)->get();
 
         return $products;
     }

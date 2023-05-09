@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+ 
 @section('content')
 
  <div>
@@ -18,7 +18,7 @@
             </div>
             <div class="card-body">
               
-                <table class="table table-bordered table-striped" id="mitabla" name="mitabla">
+                <table class="table table-bordered table-striped display  nowrap" style="width:100%" id="mitabla" name="mitabla">
                     <thead>
                         <tr>
                             <th>ID</th>
