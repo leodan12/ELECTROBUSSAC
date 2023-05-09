@@ -46,7 +46,7 @@ class VentaFormRequest extends FormRequest
                 'required',
             ],
             'factura' => [
-                'required',
+                'nullable',
             ],
             'observacion' => [
                 'nullable',
@@ -56,6 +56,10 @@ class VentaFormRequest extends FormRequest
             ],
             'fechav' => [
                 'nullable',
+            ],
+            'pagada' => [
+                'required', 
+                'string'
             ],
 
         ];

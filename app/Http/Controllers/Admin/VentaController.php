@@ -40,6 +40,7 @@ class VentaController extends Controller
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
         $factura = $validatedData['factura'];
+        $pagada = $validatedData['pagada'];
 
         $venta = new Venta;
 
@@ -50,6 +51,7 @@ class VentaController extends Controller
         $venta->formapago = $formapago;
         $venta->moneda = $moneda;
         $venta->factura = $factura;
+        $venta->pagada = $pagada;
 
         //no obligatorios
         $observacion = $validatedData['observacion'];
@@ -69,6 +71,7 @@ class VentaController extends Controller
         if (  $venta->save() ) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
+            $observacionproducto = $request->Lobservacionproducto;
             $preciounitario = $request->Lpreciounitario;
             $servicio = $request->Lservicio;
             $preciofinal = $request->Lpreciofinal;
@@ -80,6 +83,7 @@ class VentaController extends Controller
                     $Detalleventa->venta_id = $venta->id;
                     $Detalleventa->product_id = $product[$i];
                     $Detalleventa->cantidad = $cantidad[$i];
+                    $Detalleventa->observacionproducto = $observacionproducto[$i];
                     $Detalleventa->preciounitario = $preciounitario[$i];
                     $Detalleventa->preciounitariomo = $preciounitariomo[$i];
                     $Detalleventa->servicio= $servicio[$i];
@@ -117,7 +121,7 @@ class VentaController extends Controller
         $detallesventa = DB::table('detalleventas as dv')
             ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
-            ->select('dv.id as iddetalleventa','dv.cantidad', 'dv.preciounitario','dv.preciounitariomo','dv.servicio','dv.preciofinal','p.id as idproducto','p.nombre as producto')
+            ->select('dv.observacionproducto','p.moneda','dv.id as iddetalleventa','dv.cantidad', 'dv.preciounitario','dv.preciounitariomo','dv.servicio','dv.preciofinal','p.id as idproducto','p.nombre as producto')
             ->where('v.id', '=', $venta_id)->get();
         //return $detallesventa;
         return view('admin.venta.edit', compact('products','venta','companies','clientes','detallesventa'));
@@ -149,6 +153,7 @@ class VentaController extends Controller
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];
         $fechav = $validatedData['fechav'];
+        $venta->tasacambio = $tasacambio;
 
         $venta->observacion = $observacion;
         if($formapago== 'credito'){
@@ -156,17 +161,15 @@ class VentaController extends Controller
         } elseif($formapago == 'contado'){
             $venta->fechav = null;
         }
-
-        if($moneda== 'dolares'){
-            $venta->tasacambio = $tasacambio;
-        }elseif($moneda == 'soles'){
-            $venta->tasacambio = null;
-        }
+ 
+            
+        
         
         //guardamos la venta y los detalles
         if (  $venta->update() ) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
+            $observacionproducto = $request->Lobservacionproducto;
             $preciounitario = $request->Lpreciounitario;
             $servicio = $request->Lservicio;
             $preciofinal = $request->Lpreciofinal;
@@ -178,6 +181,7 @@ class VentaController extends Controller
                     $Detalleventa->venta_id = $venta->id;
                     $Detalleventa->product_id = $product[$i];
                     $Detalleventa->cantidad = $cantidad[$i];
+                    $Detalleventa->observacionproducto = $observacionproducto[$i];
                     $Detalleventa->preciounitario = $preciounitario[$i];
                     $Detalleventa->preciounitariomo = $preciounitariomo[$i];
                     $Detalleventa->servicio= $servicio[$i];
@@ -209,7 +213,7 @@ class VentaController extends Controller
                 'v.fechav',
                 'v.tasacambio',
                 'v.observacion',
-
+                'p.moneda as monedaproducto',
                 'c.nombre as company',
                 'cl.nombre as cliente',
                 'p.nombre as producto',
@@ -217,7 +221,9 @@ class VentaController extends Controller
                 'dv.preciounitario',
                 'dv.preciounitariomo',
                 'dv.servicio',
-                'dv.preciofinal'
+                'dv.preciofinal',
+                'dv.observacionproducto',
+                'v.pagada'
                 
             )
             ->where('v.id', '=', $id)->get();
@@ -250,9 +256,20 @@ class VentaController extends Controller
                 $ventaedit = Venta::findOrFail($idventa);
                 $ventaedit->costoventa =$costof -$detalle;
                 $ventaedit->update();
+ 
+                return 1;
+            }else { return 0;}
+        }else { return 2;}
+         
+    }
 
-
-
+    public function pagarfactura($id)
+    {
+        //buscamos el registro con el id enviado por la URL
+        $venta = Venta::find($id);
+        if($venta){
+            $venta->pagada = "SI";
+            if($venta->update()){
                 return 1;
             }else { return 0;}
         }else { return 2;}

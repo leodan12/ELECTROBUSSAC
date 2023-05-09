@@ -17,6 +17,7 @@ class DetalleventaSeeder extends Seeder
             'venta_id' => 1,
             'product_id' => 1,
             'cantidad' => 1,
+            'observacionproducto' => "sin observacion",
             'preciounitario' => 100,
             'preciounitariomo' => 100, 
             'servicio' => 0,
@@ -25,6 +26,7 @@ class DetalleventaSeeder extends Seeder
         Detalleventa::create([
             'venta_id' => 1,
             'product_id' => 3,
+            'observacionproducto' => "sin observacion",
             'cantidad' => 2,
             'preciounitario' => 1000,
             'preciounitariomo' => 1000, 
@@ -34,6 +36,7 @@ class DetalleventaSeeder extends Seeder
         Detalleventa::create([
             'venta_id' => 2,
             'product_id' => 2,
+            'observacionproducto' => "sin observacion",
             'cantidad' => 10,
             'preciounitario' => 200,
             'preciounitariomo' => 200, 
@@ -43,6 +46,7 @@ class DetalleventaSeeder extends Seeder
         Detalleventa::create([
             'venta_id' => 2,
             'product_id' => 1,
+            'observacionproducto' => "sin observacion",
             'cantidad' => 5,
             'preciounitario' => 100,
             'preciounitariomo' => 100, 
@@ -52,6 +56,7 @@ class DetalleventaSeeder extends Seeder
         Detalleventa::create([
             'venta_id' => 2,
             'product_id' => 3,
+            'observacionproducto' => "sin observacion",
             'cantidad' => 2,
             'preciounitario' => 1000,
             'preciounitariomo' => 1000, 
