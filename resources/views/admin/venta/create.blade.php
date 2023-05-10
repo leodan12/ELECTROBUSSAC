@@ -90,7 +90,6 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FACTURA PAGADA</label>
                             <input type="text" name="pagada" id= "pagada"  class="form-control borde " required readonly />
-                      
                        </div>
                         <div class="col-md-12 mb-3">
                              <label class="form-label">OBSERVACION</label>
@@ -122,22 +121,22 @@
                              <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
                              <span class="input-group-text" id="spanpreciounitario"></span> 
                              <input type="number" name="preciounitariomo" min="0.1" step="0.01" id="preciounitariomo" class="form-control borde" />
+                            </div>
                         </div>
-                    </div>
                         <div class="col-md-4 mb-3">
                             <div class="input-group">
                              <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
                              <span class="input-group-text" id="spanservicio"></span>
                             <input type="number" name="servicio" min="0" step="0.01" id="servicio"class="form-control borde" /> 
+                            </div>
                         </div>
-                    </div>
                         <div class="col-md-4 mb-3">
                             <div class="input-group">
                              <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
                              <span class="input-group-text" id="spanpreciototal"></span>
                             <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
+                            </div>
                         </div>
-                    </div>
                     <div class="col-md-8 mb-3"> 
                          <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
                         <input type="text" name="observacionproducto" min="0.1" step="0.01" id="observacionproducto"  class="form-control borde gui-input" />
@@ -294,11 +293,8 @@
                 indice++;
                 indicex++;
                 //alert(indice);
-                var mitasacambio = $('[name="tasacambio"]').val(); 
-                var miconversion = 0; 
                 
-                miconversion=parseFloat(preciototalI);
-                ventatotal = parseFloat(ventatotal) + parseFloat(miconversion);
+                ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
   
                 limpiarinputs();
 
@@ -362,8 +358,7 @@
                 document.getElementById('spanpreciounitario').innerHTML = simbolomonedafactura;
                 document.getElementById('spanservicio').innerHTML = simbolomonedafactura;
                 document.getElementById('spanpreciototal').innerHTML = simbolomonedafactura;
-                
-
+                 
                 document.getElementById('cantidad').value = 1;
                 document.getElementById('servicio').value = 0;
                 nameproduct = $named;
@@ -408,6 +403,7 @@
         if($mimoneda=="dolares"){simbolomonedafactura="$";}
         else if($mimoneda=="soles"){simbolomonedafactura="S/.";}
         document.getElementById('spancostoventa').innerHTML = simbolomonedafactura; 
+
         if(monedaantigua=0){
             monedafactura=$mimoneda;
             monedaantigua=1;

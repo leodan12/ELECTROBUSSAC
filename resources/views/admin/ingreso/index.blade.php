@@ -128,8 +128,11 @@
                                     <input type="text" class="form-control " id="verCliente" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="moneda" class="col-form-label">PRECIO COMPRA:</label>
+                                    <div class="input-group">
+                                    <label for="moneda" class="col-form-label input-group">PRECIO COMPRA:</label>
+                                    <span class="input-group-text" id="spancostoventa"></span>
                                     <input type="text" class="form-control " id="verPrecioventa" readonly>
+                                </div> 
                                 </div>
                                 <div class=" col-md-4   mb-5" id="divobservacion">
                                     <label for="moneda" class="col-form-label">OBSERVACION:</label>
@@ -189,39 +192,47 @@
             document.getElementById("verFormapago").value=data[0].formapago; 
             document.getElementById("verEmpresa").value=data[0].company; 
             document.getElementById("verCliente").value=data[0].cliente; 
-            document.getElementById("verPrecioventa").value=data[0].costoventa;  
+            document.getElementById("verPrecioventa").value=data[0].costoventa; 
+            if(data[0].moneda=="dolares"){document.getElementById('spancostoventa').innerHTML = "$";}
+            else if(data[0].moneda=="soles"){document.getElementById('spancostoventa').innerHTML = "S/.";} 
 
             if(data[0].fechav == null){
                 document.getElementById('divfechav').style.display = 'none';
             }else{ 
                 document.getElementById('divfechav').style.display = 'inline';
                 document.getElementById("verFechav").value=data[0].fechav;  
-            }
-            if(data[0].tasacambio == null){
-                document.getElementById('divtasacambio').style.display = 'none';
-            }else{ 
-                document.getElementById('divtasacambio').style.display = 'inline';
+            } 
+            
                 document.getElementById("verTipocambio").value=data[0].tasacambio;   
-            }
+             
             if(data[0].observacion == null){
                 document.getElementById('divobservacion').style.display = 'none';
             }else{ 
                 document.getElementById('divobservacion').style.display = 'inline';
                 document.getElementById("verObservacion").value=data[0].observacion;  
             }
-            
+            var monedafactura=data[0].moneda;
+            var simbolomonedaproducto="";
+            var simbolomonedafactura="";
+
+            if(monedafactura=="dolares"){simbolomonedafactura="$";}
+            else if(monedafactura=="soles"){simbolomonedafactura="S/.";}
             
              
             var tabla = document.getElementById(detallesventa);
             $('#detallesventa tbody tr').slice().remove();
             for(var i =0 ; i<data.length;i++){
+                var monedaproducto=data[i].monedaproducto;
+                if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
+                else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
+
                 filaDetalle ='<tr id="fila' + i + 
                 '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+ data[i].preciounitario+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+ data[i].preciounitariomo+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+ data[i].servicio+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+ data[i].preciofinal+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+simbolomonedafactura+ data[i].servicio+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+simbolomonedafactura+ data[i].preciofinal+ 
                 '</td></tr>';
                
                 $("#detallesventa>tbody").append(filaDetalle);

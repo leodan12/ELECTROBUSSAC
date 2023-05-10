@@ -79,8 +79,7 @@
                             @elseif($venta->moneda == "dolares")
                                 <option value="dolares" data-moneda="dolares" selected>Dolares Americanos</option> 
                                 <!--  <option value="soles" data-moneda="soles" >Soles</option>-->
-                            @endif
- 
+                            @endif 
                             </select>
                             @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -123,8 +122,22 @@
                             @endif
                             <input type="number" name="costoventa" id= "costoventa"  min="0.1" step="0.01" class="form-control borde required" required readonly value="{{ $venta->costoventa }}"/>
                         </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
+                        </div> 
+                       <div class="col-md-6 mb-3">
+                        <label class="form-label is-required">FACTURA PAGADA</label>
+                        <select name="pagada" id="pagada"  class="form-select borde"  required>
+                        <option value="" disabled>Seleccion una opción</option>
+                        @if($venta->pagada == "NO")
+                            <option value="NO" selected >NO</option>  
+                            <option value="SI" >SI</option>
+                        @elseif($venta->pagada == "SI")
+                            <option value="SI" selected>SI</option> 
+                            <option value="NO" >NO</option>
+                        @endif 
+                        </select>
+                        @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
+                    </div>
+                        <div class="col-md-12 mb-5">
                              <label class="form-label">OBSERVACION</label>
                             <input type="text" name="observacion" id="observacion" class="form-control borde" value="{{ $venta->observacion }}"/>
                             @error('observacion') <small class="text-danger">{{$message}}</small> @enderror
@@ -132,7 +145,7 @@
                         <hr>
                         <h4>Agregar Detalle de la Venta</h4>
                         <div class="col-md-6 mb-3">
-                             <label class="form-label">PRODUCTO</label>
+                            <label class="form-label">PRODUCTO</label>
                             <select  class="form-select select2 borde" name="product" id="product">
                                 <option  selected disabled value="">Seleccione una opción</option>    
                                 @foreach ($products as $product)
@@ -143,44 +156,39 @@
                         <div class="col-md-6 mb-3">
                              <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control borde" />
-                            @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                            <div class="input-group">
+                        <div class="input-group">
                             <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
                             <span class="input-group-text" id="spanpreciounitarioref"></span> 
                             <input type="number" name="preciounitario" min="0.1" step="0.01" id="preciounitario" readonly class="form-control borde" />
-                            @error('preciounitario') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <div class="input-group">
+                        <div class="input-group">
                              <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
                              <span class="input-group-text" id="spanpreciounitario"></span> 
                              <input type="number" name="preciounitariomo" min="0.1" step="0.01" id="preciounitariomo" class="form-control borde" />
-                            @error('preciounitariomo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
-                    </div>
+                        </div>
                     <div class="col-md-4 mb-3">
                     <div class="input-group">
-                     <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
-                     <span class="input-group-text" id="spanservicio"></span>
-                    <input type="number" name="servicio" min="0.1" step="0.01" id="servicio"class="form-control borde" />
-                    @error('servicio') <small class="text-danger">{{$message}}</small> @enderror
+                        <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
+                        <span class="input-group-text" id="spanservicio"></span>
+                        <input type="number" name="servicio" min="0.1" step="0.01" id="servicio"class="form-control borde" />
                     </div>
-                </div>
-            <div class="col-md-4 mb-3">
+                    </div>
+                <div class="col-md-4 mb-3">
                 <div class="input-group">
-                 <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
-                 <span class="input-group-text" id="spanpreciototal"></span>
-                <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
-                @error('preciofinal') <small class="text-danger">{{$message}}</small> @enderror
+                    <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
+                    <span class="input-group-text" id="spanpreciototal"></span>
+                    <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
                 </div>
-            </div>
+                </div>
             <div class="col-md-8 mb-3"> 
                 <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
-               <input type="text" name="observacionproducto" min="0.1" step="0.01" id="observacionproducto"  class="form-control borde gui-input" />
-           </div> 
+                <input type="text" name="observacionproducto" min="0.1" step="0.01" id="observacionproducto"  class="form-control borde gui-input" />
+            </div> 
                         @php $ind=0 ; @endphp
                         @php $indice=count($detallesventa) ; @endphp
                         <button type="button" class="btn btn-info" id="addDetalleBatch"  onclick="agregarFila('{{$indice}}')"><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
@@ -212,7 +220,6 @@
                                         <td> @if($venta->moneda=="soles") S/.  @elseif($venta->moneda=="dolares")$ @endif  {{$detalle->servicio}}</td>
                                         <td><input type="hidden" id="preciof{{ $ind }}" value="{{$detalle->preciofinal}}" />
                                             @if($venta->moneda=="soles") S/.  @elseif($venta->moneda=="dolares")$ @endif  {{$detalle->preciofinal}}</td>
-                                         
                                         <td>
                                              
                                             <button type="button" class="btn btn-danger" onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{$detalle->iddetalleventa}}'  )" data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>

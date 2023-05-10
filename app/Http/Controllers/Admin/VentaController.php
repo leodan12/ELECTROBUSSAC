@@ -138,6 +138,7 @@ class VentaController extends Controller
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
         $factura = $validatedData['factura'];
+        $pagada = $validatedData['pagada'];
 
         $venta =  Venta::findOrFail($venta_id);
 
@@ -148,7 +149,8 @@ class VentaController extends Controller
         $venta->formapago = $formapago;
         $venta->moneda = $moneda;
         $venta->factura = $factura;
-
+        $venta->pagada = $pagada;
+        
         //no obligatorios
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];

@@ -234,7 +234,7 @@
             var tabla = document.getElementById(detallesventa);
             $('#detallesventa tbody tr').slice().remove();
             for(var i =0 ; i<data.length;i++){
-                var monedaproducto=data[i].monedaproducto;
+            var monedaproducto=data[i].monedaproducto;
             if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
             else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
 

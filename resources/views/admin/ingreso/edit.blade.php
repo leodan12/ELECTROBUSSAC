@@ -109,10 +109,16 @@
                             
                         </div>
                         <div class="col-md-6 mb-3">
-                             <label class="form-label is-required">PRECIO DE LA COMPRA </label>
-                            <input type="number" name="costoventa" id= "costoventa" min="0.1"  step="0.01" class="form-control borde required" required readonly value="{{ $ingreso->costoventa }}"/>
-                            
+                            <div class="input-group"> 
+                             <label class="form-label input-group is-required">PRECIO DE LA VENTA </label>
+                            @if($ingreso->moneda=="dolares")
+                            <span class="input-group-text" id="spancostoventa">$</span> 
+                            @elseif($ingreso->moneda=="soles")
+                            <span class="input-group-text" id="spancostoventa">S/.</span> 
+                            @endif
+                            <input type="number" name="costoventa" id= "costoventa"  min="0.1" step="0.01" class="form-control borde required" required readonly value="{{ $ingreso->costoventa }}"/>
                         </div>
+                        </div> 
                         <div class="col-md-12 mb-3">
                              <label class="form-label">OBSERVACION</label>
                             <input type="text" name="observacion" id="observacion" class="form-control borde" value="{{ $ingreso->observacion }}"/>
@@ -135,24 +141,37 @@
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label" id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL)</label>
+                            <div class="input-group">
+                             <label class="form-label input-group" id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL)</label>
+                             <span class="input-group-text" id="spanpreciounitarioref"></span> 
                             <input type="number" name="preciounitario" min="0.1" step="0.01" id="preciounitario" readonly class="form-control borde" />
                             @error('preciounitario') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
+                        </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label"  id="labelpreciounitario">PRECIO UNITARIO</label>
+                            <div class="input-group">
+                            <label class="form-label input-group"  id="labelpreciounitario">PRECIO UNITARIO</label>
+                            <span class="input-group-text" id="spanpreciounitario"></span> 
                             <input type="number" name="preciounitariomo" min="0.1" step="0.01" id="preciounitariomo" class="form-control borde" />
                             @error('preciounitariomo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
+                        </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label" id="labelservicio">SERVICIO ADICIONAL</label>
+                            <div class="input-group">
+                            <label class="form-label input-group" id="labelservicio">SERVICIO ADICIONAL</label>
+                            <span class="input-group-text" id="spanservicio"></span>
                             <input type="number" name="servicio" min="0.1" step="0.01" id="servicio"class="form-control borde" />
                             @error('servicio') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
+                        </div>
                         <div class="col-md-4 mb-3">
-                             <label class="form-label">PRECIO TOTAL POR PRODUCTO</label>
+                            <div class="input-group">
+                            <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO:</label>
+                            
+                            <span class="input-group-text" id="spanpreciototal"></span>
                             <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
                             @error('preciofinal') <small class="text-danger">{{$message}}</small> @enderror
+                        </div>
                         </div>
                         @php $ind=0 ; @endphp
                         @php $indice=count($detallesingreso) ; @endphp
@@ -178,11 +197,12 @@
                                     <tr id="fila{{$ind}}">
                                         <td> {{$detalle->producto}}</td>
                                         <td> {{$detalle->cantidad}}</td>
-                                        <td> {{$detalle->preciounitario}}</td>
-                                        <td> {{$detalle->preciounitariomo}}</td>
-                                        <td> {{$detalle->servicio}}</td>
-                                        <td> <input type="hidden" id="preciof{{ $ind }}" value="{{$detalle->preciofinal}}" > {{$detalle->preciofinal}} </td>
-                                         
+                                        <td> @if($detalle->moneda=="soles") S/.  @elseif($detalle->moneda=="dolares")$ @endif  {{ $detalle->preciounitario }}</td>
+                                        <td> @if($ingreso->moneda=="soles") S/.  @elseif($ingreso->moneda=="dolares")$ @endif  {{$detalle->preciounitariomo}}</td>
+                                        <td> @if($ingreso->moneda=="soles") S/.  @elseif($ingreso->moneda=="dolares")$ @endif  {{$detalle->servicio}}</td>
+                                        <td><input type="hidden" id="preciof{{ $ind }}" value="{{$detalle->preciofinal}}" />
+                                            @if($ingreso->moneda=="soles") S/.  @elseif($ingreso->moneda=="dolares")$ @endif  {{$detalle->preciofinal}}</td>
+                                        
                                         <td><button type="button" class="btn btn-danger" onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{$detalle->iddetalleingreso}}'  )" data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button></td>
 
                                     </tr>
@@ -215,8 +235,9 @@
     var preciototalI=0;
     var estadoguardar=0;
     var monedafactura="";
-    var monedaproducto=""; 
-
+    var monedaproducto="";  
+    var simbolomonedaproducto="";
+    var simbolomonedafactura="";
 
     estadoguardar = @json($detalles);
     //alert(estadoguardar);
@@ -262,28 +283,34 @@
             monedaproducto=$moneda;
             monedafactura = $('[name="moneda"]').val();
             //alert(stocke);
+            if(monedafactura=="dolares"){simbolomonedafactura="$";}
+            else if(monedafactura=="soles"){simbolomonedafactura="S/.";}
             var mitasacambio1 = $('[name="tasacambio"]').val();
             var cant = document.getElementById('cantidad') ; 
             cant.setAttribute("min",1);
             if($price != null){
                 preciounit = $price;
                 if(monedaproducto=="dolares" && monedafactura=="dolares"){
+                    simbolomonedaproducto="$";
                     preciototalI = $price;
                     document.getElementById('preciounitario').value = $price;
                     document.getElementById('preciounitariomo').value = $price;
                     document.getElementById('preciofinal').value = $price; 
                 }else if(monedaproducto=="soles" && monedafactura=="soles"){
+                    simbolomonedaproducto="S/.";
                     preciototalI = $price;
                     document.getElementById('preciounitario').value = $price;
                     document.getElementById('preciounitariomo').value = $price; 
                     document.getElementById('preciofinal').value = $price; 
                 }else if(monedaproducto=="dolares" && monedafactura=="soles"){
+                    simbolomonedaproducto="$";
                     preciototalI = ($price*mitasacambio1).toFixed(2);
                     document.getElementById('preciounitario').value = ($price);
                     document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
                     document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2); 
                 }
                 else if(monedaproducto=="soles" && monedafactura=="dolares"){
+                    simbolomonedaproducto="S/.";
                     preciototalI = ($price/mitasacambio1).toFixed(2);;
                     document.getElementById('preciounitario').value = ($price);
                     document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
@@ -292,6 +319,11 @@
                 document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): "+  monedaproducto;
                 document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: "+  monedafactura;
                 document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL: "+  monedafactura;
+                document.getElementById('labelpreciototal').innerHTML = "PRECIO TOTAL POR PRODUCTO: "+  monedafactura;
+                document.getElementById('spanpreciounitarioref').innerHTML = simbolomonedaproducto;
+                document.getElementById('spanpreciounitario').innerHTML = simbolomonedafactura;
+                document.getElementById('spanservicio').innerHTML = simbolomonedafactura;
+                document.getElementById('spanpreciototal').innerHTML = simbolomonedafactura;
                 document.getElementById('cantidad').value = 1;
                 document.getElementById('servicio').value = 0;
                 nameproduct = $named;
@@ -364,10 +396,10 @@
                 filaDetalle ='<tr id="fila' + indice + 
                 '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
                 '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+  
-                '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+ LVenta[3]+ 
-                '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+ LVenta[6]+ 
-                '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+ LVenta[4]+
-                '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ LVenta[5]+ 
+                '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
+                '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
+                '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+  LVenta[4]+
+                '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+simbolomonedafactura+  LVenta[5]+ 
                 '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice  +','+  0  + ','+  0  +')" data-id="0">ELIMINAR</button></td></tr>';
                
                 $("#detallesVenta>tbody").append(filaDetalle);
@@ -375,11 +407,6 @@
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
                 $('#product').val(null).trigger('change');
-                document.getElementById('cantidad').value = "";
-                document.getElementById('servicio').value = "";
-                document.getElementById('preciofinal').value = "";
-                document.getElementById('preciounitario').value = "";
-                document.getElementById('preciounitariomo').value = "";
                 document.getElementById('costoventa').value = ventatotal;
  
                 var funcion="agregar";
@@ -449,6 +476,26 @@ function quitarFila(indicador){
         $("#btnguardar").prop("disabled", false);
     }    
  }   
+
+ function limpiarinputs(){
+    $('#product').val(null).trigger('change');
+    document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: ";
+    document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): ";
+    document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL:";
+    document.getElementById('labelpreciototal').innerHTML = "PRECIO TOTAL POR PRODUCTO:";
+    document.getElementById('spanpreciounitarioref').innerHTML = "";
+    document.getElementById('spanpreciounitario').innerHTML = "";
+    document.getElementById('spanservicio').innerHTML = "";
+    document.getElementById('spanpreciototal').innerHTML = "";
+    document.getElementById('cantidad').value = "";
+    document.getElementById('servicio').value = "";
+    document.getElementById('preciofinal').value = "";
+    document.getElementById('preciounitario').value = "";
+    document.getElementById('preciounitariomo').value = "";
+    document.getElementById('observacionproducto').value = "";
+    monedaproducto="";
+    simbolomonedaproducto="";
+}
 
 </script>
 

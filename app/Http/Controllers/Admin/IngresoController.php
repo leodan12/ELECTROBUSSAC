@@ -175,7 +175,7 @@ class IngresoController extends Controller
         $detallesingreso = DB::table('detalleingresos as di')
             ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
             ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select('di.id as iddetalleingreso','di.cantidad', 'di.preciounitario','di.preciounitariomo','di.servicio','di.preciofinal','p.id as idproducto','p.nombre as producto')
+            ->select('p.moneda','di.id as iddetalleingreso','di.cantidad', 'di.preciounitario','di.preciounitariomo','di.servicio','di.preciofinal','p.id as idproducto','p.nombre as producto')
             ->where('i.id', '=', $ingreso_id)->get();
         //return $detallesventa;
         return view('admin.ingreso.edit', compact('products','ingreso','companies','clientes','detallesingreso'));
@@ -198,7 +198,7 @@ class IngresoController extends Controller
             'i.fechav',
             'i.tasacambio',
             'i.observacion',
-
+            'I.moneda',
             'c.nombre as company',
             'cl.nombre as cliente',
             'p.nombre as producto',
@@ -206,7 +206,8 @@ class IngresoController extends Controller
             'di.preciounitario',
             'di.preciounitariomo',
             'di.servicio',
-            'di.preciofinal'
+            'di.preciofinal',
+            'p.moneda as monedaproducto'
             
         )
         ->where('i.id', '=', $id)->get();
