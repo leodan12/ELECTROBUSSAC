@@ -92,12 +92,12 @@ class IngresoController extends Controller
                             if($preciounitariomo[$i]>$productb->NoIGV){$productb->maximo = $preciounitariomo[$i] ; }
                             else  if($preciounitariomo[$i]<$productb->NoIGV){$productb->minimo = $preciounitariomo[$i] ; }
                         }else if($moneda =="dolares" && $productb->moneda =="soles"){
-                            if($preciounitariomo[$i]>(($productb->NoIGV)/$tasacambio)){$productb->maximo = $preciounitariomo[$i]*$tasacambio ; }
-                            else  if($preciounitariomo[$i]<(($productb->NoIGV)/$tasacambio)){$productb->minimo = $preciounitariomo[$i]*$tasacambio ; }
+                            if($preciounitariomo[$i]>round(($productb->NoIGV)/$tasacambio,2)){$productb->maximo = round($preciounitariomo[$i]*$tasacambio,2) ; }
+                            else  if($preciounitariomo[$i]<round(($productb->NoIGV)/$tasacambio,2)){$productb->minimo = round($preciounitariomo[$i]*$tasacambio,2) ; }
                         }
                         else if($moneda =="soles" && $productb->moneda =="dolares"){
-                            if($preciounitariomo[$i]>(($productb->NoIGV)*$tasacambio)){$productb->maximo = ($preciounitariomo[$i]/$tasacambio) ; }
-                            else  if($preciounitariomo[$i]<(($productb->NoIGV)*$tasacambio)){$productb->minimo = $preciounitariomo[$i]/$tasacambio ; }
+                            if($preciounitariomo[$i]>round(($productb->NoIGV)*$tasacambio,2)){$productb->maximo = round($preciounitariomo[$i]/$tasacambio,2) ; }
+                            else  if($preciounitariomo[$i]<round(($productb->NoIGV)*$tasacambio,2)){$productb->minimo = round($preciounitariomo[$i]/$tasacambio,2) ; }
                         }
                         $productb->save();
                     }
