@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('cliente_id');
             $table->string('fecha');
             $table->string('fechav')->nullable();
+            $table->string('pagada');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
             $table->timestamps(); 

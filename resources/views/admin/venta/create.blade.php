@@ -107,20 +107,20 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
-                            <input type="number" name="cantidad" id="cantidad" class="form-control borde" />
+                            <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <div class="input-group">
                             <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
                             <span class="input-group-text" id="spanpreciounitarioref"></span> 
-                            <input type="number" name="preciounitario" min="0.1" step="0.01" id="preciounitario" readonly class="form-control borde" />
+                            <input type="number" name="preciounitario" min="0" step="0.01" id="preciounitario" readonly class="form-control borde" />
                         </div>
                         </div> 
                         <div class="col-md-4 mb-3">
                             <div class="input-group">
                              <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
                              <span class="input-group-text" id="spanpreciounitario"></span> 
-                             <input type="number" name="preciounitariomo" min="0.1" step="0.01" id="preciounitariomo" class="form-control borde" />
+                             <input type="number" name="preciounitariomo" min="0" step="0.01" id="preciounitariomo" class="form-control borde" />
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -134,12 +134,12 @@
                             <div class="input-group">
                              <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
                              <span class="input-group-text" id="spanpreciototal"></span>
-                            <input type="number" name="preciofinal" min="0.1" step="0.01" id="preciofinal" readonly class="form-control borde" />
+                            <input type="number" name="preciofinal" min="0" step="0.01" id="preciofinal" readonly class="form-control borde" />
                             </div>
                         </div>
                     <div class="col-md-8 mb-3"> 
                          <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
-                        <input type="text" name="observacionproducto" min="0.1" step="0.01" id="observacionproducto"  class="form-control borde gui-input" />
+                        <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
                     </div> 
                         <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
                         <div class="table-responsive">
@@ -298,7 +298,7 @@
   
                 limpiarinputs();
 
-                document.getElementById('costoventa').value = ventatotal;
+                document.getElementById('costoventa').value = (ventatotal.toFixed(2)); 
                 
                  
                 var funcion="agregar";
@@ -323,29 +323,29 @@
             cant.setAttribute("max",$stock);
             cant.setAttribute("min",1);
             if($price != null){
-                preciounit = $price;
+                preciounit = ($price).toFixed(2);
                 if(monedaproducto=="dolares" && monedafactura=="dolares"){
                     simbolomonedaproducto="$";
-                    preciototalI = $price;
-                    document.getElementById('preciounitario').value = $price;
-                    document.getElementById('preciounitariomo').value = $price;
-                    document.getElementById('preciofinal').value = $price;
+                    preciototalI = ($price).toFixed(2);
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
+                    document.getElementById('preciounitariomo').value = ($price).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price).toFixed(2);
                 }else if(monedaproducto=="soles" && monedafactura=="soles"){
-                    preciototalI = $price;
+                    preciototalI = ($price).toFixed(2);
                     simbolomonedaproducto="S/.";
-                    document.getElementById('preciounitario').value = $price;
-                    document.getElementById('preciounitariomo').value = $price; 
-                    document.getElementById('preciofinal').value = $price;  
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
+                    document.getElementById('preciounitariomo').value = ($price).toFixed(2); 
+                    document.getElementById('preciofinal').value = ($price).toFixed(2);  
                 }else if(monedaproducto=="dolares" && monedafactura=="soles"){
                     preciototalI = ($price*mitasacambio1).toFixed(2);
                     simbolomonedaproducto="$";
-                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
                     document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
                     document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2);     }
                 else if(monedaproducto=="soles" && monedafactura=="dolares"){
                     preciototalI = ($price/mitasacambio1).toFixed(2);
                     simbolomonedaproducto="S/.";
-                    document.getElementById('preciounitario').value = $price;
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
                     document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
                     document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
                    
@@ -389,7 +389,7 @@
                 $("#fechav").prop("readonly", true);
                 $("#fechav").prop("required", false); 
                 var fechav = document.getElementById("labelfechav");
-                fechav.className -= " is-required";
+                fechav.className = "form-label";
                 document.getElementById('pagada').value = "SI";
             } 
    });
@@ -430,7 +430,7 @@
     $('#fila' + ind).remove();
         indice-- ;
     // damos el valor
-    document.getElementById('costoventa').value = ventatotal;
+    document.getElementById('costoventa').value = (ventatotal.toFixed(2)); 
     //alert(resta);
 
     var funcion="eliminar";

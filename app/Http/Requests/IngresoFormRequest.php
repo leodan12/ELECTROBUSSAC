@@ -61,7 +61,10 @@ class IngresoFormRequest extends FormRequest
             'fechav' => [
                 'nullable',
             ],
-
+            'pagada' => [
+                'required', 
+                'string'
+            ],
         ];
     }
 

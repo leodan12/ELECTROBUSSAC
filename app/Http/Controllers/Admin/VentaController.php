@@ -261,8 +261,7 @@ class VentaController extends Controller
  
                 return 1;
             }else { return 0;}
-        }else { return 2;}
-         
+        }else { return 2;} 
     }
 
     public function pagarfactura($id)
@@ -274,10 +273,7 @@ class VentaController extends Controller
             if($venta->update()){
                 return 1;
             }else { return 0;}
-        }else { return 2;}
-        
-
-
+        }else { return 2;} 
     }
 
     public function productosxempresa($id)

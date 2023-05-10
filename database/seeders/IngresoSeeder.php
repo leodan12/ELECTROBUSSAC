@@ -24,6 +24,7 @@ class IngresoSeeder extends Seeder
             'cliente_id' => 2,
             'fecha' => "2023-05-02",
             'fechav' => "2023-05-02",
+            'pagada' => "NO",
         ]); 
         Ingreso::create([
             'moneda' => "soles",
@@ -36,6 +37,7 @@ class IngresoSeeder extends Seeder
             'cliente_id' => 4,
             'fecha' => "2023-05-02",
            // 'fechav' => "2023-05-02",
+           'pagada' => "SI",
         ]); 
     }
 }

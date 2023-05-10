@@ -39,7 +39,7 @@ class IngresoController extends Controller
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
         $factura = $validatedData['factura'];
-
+        $pagada = $validatedData['pagada'];
         $ingreso = new Ingreso;
 
         $ingreso->company_id = $company->id;
@@ -49,7 +49,7 @@ class IngresoController extends Controller
         $ingreso->formapago = $formapago;
         $ingreso->moneda = $moneda;
         $ingreso->factura = $factura;
-
+        $ingreso->pagada = $pagada;
         //no obligatorios
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];
@@ -66,6 +66,7 @@ class IngresoController extends Controller
         //guardamos la venta y los detalles
         if (  $ingreso->save() ) {
             $product = $request->Lproduct;
+            $observacionproducto = $request->Lobservacionproducto;
             $cantidad = $request->Lcantidad;
             $preciounitario = $request->Lpreciounitario;
             $servicio = $request->Lservicio;
@@ -77,6 +78,7 @@ class IngresoController extends Controller
                     $Detalleingreso = new Detalleingreso;
                     $Detalleingreso->ingreso_id = $ingreso->id;
                     $Detalleingreso->product_id = $product[$i];
+                    $Detalleingreso->observacionproducto = $observacionproducto[$i];
                     $Detalleingreso->cantidad = $cantidad[$i];
                     $Detalleingreso->preciounitario = $preciounitario[$i];
                     $Detalleingreso->preciounitariomo = $preciounitariomo[$i];
@@ -102,6 +104,7 @@ class IngresoController extends Controller
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
         $factura = $validatedData['factura'];
+        $pagada = $validatedData['pagada'];
 
         $ingreso =  Ingreso::findOrFail($ingreso_id);
 
@@ -112,6 +115,8 @@ class IngresoController extends Controller
         $ingreso->formapago = $formapago;
         $ingreso->moneda = $moneda;
         $ingreso->factura = $factura;
+        $ingreso->pagada = $pagada;
+
 
         //no obligatorios
         $observacion = $validatedData['observacion'];
@@ -135,6 +140,7 @@ class IngresoController extends Controller
         if (  $ingreso->update() ) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
+            $observacionproducto = $request->Lobservacionproducto;
             $preciounitario = $request->Lpreciounitario;
             $servicio = $request->Lservicio;
             $preciofinal = $request->Lpreciofinal;
@@ -145,6 +151,7 @@ class IngresoController extends Controller
                     $Detalleingreso = new Detalleingreso;
                     $Detalleingreso->ingreso_id = $ingreso->id;
                     $Detalleingreso->product_id = $product[$i];
+                    $Detalleingreso->observacionproducto = $observacionproducto[$i];
                     $Detalleingreso->cantidad = $cantidad[$i];
                     $Detalleingreso->preciounitario = $preciounitario[$i];
                     $Detalleingreso->preciounitariomo = $preciounitariomo[$i];
@@ -175,7 +182,7 @@ class IngresoController extends Controller
         $detallesingreso = DB::table('detalleingresos as di')
             ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
             ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select('p.moneda','di.id as iddetalleingreso','di.cantidad', 'di.preciounitario','di.preciounitariomo','di.servicio','di.preciofinal','p.id as idproducto','p.nombre as producto')
+            ->select('di.observacionproducto','p.moneda','di.id as iddetalleingreso','di.cantidad', 'di.preciounitario','di.preciounitariomo','di.servicio','di.preciofinal','p.id as idproducto','p.nombre as producto')
             ->where('i.id', '=', $ingreso_id)->get();
         //return $detallesventa;
         return view('admin.ingreso.edit', compact('products','ingreso','companies','clientes','detallesingreso'));
@@ -207,7 +214,9 @@ class IngresoController extends Controller
             'di.preciounitariomo',
             'di.servicio',
             'di.preciofinal',
-            'p.moneda as monedaproducto'
+            'di.observacionproducto',
+            'p.moneda as monedaproducto',
+            'i.pagada'
             
         )
         ->where('i.id', '=', $id)->get();
@@ -220,6 +229,18 @@ class IngresoController extends Controller
         $ingreso = Ingreso::findOrFail($ingreso_id);
         $ingreso->delete();
         return redirect()->back()->with('message','Ingreso Eliminado');
+     }
+
+     public function pagarfactura($id)
+     {
+         //buscamos el registro con el id enviado por la URL
+         $ingreso = Ingreso::find($id);
+         if($ingreso){
+             $ingreso->pagada = "SI";
+             if($ingreso->update()){
+                 return 1;
+             }else { return 0;}
+         }else { return 2;} 
      }
 
      public function destroydetalleingreso($id) 

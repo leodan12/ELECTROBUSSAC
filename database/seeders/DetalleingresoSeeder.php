@@ -16,6 +16,7 @@ class DetalleingresoSeeder extends Seeder
         Detalleingreso::create([
             'ingreso_id' => 1,
             'product_id' => 1,
+            'observacionproducto' => "no",
             'cantidad' => 1,
             'preciounitario' => 100,
             'preciounitariomo' => 100, 
@@ -25,6 +26,7 @@ class DetalleingresoSeeder extends Seeder
         Detalleingreso::create([
             'ingreso_id' => 1,
             'product_id' => 3,
+            'observacionproducto' => "no",
             'cantidad' => 2,
             'preciounitario' => 1000,
             'preciounitariomo' => 1000, 
@@ -34,6 +36,7 @@ class DetalleingresoSeeder extends Seeder
         Detalleingreso::create([
             'ingreso_id' => 2,
             'product_id' => 2,
+            'observacionproducto' => "no",
             'cantidad' => 10,
             'preciounitario' => 200,
             'preciounitariomo' => 200, 
@@ -43,6 +46,7 @@ class DetalleingresoSeeder extends Seeder
         Detalleingreso::create([
             'ingreso_id' => 2,
             'product_id' => 1,
+            'observacionproducto' => "no",
             'cantidad' => 5,
             'preciounitario' => 100,
             'preciounitariomo' => 100, 
@@ -52,6 +56,7 @@ class DetalleingresoSeeder extends Seeder
         Detalleingreso::create([
             'ingreso_id' => 2,
             'product_id' => 3,
+            'observacionproducto' => "no",
             'cantidad' => 2,
             'preciounitario' => 1000,
             'preciounitariomo' => 1000, 

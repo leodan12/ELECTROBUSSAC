@@ -36,7 +36,7 @@
                         
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">NUMERO DE FACTURA</label>
-                            <input type="text" name="factura" id="factura" class="form-control borde" readonly required value="{{ $ingreso->factura }}"/>
+                            <input type="text" name="factura" id="factura" class="form-control borde"  required value="{{ $ingreso->factura }}"/>
                             @error('factura') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
@@ -45,9 +45,9 @@
                             <option value="" selected disabled>Seleccion una opción</option>
                             @if($ingreso->formapago == "credito")
                             <option value="credito" data-formapago="credito" selected >Credito</option>
-                            <option value="contado" data-formapago="contado">Contado</option>
+                            {{-- <option value="contado" data-formapago="contado">Contado</option> --}}
                             @elseif($ingreso->formapago == "contado")
-                            <option value="credito" data-formapago="credito"  >Credito</option>
+                            {{-- <option value="credito" data-formapago="credito"  >Credito</option> --}}
                             <option value="contado" data-formapago="contado" selected>Contado</option>
                             @endif
                             </select>
@@ -119,7 +119,20 @@
                             <input type="number" name="costoventa" id= "costoventa"  min="0.1" step="0.01" class="form-control borde required" required readonly value="{{ $ingreso->costoventa }}"/>
                         </div>
                         </div> 
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label is-required">FACTURA PAGADA</label>
+                            <select name="pagada" id="pagada"  class="form-select borde"  required>
+                            <option value="" disabled>Seleccion una opción</option>
+                            @if($ingreso->pagada == "NO")
+                                <option value="NO" selected >NO</option>  
+                                <option value="SI" >SI</option>
+                            @elseif($ingreso->pagada == "SI")
+                                <option value="SI" selected>SI</option> 
+                                {{-- <option value="NO" >NO</option> --}}
+                            @endif 
+                            </select> 
+                        </div>
+                        <div class="col-md-12 mb-5">
                              <label class="form-label">OBSERVACION</label>
                             <input type="text" name="observacion" id="observacion" class="form-control borde" value="{{ $ingreso->observacion }}"/>
                             @error('observacion') <small class="text-danger">{{$message}}</small> @enderror
@@ -137,7 +150,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label">CANTIDAD</label>
-                            <input type="number" name="cantidad" id="cantidad" class="form-control borde" />
+                            <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
                             @error('cantidad') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-4 mb-3">
@@ -173,6 +186,10 @@
                             @error('preciofinal') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         </div>
+                        <div class="col-md-8 mb-3"> 
+                            <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
+                            <input type="text" name="observacionproducto"   id="observacionproducto"  class="form-control borde gui-input" />
+                        </div> 
                         @php $ind=0 ; @endphp
                         @php $indice=count($detallesingreso) ; @endphp
                         <button type="button" class="btn btn-info" id="addDetalleBatch"  onclick="agregarFila('{{$indice}}')"><i class="fa fa-plus"></i> Agregar Producto al ingreso</button>
@@ -182,6 +199,7 @@
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>PRODUCTO</th>
+                                    <th>OBSERVACION</th>
                                     <th>CANTIDAD</th>
                                     <th>PRECIO UNITARIO(REFERENCIAL)</th>
                                     <th>PRECIO UNITARIO</th>
@@ -196,6 +214,7 @@
                                     @php $ind++;    @endphp
                                     <tr id="fila{{$ind}}">
                                         <td> {{$detalle->producto}}</td>
+                                        <td> {{$detalle->observacionproducto}}</td>
                                         <td> {{$detalle->cantidad}}</td>
                                         <td> @if($detalle->moneda=="soles") S/.  @elseif($detalle->moneda=="dolares")$ @endif  {{ $detalle->preciounitario }}</td>
                                         <td> @if($ingreso->moneda=="soles") S/.  @elseif($ingreso->moneda=="dolares")$ @endif  {{$detalle->preciounitariomo}}</td>
@@ -289,30 +308,30 @@
             var cant = document.getElementById('cantidad') ; 
             cant.setAttribute("min",1);
             if($price != null){
-                preciounit = $price;
+                preciounit = ($price).toFixed(2);
                 if(monedaproducto=="dolares" && monedafactura=="dolares"){
                     simbolomonedaproducto="$";
-                    preciototalI = $price;
-                    document.getElementById('preciounitario').value = $price;
-                    document.getElementById('preciounitariomo').value = $price;
-                    document.getElementById('preciofinal').value = $price; 
+                    preciototalI = ($price).toFixed(2);
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
+                    document.getElementById('preciounitariomo').value = ($price).toFixed(2);
+                    document.getElementById('preciofinal').value = ($price).toFixed(2); 
                 }else if(monedaproducto=="soles" && monedafactura=="soles"){
                     simbolomonedaproducto="S/.";
-                    preciototalI = $price;
-                    document.getElementById('preciounitario').value = $price;
-                    document.getElementById('preciounitariomo').value = $price; 
-                    document.getElementById('preciofinal').value = $price; 
+                    preciototalI = ($price).toFixed(2);
+                    document.getElementById('preciounitario').value = ($price).toFixed(2);
+                    document.getElementById('preciounitariomo').value = ($price).toFixed(2); 
+                    document.getElementById('preciofinal').value = ($price).toFixed(2); 
                 }else if(monedaproducto=="dolares" && monedafactura=="soles"){
                     simbolomonedaproducto="$";
                     preciototalI = ($price*mitasacambio1).toFixed(2);
-                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitario').value = (($price).toFixed(2));
                     document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
                     document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2); 
                 }
                 else if(monedaproducto=="soles" && monedafactura=="dolares"){
                     simbolomonedaproducto="S/.";
                     preciototalI = ($price/mitasacambio1).toFixed(2);;
-                    document.getElementById('preciounitario').value = ($price);
+                    document.getElementById('preciounitario').value = (($price).toFixed(2));
                     document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
                     document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
                 }
@@ -351,7 +370,7 @@
                 $("#fechav").prop("readonly", true);
                 $("#fechav").prop("required", false); 
                 var fechav = document.getElementById("labelfechav");
-                fechav.className -= " is-required";
+                fechav.className = "form-label ";
             } 
    });
     });
@@ -382,20 +401,24 @@
             var servicio = $('[name="servicio"]').val();
             var preciofinal = $('[name="preciofinal"]').val();
             var preciounitariomo = $('[name="preciounitariomo"]').val();
+            var observacionproducto = $('[name="observacionproducto"]').val();
              
             //alertas para los detallesBatch
             if (!product) {  alert("Seleccione un producto"); return;   }
             if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
             if (!preciounitariomo) {  alert("Ingrese un precio"); return;   }
-            $("#product option:contains('Seleccione una opción')").attr('selected',false);
+            if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
+
+           
             var LVenta = [];
             var tam = LVenta.length;
             var datodb ="local";
-            LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo);
+            LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
         
                 filaDetalle ='<tr id="fila' + indice + 
                 '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
-                '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+  
+                '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
+                '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+  LVenta[2]+
                 '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
                 '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
                 '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+  LVenta[4]+
@@ -407,7 +430,7 @@
                 indice++;
                 ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
                 $('#product').val(null).trigger('change');
-                document.getElementById('costoventa').value = ventatotal;
+                document.getElementById('costoventa').value = (ventatotal).toFixed(2);
  
                 var funcion="agregar";
                 botonguardar(funcion);
@@ -458,7 +481,7 @@ function quitarFila(indicador){
     ventatotal = ventatotal - resta;
     $('#fila' + indicador).remove();
     indice-- ;
-    document.getElementById('costoventa').value = ventatotal;
+    document.getElementById('costoventa').value = (ventatotal).toFixed(2);
     var funcion="eliminar";
     botonguardar(funcion);
 }

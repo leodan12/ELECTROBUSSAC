@@ -189,7 +189,7 @@
         const id = button.getAttribute('data-id')
         var urlventa = "{{ url('admin/venta/show') }}";
         $.get(urlventa + '/' + id, function(data) {
-            console.log(data);
+            //console.log(data);
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` ;
             idventa = id;
@@ -297,6 +297,7 @@
             
             })
     });    
+
     </script>
 @endpush
 

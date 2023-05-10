@@ -15,7 +15,7 @@ class VentaSeeder extends Seeder
     {
         Venta::create([
             'moneda' => "dolares",
-            'factura' => "00001",
+            // 'factura' => "00001",
             'formapago' => "credito", 
             'observacion' => "sin observacion",
             'costoventa' => 2300,
@@ -28,7 +28,7 @@ class VentaSeeder extends Seeder
         ]); 
         Venta::create([
             'moneda' => "soles",
-            'factura' => "00002",
+            // 'factura' => "00002",
             'formapago' => "contado", 
             //'observacion' => "",
             'costoventa' => 4600,

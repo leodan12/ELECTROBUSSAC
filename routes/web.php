@@ -109,5 +109,6 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('ingreso/{ingreso_id}/delete','destroy');
         Route::get('/deletedetalleingreso/{id}', 'destroydetalleingreso');
         Route::get('/ingreso/show/{id}', 'show');//ver  
+        Route::get('/ingreso/pagarfactura/{id}',  'pagarfactura');
     });
 });

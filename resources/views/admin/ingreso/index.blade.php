@@ -29,6 +29,7 @@
                                 <th>MONEDA</th>
                                 <th>FORMA PAGO</th>
                                 <th>COSTO COMPRA</th>
+                                <th>PAGADA</th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
@@ -60,7 +61,7 @@
                                 @elseif($ingreso->moneda == 'dolares')
                                 <td>$. {{$ingreso->costoventa}}</td>
                                 @endif
-                                
+                                <td id="ventapagada{{$ingreso->id  }}">{{$ingreso->pagada}}</td>
                                 
                                 <td>
                                     <a href="{{ url('admin/ingreso/'.$ingreso->id.'/edit')}}" class="btn btn-success">Editar</a>
@@ -138,7 +139,10 @@
                                     <label for="moneda" class="col-form-label">OBSERVACION:</label>
                                     <input type="text" class="form-control " id="verObservacion" readonly>
                                 </div>
-                                 
+                                <div class=" col-md-4   mb-5"  > 
+                                    <label for="pagada" class="col-form-label">FACTURA PAGADA:</label>
+                                    <input type="text" class="form-control " id="verPagada" readonly>
+                                </div>
                             </div>
                         </form>
                         <div class="table-responsive">
@@ -146,6 +150,7 @@
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>Producto</th>
+                                    <th>Observacion</th>
                                     <th>Cantidad</th>
                                     <th>Precio Unitario(referencial)</th>
                                     <th>precio Unitario</th>
@@ -160,6 +165,7 @@
                     </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="pagarfactura"  >Pagar Factura</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                     </div>
@@ -176,6 +182,7 @@
 <script src="{{ asset('admin/midatatable.js') }}"></script>
 
 <script> 
+  var idventa="";
     const mimodal = document.getElementById('mimodal')
     mimodal.addEventListener('show.bs.modal', event => {
 
@@ -183,7 +190,8 @@
         const id = button.getAttribute('data-id')
         var urlventa = "{{ url('admin/ingreso/show') }}";
         $.get(urlventa + '/' + id, function(data) {
-            console.log(data);
+            //console.log(data);
+            idventa = id;
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` 
             document.getElementById("verFecha").value=data[0].fecha;  
@@ -192,7 +200,8 @@
             document.getElementById("verFormapago").value=data[0].formapago; 
             document.getElementById("verEmpresa").value=data[0].company; 
             document.getElementById("verCliente").value=data[0].cliente; 
-            document.getElementById("verPrecioventa").value=data[0].costoventa; 
+            document.getElementById("verPagada").value=data[0].pagada; 
+            document.getElementById("verPrecioventa").value=(data[0].costoventa).toFixed(2); 
             if(data[0].moneda=="dolares"){document.getElementById('spancostoventa').innerHTML = "$";}
             else if(data[0].moneda=="soles"){document.getElementById('spancostoventa').innerHTML = "S/.";} 
 
@@ -202,9 +211,10 @@
                 document.getElementById('divfechav').style.display = 'inline';
                 document.getElementById("verFechav").value=data[0].fechav;  
             } 
-            
-                document.getElementById("verTipocambio").value=data[0].tasacambio;   
-             
+            document.getElementById("verTipocambio").value=data[0].tasacambio;   
+            if(data[0].pagada=="NO"){document.getElementById('pagarfactura').style.display = 'inline'; }
+            else if(data[0].pagada=="SI"){document.getElementById('pagarfactura').style.display = 'none';}
+
             if(data[0].observacion == null){
                 document.getElementById('divobservacion').style.display = 'none';
             }else{ 
@@ -228,6 +238,7 @@
 
                 filaDetalle ='<tr id="fila' + i + 
                 '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 
@@ -244,18 +255,52 @@
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
         });
+        $('#pagarfactura').click(function() {
+        var urlventa = "{{ url('/admin/ingreso/pagarfactura') }}";
+        Swal.fire({
+                title: '¿Esta seguro que desea pagar?',
+                //text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Pagar!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+ 
+            $.get(urlventa + '/' + idventa, function(data) {
+                $('#mimodal').modal('hide');
+                if(data[0]==1){  
+                    document.getElementById('ventapagada'+idventa).innerHTML = "SI"; 
+            Swal.fire({
+                text: "Factura Pagada",
+                icon: "success"
+            });   
+                }else if(data[0]==0){
+                    Swal.fire({
+                    text: "No se puede pagar",
+                    icon: "error"
+                    }); 
+                }else if(data[0]==2){
+                    Swal.fire({
+                text: "registro no encontrado",
+                icon: "error"
+                });
+                    
+                } 
+            }); 
 
+            } 
+            
+            })
+    });   
          
     </script>
 @endpush
 
 @endsection
-@section('js')
-  <!--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-
+@section('js') 
     <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
-
-
     <script>
         $('.formulario-eliminar').submit(function(e){
             e.preventDefault();
