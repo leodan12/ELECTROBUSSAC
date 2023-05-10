@@ -41,6 +41,8 @@ class ProductController extends Controller
             'codigo' => $request->codigo,
             'unidad' => $validatedData['unidad'],
             'und' => $request->und,
+            'maximo' => $validatedData['NoIGV'],
+            'minimo' => $validatedData['NoIGV'],
             'moneda' => $validatedData['moneda'],
             'NoIGV' => $validatedData['NoIGV'],
             'SiIGV' => $validatedData['SiIGV'],
@@ -79,6 +81,8 @@ class ProductController extends Controller
                 'codigo' => $request->codigo,
                 'unidad' => $validatedData['unidad'],
                 'und' => $request->und,
+                'maximo' => $validatedData['maximo'],
+                'minimo' => $validatedData['minimo'],
                 'moneda' => $validatedData['moneda'],
                 'NoIGV' => $validatedData['NoIGV'],
                 'SiIGV' => $validatedData['SiIGV'],
@@ -106,7 +110,7 @@ class ProductController extends Controller
     {
         $product=DB::table('products as p')
         ->join('categories as c','p.category_id','=','c.id')
-        ->select('c.nombre as nombrecategoria','p.nombre','p.codigo','p.unidad','p.und','p.moneda','p.NoIGV','p.SiIGV')
+        ->select('p.maximo','p.minimo','c.nombre as nombrecategoria','p.nombre','p.codigo','p.unidad','p.und','p.moneda','p.NoIGV','p.SiIGV')
         ->where('p.id','=',$id)->first() ;
         
             return  $product;

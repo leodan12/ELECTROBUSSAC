@@ -86,6 +86,24 @@ class IngresoController extends Controller
                     $Detalleingreso->preciofinal = $preciofinal[$i];
                     if($Detalleingreso->save()){
                         
+                    $productb = Product::find($product[$i]);
+                    if($productb){ 
+                        if($moneda == $productb->moneda){
+                            if($preciounitariomo[$i]>$productb->NoIGV){$productb->maximo = $preciounitariomo[$i] ; }
+                            else  if($preciounitariomo[$i]<$productb->NoIGV){$productb->minimo = $preciounitariomo[$i] ; }
+                        }else if($moneda =="dolares" && $productb->moneda =="soles"){
+                            if($preciounitariomo[$i]>(($productb->NoIGV)/$tasacambio)){$productb->maximo = $preciounitariomo[$i]*$tasacambio ; }
+                            else  if($preciounitariomo[$i]<(($productb->NoIGV)/$tasacambio)){$productb->minimo = $preciounitariomo[$i]*$tasacambio ; }
+                        }
+                        else if($moneda =="soles" && $productb->moneda =="dolares"){
+                            if($preciounitariomo[$i]>(($productb->NoIGV)*$tasacambio)){$productb->maximo = ($preciounitariomo[$i]/$tasacambio) ; }
+                            else  if($preciounitariomo[$i]<(($productb->NoIGV)*$tasacambio)){$productb->minimo = $preciounitariomo[$i]/$tasacambio ; }
+                        }
+                        $productb->save();
+                    }
+
+
+
                         $detalle = DB::table('detalleinventarios as di')
                         ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
                         ->where('i.product_id', '=', $product[$i])
@@ -161,12 +179,9 @@ class IngresoController extends Controller
             $ingreso->fechav = $fechav;
         } elseif($formapago == 'contado'){
             $ingreso->fechav = null;
-        }
-
-        
+        } 
             $ingreso->tasacambio = $tasacambio;
-        
-        
+         
         //guardamos la venta y los detalles
         if (  $ingreso->update() ) {
             $product = $request->Lproduct;

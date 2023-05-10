@@ -51,6 +51,14 @@ class ProductFormRequest extends FormRequest
                 'required',
                 
             ],
+            'maximo' => [
+                'required',
+                
+            ],
+            'minimo' => [
+                'required',
+                
+            ],
             
         ];
 

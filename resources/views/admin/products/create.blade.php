@@ -65,11 +65,11 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">PRECIO SIN IGV</label>
-                            <input type="number" name="NoIGV" id="cantidad" step="0.01" class="form-control borde" required/>
+                            <input type="number" name="NoIGV" id="cantidad" min="0" step="0.01" class="form-control borde" required/>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">PRECIO CON IGV</label>
-                            <input type="number" name="SiIGV" id="cantidad2" step="0.01" readonly  class="form-control borde" required/>
+                            <input type="number" name="SiIGV" id="cantidad2" min="0" step="0.01" readonly  class="form-control borde" required/>
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label ">Status</label><br>

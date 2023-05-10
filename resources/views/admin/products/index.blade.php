@@ -77,7 +77,7 @@
 
 
         <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen-sm-down">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mimodalLabel">Ver Producto</h1>
@@ -86,37 +86,46 @@
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                               <div class="col-sm-6 col-lg-6 mb-5">
+                               <div class="col-sm-4  mb-5">
                                     <label for="nombre" class="col-form-label">CATEGORIA:</label>
                                     <input type="text" class="form-control" id="vercategoria" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                               
+                                <div class="col-sm-8 mb-5">
                                     <label for="nombre" class="col-form-label">NOMBRE:</label>
                                     <input type="text" class="form-control" id="vernombre" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4   mb-5">
                                     <label for="direccion" class="col-form-label">CÓDIGO:</label>
                                     <input type="text" class="form-control" id="vercodigo" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4   mb-5">
                                     <label for="telefono" class="col-form-label">UNIDAD:</label>
                                     <input type="text" class="form-control" id="verunidad" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4   mb-5">
                                     <label for="email" class="col-form-label">UND:</label>
                                     <input type="text" class="form-control" id="verund" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4   mb-5">
                                     <label for="email" class="col-form-label">TIPO DE MONEDA:</label>
                                     <input type="text" class="form-control" id="vermoneda" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4 mb-5">
                                     <label for="email" class="col-form-label">PRECIO SIN IGV:</label>
                                     <input type="number" class="form-control" id="vernoigv" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-4 mb-5">
                                     <label for="email" class="col-form-label">PRECIO CON IGV:</label>
                                     <input type="number" class="form-control" id="versiigv" readonly>
+                                </div>
+                                <div class="col-sm-4 mb-5">
+                                    <label for="email" class="col-form-label">PRECIO MÍNIMO:</label>
+                                    <input type="number" class="form-control" id="verminimo" readonly>
+                                </div>
+                                <div class="col-sm-4 mb-5">
+                                    <label for="email" class="col-form-label">PRECIO MÁXIMO:</label>
+                                    <input type="number" class="form-control" id="vermaximo" readonly >
                                 </div>
                                 
                             </div>
@@ -159,6 +168,8 @@
             document.getElementById("vermoneda").value=data.moneda;  
             document.getElementById("vernoigv").value=data.NoIGV; 
             document.getElementById("versiigv").value=data.SiIGV; 
+            document.getElementById("verminimo").value=data.minimo; 
+            document.getElementById("vermaximo").value=data.maximo; 
             
         });
  
