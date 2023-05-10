@@ -61,9 +61,8 @@ class IngresoController extends Controller
         if($formapago== 'credito'){
             $ingreso->fechav = $fechav;
         }
-        if($moneda== 'dolares'){
+        
             $ingreso->tasacambio = $tasacambio;
-        }
         
         //guardamos la venta y los detalles
         if (  $ingreso->save() ) {
@@ -164,11 +163,9 @@ class IngresoController extends Controller
             $ingreso->fechav = null;
         }
 
-        if($moneda== 'dolares'){
+        
             $ingreso->tasacambio = $tasacambio;
-        }elseif($moneda == 'soles'){
-            $ingreso->tasacambio = null;
-        }
+        
         
         //guardamos la venta y los detalles
         if (  $ingreso->update() ) {
