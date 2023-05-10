@@ -205,7 +205,7 @@ class IngresoController extends Controller
             'i.fechav',
             'i.tasacambio',
             'i.observacion',
-            'I.moneda',
+            'i.moneda',
             'c.nombre as company',
             'cl.nombre as cliente',
             'p.nombre as producto',
