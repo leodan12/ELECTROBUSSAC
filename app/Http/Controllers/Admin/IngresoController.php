@@ -8,6 +8,8 @@ use App\Models\Ingreso;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Detalleingreso;
+use App\Models\Detalleinventario;
+use App\Models\Inventario;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\IngresoFormRequest;
@@ -73,8 +75,7 @@ class IngresoController extends Controller
             $preciofinal = $request->Lpreciofinal;
             $preciounitariomo = $request->Lpreciounitariomo;
             if ($product !== null) {
-                for ($i = 0; $i < count($product); $i++) {
-
+                for ($i = 0; $i < count($product); $i++) { 
                     $Detalleingreso = new Detalleingreso;
                     $Detalleingreso->ingreso_id = $ingreso->id;
                     $Detalleingreso->product_id = $product[$i];
@@ -84,7 +85,40 @@ class IngresoController extends Controller
                     $Detalleingreso->preciounitariomo = $preciounitariomo[$i];
                     $Detalleingreso->servicio= $servicio[$i];
                     $Detalleingreso->preciofinal = $preciofinal[$i];
-                    $Detalleingreso->save();
+                    if($Detalleingreso->save()){
+                        
+                        $detalle = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->where('i.product_id', '=', $product[$i])
+                        ->where('di.company_id', '=', $company->id)
+                        ->select('di.id')
+                        ->first();
+                        if($detalle == null){
+                            $inv3 = DB::table('inventarios as i') 
+                                ->where('i.product_id', '=', $product[$i]) 
+                                ->select('i.id')
+                                ->first();
+                            //$inventario = Inventario::find($inv3->id);
+                            $detalle2= new Detalleinventario;
+                            $detalle2->company_id = $company->id;
+                            $detalle2->inventario_id = $inv3->id;
+                            $detalle2->stockempresa = 0;
+                            $detalle2->status = 0;
+                            $detalle2->save();
+
+                            $detalle =$detalle2;
+                        }
+                        $detalleinventario = Detalleinventario::findOrFail($detalle->id);
+                        $mistock=($detalleinventario->stockempresa);
+                        $detalleinventario->stockempresa = $mistock + $cantidad[$i];
+                        if($detalleinventario->update()){ 
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal + $cantidad[$i];
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }    
+                    }
+ 
                 }
                 return redirect('admin/ingreso')->with('message','Ingreso Agregado Satisfactoriamente');
             }
@@ -157,7 +191,24 @@ class IngresoController extends Controller
                     $Detalleingreso->preciounitariomo = $preciounitariomo[$i];
                     $Detalleingreso->servicio= $servicio[$i];
                     $Detalleingreso->preciofinal = $preciofinal[$i];
-                    $Detalleingreso->save();
+                    if($Detalleingreso->save()){
+                        
+                        $detalle = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->where('i.product_id', '=', $product[$i])
+                        ->where('di.company_id', '=', $company->id)
+                        ->select('di.id')
+                        ->first();
+
+                        $detalleinventario = Detalleinventario::findOrFail($detalle->id);
+                        $detalleinventario->stockempresa = $detalleinventario->stockempresa + $cantidad[$i];
+                        if($detalleinventario->update()){ 
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal + $cantidad[$i];
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }     
+                    }
                 }
                 return redirect('admin/ingreso')->with('message','Ingreso Actualizado Satisfactoriamente');
             }
@@ -250,7 +301,7 @@ class IngresoController extends Controller
          if($detalleingreso){
              $ingreso = DB::table('detalleingresos as di')
                  ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-                 ->select('i.costoventa','di.preciofinal','i.id')
+                 ->select('di.cantidad','i.costoventa','di.preciofinal','i.id','di.product_id as idproducto','i.company_id as idempresa')
                  ->where('di.id', '=', $id)->first();
              if($detalleingreso->delete()){
                  $costof = $ingreso->costoventa;
@@ -258,9 +309,26 @@ class IngresoController extends Controller
                  $idingreso = $ingreso->id;
                  
                  $ingresoedit = Ingreso::findOrFail($idingreso);
-                 $ingresoedit->costoventa =$costof -$detalle;
-                 $ingresoedit->update();
- 
+                 $ingresoedit->costoventa =$costof -$detalle; 
+                 if($ingresoedit->update()){
+                    $detalleInv = DB::table('detalleinventarios as di')
+                    ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                    ->where('i.product_id', '=', $ingreso->idproducto)
+                    ->where('di.company_id', '=', $ingreso->idempresa)
+                    ->select('di.id','i.stocktotal')
+                    ->first();
+                    $detalleinventario = Detalleinventario::findOrFail($detalleInv->id);
+                    if($detalleinventario){
+                        $mistock2 = $detalleinventario->stockempresa - $ingreso->cantidad  ; 
+                        $detalleinventario->stockempresa = $mistock2;
+                        if($detalleinventario->update()){
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal - $ingreso->cantidad;
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }
+                    }
+                } 
                  return 1;
              }else { return 0;}
          }else { return 2;}

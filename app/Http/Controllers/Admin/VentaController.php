@@ -7,6 +7,8 @@ use App\Models\Company;
 use App\Models\Cliente;
 use App\Models\Product;
 use App\Models\Detalleventa;
+use App\Models\Inventario;
+use App\Models\Detalleinventario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -30,11 +32,10 @@ class VentaController extends Controller
 
     public function store(VentaFormRequest $request)
     {
- 
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
         $cliente = Cliente::findOrFail($validatedData['cliente_id']);
-       
+
         $fecha = $validatedData['fecha'];
         $moneda = $validatedData['moneda'];
         $costoventa = $validatedData['costoventa'];
@@ -46,7 +47,7 @@ class VentaController extends Controller
 
         $venta->company_id = $company->id;
         $venta->cliente_id = $cliente->id;
-        $venta->fecha = $fecha; 
+        $venta->fecha = $fecha;
         $venta->costoventa = $costoventa;
         $venta->formapago = $formapago;
         $venta->moneda = $moneda;
@@ -63,10 +64,6 @@ class VentaController extends Controller
         if($formapago== 'credito'){
             $venta->fechav = $fechav;
         }
-        
-           
-         
-        
         //guardamos la venta y los detalles
         if (  $venta->save() ) {
             $product = $request->Lproduct;
@@ -88,18 +85,38 @@ class VentaController extends Controller
                     $Detalleventa->preciounitariomo = $preciounitariomo[$i];
                     $Detalleventa->servicio= $servicio[$i];
                     $Detalleventa->preciofinal = $preciofinal[$i];
-                    $Detalleventa->save();
+                    if($Detalleventa->save()){
+ 
+                        $detalle = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->where('i.product_id', '=', $product[$i])
+                        ->where('di.company_id', '=', $company->id)
+                        ->select('di.id')
+                        ->first();
+ 
+                        $detalleinventario = Detalleinventario::find($detalle->id);
+                        if($detalleinventario){
+                        $mistock=(($detalleinventario->stockempresa) - $cantidad[$i]);
+                        $detalleinventario->stockempresa = $mistock ;
+                        if($detalleinventario->update()){ 
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal - $cantidad[$i];
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }
+                        }
+                    }
                 }
                 return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
             }
             return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
         }
-       
+
     }
 
     public function edit(int $venta_id)
     {
-        
+
         $venta = Venta::findOrFail($venta_id);
         //$companies = Company::all();
         $companies = DB::table('companies as c')
@@ -115,9 +132,11 @@ class VentaController extends Controller
                 ->join('companies as c', 'di.company_id', '=', 'c.id')
                 ->join('products as p', 'i.product_id', '=', 'p.id')
                 ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
-                ->where('c.id', '=', $venta->company_id)->get();
+                ->where('c.id', '=', $venta->company_id)
+                ->where('di.stockempresa', '>', 0)
+                ->get();
 
-       
+
         $detallesventa = DB::table('detalleventas as dv')
             ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
@@ -125,14 +144,14 @@ class VentaController extends Controller
             ->where('v.id', '=', $venta_id)->get();
         //return $detallesventa;
         return view('admin.venta.edit', compact('products','venta','companies','clientes','detallesventa'));
-    } 
+    }
 
     public function update(VentaFormRequest $request ,int $venta_id)
     {
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
         $cliente = Cliente::findOrFail($validatedData['cliente_id']);
-       
+
         $fecha = $validatedData['fecha'];
         $moneda = $validatedData['moneda'];
         $costoventa = $validatedData['costoventa'];
@@ -144,13 +163,13 @@ class VentaController extends Controller
 
         $venta->company_id = $company->id;
         $venta->cliente_id = $cliente->id;
-        $venta->fecha = $fecha; 
+        $venta->fecha = $fecha;
         $venta->costoventa = $costoventa;
         $venta->formapago = $formapago;
         $venta->moneda = $moneda;
         $venta->factura = $factura;
         $venta->pagada = $pagada;
-        
+
         //no obligatorios
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];
@@ -163,10 +182,6 @@ class VentaController extends Controller
         } elseif($formapago == 'contado'){
             $venta->fechav = null;
         }
- 
-            
-        
-        
         //guardamos la venta y los detalles
         if (  $venta->update() ) {
             $product = $request->Lproduct;
@@ -188,14 +203,34 @@ class VentaController extends Controller
                     $Detalleventa->preciounitariomo = $preciounitariomo[$i];
                     $Detalleventa->servicio= $servicio[$i];
                     $Detalleventa->preciofinal = $preciofinal[$i];
-                    $Detalleventa->save();
+                    if($Detalleventa->save()){
+ 
+                        $detalle = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->where('i.product_id', '=', $product[$i])
+                        ->where('di.company_id', '=', $company->id)
+                        ->select('di.id')
+                        ->first();
+ 
+                        $detalleinventario = Detalleinventario::findOrFail($detalle->id);
+                        if($detalleinventario){
+                        $mistock=(($detalleinventario->stockempresa) - $cantidad[$i]);
+                        $detalleinventario->stockempresa = $mistock ;
+                        if($detalleinventario->update()){ 
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal - $cantidad[$i];
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }
+                        }
+                    }
                 }
                 return redirect('admin/venta')->with('message','Venta Actualizada Satisfactoriamente');
             }
 
         return redirect('admin/venta')->with('message','Venta Actualizada Satisfactoriamente');
         }
-    } 
+    }
 
     public function show($id)
     {
@@ -205,7 +240,7 @@ class VentaController extends Controller
             ->join('companies as c', 'v.company_id', '=', 'c.id')
             ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
-            
+
             ->select(
                 'v.fecha',
                 'v.factura',
@@ -226,7 +261,7 @@ class VentaController extends Controller
                 'dv.preciofinal',
                 'dv.observacionproducto',
                 'v.pagada'
-                
+
             )
             ->where('v.id', '=', $id)->get();
 
@@ -239,7 +274,7 @@ class VentaController extends Controller
         $venta->delete();
         return redirect()->back()->with('message','Venta Eliminada');
      }
-     
+
     public function destroydetalleventa($id)
     {
         //buscamos el registro con el id enviado por la URL
@@ -247,21 +282,38 @@ class VentaController extends Controller
         if($detalleventa){
             $venta = DB::table('detalleventas as dv')
                 ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
-                ->select('v.costoventa','dv.preciofinal','v.id')
+                ->select('dv.cantidad','v.costoventa','dv.preciofinal','v.id','v.company_id as idempresa','dv.product_id as idproducto')
                 ->where('dv.id', '=', $id)->first();
             if($detalleventa->delete()){
                 $costof = $venta->costoventa;
                 $detalle = $venta->preciofinal;
-                $idventa = $venta->id;
-                
-               
+                $idventa = $venta->id; 
+
                 $ventaedit = Venta::findOrFail($idventa);
                 $ventaedit->costoventa =$costof -$detalle;
-                $ventaedit->update();
- 
+                if($ventaedit->update()){
+                    $detalleInv = DB::table('detalleinventarios as di')
+                    ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                    ->where('i.product_id', '=', $venta->idproducto)
+                    ->where('di.company_id', '=', $venta->idempresa)
+                    ->select('di.id','i.stocktotal')
+                    ->first();
+                    $detalleinventario = Detalleinventario::findOrFail($detalleInv->id);
+                    if($detalleinventario){
+                        $mistock2 = $detalleinventario->stockempresa + $venta->cantidad  ; 
+                        $detalleinventario->stockempresa = $mistock2;
+                        if($detalleinventario->update()){
+                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                            $mistockt = $inventario->stocktotal + $venta->cantidad;
+                            $inventario->stocktotal = $mistockt;
+                            $inventario->update();
+                        }
+                    }
+                } 
                 return 1;
             }else { return 0;}
-        }else { return 2;} 
+        
+        }else { return 2;}
     }
 
     public function pagarfactura($id)
@@ -273,7 +325,7 @@ class VentaController extends Controller
             if($venta->update()){
                 return 1;
             }else { return 0;}
-        }else { return 2;} 
+        }else { return 2;}
     }
 
     public function productosxempresa($id)
@@ -296,12 +348,12 @@ class VentaController extends Controller
         //buscamos el registro con el id enviado por la URL
         $empresa = Company::find($id);
 
-        $products = DB::table('clientes as c') 
+        $products = DB::table('clientes as c')
                 ->select('c.id','c.nombre')
                 ->where('c.ruc', '!=', $empresa->ruc)->get();
 
         return $products;
     }
 
-    
+
 }

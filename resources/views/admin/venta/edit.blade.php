@@ -258,8 +258,9 @@
     var monedaproducto=""; 
     var simbolomonedaproducto="";
     var simbolomonedafactura="";
-
+    var idcompany="";
     estadoguardar = @json($detalles);
+    idcompany = @json($venta->company_id);
     //alert(estadoguardar);
     var funcion1="inicio";
     botonguardar(funcion1);
@@ -480,6 +481,7 @@
             });  
                 quitarFila(ind);
                 
+                llenarselectproducto();
                 }else if(data[0]==0){
                     alert("no se puede eliminar");  
                 }else if(data[0]==2){
@@ -541,6 +543,16 @@ function quitarFila(indicador){
     monedaproducto="";
     simbolomonedaproducto="";
 }
+function llenarselectproducto(){
+
+    $.get('/admin/venta/productosxempresa/'+idcompany, function(data){ 
+            var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+              for (var i=0; i<data.length;i++){
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+              }
+              $("#product").html(producto_select);
+        });
+}  
 </script>
 
  

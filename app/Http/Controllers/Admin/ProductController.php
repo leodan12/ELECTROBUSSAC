@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Inventario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
@@ -46,6 +47,12 @@ class ProductController extends Controller
             'status' => $request->status == true ? '1':'0',
         ]);
 
+        $inventario = new Inventario;
+        $inventario->product_id = $product->id;
+        $inventario->stockminimo = 5;
+        $inventario->stocktotal = 0;
+        $inventario->status = 0;
+        $inventario->save();
         
 
         return redirect('admin/products')->with('message','Producto Agregado Satisfactoriamente');

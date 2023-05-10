@@ -188,8 +188,7 @@
         const button = event.relatedTarget
         const id = button.getAttribute('data-id')
         var urlventa = "{{ url('admin/venta/show') }}";
-        $.get(urlventa + '/' + id, function(data) {
-            //console.log(data);
+        $.get(urlventa + '/' + id, function(data) { 
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` ;
             idventa = id;

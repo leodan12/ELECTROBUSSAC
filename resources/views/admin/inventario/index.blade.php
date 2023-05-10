@@ -128,8 +128,7 @@
         const button = event.relatedTarget
         const id = button.getAttribute('data-id')
         var urlinventario = "{{ url('admin/inventario/show') }}";
-        $.get(urlinventario + '/' + id, function(data) {
-            console.log(data);
+        $.get(urlinventario + '/' + id, function(data) { 
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` 
             document.getElementById("verProducto").value=data[0].nombre;  
@@ -157,8 +156,7 @@
 
         function onInputChange(){
             let inputText = document.getElementById("input-search").value.toString().toLowerCase();
-            /*console.log(inputText);*/
-            let tableBody = document.getElementById("tbody-mantenimientos");
+          let tableBody = document.getElementById("tbody-mantenimientos");
             let tableRows = tableBody.getElementsByTagName("tr");
             for(let i = 0; i < tableRows.length; i++){
                 let textoConsulta = tableRows[i].cells[1].textContent.toString().toLowerCase();

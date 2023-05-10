@@ -145,6 +145,24 @@ public function show($id)
     {
         //buscamos el registro con el id enviado por la URL
         $detalleinventario = Detalleinventario::find($id);
-        $detalleinventario->delete();
+        if($detalleinventario){
+            $inv = DB::table('detalleinventarios as di')
+                 ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                 ->select('i.stocktotal','di.stockempresa','i.id')
+                 ->where('di.id', '=', $id)->first();
+        } 
+        if($detalleinventario->delete()){
+            $stocke = $inv->stockempresa;
+            $stockt = $inv->stocktotal;
+            $idinv = $inv->id; 
+
+            $invEdit = Inventario::findOrFail($idinv);
+            $invEdit->stocktotal =$stockt -$stocke;
+            $invEdit->update();
+
+            return 1;
+        }
+         
+
     }
 }
