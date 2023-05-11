@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('stockminimo');
             $table->integer('stocktotal');
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products');//->onDelete('cascade');
             $table->timestamps();
         });
     }

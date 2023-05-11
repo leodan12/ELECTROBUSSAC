@@ -28,7 +28,7 @@
                         <div class="col-md-12 mb-3">
                             <label class="form-label is-required">PRODUCTO</label>
                             <select class="form-select select2 borde" name="product_id"  required>
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($products as $product) 
                                 <option value="{{ $product->id }}">{{ $product->nombre }}</option>
                                 @endforeach
@@ -54,7 +54,7 @@
                         <div class="col-md-6 mb-3">
                             <label  class="form-label">EMPRESA</label>
                             <select class="form-select select2 borde" name="empresa" id="empresa">
-                                <option value="" class="silver">Seleccione una opción</option>    
+                                <option value="" selected disabled>Seleccione una opción</option>    
                                 @foreach ($companies as $company)
                                 <option value="{{ $company->id }}" data-name="{{$company->nombre}}">{{ $company->nombre }}</option>
                                 @endforeach

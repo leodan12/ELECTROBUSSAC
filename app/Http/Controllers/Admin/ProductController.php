@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Inventario;
+use App\Models\Detalleingreso;
+use App\Models\Detalleventa;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
@@ -20,7 +22,7 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::all()->where('status','=',0);
         return view('admin.products.create',compact('categories'));
     }
 
@@ -57,8 +59,12 @@ class ProductController extends Controller
 
     public function edit(int $product_id)
     {
-        $categories = Category::all();
+        $lascategorias = Category::all()->where('status','=',0);
         $product = Product::findOrFail($product_id);
+        $micategoria =Category::all()->where('id','=',$product->category_id);
+        if($micategoria){
+            $categories = $lascategorias->concat($micategoria);
+        }
         return view('admin.products.edit', compact('categories','product'));
     } 
 
@@ -93,11 +99,23 @@ class ProductController extends Controller
 
     public function destroy(int $product_id)
     {
-        $product = Product::findOrFail($product_id);
-        $product->status=1;
-        $product->update();
-        return redirect()->back()->with('message','Producto Eliminado');
+        $product = Product::find($product_id);
 
+        $inventario = Inventario::all()->where('product_id','=',$product_id); 
+        $ingreso = Detalleingreso::all()->where('product_id','=',$product_id); 
+        $venta = Detalleventa::all()->where('product_id','=',$product_id); 
+
+        if(count($inventario)==0 && count($ingreso)==0 && count($venta)==0){ 
+            $product->delete();
+            return redirect()->back()->with('message','Producto Eliminado');
+            $this->dispatchBrowserEvent('close-modal');
+        }else{  
+            $product->status = 1;
+            $product->update();
+            return redirect()->back()->with('message','Producto Eliminado');
+            $this->dispatchBrowserEvent('close-modal');
+        }
+        
         
      }
     public function show($id)

@@ -22,7 +22,7 @@ class Index extends Component
     {
         $cliente = Cliente::find($this->cliente_id);
         $cliente->delete();
-        session()->flash('message','Cliente Eliminado');
+        session()->flash('message','Proveedor o Cliente Eliminado');
         $this->dispatchBrowserEvent('close-modal');
     }
     

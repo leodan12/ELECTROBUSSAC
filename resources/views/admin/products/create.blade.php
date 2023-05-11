@@ -57,7 +57,7 @@
                         <div class="col-md-6 mb-3">
                             <label  class="form-label is-required">Tipo de Moneda</label>
                             <select name="moneda" id="moneda" class="form-select" required>
-                            <option value="" class="silver">Seleccion una opción</option>
+                            <option value="" selected disabled>Seleccion una opción</option>
                             <option value="dolares">Dolares Americanos</option>
                             <option value="soles">Soles</option>
                             </select>

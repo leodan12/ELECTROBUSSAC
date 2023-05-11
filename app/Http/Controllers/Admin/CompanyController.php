@@ -81,7 +81,7 @@ class CompanyController extends Controller
     {
         $company=DB::table('companies as c')
         
-        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email')
+        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email','c.logo')
         ->where('c.id','=',$id)->first() ;
         
             return  $company ;

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->double('NoIGV');
             $table->double('SiIGV');
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories');//->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -43,8 +43,7 @@
                                 <th>ID</th>
                                 <th>NOMBRE</th>
                                 <th>RUC</th>
-                                <th>TELEFONO</th>
-                                <th>ESTADO</th>
+                                <th>TELEFONO</th> 
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
@@ -54,8 +53,7 @@
                                 <td>{{ $company->id}}</td>
                                 <td>{{ $company->nombre}}</td>
                                 <td>{{ $company->ruc}}</td>
-                                <td>{{ $company->telefono}}</td>
-                                <td>{{ $company->status == '1' ? 'Oculto':'Visible' }}</td>
+                                <td>{{ $company->telefono}}</td> 
                                 <td>
                                     <a href="{{ url('admin/company/'.$company->id.'/edit')}}" class="btn btn-success">Editar</a>
                                     <button type="button" class="btn btn-secondary" data-id="{{ $company->id}}" data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
@@ -73,7 +71,7 @@
 
 
         <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mimodalLabel">VER PROVEEDOR</h1>
@@ -82,25 +80,28 @@
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                               <div class="col-sm-6 col-lg-6 mb-5">
+                               <div class="col-sm-12 col-lg-12 mb-5">
                                     <label for="nombre" class="col-form-label">NOMBRE:</label>
                                     <input type="text" class="form-control" id="vernombre" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-5 col-lg-5 mb-5">
                                     <label for="ruc" class="col-form-label">RUC:</label>
                                     <input type="number" class="form-control" id="verruc" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-7 col-lg-7 mb-5" id="divemail">
+                                    <label for="email" class="col-form-label">Email:</label>
+                                    <input type="email" class="form-control" id="veremail" readonly>
+                                </div>
+                                <div class="col-sm-12 col-lg-12 mb-5" id="divdireccion">
                                     <label for="direccion" class="col-form-label">DIRECCION:</label>
                                     <input type="text" class="form-control" id="verdireccion" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
+                                <div class="col-sm-12 col-lg-12 mb-5" id="divtelefono">
                                     <label for="telefono" class="col-form-label">TELEFONO:</label>
                                     <input type="number" class="form-control" id="vertelefono" readonly>
                                 </div>
-                                <div class="col-sm-12 col-lg-12 mb-5">
-                                    <label for="email" class="col-form-label">Email:</label>
-                                    <input type="email" class="form-control" id="veremail" readonly>
+                                <div class="col-md-6 mb-3" id="divlogo">
+                                    <img id="verLogo" width="300px" height="150px" >
                                 </div>
                                 
                             </div>
@@ -139,6 +140,31 @@
             document.getElementById("verdireccion").value=data.direccion;
             document.getElementById("vertelefono").value=data.telefono;
             document.getElementById("veremail").value=data.email;   
+            document.getElementById("verLogo").src= "/logos/"+data.logo;   
+            if(data.direccion == null){
+                document.getElementById('divdireccion').style.display = 'none';
+            }else{ 
+                document.getElementById('divdireccion').style.display = 'inline';
+                document.getElementById("verdireccion").value=data.direccion;  
+            }
+            if(data.email == null){
+                document.getElementById('divemail').style.display = 'none';
+            }else{ 
+                document.getElementById('divemail').style.display = 'inline';
+                document.getElementById("veremail").value=data.email;  
+            }
+            if(data.telefono == null){
+                document.getElementById('divtelefono').style.display = 'none';
+            }else{ 
+                document.getElementById('divtelefono').style.display = 'inline';
+                document.getElementById("vertelefono").value=data.telefono;  
+            }
+            if(data.logo == null){
+                document.getElementById('divlogo').style.display = 'none';
+            }else{ 
+                document.getElementById('divlogo').style.display = 'inline';
+                document.getElementById("verlogo").value=data.logo;  
+            }
             
         });
  

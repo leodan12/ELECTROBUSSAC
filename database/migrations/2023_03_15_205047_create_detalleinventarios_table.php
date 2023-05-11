@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('company_id');
             $table->integer('stockempresa');
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
-            $table->foreign('inventario_id')->references('id')->on('inventarios')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies');//->onDelete('cascade');
+            $table->foreign('inventario_id')->references('id')->on('inventarios');//->onDelete('cascade');
             $table->timestamps();
         });
     }

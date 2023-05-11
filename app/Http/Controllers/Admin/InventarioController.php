@@ -16,7 +16,7 @@ class InventarioController extends Controller
 {
     public function index()
     {
-        $inventarios = Inventario::all();
+        $inventarios = Inventario::all()->where('status','=',0);
         return view('admin.inventario.index', compact('inventarios'));
     }
 
@@ -136,9 +136,17 @@ public function show($id)
 
     public function destroy(int $inventario_id)
     {
-        $inventario = Inventario::findOrFail($inventario_id);
-        $inventario->delete();
-        return redirect()->back()->with('message','Inventario Eliminado');
+        $inventario = Inventario::findOrFail($inventario_id); 
+        $detalle = Detalleinventario::all()->where('inventario_id','=',$inventario_id); 
+        if(count($detalle)==0){ 
+            $inventario->delete();
+            return redirect()->back()->with('message','Inventario Eliminado');
+        }else{  
+            $inventario->status = 1;
+            $inventario->update();
+            return redirect()->back()->with('message','Inventario Eliminado');
+        }
+       
      }
 
     public function destroydetalleinventario($id)

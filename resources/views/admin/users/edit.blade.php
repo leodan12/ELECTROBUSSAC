@@ -47,7 +47,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">Seleccionar Rol</label>
                             <select name="role_as" class="form-select">
-                                <option value="" class="silver">Seleccione Rol</option>
+                                <option value="" selected disabled>Seleccione Rol</option>
                                 <option value="0" {{ $user->role_as == '0' ? 'selected':''}}>Usuario</option>
                                 <option value="1" {{ $user->role_as == '1' ? 'selected':''}}>Administrador</option>
                             </select> 

@@ -42,8 +42,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>NOMBRE</th>
-                                <th>ESTADO</th>
+                                <th>NOMBRE</th> 
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
@@ -51,8 +50,7 @@
                             @foreach ($categories as $category)
                             <tr>
                                 <td>{{ $category->id}}</td>
-                                <td>{{ $category->nombre}}</td>
-                                <td>{{ $category->status == '1' ? 'Oculto':'Visible' }}</td>
+                                <td>{{ $category->nombre}}</td> 
                                 <td>
                                     <a href="{{ url('admin/category/'.$category->id.'/edit')}}" class="btn btn-success">Editar</a>
                                     <a href="#" wire:click="deleteCategory({{$category->id}})" data-bs-toggle="modal" data-bs-target="#deleteModal" class="btn btn-danger">Eliminar</a>

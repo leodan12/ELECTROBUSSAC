@@ -47,7 +47,7 @@
                             <input type="file" accept="image/png,image/jpeg,image/jpg,image/svg,image/webp" id="logo" name="logo" class="form-control  borde"  />
                         </div> 
                         <div class="col-md-6 mb-3">
-                            <img id="imagenPrevisualizacion" width="200px" height="100px" src="/logos/{{$company->logo}}">
+                            <img id="imagenPrevisualizacion" width="300px" height="150px" src="/logos/{{$company->logo}}">
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Status</label><br>

@@ -46,7 +46,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">Seleccionar Rol</label>
                             <select name="role_as" class="form-select borde" required>
-                                <option value="" class="silver">Seleccione Rol</option>
+                                <option value="" selected disabled>Seleccione Rol</option>
                                 <option value="0">Usuario</option>
                                 <option value="1">Administrador</option>
                             </select>

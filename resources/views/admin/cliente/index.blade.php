@@ -69,22 +69,23 @@
                                 <label for="nombre" class="col-form-label">NOMBRE:</label>
                                 <input type="text" class="form-control" id="vernombre" readonly>
                             </div>
-                            <div class="col-sm-12 col-lg-12 mb-5">
+                            <div class="col-sm-6 col-lg-6 mb-5">
                                 <label for="ruc" class="col-form-label">RUC:</label>
                                 <input type="number" class="form-control" id="verruc" readonly>
                             </div>
-                            <div class="col-sm-12 col-lg-12 mb-5">
-                                <label for="direccion" class="col-form-label">DIRECCION:</label>
-                                <input type="text" class="form-control" id="verdireccion" readonly>
-                            </div>
-                            <div class="col-sm-12 col-lg-12 mb-5">
-                                <label for="telefono" class="col-form-label">TELEFONO:</label>
-                                <input type="number" class="form-control" id="vertelefono" readonly>
-                            </div>
-                            <div class="col-sm-12 col-lg-12 mb-5">
+                            <div class="col-sm-6 col-lg-6 mb-5" id="divemail">
                                 <label for="email" class="col-form-label">EMAIL:</label>
                                 <input type="email" class="form-control" id="veremail" readonly>
                             </div>
+                            <div class="col-sm-12 col-lg-12 mb-5" id="divdireccion">
+                                <label for="direccion" class="col-form-label">DIRECCION:</label>
+                                <input type="text" class="form-control" id="verdireccion" readonly>
+                            </div>
+                            <div class="col-sm-12 col-lg-12 mb-5" id="divtelefono">
+                                <label for="telefono" class="col-form-label">TELEFONO:</label>
+                                <input type="number" class="form-control" id="vertelefono" readonly>
+                            </div>
+                            
                             
                         </div>
                     </form>
@@ -123,6 +124,24 @@
             document.getElementById("verdireccion").value=data.direccion;
             document.getElementById("vertelefono").value=data.telefono;
             document.getElementById("veremail").value=data.email;   
+            if(data.direccion == null){
+                document.getElementById('divdireccion').style.display = 'none';
+            }else{ 
+                document.getElementById('divdireccion').style.display = 'inline';
+                document.getElementById("verdireccion").value=data.direccion;  
+            }
+            if(data.telefono == null){
+                document.getElementById('divtelefono').style.display = 'none';
+            }else{ 
+                document.getElementById('divtelefono').style.display = 'inline';
+                document.getElementById("vertelefono").value=data.telefono;  
+            }
+            if(data.email == null){
+                document.getElementById('divemail').style.display = 'none';
+            }else{ 
+                document.getElementById('divemail').style.display = 'inline';
+                document.getElementById("veremail").value=data.email;  
+            }
             
         });
  
