@@ -42,6 +42,13 @@
                             <input type="email" name="email" value="{{ $company->email}}" class="form-control borde" />
                             
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Subir un Logo</label>
+                            <input type="file" accept="image/png,image/jpeg,image/jpg,image/svg,image/webp" id="logo" name="logo" class="form-control  borde"  />
+                        </div> 
+                        <div class="col-md-6 mb-3">
+                            <img id="imagenPrevisualizacion" width="200px" height="100px" src="/logos/{{$company->logo}}">
+                        </div>
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Status</label><br>
                             <input type="checkbox" name="status" {{ $company->status == '1' ? 'checked':''}}  />
@@ -78,5 +85,24 @@ function verificar() {
             enviar.disabled = true;
         }
     }
+    const $subirlogo = document.querySelector("#logo"),
+    $imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+
+        // Escuchar cuando cambie
+        $subirlogo.addEventListener("change", () => {
+        // Los archivos seleccionados, pueden ser muchos o uno
+        const archivos = $subirlogo.files;
+        // Si no hay archivos salimos de la función y quitamos la imagen
+        if (!archivos || !archivos.length) {
+        $imagenPrevisualizacion.src = "";
+        return;
+    }
+        // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+        const primerArchivo = archivos[0];
+        // Lo convertimos a un objeto de tipo objectURL
+        const objectURL = URL.createObjectURL(primerArchivo);
+        // Y a la fuente de la imagen le ponemos el objectURL
+        $imagenPrevisualizacion.src = objectURL;
+    });
 </script>
 @endpush

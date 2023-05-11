@@ -7,6 +7,8 @@ use Livewire\Component;
 use App\Models\Company;
 use Livewire\WithPagination;
 
+use Illuminate\Support\Facades\File;
+
 class Index extends Component
 {
     use WithPagination;
@@ -22,7 +24,11 @@ class Index extends Component
     public function destroyCompany()
     {
         $company = Company::find($this->company_id);
-        $company->delete();
+        $company2 =$company;
+       if( $company->delete())
+        $path = public_path('logos/' . $company2->logo);
+            if (File::exists($path)) {   File::delete($path);   }
+
         session()->flash('message','Proveedor o Cliente Eliminada');
         $this->dispatchBrowserEvent('close-modal');
     }

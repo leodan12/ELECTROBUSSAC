@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
+            $table->string('logo')->nullable();
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
             $table->timestamps();
         });

@@ -33,6 +33,11 @@ class CompanyFormRequest extends FormRequest
                 Rule::unique('companies')->ignore($this->route('company')),
                 'string'
             ],
+            'logo' => [
+                'nullable',
+                'image' ,
+                'file'
+            ],
         ];
     }
 
