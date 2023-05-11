@@ -97,6 +97,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/comboempresacliente/{id}', 'comboempresacliente');//para no seleccionar en una venta la misma empresa y cliente  
         Route::get('/venta/productosxempresa/{id}', 'productosxempresa'); //devuelve los productos con stock de una empresa
         Route::get('/venta/pagarfactura/{id}',  'pagarfactura');
+        Route::get('/venta/generarfacturapdf/{id}',  'generarfacturapdf');
     });
 
     //Ruta de ingresos

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\VentaFormRequest;
+use PDF;
 
 class VentaController extends Controller
 {
@@ -338,6 +339,7 @@ class VentaController extends Controller
                 ->join('products as p', 'i.product_id', '=', 'p.id')
                 ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
                 ->where('c.id', '=', $id)
+                ->where('p.status', '=', 0)
                 ->where('di.stockempresa', '>', 0)->get();
 
         return $products;
@@ -354,6 +356,46 @@ class VentaController extends Controller
 
         return $products;
     }
+
+    public function generarfacturapdf($id){
+
+        $venta = DB::table('ventas as v')
+            ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->join('companies as c', 'v.company_id', '=', 'c.id')
+            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+            ->select(
+                'v.id as idventa',
+                'v.fecha',
+                'p.nombre as nombreproducto',
+                'dv.cantidad',
+                'dv.preciounitariomo',
+                'dv.preciounitario',
+                'dv.observacionproducto',
+                'dv.servicio',
+                'dv.preciofinal',
+                'v.moneda as monedaventa',
+                'p.moneda as monedaproducto',
+                'v.formapago',
+                'v.costoventa',
+                'v.tasacambio',
+                'v.costoventa',
+                'c.nombre as company',
+                'c.ruc as ruccompany',
+                'c.direccion as direccioncompany',
+                'c.telefono as telefonocompany',
+                'cl.nombre as cliente',
+                'cl.ruc as ruccliente',
+                'cl.direccion as direccioncliente',
+                'cl.telefono as telefonocliente'
+                )
+            ->where('v.id', '=', $id)->get();
+        //return $venta;
+        $pdf = PDF::loadView('admin.venta.facturapdf', ["venta" => $venta]);
+        return $pdf->stream('venta.pdf');
+        
+    }
+    
 
 
 }

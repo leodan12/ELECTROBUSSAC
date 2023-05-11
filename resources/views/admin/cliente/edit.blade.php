@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Telefono</label>
-                            <input type="number" name="telefono" value="{{ $cliente->telefono }}" class="form-control borde" />
+                            <input type="text" name="telefono" value="{{ $cliente->telefono }}" class="form-control borde" />
                             
                         </div>
                         <div class="col-md-6 mb-3">

@@ -18,6 +18,8 @@ class Product extends Model
         'codigo',
         'unidad',
         'und',
+        'maximo',
+        'minimo',
         'moneda',
         'NoIGV',
         'SiIGV',

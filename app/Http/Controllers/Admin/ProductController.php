@@ -13,12 +13,7 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     public function index()
-    {
-        //$products=DB::table('products as p')
-        //->join('categories as c','p.category_id','=','c.id')
-        //->select(  'p.id','c.nombre as nombrecategoria','p.nombre','p.unidad','p.NoIGV','p.SiIGV','p.status')
-        //->get() ;
-
+    { 
         $products = Product::all()->where('status','=',0);
         return view('admin.products.index', compact('products'));
     }
@@ -34,20 +29,20 @@ class ProductController extends Controller
         $validatedData = $request->validated();
 
         $category = Category::findOrFail($validatedData['category_id']);
-
-        $product = $category->products()->create([
-            'category_id' => $validatedData['category_id'],
-            'nombre' => $validatedData['nombre'],
-            'codigo' => $request->codigo,
-            'unidad' => $validatedData['unidad'],
-            'und' => $request->und,
-            'maximo' => $validatedData['NoIGV'],
-            'minimo' => $validatedData['NoIGV'],
-            'moneda' => $validatedData['moneda'],
-            'NoIGV' => $validatedData['NoIGV'],
-            'SiIGV' => $validatedData['SiIGV'],
-            'status' => $request->status == true ? '1':'0',
-        ]);
+  
+        $product = new Product;
+        $product->category_id =$validatedData['category_id'];
+        $product->nombre = $validatedData['nombre'];
+        $product->codigo =$request->codigo;
+        $product->unidad =$validatedData['unidad'];
+        $product->und =$request->und;
+        $product->maximo =$validatedData['NoIGV'];
+        $product->minimo =$validatedData['NoIGV'];
+        $product->moneda =$validatedData['moneda'];
+        $product->NoIGV =$validatedData['NoIGV'];
+        $product->SiIGV =$validatedData['SiIGV'];
+        $product->status =$request->status == true ? '1':'0';
+        $product->save();
 
         $inventario = new Inventario;
         $inventario->product_id = $product->id;
@@ -74,20 +69,19 @@ class ProductController extends Controller
         $product = Category::findOrFail($categoria->category_id)
                         ->products()->where('id',$product_id)->first();
         if($product)
-        {
-            $product->update([
-                'category_id' => $validatedData['category_id'],
-                'nombre' => $validatedData['nombre'],
-                'codigo' => $request->codigo,
-                'unidad' => $validatedData['unidad'],
-                'und' => $request->und,
-                'maximo' => $validatedData['maximo'],
-                'minimo' => $validatedData['minimo'],
-                'moneda' => $validatedData['moneda'],
-                'NoIGV' => $validatedData['NoIGV'],
-                'SiIGV' => $validatedData['SiIGV'],
-                'status' => $request->status == true ? '1':'0',
-            ]);
+        { 
+            $product->category_id =$validatedData['category_id'];
+            $product->nombre = $validatedData['nombre'];
+            $product->codigo =$request->codigo;
+            $product->unidad =$validatedData['unidad'];
+            $product->und =$request->und;
+            $product->maximo =$validatedData['maximo'];
+            $product->minimo =$validatedData['minimo'];
+            $product->moneda =$validatedData['moneda'];
+            $product->NoIGV =$validatedData['NoIGV'];
+            $product->SiIGV =$validatedData['SiIGV'];
+            $product->status =$request->status == true ? '1':'0';
+            $product->update();
             return redirect('/admin/products')->with('message','Producto Actualizado Satisfactoriamente');
         }
         

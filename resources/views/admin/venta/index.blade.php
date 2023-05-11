@@ -166,7 +166,8 @@
                     </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="pagarfactura"  >Pagar Factura</button>
+                        <button type="button" class="btn btn-success" id="generarfactura"> Generar Pdf de la Factura  </button>
+                        <button type="button" class="btn btn-warning" id="pagarfactura"  >Pagar Factura</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
                     </div>
@@ -296,6 +297,16 @@
             
             })
     });    
+
+    $('#generarfactura').click(function() {
+        generarfactura(idventa);
+    });
+
+
+    function generarfactura($id){
+        if($id != -1){
+            window.open( '/admin/venta/generarfacturapdf/' + $id );}
+        }     
 
     </script>
 @endpush

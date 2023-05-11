@@ -52,11 +52,11 @@ class ProductFormRequest extends FormRequest
                 
             ],
             'maximo' => [
-                'required',
+                'nullable',
                 
             ],
             'minimo' => [
-                'required',
+                'nullable',
                 
             ],
             

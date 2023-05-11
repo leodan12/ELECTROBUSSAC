@@ -25,7 +25,7 @@
                             <th>NOMBRE</th>
                             <th>RUC</th>
                             <th>TELEFONO</th>
-                            <th>ESTADO</th>
+                            <th>EMAIL</th>
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
@@ -36,7 +36,7 @@
                             <td>{{ $cliente->nombre}}</td>
                             <td>{{ $cliente->ruc}}</td>
                             <td>{{ $cliente->telefono}}</td>
-                            <td>{{ $cliente->status == '1' ? 'Oculto':'Visible' }}</td>
+                            <td>{{ $cliente->email }}</td>
                             <td>
                                 <a href="{{ url('admin/cliente/'.$cliente->id.'/edit')}}" class="btn btn-success">Editar</a>
                                 <button type="button" class="btn btn-secondary" data-id="{{ $cliente->id}}" data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
@@ -56,7 +56,7 @@
 
 
     <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="mimodalLabel">Ver Empresa</h1>
@@ -65,7 +65,7 @@
                 <div class="modal-body">
                     <form>
                         <div class="row">
-                           <div class="col-sm-6 col-lg-6 mb-5">
+                           <div class="col-sm-12 col-lg-12 mb-5">
                                 <label for="nombre" class="col-form-label">NOMBRE:</label>
                                 <input type="text" class="form-control" id="vernombre" readonly>
                             </div>
