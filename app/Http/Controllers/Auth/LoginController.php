@@ -31,10 +31,14 @@ class LoginController extends Controller
 
     protected function authenticated(){
         if ( Auth::user()->role_as == '1'){
-            return redirect('admin/dashboard')->with('message','Ingreso Satisfactorio');
+            $usuario= Auth::user()->name;
+            $mensaje= "Bienvenido usuario ".$usuario;
+            return redirect('admin/dashboard')->with('message',$mensaje);
         }
-        else{
-            return redirect('/home')->with('status','Logueado');
+        else if(Auth::user()->role_as == '0'){
+            $usuario= Auth::user()->name;
+            $mensaje= "Bienvenido usuario ".$usuario;
+            return redirect('admin/dashboard')->with('message',$mensaje);
         }
     }
 

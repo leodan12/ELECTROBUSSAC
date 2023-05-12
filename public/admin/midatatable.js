@@ -12,6 +12,8 @@ $('#mitabla').DataTable({
    "sUrl":            "",
    "sInfoThousands":  ",",
    "sLoadingRecords": "Cargando...",
+   "loadingRecords": "Cargando...",
+   "processing": "Procesando...",
    "oPaginate": {
        "sFirst":    "Primero",
        "sLast":     "Último",
@@ -25,3 +27,4 @@ $('#mitabla').DataTable({
 },  "order": [[ 0, "desc" ]], 
 scrollX: true,
 });
+

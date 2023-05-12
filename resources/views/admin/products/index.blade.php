@@ -13,12 +13,11 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>PRODUCTOS
+                    <h4>PRODUCTOS 
                         <a href="{{ url('admin/products/create') }}" class="btn btn-primary float-end">Añadir Producto</a>
                     </h4>
                 </div>
-                <div class="card-body">
-                    
+                <div class="card-body"> 
                     <table class="table table-bordered table-striped" style="width:100%" id="mitabla" name="mitabla" >
                         <thead>
                             <tr>

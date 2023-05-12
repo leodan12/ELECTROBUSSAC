@@ -20,7 +20,24 @@ class VentaController extends Controller
     public function index()
     {
         $ventas = Venta::orderBy('id', 'desc')->get();
-        return view('admin.venta.index', compact('ventas'));
+       
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 4 days")); 
+        
+        $creditosxvencer = DB::table('ventas as v')
+        ->join('companies as e', 'v.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id') 
+        ->where('v.fechav','!=',null)
+        ->where( 'v.fechav' ,'<=', $fechalimite)
+        ->where('v.pagada','=', 'NO')
+        ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
+        'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
+        ->get();
+ 
+
+        //return $creditosxvencer;
+       
+        return view('admin.venta.index', compact('ventas','creditosxvencer'));
     }
 
     public function create()
