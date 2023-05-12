@@ -112,4 +112,17 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/ingreso/show/{id}', 'show');//ver  
         Route::get('/ingreso/pagarfactura/{id}',  'pagarfactura');
     });
+
+    //Ruta de la cotizacion
+    Route::controller(App\Http\Controllers\Admin\CotizacionesController::class)->group(function(){
+        Route::get('/cotizacion','index');
+        Route::get('/cotizacion/create','create');
+        Route::post('/cotizacion','store');
+        Route::get('/cotizacion/{cotizacion_id}/edit','edit');
+        Route::put('/cotizacion/{cotizacion_id}','update');
+        Route::get('cotizacion/{cotizacion_id}/delete','destroy');
+        Route::get('/deletedetallecotizacion/{id}',  'destroydetallecotizacion');
+        Route::get('/cotizacion/show/{id}', 'show');//ver  
+        Route::get('/cotizacion/vendercotizacion/{id}',  'vendercotizacion');
+    });
 });
