@@ -5,6 +5,10 @@ namespace App\Http\Livewire\Admin\Cliente;
 use Livewire\Component;
 use App\Models\Cliente;
 use Livewire\WithPagination;
+use App\Models\Ingreso;
+use App\Models\Venta;
+use App\Models\Detalleinventario;
+
 
 class Index extends Component
 {
@@ -21,9 +25,21 @@ class Index extends Component
     public function destroyCliente()
     {
         $cliente = Cliente::find($this->cliente_id);
-        $cliente->delete();
-        session()->flash('message','Proveedor o Cliente Eliminado');
-        $this->dispatchBrowserEvent('close-modal');
+        $ingreso = Ingreso::all()->where('cliente_id','=',$this->cliente_id); 
+        $venta = Venta::all()->where('cliente_id','=',$this->cliente_id); 
+        if(count($venta)==0 && count($ingreso)==0){ 
+            if( $cliente->delete()){
+            session()->flash('message','Cliente o Proveedor Eliminada');
+            $this->dispatchBrowserEvent('close-modal');
+        }
+ 
+        }else{  
+            $cliente->status = 1;
+            $cliente->update();
+            session()->flash('message','Cliente o Proveedor Eliminada');
+            $this->dispatchBrowserEvent('close-modal');
+        }
+
     }
     
     public function render()

@@ -97,50 +97,50 @@
                         <form>
                             <div class="row">
                                 <div class="col-md-4   mb-5">
-                                    <label for="fecha" class="col-form-label">FECHA:</label>
+                                    <label for="verFecha" class="col-form-label">FECHA:</label>
                                     <input type="text" class="form-control " id="verFecha" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="descripcion" class="col-form-label">NUMERO FACTURA:</label>
+                                    <label for="verFactura" class="col-form-label">NUMERO FACTURA:</label>
                                     <input type="text" class="form-control" id="verFactura" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="costoCompra" class="col-form-label">FORMA PAGO:</label>
+                                    <label for="verFormapago" class="col-form-label">FORMA PAGO:</label>
                                     <input type="text" class="form-control" id="verFormapago" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5 " id="divfechav">
-                                    <label for="costoCompra" class="col-form-label">FECHA VENCIMIENTO:</label>
+                                    <label for="verFechav" class="col-form-label">FECHA VENCIMIENTO:</label>
                                     <input type="text" class="form-control" id="verFechav" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="moneda" class="col-form-label">MONEDA:</label>
+                                    <label for="verMoneda" class="col-form-label">MONEDA:</label>
                                     <input type="text" class="form-control " id="verMoneda" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5" id="divtasacambio">
-                                    <label for="moneda" class="col-form-label">TIPO DE CAMBIO:</label>
+                                    <label for="verTipocambio" class="col-form-label">TIPO DE CAMBIO:</label>
                                     <input type="text" class="form-control " id="verTipocambio" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="empresa" class="col-form-label">EMPRESA:</label>
+                                    <label for="verEmpresa" class="col-form-label">EMPRESA:</label>
                                     <input type="text" class="form-control " id="verEmpresa" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
-                                    <label for="cliente" class="col-form-label">CLIENTE:</label>
+                                    <label for="verCliente" class="col-form-label">CLIENTE:</label>
                                     <input type="text" class="form-control " id="verCliente" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5">
                                     <div class="input-group">
-                                    <label for="moneda" class="col-form-label input-group">PRECIO VENTA:</label>
+                                    <label for="verPrecioventa" class="col-form-label input-group">PRECIO VENTA:</label>
                                     <span class="input-group-text" id="spancostoventa"></span>
                                     <input type="text" class="form-control " id="verPrecioventa" readonly>
                                 </div> 
                                 </div>
                                 <div class=" col-md-4   mb-5" id="divobservacion"> 
-                                    <label for="moneda" class="col-form-label">OBSERVACION:</label>
+                                    <label for="verObservacion" class="col-form-label">OBSERVACION:</label>
                                     <input type="text" class="form-control " id="verObservacion" readonly>
                                 </div>
                                 <div class=" col-md-4   mb-5"  > 
-                                    <label for="pagada" class="col-form-label">FACTURA PAGADA:</label>
+                                    <label for="verPagada" class="col-form-label">FACTURA PAGADA:</label>
                                     <input type="text" class="form-control " id="verPagada" readonly>
                                 </div>
                                  

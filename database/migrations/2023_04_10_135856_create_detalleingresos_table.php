@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('preciounitariomo');
             $table->double('servicio');
             $table->double('preciofinal');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products');//->onDelete('cascade');
             $table->foreign('ingreso_id')->references('id')->on('ingresos')->onDelete('cascade');
             $table->timestamps();
         });

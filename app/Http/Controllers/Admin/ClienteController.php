@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClienteFormRequest;
 use Illuminate\Support\Facades\DB;
+use App\Models\Ingreso;
+use App\Models\Venta;
 
 
 class ClienteController extends Controller
@@ -70,13 +72,20 @@ class ClienteController extends Controller
         
             return  $cliente ;
     }
-    public function destroy(int $product_id)
+    public function destroy(int $cliente_id)
     {
-        $cliente = Cliente::findOrFail($product_id);
-        $cliente->status=1;
-        $cliente->update();
-        return redirect()->back()->with('message','Cliente Eliminado');
-
-        
+        $cliente = Cliente::findOrFail($cliente_id);
+        $ingreso = Ingreso::all()->where('cliente_id','=',$cliente_id); 
+        $venta = Venta::all()->where('cliente_id','=',$cliente_id); 
+        if(count($venta)==0 && count($ingreso)==0){ 
+            if( $cliente->delete()){
+                return redirect()->back()->with('message','Cliente Eliminado');
+        } 
+        }else{  
+            $cliente->status = 1;
+            $cliente->update();
+            return redirect()->back()->with('message','Cliente Eliminado');
+        }
+          
      }
 }

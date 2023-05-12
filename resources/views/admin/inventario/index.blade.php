@@ -68,8 +68,8 @@
                         
                     </div>
                 </div>
-                <div class="modal fade modal-lg" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog">
+                <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mimodalLabel">Ver Inventario</h1>
@@ -79,15 +79,15 @@
                         <form>
                             <div class="row">
                                 <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="fecha" class="col-form-label">PRODUCTO:</label>
+                                    <label for="verProducto" class="col-form-label">PRODUCTO:</label>
                                     <input type="text" class="form-control " id="verProducto" readonly>
                                 </div>
                                 <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="descripcion" class="col-form-label">STOCK MINIMO:</label>
+                                    <label for="verStockminimo" class="col-form-label">STOCK MINIMO:</label>
                                     <input type="number" class="form-control" id="verStockminimo" readonly>
                                 </div>
                                 <div class="col-sm-4 col-lg-4 mb-5">
-                                    <label for="costoCompra" class="col-form-label">STOCK TOTAL:</label>
+                                    <label for="verStocktotal" class="col-form-label">STOCK TOTAL:</label>
                                     <input type="number" class="form-control" id="verStocktotal" readonly>
                                 </div>
                                  

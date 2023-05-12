@@ -272,10 +272,34 @@ class VentaController extends Controller
     public function destroy(int $venta_id)
     {
         $venta = Venta::findOrFail($venta_id);
+        $detallesventa = DB::table('detalleventas as dv')
+                ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
+                ->select('dv.cantidad','dv.product_id')
+                ->where('v.id', '=', $venta_id)->get();
+        for( $i = 0 ;$i < count($detallesventa); $i++){ 
+            $detallesinventario=DB::table('detalleinventarios as di')
+            ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+            ->select('di.id','di.company_id','di.stockempresa','i.product_id','di.inventario_id')
+            //->where('i.id', '=', $venta_id)
+            ->where('i.product_id', '=', $detallesventa[$i]->product_id)
+            ->where('di.company_id', '=', $venta->company_id)
+            ->first();
+
+            $detalleinv = Detalleinventario::find($detallesinventario->id); 
+            $inventario = Inventario::find($detallesinventario->inventario_id);
+            
+            if($detalleinv){
+                $detalleinv->stockempresa = $detalleinv->stockempresa + $detallesventa[$i]->cantidad; 
+                if($detalleinv->update()){
+                    $inventario->stocktotal = $inventario->stocktotal + $detallesventa[$i]->cantidad; 
+                    $inventario->update();
+            }
+        }
+    }
         $venta->delete();
         return redirect()->back()->with('message','Venta Eliminada');
-     }
-
+     
+    }
     public function destroydetalleventa($id)
     {
         //buscamos el registro con el id enviado por la URL
@@ -307,8 +331,7 @@ class VentaController extends Controller
                             $inventario = Inventario::find($detalleinventario->inventario_id);
                             $mistockt = $inventario->stocktotal + $venta->cantidad;
                             $inventario->stocktotal = $mistockt;
-                            $inventario->update();
-                        }
+                            $inventario->update();   }
                     }
                 } 
                 return 1;
@@ -392,8 +415,7 @@ class VentaController extends Controller
             ->where('v.id', '=', $id)->get();
         //return $venta;
         $pdf = PDF::loadView('admin.venta.facturapdf', ["venta" => $venta]);
-        return $pdf->stream('venta.pdf');
-        
+        return $pdf->stream('venta.pdf'); 
     }
     
 

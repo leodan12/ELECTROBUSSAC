@@ -289,9 +289,35 @@ class IngresoController extends Controller
 
     public function destroy(int $ingreso_id)
     {
-        $ingreso = Ingreso::findOrFail($ingreso_id);
+        $ingreso = Ingreso::findOrFail($ingreso_id); 
+        $detallesingreso = DB::table('detalleingresos as di')
+                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
+                ->select('di.cantidad','di.product_id')
+                ->where('i.id', '=', $ingreso_id)->get();
+        for( $i = 0 ;$i < count($detallesingreso); $i++){ 
+            $detallesinventario=DB::table('detalleinventarios as di')
+            ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+            ->select('di.id','di.company_id','di.stockempresa','i.product_id','di.inventario_id')
+            //->where('i.id', '=', $venta_id)
+            ->where('i.product_id', '=', $detallesingreso[$i]->product_id)
+            ->where('di.company_id', '=', $ingreso->company_id)
+            ->first();
+
+            $detalleinv = Detalleinventario::find($detallesinventario->id); 
+            $inventario = Inventario::find($detallesinventario->inventario_id);
+            
+            if($detalleinv){
+                $detalleinv->stockempresa = $detalleinv->stockempresa - $detallesingreso[$i]->cantidad; 
+                if($detalleinv->update()){
+                    $inventario->stocktotal = $inventario->stocktotal - $detallesingreso[$i]->cantidad; 
+                    $inventario->update();
+            }
+        }
+    }
         $ingreso->delete();
-        return redirect()->back()->with('message','Ingreso Eliminado');
+        return redirect()->back()->with('message','Venta Eliminada');
+
+
      }
 
      public function pagarfactura($id)
@@ -343,9 +369,6 @@ class IngresoController extends Controller
                 } 
                  return 1;
              }else { return 0;}
-         }else { return 2;}
-         
- 
- 
+         }else { return 2;} 
      }
 }
