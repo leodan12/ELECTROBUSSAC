@@ -19,7 +19,32 @@ class IngresoController extends Controller
     public function index()
     {
         $ingresos = Ingreso::orderBy('id', 'desc')->get();
-        return view('admin.ingreso.index', compact('ingresos'));
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 7 days")); 
+        
+        $creditosxvencer = DB::table('ingresos as i')
+        ->join('companies as e', 'i.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id') 
+        ->where('i.fechav','!=',null)
+        ->where( 'i.fechav' ,'<=', $fechalimite)
+        ->where('i.pagada','=', 'NO')
+        ->select('i.id','i.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','i.moneda',
+        'i.costoventa','i.pagada','i.fechav','i.factura','i.formapago')
+        ->get();
+
+        $creditosvencidos = DB::table('ingresos as i')
+        ->join('companies as e', 'i.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id') 
+        ->where('i.fechav','!=',null)
+        ->where( 'i.fechav' ,'<', $fechahoy)
+        ->where('i.pagada','=', 'NO')
+        ->select('i.id','i.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','i.moneda',
+        'i.costoventa','i.pagada','i.fechav','i.factura','i.formapago')
+        ->get();
+
+        $nrocreditosvencidos =count($creditosvencidos);
+
+        return view('admin.ingreso.index', compact('ingresos','creditosxvencer','nrocreditosvencidos'));
     }
 
     public function create()

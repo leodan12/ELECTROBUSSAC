@@ -22,7 +22,7 @@ class VentaController extends Controller
         $ventas = Venta::orderBy('id', 'desc')->get();
        
         $fechahoy = date('Y-m-d');
-        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 4 days")); 
+        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 7 days")); 
         
         $creditosxvencer = DB::table('ventas as v')
         ->join('companies as e', 'v.company_id', '=', 'e.id')
@@ -33,11 +33,22 @@ class VentaController extends Controller
         ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
         'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
         ->get();
- 
 
-        //return $creditosxvencer;
+        $creditosvencidos = DB::table('ventas as v')
+        ->join('companies as e', 'v.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id') 
+        ->where('v.fechav','!=',null)
+        ->where( 'v.fechav' ,'<', $fechahoy)
+        ->where('v.pagada','=', 'NO')
+        ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
+        'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
+        ->get();
+
+        $nrocreditosvencidos =count($creditosvencidos);
+  
+       // return $creditosvencidos;
        
-        return view('admin.venta.index', compact('ventas','creditosxvencer'));
+        return view('admin.venta.index', compact('ventas','creditosxvencer','nrocreditosvencidos'));
     }
 
     public function create()

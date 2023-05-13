@@ -12,12 +12,18 @@
             @php  $numerodecreditos = count($creditosxvencer) @endphp
             <div class="card">
                 <div class="card-header">
-                     
-                    <h4>REGISTRO DE VENTAS: &nbsp;&nbsp;Tienes {{ count($creditosxvencer) }} Ventas por cobrar:&nbsp;
-                        @if(count($creditosxvencer)>0)<button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>
-                        @endif
-                        <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir venta</a>
-                    </h4>
+                     <div class="row">
+                        <div class="col"><h4>REGISTRO DE VENTAS: &nbsp;&nbsp;Tienes   {{ count($creditosxvencer) }}  
+                            Ventas por cobrar:&nbsp;
+                            @if(count($creditosxvencer)>0)<button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>
+                            @endif
+                           </h4>
+                        </div>
+                        <div class="col"><h4>
+                            <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir venta</a>
+                        </h4></div>
+                     </div>
+                        
                 </div>
                 <div class="card-body">
                 
@@ -177,11 +183,17 @@
                 </div>
             </div>
         </div>
+
+        {{-- mis modales para ver los creditos vencidos --}}
         <div class="modal fade" id="modalCreditos1" aria-hidden="true" aria-labelledby="modalCreditos1Label" tabindex="-1">
             <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="modalCreditos1Label">{{ count($creditosxvencer) }} Ventas a credito por vencer</h1>
+                  <h1 class="modal-title fs-5" id="modalCreditos1Label" >
+                    TIENES:  &nbsp;
+                    {{ (count($creditosxvencer)-$nrocreditosvencidos) }} Ventas a credito por vencer 
+                    @if($nrocreditosvencidos>0)y  {{ ( $nrocreditosvencidos)}} Ventas a creditos vencidas. @endif</h1>  
+
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -248,8 +260,7 @@
             </div>
           </div>
 
-
-
+ {{-- modal para ver los datosde los creditos x vencer --}}
           <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos1Label2" tabindex="-1">
             <div class="modal-dialog modal-xl">
               <div class="modal-content">
@@ -337,6 +348,7 @@
               </div>
             </div>
           </div>
+          {{-- fin del modal --}}
          
                 </div> 
             </div> 
@@ -346,8 +358,10 @@
 @push('script')
 <script src="{{ asset('admin/midatatable.js') }}"></script>
 <script>
-    //mostrar el modal ver
+    //para el modal ver venta
     var idventa="";
+    var nrocreditos=0;
+    nrocreditos = @json($numerodecreditos);
     const mimodal = document.getElementById('mimodal')
     mimodal.addEventListener('show.bs.modal', event => {
 
@@ -419,8 +433,9 @@
         });
 
     })
+
     //mostrar el modal de los datos de los creditos
-    var idventa="";
+     
     const mimodalcreditos = document.getElementById('modalVer2')
     mimodalcreditos.addEventListener('show.bs.modal', event => {
 
@@ -492,14 +507,12 @@
         });
 
     })
-
+// fin de los modales
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
         });
 
-$( document ).ready(function() {
-    $('#modalCreditos1').modal('toggle')
-});
+ 
 
     $('#pagarfactura').click(function() { 
         pagarfactura(); 
@@ -562,6 +575,42 @@ $( document ).ready(function() {
             });
     }
 
+    //inicializamos la tabla mitable1
+
+    if(nrocreditos>0){
+        
+        $('#mitabla1').DataTable({
+            "language": {
+           "sProcessing":     "Procesando...",
+           "sLengthMenu":     "Mostrar _MENU_ registros",
+           "sZeroRecords":    "No se encontraron resultados",
+           "sEmptyTable":     "Ningún dato disponible en esta tabla",
+           "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+           "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+           "sInfoFiltered":   "( filtrado de un total de _MAX_ registros )",
+           "sInfoPostFix":    "",
+           "sSearch":         "Buscar Registro:",
+           "sUrl":            "",
+           "sInfoThousands":  ",",
+           "sLoadingRecords": "Cargando...",
+           "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+           "oPaginate": {
+               "sFirst":    "Primero",
+               "sLast":     "Último",
+               "sNext":     "Siguiente",
+               "sPrevious": "Anterior"
+           },
+           "oAria": {
+               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+           }
+        },  "order": [[ 0, "desc" ]], 
+        scrollX: true,
+        });
+            }
+    
+
     </script>
 @endpush
 
@@ -586,41 +635,7 @@ $( document ).ready(function() {
         }
         })
     });
-    var nrocreditos=0;
-    nrocreditos = @json($numerodecreditos);
 
-    if(nrocreditos>0){
-        
-$('#mitabla1').DataTable({
-    "language": {
-   "sProcessing":     "Procesando...",
-   "sLengthMenu":     "Mostrar _MENU_ registros",
-   "sZeroRecords":    "No se encontraron resultados",
-   "sEmptyTable":     "Ningún dato disponible en esta tabla",
-   "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-   "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-   "sInfoFiltered":   "( filtrado de un total de _MAX_ registros )",
-   "sInfoPostFix":    "",
-   "sSearch":         "Buscar Registro:",
-   "sUrl":            "",
-   "sInfoThousands":  ",",
-   "sLoadingRecords": "Cargando...",
-   "loadingRecords": "Cargando...",
-    "processing": "Procesando...",
-   "oPaginate": {
-       "sFirst":    "Primero",
-       "sLast":     "Último",
-       "sNext":     "Siguiente",
-       "sPrevious": "Anterior"
-   },
-   "oAria": {
-       "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-       "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-   }
-},  "order": [[ 0, "desc" ]], 
-scrollX: true,
-});
-    }
-
+ 
     </script>
 @endsection
