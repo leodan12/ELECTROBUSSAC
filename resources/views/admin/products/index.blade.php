@@ -27,6 +27,7 @@
                                 <th>UNIDAD</th>
                                 <th>TIPO DE MONEDA</th>
                                 <th>PRECIO SIN IGV</th>
+                                
                                 <th>PRECIO CON IGV</th>
                                 
                                 <th>ACCIONES</th>

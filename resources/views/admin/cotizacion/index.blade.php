@@ -22,6 +22,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th> 
+                                <th>NUMERO</th>
                                 <th>FECHA</th>
                                 <th>CLIENTE</th>
                                 <th>EMPRESA</th>
@@ -36,6 +37,7 @@
                             @forelse ($cotizaciones as $item)
                             <tr>
                                 <td>{{$item->id}}</td>
+                                <td>{{$item->numero}}</td>
                                 <td>{{$item->fecha}}</td>
                                 <td> 
                                     {{$item->nombrecliente}}
@@ -46,9 +48,9 @@
                                 </td>
                                 <td> {{$item->moneda}}</td> 
                                 @if($item->moneda == 'soles')
-                                <td>S/. {{$item->costoventa}}</td>
+                                <td>S/. {{$item->costoventasinigv}}</td>
                                 @elseif($item->moneda == 'dolares')
-                                <td>$ {{$item->costoventa}}</td>
+                                <td>$ {{$item->costoventasinigv}}</td>
                                 @endif
                                 <td >{{$item->vendida}}</td>
                                 

@@ -253,7 +253,7 @@
             document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
          }   }
 
-        var tabla = document.getElementById(detallesVenta);
+       // var tabla = document.getElementById(detallesVenta);
        
         $('#addDetalleBatch').click(function() {
           

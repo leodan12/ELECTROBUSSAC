@@ -13,13 +13,17 @@ return new class extends Migration
     {
         Schema::create('cotizacions', function (Blueprint $table) {
             $table->id(); 
-            $table->string('moneda'); 
+            $table->string('fecha'); 
+            $table->string('fechav');
+            $table->string('numero'); 
+            $table->string('moneda');  
+            $table->string('formapago');
             $table->string('observacion')->nullable();
-            $table->double('costoventa');
+            $table->double('costoventasinigv');
+            $table->double('costoventaconigv')->nullable();
             $table->double('tasacambio')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('cliente_id');
-            $table->string('fecha'); 
             $table->string('vendida');
             $table->foreign('company_id')->references('id')->on('companies');//->onDelete('cascade');
             $table->foreign('cliente_id')->references('id')->on('clientes');//->onDelete('cascade');

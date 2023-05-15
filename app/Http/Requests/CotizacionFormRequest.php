@@ -34,11 +34,14 @@ class CotizacionFormRequest extends FormRequest
             'fecha' => [
                 'required',
             ], 
+            'formapago' => [
+                'required',
+            ], 
             'moneda' => [
                 'required', 
                 'string'
             ], 
-            'costoventa' => [
+            'costoventasinigv' => [
                 'required',
             ],
             'observacion' => [
