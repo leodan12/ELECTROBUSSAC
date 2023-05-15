@@ -71,7 +71,7 @@
 
 
         <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="mimodalLabel">VER PROVEEDOR</h1>
@@ -80,28 +80,63 @@
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                               <div class="col-sm-12 col-lg-12 mb-5">
-                                    <label for="vernombre" class="col-form-label">NOMBRE:</label>
-                                    <input type="text" class="form-control" id="vernombre" readonly>
+                                <div class="col-md-8 ">
+                                    <div class="row">
+                                        <div class="col-md-12  mb-3">
+                                            <label for="vernombre" class="col-form-label">NOMBRE:</label>
+                                            <input type="text" class="form-control" id="vernombre" readonly>
+                                        </div>
+                                        <div class="col-md-12 mb-3" id="divdireccion">
+                                            <label for="verdireccion" class="col-form-label">DIRECCION:</label>
+                                            <input type="text" class="form-control" id="verdireccion" readonly>
+                                        </div>
+                                        <div class="col-md-6  mb-3" id="divtelefono">
+                                            <label for="vertelefono" class="col-form-label">TELEFONO:</label>
+                                            <input type="number" class="form-control" id="vertelefono" readonly>
+                                        </div>
+                                        <div class="col-md-6  mb-3" id="divemail">
+                                            <label for="veremail" class="col-form-label">Email:</label>
+                                            <input type="email" class="form-control" id="veremail" readonly>
+                                        </div>
+                                        <h5>Datos de la cuenta soles</h5>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="vertipocuentasoles" class="col-form-label">Tipo Cuenta:</label>
+                                            <input type="text" class="form-control" id="vertipocuentasoles" readonly>
+                                        </div>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="vernumerocuentasoles" class="col-form-label">Numero Cuenta:</label>
+                                            <input type="text" class="form-control" id="vernumerocuentasoles" readonly>
+                                        </div>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="verccisoles" class="col-form-label">CCI:</label>
+                                            <input type="text" class="form-control" id="verccisoles" readonly>
+                                        </div>
+                                        <h5>Datos de la cuenta dolares</h5>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="vertipocuentadolares" class="col-form-label">Tipo Cuenta:</label>
+                                            <input type="text" class="form-control" id="vertipocuentadolares" readonly>
+                                        </div>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="vernumerocuentadolares" class="col-form-label">Numero Cuenta:</label>
+                                            <input type="text" class="form-control" id="vernumerocuentadolares" readonly>
+                                        </div>
+                                        <div class="col-md-4  mb-3" id="div">
+                                            <label for="verccidolares" class="col-form-label">CCI:</label>
+                                            <input type="text" class="form-control" id="verccidolares" readonly>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
-                                <div class="col-sm-5 col-lg-5 mb-5">
-                                    <label for="verruc" class="col-form-label">RUC:</label>
-                                    <input type="number" class="form-control" id="verruc" readonly>
-                                </div>
-                                <div class="col-sm-7 col-lg-7 mb-5" id="divemail">
-                                    <label for="veremail" class="col-form-label">Email:</label>
-                                    <input type="email" class="form-control" id="veremail" readonly>
-                                </div>
-                                <div class="col-sm-12 col-lg-12 mb-5" id="divdireccion">
-                                    <label for="verdireccion" class="col-form-label">DIRECCION:</label>
-                                    <input type="text" class="form-control" id="verdireccion" readonly>
-                                </div>
-                                <div class="col-sm-12 col-lg-12 mb-5" id="divtelefono">
-                                    <label for="vertelefono" class="col-form-label">TELEFONO:</label>
-                                    <input type="number" class="form-control" id="vertelefono" readonly>
-                                </div>
-                                <div class="col-md-6 mb-3" id="divlogo">
-                                    <img id="verLogo" width="300px" height="150px" >
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12   mb-3">
+                                            <label for="verruc" class="col-form-label">RUC:</label>
+                                            <input type="number" class="form-control" id="verruc" readonly>
+                                        </div>
+                                        <div class="col-md-12 mb-3" id="divlogo">
+                                            <img id="verLogo" width="100%" height="200px" >
+                                        </div>
+                                    </div>
                                 </div>
                                 
                             </div>
@@ -139,7 +174,13 @@
             document.getElementById("verruc").value=data.ruc;
             document.getElementById("verdireccion").value=data.direccion;
             document.getElementById("vertelefono").value=data.telefono;
-            document.getElementById("veremail").value=data.email;   
+            document.getElementById("vertipocuentasoles").value=data.tipocuentasoles;   
+            document.getElementById("vernumerocuentasoles").value=data.numerocuentasoles;
+            document.getElementById("verccisoles").value=data.ccisoles;
+            document.getElementById("vertipocuentadolares").value=data.tipocuentadolares;   
+            document.getElementById("vernumerocuentadolares").value=data.numerocuentadolares;
+            document.getElementById("verccidolares").value=data.ccidolares;
+
             document.getElementById("verLogo").src= "/logos/"+data.logo;   
             if(data.direccion == null){
                 document.getElementById('divdireccion').style.display = 'none';

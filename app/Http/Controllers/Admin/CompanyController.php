@@ -32,6 +32,14 @@ class CompanyController extends Controller
         $company->direccion = $request->direccion;
         $company->telefono= $request->telefono;
         $company->email = $request->email;
+
+        $company->tipocuentasoles = $request->tipocuentasoles;
+        $company->numerocuentasoles= $request->numerocuentasoles;
+        $company->ccisoles = $request->ccisoles;
+        $company->tipocuentadolares = $request->tipocuentadolares;
+        $company->numerocuentadolares= $request->numerocuentadolares;
+        $company->ccidolares = $request->ccidolares;
+
         $company->status = $request->status == true ? '1':'0';
 
         if($request->hasFile('logo')&&$request->file('logo')->isValid()){  
@@ -61,6 +69,14 @@ class CompanyController extends Controller
         $company->direccion = $request->direccion;
         $company->telefono= $request->telefono;
         $company->email = $request->email;
+
+        $company->tipocuentasoles = $request->tipocuentasoles;
+        $company->numerocuentasoles= $request->numerocuentasoles;
+        $company->ccisoles = $request->ccisoles;
+        $company->tipocuentadolares = $request->tipocuentadolares;
+        $company->numerocuentadolares= $request->numerocuentadolares;
+        $company->ccidolares = $request->ccidolares;
+        
         $company->status = $request->status == true ? '1':'0';
         if($request->hasFile('logo')&&$request->file('logo')->isValid()){  
             $imagen =$request->file('logo');
@@ -81,7 +97,8 @@ class CompanyController extends Controller
     {
         $company=DB::table('companies as c')
         
-        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email','c.logo')
+        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email','c.logo'
+        ,'c.tipocuentasoles','c.numerocuentasoles','c.ccisoles','c.tipocuentadolares','c.numerocuentadolares','c.ccidolares')
         ->where('c.id','=',$id)->first() ;
         
             return  $company ;
