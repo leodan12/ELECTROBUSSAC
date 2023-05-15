@@ -94,6 +94,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('venta/{venta_id}/delete','destroy');
         Route::get('/deletedetalleventa/{id}',  'destroydetalleventa');
         Route::get('/venta/show/{id}', 'show');//ver  
+        Route::get('/venta/showcreditos', 'showcreditos');//ver   creditos
         Route::get('/venta/comboempresacliente/{id}', 'comboempresacliente');//para no seleccionar en una venta la misma empresa y cliente  
         Route::get('/venta/productosxempresa/{id}', 'productosxempresa'); //devuelve los productos con stock de una empresa
         Route::get('/venta/pagarfactura/{id}',  'pagarfactura');
@@ -110,6 +111,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('ingreso/{ingreso_id}/delete','destroy');
         Route::get('/deletedetalleingreso/{id}', 'destroydetalleingreso');
         Route::get('/ingreso/show/{id}', 'show');//ver  
+        Route::get('/ingreso/showcreditos', 'showcreditos');//ver   creditos
         Route::get('/ingreso/pagarfactura/{id}',  'pagarfactura');
     });
 

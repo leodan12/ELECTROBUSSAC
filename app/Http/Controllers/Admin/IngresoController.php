@@ -30,21 +30,9 @@ class IngresoController extends Controller
         ->where('i.pagada','=', 'NO')
         ->select('i.id','i.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','i.moneda',
         'i.costoventa','i.pagada','i.fechav','i.factura','i.formapago')
-        ->get();
-
-        $creditosvencidos = DB::table('ingresos as i')
-        ->join('companies as e', 'i.company_id', '=', 'e.id')
-        ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id') 
-        ->where('i.fechav','!=',null)
-        ->where( 'i.fechav' ,'<', $fechahoy)
-        ->where('i.pagada','=', 'NO')
-        ->select('i.id','i.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','i.moneda',
-        'i.costoventa','i.pagada','i.fechav','i.factura','i.formapago')
-        ->get();
-
-        $nrocreditosvencidos =count($creditosvencidos);
-
-        return view('admin.ingreso.index', compact('ingresos','creditosxvencer','nrocreditosvencidos'));
+        ->count();
+ 
+        return view('admin.ingreso.index', compact('ingresos','creditosxvencer'));
     }
 
     public function create()
@@ -340,10 +328,30 @@ class IngresoController extends Controller
         }
     }
         $ingreso->delete();
-        return redirect()->back()->with('message','Venta Eliminada');
+        return redirect()->back()->with('message','Ingreso Eliminado');
 
 
      }
+
+     public function showcreditos()
+    {
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 7 days")); 
+
+        $creditosvencidos = DB::table('ingresos as i')
+        ->join('companies as e', 'i.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id') 
+        ->where('i.fechav','!=',null)
+        ->where( 'i.fechav' ,'<=', $fechalimite)
+        ->where('i.pagada','=', 'NO')
+        ->select('i.id','i.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','i.moneda',
+        'i.costoventa','i.pagada','i.fechav','i.factura','i.formapago')
+        ->get();
+        //$nrocreditosvencidos =count($creditosvencidos);
+  
+       return $creditosvencidos;
+ 
+    }
 
      public function pagarfactura($id)
      {

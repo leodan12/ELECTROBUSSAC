@@ -32,7 +32,7 @@
                             @error('nombre') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label is-required">RUC</label>
+                            <label class="form-label is-required">RUC o DNI</label>
                             <input type="number" name="ruc" id="ruc" class="form-control borde" required />
                             @error('ruc') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -56,7 +56,7 @@
                             <input type="checkbox" name="status"  />
                         </div>
                         <div class="col-md-12 mb-3">
-                            <button type= "submit" id="enviar" class="btn btn-primary text-white float-end">Guardar</button>
+                            <button type= "submit" id="enviar" class="btn btn-primary text-white float-end" disabled>Guardar</button>
                         </div>
                     </div>
                 </form>
@@ -67,7 +67,7 @@
 
 @endsection
 @push('script')
-function verificar() {
+
     <script>
     ruc.oninput = function() {
         //result.innerHTML = password.value;
@@ -78,7 +78,7 @@ function verificar() {
         ruc1 = document.getElementById('ruc');
         enviar = document.getElementById('enviar');
         
-        if (ruc1.value.length == 11) {
+        if (ruc1.value.length == 11 || ruc1.value.length == 8 ) {
                 ruc1.style.borderColor = "green";
                 enviar.disabled = false;
             }

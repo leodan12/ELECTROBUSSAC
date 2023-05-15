@@ -9,14 +9,11 @@
             @if (session('message'))
                 <div class="alert alert-success">{{ session('message') }}</div>
             @endif
-            @php  $numerodecreditos = count($creditosxvencer) @endphp
+            
             <div class="card">
                 <div class="card-header">
                      <div class="row">
-                        <div class="col"><h4>REGISTRO DE VENTAS: &nbsp;&nbsp;Tienes   {{ count($creditosxvencer) }}  
-                            Ventas por cobrar:&nbsp;
-                            @if(count($creditosxvencer)>0)<button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>
-                            @endif
+                        <div class="col"><h4 id="mititulo">REGISTRO DE VENTAS:
                            </h4>
                         </div>
                         <div class="col"><h4>
@@ -27,9 +24,9 @@
                 </div>
                 <div class="card-body">
                 
-                    <table class="  table datatable table-fixed table-bordered  table-hover " style="width:100%"   id="mitabla" name="mitabla">
-                        <thead>
-                            <tr>
+                    <table class="table table-bordered table-striped "  style="width: 100%" id="mitabla" name="mitabla">
+                        <thead class="fw-bold text-primary">
+                            <tr >
                                 <th>ID</th>
                                 <th>FACTURA</th>
                                 <th>FECHA</th>
@@ -95,6 +92,7 @@
                         
                     </div>
                 </div>
+                {{-- modal paera ver la venta --}}
             <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -189,16 +187,18 @@
             <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="modalCreditos1Label" >
-                    TIENES:  &nbsp;
+                  <h1 class="modal-title fs-5" id="modalCreditos1Label1" >
+                   
+                    {{-- TIENES:  &nbsp;
                     {{ (count($creditosxvencer)-$nrocreditosvencidos) }} Ventas a credito por vencer 
-                    @if($nrocreditosvencidos>0)y  {{ ( $nrocreditosvencidos)}} Ventas a creditos vencidas. @endif</h1>  
+                    @if($nrocreditosvencidos>0)y  {{ ( $nrocreditosvencidos)}} Ventas a creditos vencidas. @endif --}}
+                </h1>  
 
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered table-striped "  style="width: 100%" id="mitabla1" name="mitabla1">
-                        <thead>
+                        <thead class="fw-bold text-primary">
                             <tr>
                                 <th>ID</th> 
                                 <th>FECHA</th>
@@ -207,49 +207,13 @@
                                 <th>EMPRESA</th>
                                 <th>MONEDA</th>
                                 <th>FORMA PAGO</th>
-                                <th>COSTO VENTA </th>
-                                <th>PAGADA </th>
+                                <th>COSTO VENTA </th> 
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
                         <Tbody id="tbody-mantenimientos">
+                           <tr></tr>
                            
-                            @forelse ($creditosxvencer as $venta)
-                            @php  $fechahoy = date('Y-m-d')  @endphp
-                            <tr @if($venta->fechav < $fechahoy )  style="background-color: #f89f9f" @endif >
-                                <td>{{$venta->id}}</td> 
-                                <td>{{$venta->fecha}}</td>
-
-                                <td>{{$venta->fechav}}</td>
-
-                                <td>{{$venta->nombrecliente}}  </td>
-                                <td>{{$venta->nombreempresa}} </td>
-                                <td> {{$venta->moneda}}</td>
-                                <td> {{$venta->formapago}}</td>
-                                @if($venta->moneda == 'soles')
-                                <td>S/. {{$venta->costoventa}}</td>
-                                @elseif($venta->moneda == 'dolares')
-                                <td>$ {{$venta->costoventa}}</td>
-                                @endif
-                                <td id="ventapagada{{$venta->id  }}">{{$venta->pagada}}</td>
-                                
-                                <td>
-                                    <a href="{{ url('admin/venta/'.$venta->id.'/edit')}}" class="btn btn-success">Editar</a>
-                                    <button type="button" class="btn btn-secondary" data-id="{{$venta->id}}" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>
-                                    <form action="{{ url('admin/venta/'.$venta->id.'/delete') }}" class="d-inline formulario-eliminar">
-                                    <button type="submit" class="btn btn-danger formulario-eliminar">
-                                        Eliminar
-                                    </button>
-                                    </form>
-                        
-                                   
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="7">No hay Productos Disponibles</td>
-                            </tr>
-                            @endforelse
                         </Tbody>
                     </table>
                 </div>
@@ -261,11 +225,11 @@
           </div>
 
  {{-- modal para ver los datosde los creditos x vencer --}}
-          <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos1Label2" tabindex="-1">
+          <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos2Label2" tabindex="-1">
             <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="modalCreditos1Label2">Ver Venta a Credito</h1>
+                  <h1 class="modal-title fs-5" id="modalCreditos2Label2">Ver Venta a Credito</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
                 </div>
                 <div class="modal-body">
@@ -361,12 +325,15 @@
     //para el modal ver venta
     var idventa="";
     var nrocreditos=0;
-    nrocreditos = @json($numerodecreditos);
-    const mimodal = document.getElementById('mimodal')
-    mimodal.addEventListener('show.bs.modal', event => {
-
-        const button = event.relatedTarget
-        const id = button.getAttribute('data-id')
+    var hoy = new Date();  
+    var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+    var inicializartabla=0; 
+    
+  var numerocreditos=0;
+    const mimodal = document.getElementById('mimodal');
+    mimodal.addEventListener('show.bs.modal', event => { 
+        const button = event.relatedTarget;
+        const id = button.getAttribute('data-id');
         var urlventa = "{{ url('admin/venta/show') }}";
         $.get(urlventa + '/' + id, function(data) { 
             const modalTitle = mimodal.querySelector('.modal-title')
@@ -434,11 +401,58 @@
 
     })
 
-    //mostrar el modal de los datos de los creditos
+//mostrar el modal de las ventas por vencer-------------------------------------------------------------------------------------------------
+const mimodalVercreditosxvencer = document.getElementById('modalCreditos1')
+mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
+    var nroxvencer=0;
+    var nrovencidos=0;
+    var hoy = new Date();  
+    var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
      
-    const mimodalcreditos = document.getElementById('modalVer2')
-    mimodalcreditos.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+      //  const id = button.getAttribute('data-id');
+        var urlventa = "{{ url('admin/venta/showcreditos') }}";
+        $.get(urlventa , function(data) { 
+            const modalTitle = mimodalVercreditosxvencer.querySelector('.modal-title');
+            modalTitle.textContent = `Ventas a credito por vencer ` ;
+           var simbolomonedafact="";
+            $('#mitabla1 tbody tr').slice().remove(); 
+            var miurl = "{{ url('/admin/venta/') }}";
+            for(var i =0 ; i<data.length;i++){ 
+                var monedafactura=data[i].moneda;
+                if(monedafactura=="dolares"){simbolomonedafact="$";}
+                else if(monedafactura=="soles"){simbolomonedafact="S/.";} 
+                var colorfondo ='<tr id="fila' + i + '">';
+                    if(data[i].fechav < fechaActual){
+                        colorfondo ='<tr style="background-color:  #f89f9f" id="fila' + i + '">';
+                            nrovencidos++;
+                    }else{nroxvencer++;}
+                filaDetalle =colorfondo+
+                '<td><input  type="hidden"   value="' + data[i].id  + '"required>'+ data[i].id+
+                '</td><td><input  type="hidden"  value="' + data[i].fecha + '"required>'+ data[i].fecha+ 
+                '</td><td><input  type="hidden"  value="' + data[i].fechav + '"required>'+ data[i].fechav+ 
+                '</td><td><input  type="hidden"  value="' + data[i].nombrecliente + '"required>'+ data[i].nombrecliente+ 
+                '</td><td><input  type="hidden"  value="' + data[i].nombreempresa + '"required>'+ data[i].nombreempresa+ 
+                '</td><td><input  type="hidden"  value="' + data[i].moneda + '"required>'+ data[i].moneda+ 
+                '</td><td><input  type="hidden"  value="' + data[i].formapago + '"required>'+ data[i].formapago+  
+                '</td><td><input  type="hidden"  value="' + data[i].costoventa + '"required>'+simbolomonedafact+ data[i].costoventa+  
+                '</td><td><a  href="'+miurl+'/'+data[i].id+'/edit" class="btn btn-success">Editar</a> '+
+                '<button type="button" class="btn btn-secondary" data-id="'+data[i].id+'" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>'+
+                '<form action="'+miurl+'/'+data[i].id+'/delete" class="d-inline formulario-eliminar"> <button type="submit" class="btn btn-danger formulario-eliminar">Eliminar </button></form>'+
+                '</td></tr>';
+    
+                $("#mitabla1>tbody").append(filaDetalle);
+            }
+            inicializartabla1(inicializartabla); 
+            inicializartabla++;
+            mostrarmensajemodal(nroxvencer,nrovencidos);
+        });
 
+    });
+
+    //mostrar el modal de los datos de los creditos
+    const mimodalcreditos = document.getElementById('modalVer2')
+    mimodalcreditos.addEventListener('show.bs.modal', event => { 
         const button = event.relatedTarget;
         const id = button.getAttribute('data-id');
         var urlventa = "{{ url('admin/venta/show') }}";
@@ -500,14 +514,15 @@
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+simbolomonedafactura+ data[i].servicio+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+simbolomonedafactura+ data[i].preciofinal+ 
                 '</td></tr>';
-               
                 $("#detallesventa1>tbody").append(filaDetalle);
             }
                  
         });
 
-    })
+    });
 // fin de los modales
+
+
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
         });
@@ -527,8 +542,7 @@
     $('#generarfactura1').click(function() {
         generarfactura(idventa);
     });
-
-
+ 
     function generarfactura($id){
         if($id != -1){
             window.open( '/admin/venta/generarfacturapdf/' + $id );}
@@ -552,6 +566,8 @@
                 $('#modalVer2').modal('hide');
                 if(data[0]==1){  
                     document.getElementById('ventapagada'+idventa).innerHTML = "SI"; 
+                    numerocreditos--;
+                    mostrarmensaje(numerocreditos);
             Swal.fire({
                 text: "Factura Pagada",
                 icon: "success"
@@ -574,43 +590,36 @@
             
             });
     }
+    $(document).ready(function() { 
+        numerocreditos = @json($creditosxvencer); 
+        mostrarmensaje(numerocreditos);
+       
+     });
 
-    //inicializamos la tabla mitable1
+    function mostrarmensaje(numCred){
+        var registro = "REGISTRO DE VENTAS: " ;
+        var tienes = "Tienes ";
+        var pago = " Creditos por Cobrar ";
+        var boton= '<button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>';
+        if(numCred>0){ 
+            document.getElementById('mititulo').innerHTML =registro+tienes+numCred+pago +boton ;
+        }else{document.getElementById('mititulo').innerHTML =registro ;}
 
-    if(nrocreditos>0){
-        
-        $('#mitabla1').DataTable({
-            "language": {
-           "sProcessing":     "Procesando...",
-           "sLengthMenu":     "Mostrar _MENU_ registros",
-           "sZeroRecords":    "No se encontraron resultados",
-           "sEmptyTable":     "Ningún dato disponible en esta tabla",
-           "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-           "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-           "sInfoFiltered":   "( filtrado de un total de _MAX_ registros )",
-           "sInfoPostFix":    "",
-           "sSearch":         "Buscar Registro:",
-           "sUrl":            "",
-           "sInfoThousands":  ",",
-           "sLoadingRecords": "Cargando...",
-           "loadingRecords": "Cargando...",
-            "processing": "Procesando...",
-           "oPaginate": {
-               "sFirst":    "Primero",
-               "sLast":     "Último",
-               "sNext":     "Siguiente",
-               "sPrevious": "Anterior"
-           },
-           "oAria": {
-               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-           }
-        },  "order": [[ 0, "desc" ]], 
-        scrollX: true,
-        });
-            }
-    
+     }
+     function mostrarmensajemodal(nroxvencer,nrovencidos){
+        var xvencer = " Creditos por Vencer" ;
+        var vencidos = " Creditos Vencidos" ;
+        var y =" y ";
+        var tienes = "TIENES: "; 
+        if(nroxvencer>0 && nrovencidos >0){ 
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nroxvencer+xvencer+y+nrovencidos +vencidos  ;
+        }else if(nroxvencer>0 && nrovencidos ==0){
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nroxvencer+xvencer  ;
+        }else if(nroxvencer == 0 && nrovencidos >0){
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nrovencidos +vencidos  ;
+        }
 
+     }
     </script>
 @endpush
 

@@ -23,7 +23,7 @@
                             @error('nombre') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label is-required">RUC</label>
+                            <label class="form-label is-required">RUC o DNI</label>
                             <input type="number" name="ruc" id="ruc" value="{{ $cliente->ruc }}" class="form-control borde" required />
                             @error('ruc') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
@@ -69,7 +69,7 @@ function verificar() {
         ruc1 = document.getElementById('ruc');
         enviar = document.getElementById('enviar');
         
-        if (ruc1.value.length == 11) {
+        if (ruc1.value.length == 11 || ruc1.value.length == 8) {
                 ruc1.style.borderColor = "green";
                 enviar.disabled = false;
             }

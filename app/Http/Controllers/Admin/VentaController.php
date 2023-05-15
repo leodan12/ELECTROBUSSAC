@@ -32,23 +32,10 @@ class VentaController extends Controller
         ->where('v.pagada','=', 'NO')
         ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
         'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
-        ->get();
-
-        $creditosvencidos = DB::table('ventas as v')
-        ->join('companies as e', 'v.company_id', '=', 'e.id')
-        ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id') 
-        ->where('v.fechav','!=',null)
-        ->where( 'v.fechav' ,'<', $fechahoy)
-        ->where('v.pagada','=', 'NO')
-        ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
-        'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
-        ->get();
-
-        $nrocreditosvencidos =count($creditosvencidos);
-  
-       // return $creditosvencidos;
+        ->count();
+        
        
-        return view('admin.venta.index', compact('ventas','creditosxvencer','nrocreditosvencidos'));
+        return view('admin.venta.index', compact('ventas','creditosxvencer' ));
     }
 
     public function create()
@@ -295,6 +282,26 @@ class VentaController extends Controller
             ->where('v.id', '=', $id)->get();
 
         return  $venta;
+    }
+
+    public function showcreditos()
+    {
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d",strtotime($fechahoy."+ 7 days")); 
+
+        $creditosvencidos = DB::table('ventas as v')
+        ->join('companies as e', 'v.company_id', '=', 'e.id')
+        ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id') 
+        ->where('v.fechav','!=',null)
+        ->where( 'v.fechav' ,'<=', $fechalimite)
+        ->where('v.pagada','=', 'NO')
+        ->select('v.id','v.fecha','e.nombre as nombreempresa','cl.nombre as nombrecliente','v.moneda',
+        'v.costoventa','v.pagada','v.fechav','v.factura','v.formapago')
+        ->get();
+        //$nrocreditosvencidos =count($creditosvencidos);
+  
+       return $creditosvencidos;
+ 
     }
 
     public function destroy(int $venta_id)

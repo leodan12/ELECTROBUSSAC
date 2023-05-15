@@ -8,12 +8,10 @@
             @if (session('message'))
                 <div class="alert alert-success">{{ session('message') }}</div>
             @endif
-            @php  $numerodecreditos = count($creditosxvencer) @endphp
+             
             <div class="card">
                 <div class="card-header">
-                    <h4>REGISTRO DE INGRESOS:  @if(count($creditosxvencer)>0)  &nbsp;&nbsp;Tienes {{ count($creditosxvencer) }} Compras o Ingresos por Pagar:&nbsp;
-                        <button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>
-                        @endif
+                    <h4> <h4 id="mititulo">  REGISTRO DE INGRESOS:   </h4>
                         <a href="{{ url('admin/ingreso/create') }}" class="btn btn-primary float-end">Añadir ingreso</a>
                     </h4>
                 </div>
@@ -39,7 +37,7 @@
                            
                             @forelse ($ingresos as $ingreso)
                             <tr>
-                                <td>{{$ingreso->id}}</td>
+                                <td  >{{$ingreso->id}}</td>
                                 <td>{{$ingreso->factura}}</td>
                                 <td>{{$ingreso->fecha}}</td>
                                 <td>
@@ -78,7 +76,7 @@
                                 </td>
                             </tr>
                             @empty
-                            <tr>
+                            <tr  >
                                 <td colspan="7">No hay Productos Disponibles</td>
                             </tr>
                             @endforelse
@@ -88,7 +86,7 @@
                     </div>
                 </div>
                 {{-- modal de ver venta --}}
-            <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
+        <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -180,10 +178,9 @@
             <div class="modal-dialog modal-xl">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="modalCreditos1Label">
+                  <h1 class="modal-title fs-5" id="modalCreditos1Label1">
                     TIENES:  &nbsp;
-                    {{ (count($creditosxvencer)-$nrocreditosvencidos) }} Compras a credito por vencer 
-                    @if($nrocreditosvencidos>0)y  {{ ( $nrocreditosvencidos)}} Compras a creditos vencidas. @endif</h1>  
+                  </h1>  
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
                 </div>
                 <div class="modal-body">
@@ -197,49 +194,12 @@
                                 <th>EMPRESA</th>
                                 <th>MONEDA</th>
                                 <th>FORMA PAGO</th>
-                                <th>COSTO VENTA </th>
-                                <th>PAGADA </th>
+                                <th>COSTO VENTA </th> 
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
-                        <Tbody id="tbody-mantenimientos">
-                           
-                            @forelse ($creditosxvencer as $item)
-                            @php  $fechahoy = date('Y-m-d')  @endphp
-                            <tr @if($item->fechav < $fechahoy )  style="background-color: #f89f9f" @endif >
-                                <td>{{$item->id}}</td> 
-                                <td>{{$item->fecha}}</td>
-
-                                <td>{{$item->fechav}}</td>
-
-                                <td>{{$item->nombrecliente}}  </td>
-                                <td>{{$item->nombreempresa}} </td>
-                                <td> {{$item->moneda}}</td>
-                                <td> {{$item->formapago}}</td>
-                                @if($item->moneda == 'soles')
-                                <td>S/. {{$item->costoventa}}</td>
-                                @elseif($item->moneda == 'dolares')
-                                <td>$ {{$item->costoventa}}</td>
-                                @endif
-                                <td id="ventapagada{{$item->id  }}">{{$item->pagada}}</td>
-                                
-                                <td>
-                                    <a href="{{ url('admin/ingreso/'.$item->id.'/edit')}}" class="btn btn-success">Editar</a>
-                                    <button type="button" class="btn btn-secondary" data-id="{{$item->id}}" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>
-                                    <form action="{{ url('admin/ingreso/'.$item->id.'/delete') }}" class="d-inline formulario-eliminar">
-                                    <button type="submit" class="btn btn-danger formulario-eliminar">
-                                        Eliminar
-                                    </button>
-                                    </form>
-                        
-                                   
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="7">No hay Productos Disponibles</td>
-                            </tr>
-                            @endforelse
+                        <Tbody  >
+                           <tr></tr>
                         </Tbody>
                     </table>
                 </div>
@@ -248,7 +208,7 @@
                 </div>
               </div>
             </div>
-          </div>
+        </div>
 
  {{-- modal para ver los datosde los creditos x vencer --}}
           <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos1Label2" tabindex="-1">
@@ -350,9 +310,9 @@
 <script src="{{ asset('admin/midatatable.js') }}"></script>
 
 <script> 
-  var idventa="";
-  var nrocreditos=0;
-    nrocreditos = @json($numerodecreditos);
+  var idventa=""; 
+  var inicializartabla=0; 
+  var numerocreditos=0;
   //para el modal de ver venta
     const mimodal = document.getElementById('mimodal')
     mimodal.addEventListener('show.bs.modal', event => {
@@ -423,11 +383,61 @@
 
     })
 
-//mostrar el modal de los datos de los creditos
+//mostrar el modal de la lista de los creditos---------------------------
      
-const mimodalcreditos = document.getElementById('modalVer2')
+const modallistacreditos = document.getElementById('modalCreditos1')
+modallistacreditos.addEventListener('show.bs.modal', event => {
+    var nroxvencer=0;
+    var nrovencidos=0;
+    var hoy = new Date();  
+    var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+      // alert(fechaActual);
+        const button = event.relatedTarget;
+       // const id = button.getAttribute('data-id');
+        var urlventa = "{{ url('admin/ingreso/showcreditos') }}";
+        $.get(urlventa, function(data) { 
+            const modalTitle = modallistacreditos.querySelector('.modal-title')
+            modalTitle.textContent = `Ingresos a credito por vencer: ` ;
+          
+            var simbolomonedafact=""; 
+            $('#mitabla1 tbody tr').slice().remove();
+            var miurl = "{{ url('/admin/ingreso/') }}";
+            for(var i =0 ; i<data.length;i++){ 
+                var monedafact=data[i].moneda;
+                if(monedafact=="dolares"){simbolomonedafact="$";}
+                else if(monedafact=="soles"){simbolomonedafact="S/.";} 
+                var colorfondo ='<tr id="fila' + i + '">';
+                    if(data[i].fechav < fechaActual){
+                        colorfondo ='<tr style="background-color:  #f89f9f" id="fila' + i + '">';
+                            nrovencidos++;
+                    }else{nroxvencer++;}
+                filaDetalle =colorfondo+
+                '<td><input  type="hidden"   value="' + data[i].id  + '"required>'+ data[i].id+
+                '</td><td><input  type="hidden"  value="' + data[i].fecha + '"required>'+ data[i].fecha+ 
+                '</td><td><input  type="hidden"  value="' + data[i].fechav + '"required>'+ data[i].fechav+ 
+                '</td><td><input  type="hidden"  value="' + data[i].nombrecliente + '"required>'+ data[i].nombrecliente+ 
+                '</td><td><input  type="hidden"  value="' + data[i].nombreempresa + '"required>'+ data[i].nombreempresa+ 
+                '</td><td><input  type="hidden"  value="' + data[i].moneda + '"required>'+ data[i].moneda+ 
+                '</td><td><input  type="hidden"  value="' + data[i].formapago + '"required>'+ data[i].formapago+  
+                '</td><td><input  type="hidden"  value="' + data[i].costoventa + '"required>'+simbolomonedafact+ data[i].costoventa+  
+                '</td><td><a  href="'+miurl+'/'+data[i].id+'/edit" class="btn btn-success">Editar</a> '+
+                '<button type="button" class="btn btn-secondary" data-id="'+data[i].id+'" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>'+
+                '<form action="'+miurl+'/'+data[i].id+'/delete" class="d-inline formulario-eliminar"> <button type="submit" class="btn btn-danger formulario-eliminar">Eliminar </button></form>'+
+                '</td></tr>';
+               
+                $("#mitabla1>tbody").append(filaDetalle);
+            }
+            inicializartabla1(inicializartabla); 
+            inicializartabla++;
+            mostrarmensajemodal(nroxvencer,nrovencidos);
+        });
+       
+    })
+//mostrar el modal de los datos de los creditos---------------------------
+     
+const mimodalcreditos = document.getElementById('modalVer2');
     mimodalcreditos.addEventListener('show.bs.modal', event => {
-
+        
         const button = event.relatedTarget;
         const id = button.getAttribute('data-id');
         var urlventa = "{{ url('admin/ingreso/show') }}";
@@ -496,7 +506,6 @@ const mimodalcreditos = document.getElementById('modalVer2')
         });
 
     })
-
     //fin de los modales
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
@@ -533,6 +542,8 @@ const mimodalcreditos = document.getElementById('modalVer2')
                 $('#modalVer2').modal('hide');
                 if(data[0]==1){  
                     document.getElementById('ventapagada'+idventa).innerHTML = "SI"; 
+                    numerocreditos--;
+                    mostrarmensaje(numerocreditos);
             Swal.fire({
                 text: "Factura Pagada",
                 icon: "success"
@@ -557,38 +568,36 @@ const mimodalcreditos = document.getElementById('modalVer2')
 
      }    
 
-     if(nrocreditos>0){
-        
-        $('#mitabla1').DataTable({
-            "language": {
-           "sProcessing":     "Procesando...",
-           "sLengthMenu":     "Mostrar _MENU_ registros",
-           "sZeroRecords":    "No se encontraron resultados",
-           "sEmptyTable":     "Ningún dato disponible en esta tabla",
-           "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-           "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-           "sInfoFiltered":   "( filtrado de un total de _MAX_ registros )",
-           "sInfoPostFix":    "",
-           "sSearch":         "Buscar Registro:",
-           "sUrl":            "",
-           "sInfoThousands":  ",",
-           "sLoadingRecords": "Cargando...",
-           "loadingRecords": "Cargando...",
-            "processing": "Procesando...",
-           "oPaginate": {
-               "sFirst":    "Primero",
-               "sLast":     "Último",
-               "sNext":     "Siguiente",
-               "sPrevious": "Anterior"
-           },
-           "oAria": {
-               "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-               "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-           }
-        },  "order": [[ 0, "desc" ]], 
-        scrollX: true,
-        });
-            }
+     $(document).ready(function() { 
+        numerocreditos = @json($creditosxvencer); 
+        mostrarmensaje(numerocreditos);
+       
+     });
+
+     function mostrarmensaje(numCred){
+        var registro = "REGISTRO DE INGRESOS: " ;
+        var tienes = "Tienes ";
+        var pago = " Creditos por Pagar ";
+        var boton= '<button class="btn btn-info" data-bs-target="#modalCreditos1" data-bs-toggle="modal">  Ver</button>';
+        if(numCred>0){ 
+            document.getElementById('mititulo').innerHTML =registro+tienes+numCred+pago +boton ;
+        }else{document.getElementById('mititulo').innerHTML =registro ;}
+
+     }
+     function mostrarmensajemodal(nroxvencer,nrovencidos){
+        var xvencer = " Creditos por Vencer" ;
+        var vencidos = " Creditos Vencidos" ;
+        var y =" y ";
+        var tienes = "TIENES: "; 
+        if(nroxvencer>0 && nrovencidos >0){ 
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nroxvencer+xvencer+y+nrovencidos +vencidos  ;
+        }else if(nroxvencer>0 && nrovencidos ==0){
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nroxvencer+xvencer  ;
+        }else if(nroxvencer == 0 && nrovencidos >0){
+            document.getElementById('modalCreditos1Label1').innerHTML =tienes+nrovencidos +vencidos  ;
+        }
+
+     }
     </script> 
 @endpush
 
