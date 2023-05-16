@@ -85,14 +85,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group is-required">PRECIO DE LA VENTA SIN IGV</label>
+                             <label class="form-label input-group is-required">PRECIO DE LA COTIZACION SIN IGV</label>
                              <span class="input-group-text" id="spancostoventasinigv"></span> 
                             <input type="number" name="costoventasinigv" id= "costoventasinigv"  min="0.1" step="0.01" class="form-control borde required" required readonly />
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group">PRECIO DE LA VENTA CON IGV</label>
+                             <label class="form-label input-group">PRECIO DE LA COTIZACION CON IGV</label>
                              <span class="input-group-text" id="spancostoventaconigv"></span> 
                             <input type="number" name="costoventaconigv" id= "costoventaconigv"  min="0.1" step="0.01" class="form-control borde required" required  readonly/>
                         </div>
@@ -102,70 +102,128 @@
                             <input type="text" name="observacion" id="observacion" class="form-control borde" />
                         </div>
                         
-                        <hr>
-                        <h4>Agregar Detalle de la Venta</h4>
-                        <div class="col-md-6 mb-3">
-                             <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select select2 borde" name="product" id="product" disabled >
-                                <option value="" selected disabled>Seleccione una opción</option>    
-                            </select>  
-                        </div>
-                        <div class="col-md-6 mb-3">
-                             <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
-                            <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                            <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
-                            <span class="input-group-text" id="spanpreciounitarioref"></span> 
-                            <input type="number" name="preciounitario" min="0" step="0.01" id="preciounitario" readonly class="form-control borde" />
-                        </div>
-                        </div> 
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
-                             <span class="input-group-text" id="spanpreciounitario"></span> 
-                             <input type="number" name="preciounitariomo" min="0" step="0.01" id="preciounitariomo" class="form-control borde" />
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
-                             <span class="input-group-text" id="spanservicio"></span>
-                            <input type="number" name="servicio" min="0" step="0.01" id="servicio"class="form-control borde" /> 
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
-                             <span class="input-group-text" id="spanpreciototal"></span>
-                            <input type="number" name="preciofinal" min="0" step="0.01" id="preciofinal" readonly class="form-control borde" />
-                            </div>
-                        </div>
-                    <div class="col-md-8 mb-3"> 
-                         <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
-                        <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
-                    </div> 
-                        <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
-                        <div class="table-responsive">
-                        <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
-                            <thead class="fw-bold text-primary">
-                                <tr>
-                                    <th>PRODUCTO</th>
-                                    <th>OBSERVACION</th>
-                                    <th>CANTIDAD</th>
-                                    <th>PRECIO UNITARIO(REFERENCIAL)</th>
-                                    <th>PRECIO UNITARIO</th>
-                                    <th>SERVICIO ADICIONAL</th>
-                                    <th>PRECIO FINAL DEL PRODUCTO</th>
-                                    <th>ELIMINAR</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        
+                        
+                       
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-12">
+        <hr>
+        <nav class="borde" style="border-radius: 5px;">
+            <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist" >
+
+                <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab" data-bs-target="#nav-detalles" type="button" role="tab" aria-controls="nav-detalles" aria-selected="false">Detalles</button>
+                <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab" data-bs-target="#nav-condiciones" type="button" role="tab" aria-controls="nav-condiciones" aria-selected="false">Condiciones</button>
+            </div>
+        </nav>
+        <hr>
+        <div class="tab-content" id="nav-tabContent">
+
+            <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel" aria-labelledby="nav-detalles-tab" tabindex="0">
+                <br>
+                <h4>Agregar Detalle de la Cotizacion</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">PRODUCTO</label>
+                       <select  class="form-select select2 borde" name="product" id="product" disabled >
+                           <option value="" selected disabled>Seleccione una opción</option>    
+                       </select>  
+                   </div>
+                   <div class="col-md-6 mb-3">
+                        <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
+                       <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
+                   </div>
+                   <div class="col-md-4 mb-3">
+                       <div class="input-group">
+                       <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
+                       <span class="input-group-text" id="spanpreciounitarioref"></span> 
+                       <input type="number" name="preciounitario" min="0" step="0.01" id="preciounitario" readonly class="form-control borde" />
+                   </div>
+                   </div> 
+                   <div class="col-md-4 mb-3">
+                       <div class="input-group">
+                        <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
+                        <span class="input-group-text" id="spanpreciounitario"></span> 
+                        <input type="number" name="preciounitariomo" min="0" step="0.01" id="preciounitariomo" class="form-control borde" />
+                       </div>
+                   </div>
+                   <div class="col-md-4 mb-3">
+                       <div class="input-group">
+                        <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
+                        <span class="input-group-text" id="spanservicio"></span>
+                       <input type="number" name="servicio" min="0" step="0.01" id="servicio"class="form-control borde" /> 
+                       </div>
+                   </div>
+                   <div class="col-md-4 mb-3">
+                       <div class="input-group">
+                        <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
+                        <span class="input-group-text" id="spanpreciototal"></span>
+                       <input type="number" name="preciofinal" min="0" step="0.01" id="preciofinal" readonly class="form-control borde" />
+                       </div>
+                   </div>
+               <div class="col-md-8 mb-3"> 
+                    <label class="form-label " id="labelobservacionproducto">OBSERVACION:</label>
+                   <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
+               </div> 
+               <button type="button" class="btn btn-info" id="addDetalleBatch">  Agregar Producto a la Cotizacion</button>
+                
+               <div class="table-responsive">
+                <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
+                    <thead class="fw-bold text-primary">
+                        <tr>
+                            <th>PRODUCTO</th>
+                            <th>OBSERVACION</th>
+                            <th>CANTIDAD</th>
+                            <th>PRECIO UNITARIO(REFERENCIAL)</th>
+                            <th>PRECIO UNITARIO</th>
+                            <th>SERVICIO ADICIONAL</th>
+                            <th>PRECIO FINAL DEL PRODUCTO</th>
+                            <th>ELIMINAR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr></tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+                        
+                        
+
+            </div>
+            <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel" aria-labelledby="nav-condiciones-tab" tabindex="0">
+                <div class="row">
+                    <div class="col-md-10 mb-3"> 
+                        <label class="form-label " id="labelcondicion">CONDICION:</label>
+                        <input type="text" name="condicion"   id="condicion"  class="form-control borde gui-input" />
                     </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label " style="color: white">.</label>
+                        <button type="button" class="btn btn-info form-control" id="addCondicion"> Agregar</button>
+                    </div>
+                </div>
+                
+                <div class="table-response">
+                    <table class="table table-row-bordered gy-5 gs-5" id="condiciones">
+                        <thead class="fw-bold text-primary">
+                            <tr >
+                                <th>CONDICION</th>
+                                <th>ELIMINAR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                </div> 
+
+            </div>
+             
+        </div>
+    </div>
+</div>
+                       
                         <hr>
                         <div class="col-md-12 mb-3">
                              <button type= "submit" id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end" disabled>Guardar</button>
@@ -193,7 +251,8 @@
     var simbolomonedaproducto="";
     var simbolomonedafactura="";
     var indicex=0;
-    var conigv="";
+    var conigv="SI";
+    var indicecondicion=0;
     var hoy = new Date();  
     var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
   
@@ -216,7 +275,7 @@ $("#igv").change(function(){
         document.getElementById('costoventaconigv').value = "";  
     }
 });
- $("#company_id").change(function(){
+$("#company_id").change(function(){
         var company = $(this).val();
         $('#product').removeAttr('disabled');
         $.get('/admin/venta/productosxempresa/'+company, function(data){ 
@@ -263,7 +322,7 @@ $("#moneda").change(function () {
         } 
    }); 
    limpiarinputs();
- });
+});
 
  $("#product").change(function () {
             
@@ -331,8 +390,25 @@ $("#moneda").change(function () {
                      document.getElementById('preciounitariomo').value = "";
                 } 
                 //alert(nameprod);
-        });  });
+        }); 
+});
 
+$('#addCondicion').click(function() {
+          
+    //datos del detalleSensor
+    var condicion = $('[name="condicion"]').val();
+    if (!condicion) {alert("ingrese una condicion:");   $("#condicion").focus(); return;   }
+    var LCondiciones = [];
+    LCondiciones.push(condicion);
+
+    filaDetalle ='<tr id="filacondicion' + indicecondicion + 
+        '"><td><input  type="hidden" name="Lcondicion[]" value="' + LCondiciones[0]  + '"required>'+ LCondiciones[0]+
+        '</td><td><button type="button" class="btn btn-danger" onclick="eliminarCondicion(' + indicecondicion + ')" data-id="0">ELIMINAR</button></td></tr>';
+        $("#condiciones>tbody").append(filaDetalle);
+        indicecondicion++;
+        document.getElementById('condicion').value ="";
+
+});
         $('#addDetalleBatch').click(function() {
           
           //datos del detalleSensor
@@ -349,11 +425,11 @@ $("#moneda").change(function () {
           if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
           if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
           if (!servicio) {  alert("Ingrese un servicio"); return;   }
-          if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
+          if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
 
            
           var LVenta = [];
-          var tam = LVenta.length;
+         // var tam = LVenta.length;
           LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
       
               filaDetalle ='<tr id="fila' + indice + 
@@ -451,6 +527,11 @@ function eliminarFila(ind) {
     var funcion="eliminar";
     botonguardar(funcion);
 
+    return false;
+} 
+function eliminarCondicion(ind) { 
+    $('#filacondicion' + ind).remove();
+        indicecondicion-- ; 
     return false;
 } 
 function eliminarTabla(ind) {

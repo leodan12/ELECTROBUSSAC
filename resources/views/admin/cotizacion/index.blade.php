@@ -16,23 +16,25 @@
                         <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir cotizacion</a>
                     </h4>
                 </div>
-                <div class="card-body">
-                
-                    <table class="table table-bordered table-striped " style="width:100%"  id="mitabla" name="mitabla">
-                        <thead>
-                            <tr>
+                <div class="card-body" style="text-align: left;" >
+                    <div class="table-responsive">
+                    <table class="table table-bordered table-striped "   id="mitabla" name="mitabla">
+                        <thead style="width:100%">
+                            <tr  class="fw-bold text-primary ">
                                 <th>ID</th> 
                                 <th>NUMERO</th>
                                 <th>FECHA</th>
                                 <th>CLIENTE</th>
                                 <th>EMPRESA</th>
                                 <th>MONEDA</th> 
-                                <th>COSTO VENTA </th>
+                                <th>FORMA PAGO</th> 
+                                <th>COSTO SIN IGV</th>
+                                <th>COSTO CON IGV</th>
                                 <th>VENDIDA </th>
                                 <th>ACCIONES</th>
                             </tr>
                         </thead>
-                        <Tbody id="tbody-mantenimientos">
+                        <Tbody  >
                            
                             @forelse ($cotizaciones as $item)
                             <tr>
@@ -47,10 +49,13 @@
                                     {{$item->nombreempresa}}
                                 </td>
                                 <td> {{$item->moneda}}</td> 
+                                <td> {{$item->formapago}}</td> 
                                 @if($item->moneda == 'soles')
                                 <td>S/. {{$item->costoventasinigv}}</td>
+                                <td>S/. {{$item->costoventaconigv}}</td>
                                 @elseif($item->moneda == 'dolares')
-                                <td>$ {{$item->costoventasinigv}}</td>
+                                <td>$ {{$item->costoventasinigv}}</td> 
+                                <td>$ {{$item->costoventaconigv}}</td>
                                 @endif
                                 <td >{{$item->vendida}}</td>
                                 
@@ -66,61 +71,74 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7">No hay Productos Disponibles</td>
+                                <td colspan="7">No hay Cotizaciones Disponibles</td>
                             </tr>
                             @endforelse
                         </Tbody>
                     </table>
-                    <div>
-                        
                     </div>
                 </div>
                 <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Venta</h1>
+                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Cotizacion</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                                <div class="col-md-4   mb-5">
+                                <div class="col-md-3   mb-3">
                                     <label for="verFecha" class="col-form-label">FECHA:</label>
                                     <input type="text" class="form-control " id="verFecha" readonly>
                                 </div>
-                                
-                                <div class=" col-md-4   mb-5">
+                                <div class="col-md-3   mb-3">
+                                    <label for="verFechav" class="col-form-label">FECHA VALIDEZ:</label>
+                                    <input type="text" class="form-control " id="verFechav" readonly>
+                                </div>
+                                <div class=" col-md-3   mb-3">
                                     <label for="verMoneda" class="col-form-label">MONEDA:</label>
                                     <input type="text" class="form-control " id="verMoneda" readonly>
                                 </div>
-                                <div class=" col-md-4   mb-5" id="divtasacambio">
+                                <div class=" col-md-3   mb-3" id="divtasacambio">
                                     <label for="verTipocambio" class="col-form-label">TIPO DE CAMBIO:</label>
                                     <input type="text" class="form-control " id="verTipocambio" readonly>
                                 </div>
-                                <div class=" col-md-4   mb-5">
+                                <div class=" col-md-6   mb-3">
                                     <label for="verEmpresa" class="col-form-label">EMPRESA:</label>
                                     <input type="text" class="form-control " id="verEmpresa" readonly>
                                 </div>
-                                <div class=" col-md-4   mb-5">
+                                <div class=" col-md-6   mb-3">
                                     <label for="verCliente" class="col-form-label">CLIENTE:</label>
                                     <input type="text" class="form-control " id="verCliente" readonly>
                                 </div>
-                                <div class=" col-md-4   mb-5">
-                                    <div class="input-group">
-                                    <label for="verPrecioventa" class="col-form-label input-group">PRECIO VENTA:</label>
-                                    <span class="input-group-text" id="spancostoventa"></span>
-                                    <input type="text" class="form-control " id="verPrecioventa" readonly>
-                                </div> 
-                                </div>
-                                <div class=" col-md-4   mb-5" id="divobservacion"> 
+                                <div class=" col-md-8   mb-3" id="divobservacion"> 
                                     <label for="verObservacion" class="col-form-label">OBSERVACION:</label>
                                     <input type="text" class="form-control " id="verObservacion" readonly>
                                 </div>
-                                <div class=" col-md-4   mb-5"  > 
+                                <div class=" col-md-4   mb-3" id="divobservacion"> 
+                                    <label for="verFormapago" class="col-form-label">FORMA DE PAGO:</label>
+                                    <input type="text" class="form-control " id="verFormapago" readonly>
+                                </div>
+                                <div class=" col-md-4   mb-3">
+                                <div class="input-group">
+                                    <label for="verPrecioventasinigv" class="col-form-label input-group">PRECIO SIN IGV:</label>
+                                    <span class="input-group-text" id="spancostoventasinigv"></span>
+                                    <input type="text" class="form-control " id="verPrecioventasinigv" readonly>
+                                </div> 
+                                </div>
+                                <div class=" col-md-4   mb-3">
+                                <div class="input-group">
+                                    <label for="verPrecioventaconigv" class="col-form-label input-group">PRECIO CON IGV:</label>
+                                    <span class="input-group-text" id="spancostoventaconigv"></span>
+                                    <input type="text" class="form-control " id="verPrecioventaconigv" readonly>
+                                </div> 
+                                </div> 
+                                <div class=" col-md-4   mb-3"  > 
                                     <label for="verVendida" class="col-form-label">COTIZACION VENDIDA:</label>
                                     <input type="text" class="form-control " id="verVendida" readonly>
                                 </div>
+                                
                                  
                             </div>
                         </form>
@@ -129,6 +147,7 @@
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>Producto</th> 
+                                    <th>Observacion</th>
                                     <th>Cantidad</th>
                                     <th>Precio Unitario(referencial)</th>
                                     <th>precio Unitario</th> 
@@ -165,24 +184,31 @@
 
         const button = event.relatedTarget
         const id = button.getAttribute('data-id')
-        var urlventa = "{{ url('admin/venta/show') }}";
+        var urlventa = "{{ url('admin/cotizacion/show') }}";
         $.get(urlventa + '/' + id, function(data) { 
             const modalTitle = mimodal.querySelector('.modal-title')
-            modalTitle.textContent = `Ver Registro ${id}` ;
+            modalTitle.textContent = `Ver Cotizacion Nro: `+data[0].numero ;
             idventa = id;
             document.getElementById("verFecha").value=data[0].fecha;     
+            document.getElementById("verFechav").value=data[0].fechav;
             document.getElementById("verMoneda").value=data[0].moneda;   
             document.getElementById("verEmpresa").value=data[0].company; 
             document.getElementById("verCliente").value=data[0].cliente
-            document.getElementById("verVendida").value=data[0].pagada; 
-            document.getElementById("verPrecioventa").value=data[0].costoventa;  
-            if(data[0].moneda=="dolares"){document.getElementById('spancostoventa').innerHTML = "$";}
-            else if(data[0].moneda=="soles"){document.getElementById('spancostoventa').innerHTML = "S/.";}
+            document.getElementById("verVendida").value=data[0].vendida; 
+            document.getElementById("verFormapago").value=data[0].formapago; 
+            document.getElementById("verPrecioventasinigv").value=data[0].costoventasinigv;  
+            document.getElementById("verPrecioventaconigv").value=data[0].costoventaconigv;  
+            if(data[0].moneda=="dolares"){
+                document.getElementById('spancostoventasinigv').innerHTML = "$";
+                document.getElementById('spancostoventaconigv').innerHTML = "$";}
+            else if(data[0].moneda=="soles"){
+                document.getElementById('spancostoventasinigv').innerHTML = "S/.";
+                document.getElementById('spancostoventaconigv').innerHTML = "S/.";}
 
             document.getElementById("verTipocambio").value=data[0].tasacambio;   
              
-            if(data[0].pagada=="NO"){document.getElementById('pagarfactura').style.display = 'inline'; }
-            else if(data[0].pagada=="SI"){document.getElementById('pagarfactura').style.display = 'none';}
+            if(data[0].vendida=="NO"){document.getElementById('realizarventa').style.display = 'inline'; }
+            else if(data[0].vendida=="SI"){document.getElementById('realizarventa').style.display = 'none';}
 
             if(data[0].observacion == null){
                 document.getElementById('divobservacion').style.display = 'none';

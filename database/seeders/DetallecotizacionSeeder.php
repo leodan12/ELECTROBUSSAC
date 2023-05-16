@@ -21,6 +21,7 @@ class DetallecotizacionSeeder extends Seeder
             'preciounitariomo' => 100, 
             'servicio' => 0,
             'preciofinal' => 100,
+            'observacionproducto' => 100,
         ]); 
         Detallecotizacion::create([
             'cotizacion_id' => 1,
@@ -30,6 +31,7 @@ class DetallecotizacionSeeder extends Seeder
             'preciounitariomo' => 1000, 
             'servicio' => 100,
             'preciofinal' => 2200,
+            'observacionproducto' => 100,
         ]); 
         Detallecotizacion::create([
             'cotizacion_id' => 2,
@@ -39,6 +41,7 @@ class DetallecotizacionSeeder extends Seeder
             'preciounitariomo' => 200, 
             'servicio' => 5,
             'preciofinal' => 2050,
+            'observacionproducto' => 100,
         ]); 
         Detallecotizacion::create([
             'cotizacion_id' => 2,
@@ -48,6 +51,7 @@ class DetallecotizacionSeeder extends Seeder
             'preciounitariomo' => 100, 
             'servicio' => 10,
             'preciofinal' => 550,
+            'observacionproducto' => 100,
         ]);
         Detallecotizacion::create([
             'cotizacion_id' => 2,
@@ -57,6 +61,7 @@ class DetallecotizacionSeeder extends Seeder
             'preciounitariomo' => 1000, 
             'servicio' => 0,
             'preciofinal' => 2000,
+            'observacionproducto' => 100,
         ]); 
 
     }

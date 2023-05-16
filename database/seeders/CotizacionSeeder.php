@@ -15,7 +15,7 @@ class CotizacionSeeder extends Seeder
     {
         Cotizacion::create([
             'moneda' => "dolares",  
-            'numero' => "01",  
+            'numero' => "20230516-01-001",  
             'observacion' => "no",
             'costoventasinigv' => 2300,
             'costoventaconigv' => 2300,
@@ -29,7 +29,7 @@ class CotizacionSeeder extends Seeder
         ]); 
         Cotizacion::create([
             'moneda' => "soles",
-            'numero' => "02",   
+            'numero' => "20230516-03-001",   
             'observacion' => "no",
             'costoventasinigv' => 4600,
             'costoventaconigv' => 2300,

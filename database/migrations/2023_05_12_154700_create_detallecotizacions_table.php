@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('cotizacion_id');
             $table->unsignedBigInteger('product_id'); 
             $table->integer('cantidad');
+            $table->string('observacionproducto');
             $table->double('preciounitario');
             $table->double('preciounitariomo'); 
             $table->double('preciofinal');

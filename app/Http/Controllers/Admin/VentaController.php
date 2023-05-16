@@ -127,7 +127,7 @@ class VentaController extends Controller
             }
             return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
         }
-
+        return redirect('admin/venta')->with('message','No se pudo Agregar La venta');
     }
 
     public function edit(int $venta_id)

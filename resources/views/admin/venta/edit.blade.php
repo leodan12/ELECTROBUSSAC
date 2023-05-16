@@ -45,10 +45,8 @@
                             <select name="formapago" id="formapago" class="form-select borde" required  >
                             <option value="" selected disabled>Seleccion una opción</option>
                             @if($venta->formapago == "credito")
-                            <option value="credito" data-formapago="credito" selected >Credito</option>
-                            {{-- <option value="contado" data-formapago="contado">Contado</option> --}}
-                            @elseif($venta->formapago == "contado")
-                            {{-- <option value="credito" data-formapago="credito"  >Credito</option> --}}
+                            <option value="credito" data-formapago="credito" selected >Credito</option> 
+                            @elseif($venta->formapago == "contado") 
                             <option value="contado" data-formapago="contado" selected>Contado</option>
                             @endif
                             </select>
@@ -84,13 +82,8 @@
                             @error('tipo') <small class="text-danger">{{$message}}</small> @enderror
                         </div>
                         <div class="col-md-6 mb-3">
-                            @if($venta->moneda == "soles")
-                                <label id="labeltasacambio" class="form-label ">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id= "tasacambio" step="0.01" readonly  class="form-control borde" value="{{ $venta->tasacambio }}"/>
-                            @elseif($venta->moneda == "dolares")
-                                <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id= "tasacambio" step="0.01"   class="form-control borde" value="{{ $venta->tasacambio }}"/>
-                            @endif
+                            <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
+                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01"   class="form-control borde" value="{{ $venta->tasacambio }}"/>
                         </div>
                         <div class="col-md-6 mb-3">
                              <label class="form-label is-required">EMPRESA</label>
@@ -185,7 +178,7 @@
                 </div>
                 </div>
             <div class="col-md-8 mb-3"> 
-                <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
+                <label class="form-label " id="labelobservacionproducto">OBSERVACION:</label>
                 <input type="text" name="observacionproducto"   id="observacionproducto"  class="form-control borde gui-input" />
             </div> 
                         @php $ind=0 ; @endphp
@@ -230,6 +223,7 @@
                             </tbody>
                         </table>
                     </div>
+                    
                         <hr>
                         <div class="col-md-12 mb-3">
                             <button type= "submit" id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end">Actualizar</button>
@@ -285,11 +279,8 @@
          var preciounit = $('[name="preciounitariomo"]').val(); 
          var servicio = $('[name="servicio"]').val();
          if(cantidad >= 1   && preciounit >= 0 && servicio >=0 ){
-              
-                     
-                    preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(cantidad) * parseFloat(servicio)));
-                     
-                    document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
+                preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(cantidad) * parseFloat(servicio)));
+                document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
          }
     }
  
@@ -379,26 +370,6 @@
    });
     });
 
-    //para cambiar la moneda de pago y deshabilitar la tasa de cambio
-   $("#moneda").change(function () {
-       $("#moneda option:selected").each(function () {
-        $mimoneda = $(this).data("moneda"); 
-        if ($mimoneda == "soles") {
-                //alert("selecciono soles");
-                $("#tasacambio").prop("readonly", true);
-                $("#tasacambio").prop("required", false);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className -= " is-required";
-
-            } else if ($mimoneda == "dolares"){
-                $("#tasacambio").prop("readonly", false);
-                $("#tasacambio").prop("required", true);
-                var tasacambio = document.getElementById("labeltasacambio");
-                tasacambio.className += " is-required";
-
-            } 
-   });  });
-
  
 });
 
@@ -429,7 +400,7 @@
             if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
             if (!preciounitariomo) {  alert("Ingrese un precio"); return;   }
             if (!servicio) {  alert("Ingrese un servicio"); return;   }
-            if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
+            if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
 
             var LVenta = [];
             var tam = LVenta.length;
