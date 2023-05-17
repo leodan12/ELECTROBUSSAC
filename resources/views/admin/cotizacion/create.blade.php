@@ -218,7 +218,7 @@
                         </tbody>
                     </table>
                 </div> 
-                
+
 
             </div>
              
@@ -454,7 +454,7 @@ $('#addCondicion').click(function() {
 
               limpiarinputs();
 
-              document.getElementById('costoventasinigv').value = (ventatotal.toFixed(2)); 
+              document.getElementById('costoventasinigv').value = (ventatotal*1).toFixed(2);
               if(conigv=="SI"){
                 document.getElementById('costoventaconigv').value = (ventatotal*1.18).toFixed(2); 
               }else{ 
@@ -520,7 +520,7 @@ function eliminarFila(ind) {
     $('#fila' + ind).remove();
         indice-- ;
     // damos el valor
-    document.getElementById('costoventasinigv').value = (ventatotal.toFixed(2)); 
+    document.getElementById('costoventasinigv').value = (ventatotal*1).toFixed(2); 
     if(conigv=="SI"){
         document.getElementById('costoventaconigv').value = (ventatotal*1.18).toFixed(2); 
     }else{ 

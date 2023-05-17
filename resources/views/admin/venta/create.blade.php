@@ -298,7 +298,7 @@
   
                 limpiarinputs();
 
-                document.getElementById('costoventa').value = (ventatotal.toFixed(2)); 
+                document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
                 
                  
                 var funcion="agregar";
@@ -430,7 +430,7 @@
     $('#fila' + ind).remove();
         indice-- ;
     // damos el valor
-    document.getElementById('costoventa').value = (ventatotal.toFixed(2)); 
+    document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
     //alert(resta);
 
     var funcion="eliminar";

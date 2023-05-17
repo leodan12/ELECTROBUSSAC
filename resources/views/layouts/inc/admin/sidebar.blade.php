@@ -8,19 +8,19 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/category') }}">
-              <i class="mdi mdi-view-headline menu-icon"></i>
+              <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
               <span class="menu-title">CATEGORIAS</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/company') }}">
-              <i class="mdi mdi-chart-pie menu-icon"></i>
+              <i class="mdi mdi-store menu-icon"></i>
               <span class="menu-title">MIS EMPRESAS</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/cliente') }}">
-              <i class="mdi mdi-chart-pie menu-icon"></i>
+              <i class="mdi mdi-hospital-building menu-icon"></i>
               <span class="menu-title">CLIENTES/PROVEEDORES</span>
             </a>
           </li>
@@ -32,40 +32,35 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/inventario') }}">
-              <i class="mdi mdi-emoticon menu-icon"></i>
+              <i class="mdi mdi-playlist-check menu-icon"></i>
               <span class="menu-title">INVENTARIO</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/cotizacion') }}">
-              <i class="mdi mdi-emoticon menu-icon"></i>
+              <i class="mdi mdi-format-strikethrough-variant menu-icon"></i>
               <span class="menu-title">COTIZACION</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="mdi mdi-circle-outline menu-icon"></i>
+              <i class="mdi mdi-cart menu-icon"></i>
               <span class="menu-title">FACTURACION</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{{url ('admin/ingreso') }}">INGRESO</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{url ('admin/venta') }}">SALIDA</a></li>
+              <ul class="  flex-column sub-menu" style="list-style: none;">
+                <li class="nav-item"> <a class="nav-link" href="{{url ('admin/ingreso') }}"><i class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{url ('admin/venta') }}"><i class="mdi mdi-clipboard-arrow-up menu-icon"></i>SALIDA</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/users') }}">
-              <i class="mdi mdi-account menu-icon"></i>
+              <i class="mdi mdi-account-multiple menu-icon"></i>
               <span class="menu-title">USUARIOS</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="documentation/documentation.html">
-              <i class="mdi mdi-file-document-box-outline menu-icon"></i>
-              <span class="menu-title">Documentation</span>
-            </a>
-          </li>
+          
         </ul>
       </nav>
