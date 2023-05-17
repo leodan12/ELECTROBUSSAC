@@ -269,10 +269,14 @@
             var monedaproducto=data[i].monedaproducto;
             if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
             else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
+            var obsproducto="";
+            if(data[i].observacionproducto!=null) {
+                obsproducto = data[i].observacionproducto;
+            }
 
                 filaDetalle ='<tr id="fila' + i + 
                 '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + obsproducto + '"required>'+ obsproducto+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 

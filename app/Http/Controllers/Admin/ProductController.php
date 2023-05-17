@@ -16,7 +16,9 @@ class ProductController extends Controller
 {
     public function index()
     { 
-        $products = Product::all()->where('status','=',0);
+        $products = Product::all()
+        ->where('status','=',0)
+        ->where('tipo','=','estandar');
         return view('admin.products.index', compact('products'));
     }
 
@@ -38,6 +40,8 @@ class ProductController extends Controller
         $product->codigo =$request->codigo;
         $product->unidad =$validatedData['unidad'];
         $product->und =$request->und;
+        $product->tipo ="estandar";
+        $product->unico =0;
         $product->maximo =$validatedData['NoIGV'];
         $product->minimo =$validatedData['NoIGV'];
         $product->moneda =$validatedData['moneda'];
@@ -52,8 +56,7 @@ class ProductController extends Controller
         $inventario->stocktotal = 0;
         $inventario->status = 0;
         $inventario->save();
-        
-
+         
         return redirect('admin/products')->with('message','Producto Agregado Satisfactoriamente');
     }
 
@@ -81,6 +84,8 @@ class ProductController extends Controller
             $product->codigo =$request->codigo;
             $product->unidad =$validatedData['unidad'];
             $product->und =$request->und;
+            $product->tipo ="estandar";
+            $product->unico =0;
             $product->maximo =$validatedData['maximo'];
             $product->minimo =$validatedData['minimo'];
             $product->moneda =$validatedData['moneda'];

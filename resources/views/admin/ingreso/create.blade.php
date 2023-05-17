@@ -189,11 +189,11 @@
     var simbolomonedafactura="";
     var indicex=0;
 
-    $(document).ready(function() {
+$(document).ready(function() {
 
         $('.select2').select2({  }); 
         //para diferente comprador y vendedor
-        $("#company_id").change(function(){
+    $("#company_id").change(function(){
         var company = $(this).val(); 
         $('#cliente_id').removeAttr('disabled');
         $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
@@ -203,7 +203,7 @@
               }
               $("#cliente_id").html(producto_select);
         });
-      });
+    });
  
         $("#btnguardar").prop("disabled", true);
         //Para poner automaticamente la fecha actual
@@ -224,7 +224,7 @@
         preciofinal();
        };
 
-       function preciofinal() {
+    function preciofinal() {
          var cantidad = $('[name="cantidad"]').val(); 
          var preciounit = $('[name="preciounitariomo"]').val(); 
          var servicio = $('[name="servicio"]').val();
@@ -283,9 +283,9 @@
                 botonguardar(funcion);
         });
         
-        $("#product").change(function () {
+    $("#product").change(function () {
        
-       $("#product option:selected").each(function () { 
+        $("#product option:selected").each(function () { 
             $price = $(this).data("price");
             $named = $(this).data("name");
             $moneda = $(this).data("moneda");
@@ -346,10 +346,11 @@
                 document.getElementById('preciounitariomo').value = "";
            }
            //alert(nameprod);
-   });  });
+        });  
+    });
 
    //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
-   $("#formapago").change(function () { 
+    $("#formapago").change(function () { 
        $("#formapago option:selected").each(function () {
         $mimoneda = $(this).data("formapago"); 
         if ($mimoneda == "credito") { 
@@ -365,13 +366,13 @@
                 fechav.className = "form-label ";
                 document.getElementById('pagada').value = "SI";
             } 
-   });
+        });
     });
 
     //para cambiar la moneda de pago y deshabilitar la tasa de cambio
-   $("#moneda").change(function () {
-    $('#product').removeAttr('disabled');
-       $("#moneda option:selected").each(function () { 
+    $("#moneda").change(function () {
+        $('#product').removeAttr('disabled');
+        $("#moneda option:selected").each(function () { 
         $mimoneda = $(this).data("moneda");  
         if($mimoneda=="dolares"){simbolomonedafactura="$";}
         else if($mimoneda=="soles"){simbolomonedafactura="S/.";}
@@ -388,10 +389,11 @@
                 eliminarTabla(i);
             } 
         } 
-   });  limpiarinputs(); }); 
+        });  limpiarinputs(); 
+    }); 
 });
  
-    function eliminarFila(ind) {
+function eliminarFila(ind) {
         var resta =0;
           //document.getElementById('preciot' + ind).value();
           resta = $('[id="preciof' + ind+'"]').val();
@@ -433,16 +435,16 @@ function eliminarTabla(ind) {
 
 function botonguardar(funcion){
 
-if(funcion == "eliminar"){
-    estadoguardar--;
-}else if(funcion == "agregar"){
-    estadoguardar++;
-}
-if(estadoguardar == 0){
-    $("#btnguardar").prop("disabled", true);
-}else if(estadoguardar > 0){
-    $("#btnguardar").prop("disabled", false);
-}    
+    if(funcion == "eliminar"){
+        estadoguardar--;
+    }else if(funcion == "agregar"){
+        estadoguardar++;
+    }
+    if(estadoguardar == 0){
+        $("#btnguardar").prop("disabled", true);
+    }else if(estadoguardar > 0){
+        $("#btnguardar").prop("disabled", false);
+    }    
 }   
 
 function limpiarinputs(){

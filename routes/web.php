@@ -62,6 +62,16 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('products/{product_id}/delete','destroy');
         Route::get('/products/show/{id}', 'show');//ver   
     }); 
+    //Rutas de los Kits
+    Route::controller(App\Http\Controllers\Admin\DetallekitController::class)->group(function(){
+        Route::get('/kits','index');
+        Route::get('/kits/create','create');
+        Route::post('/kits','store');
+        Route::get('/kits/{kit_id}/edit','edit');
+        Route::put('/kits/{kit_id}','update');
+        Route::get('kits/{kit_id}/delete','destroy');
+        Route::get('/kits/show/{kit_id}', 'show');//ver   
+    }); 
     //Ruta de los Usuarios
     Route::controller(App\Http\Controllers\Admin\UserController::class)->group(function(){
         Route::get('/users','index');

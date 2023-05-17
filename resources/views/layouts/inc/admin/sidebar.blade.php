@@ -13,6 +13,18 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{{url ('admin/products') }}">
+              <i class="mdi mdi-grid-large menu-icon"></i>
+              <span class="menu-title">PRODUCTOS</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{url ('admin/kits') }}">
+              <i class="mdi mdi-grid-large menu-icon"></i>
+              <span class="menu-title">KITS</span>
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/company') }}">
               <i class="mdi mdi-store menu-icon"></i>
               <span class="menu-title">MIS EMPRESAS</span>
@@ -24,12 +36,7 @@
               <span class="menu-title">CLIENTES/PROVEEDORES</span>
             </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url ('admin/products') }}">
-              <i class="mdi mdi-grid-large menu-icon"></i>
-              <span class="menu-title">PRODUCTOS</span>
-            </a>
-          </li>
+          
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/inventario') }}">
               <i class="mdi mdi-playlist-check menu-icon"></i>

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('codigo')->nullable();
             $table->string('unidad');
             $table->string('und')->nullable();
+            $table->string('tipo');
+            $table->integer('unico');
             $table->string('moneda');
             $table->double('maximo')->nullable();
             $table->double('minimo')->nullable();

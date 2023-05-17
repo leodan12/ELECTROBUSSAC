@@ -67,23 +67,23 @@
                 <div class="modal-body">
                     <form>
                         <div class="row">
-                           <div class="col-sm-12 col-lg-12 mb-5">
+                           <div class="col-sm-12 col-lg-12 mb-3">
                                 <label for="vernombre" class="col-form-label">NOMBRE:</label>
                                 <input type="text" class="form-control" id="vernombre" readonly>
                             </div>
-                            <div class="col-sm-6 col-lg-6 mb-5">
+                            <div class="col-sm-6 col-lg-6 mb-3">
                                 <label for="verruc" class="col-form-label">RUC:</label>
                                 <input type="number" class="form-control" id="verruc" readonly>
                             </div>
-                            <div class="col-sm-6 col-lg-6 mb-5" id="divemail">
+                            <div class="col-sm-6 col-lg-6 mb-3" id="divemail">
                                 <label for="veremail" class="col-form-label">EMAIL:</label>
                                 <input type="email" class="form-control" id="veremail" readonly>
                             </div>
-                            <div class="col-sm-12 col-lg-12 mb-5" id="divdireccion">
+                            <div class="col-sm-12 col-lg-12 mb-3" id="divdireccion">
                                 <label for="verdireccion" class="col-form-label">DIRECCION:</label>
                                 <input type="text" class="form-control" id="verdireccion" readonly>
                             </div>
-                            <div class="col-sm-12 col-lg-12 mb-5" id="divtelefono">
+                            <div class="col-sm-12 col-lg-12 mb-3" id="divtelefono">
                                 <label for="vertelefono" class="col-form-label">TELEFONO:</label>
                                 <input type="number" class="form-control" id="vertelefono" readonly>
                             </div>

@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detallecotizacions', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('cotizacion_id');
+        Schema::create('kits', function (Blueprint $table) {
+            $table->id(); 
             $table->unsignedBigInteger('product_id'); 
+            $table->unsignedBigInteger('kitproduct_id'); 
             $table->integer('cantidad');
-            $table->string('observacionproducto')->nullable();
             $table->double('preciounitario');
             $table->double('preciounitariomo'); 
             $table->double('preciofinal');
-            $table->double('servicio');
-            $table->foreign('product_id')->references('id')->on('products');//->onDelete('cascade');
-            $table->foreign('cotizacion_id')->references('id')->on('cotizacions')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('kitproduct_id')->references('id')->on('products');//->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detallecotizacions');
+        Schema::dropIfExists('kits');
     }
 };

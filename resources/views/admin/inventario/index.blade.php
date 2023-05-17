@@ -78,15 +78,15 @@
                     <div class="modal-body">
                         <form>
                             <div class="row">
-                                <div class="col-sm-4 col-lg-4 mb-5">
+                                <div class="col-sm-4 col-lg-4 mb-3">
                                     <label for="verProducto" class="col-form-label">PRODUCTO:</label>
                                     <input type="text" class="form-control " id="verProducto" readonly>
                                 </div>
-                                <div class="col-sm-4 col-lg-4 mb-5">
+                                <div class="col-sm-4 col-lg-4 mb-3">
                                     <label for="verStockminimo" class="col-form-label">STOCK MINIMO:</label>
                                     <input type="number" class="form-control" id="verStockminimo" readonly>
                                 </div>
-                                <div class="col-sm-4 col-lg-4 mb-5">
+                                <div class="col-sm-4 col-lg-4 mb-3">
                                     <label for="verStocktotal" class="col-form-label">STOCK TOTAL:</label>
                                     <input type="number" class="form-control" id="verStocktotal" readonly>
                                 </div>

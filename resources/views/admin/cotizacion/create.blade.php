@@ -427,7 +427,7 @@ $('#addCondicion').click(function() {
           if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
           if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
           if (!servicio) {  alert("Ingrese un servicio"); return;   }
-          if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
+          //if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
 
            
           var LVenta = [];
@@ -558,16 +558,16 @@ function eliminarTabla(ind) {
 } 
 function botonguardar(funcion){
 
-if(funcion == "eliminar"){
-    estadoguardar--;
-}else if(funcion == "agregar"){
-    estadoguardar++;
-}
-if(estadoguardar == 0){
-    $("#btnguardar").prop("disabled", true);
-}else if(estadoguardar > 0){
-    $("#btnguardar").prop("disabled", false);
-}    
+    if(funcion == "eliminar"){
+        estadoguardar--;
+    }else if(funcion == "agregar"){
+        estadoguardar++;
+    }
+    if(estadoguardar == 0){
+        $("#btnguardar").prop("disabled", true);
+    }else if(estadoguardar > 0){
+        $("#btnguardar").prop("disabled", false);
+    }    
 }  
  </script>
 @endpush
