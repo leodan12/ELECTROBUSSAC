@@ -8,6 +8,7 @@ use App\Models\Cotizacion;
 use App\Models\Detallecotizacion;
 use App\Models\Company;
 use App\Models\Cliente;
+use App\Models\Condicion;
 use App\Models\Product;
 use App\Http\Requests\CotizacionFormRequest;
 use Illuminate\Support\Facades\DB;
@@ -95,6 +96,7 @@ class CotizacionesController extends Controller
         $cotizacion->formapago =$formapago;
         //guardamos la venta y los detalles
     if( $cotizacion->save()){
+            //traemos y guardamos los detalles de la cotizacion
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
             $observacionproducto = $request->Lobservacionproducto;
@@ -118,7 +120,16 @@ class CotizacionesController extends Controller
             }
         }
        }
-
+       //traemos y guardamos las condiciones
+       $condicion = $request->Lcondicion;
+       if ($condicion !== null) {
+        for ($i = 0; $i < count($condicion); $i++) {
+            $condicioncotizacion = new Condicion;
+            $condicioncotizacion->cotizacion_id = $cotizacion->id;
+            $condicioncotizacion->condicion = $condicion[$i];
+            $condicioncotizacion->save();
+       } 
+        }
         return redirect('admin/cotizacion')->with('message','Cotizacion Agregada Satisfactoriamente');
     }
         return redirect('admin/cotizacion')->with('message','No se pudo Agregar la Cotizacion');
@@ -153,7 +164,13 @@ class CotizacionesController extends Controller
             ->select('dc.observacionproducto','p.moneda','dc.id as iddetallecotizacion','dc.cantidad', 'dc.preciounitario','dc.preciounitariomo','dc.servicio','dc.preciofinal','p.id as idproducto','p.nombre as producto')
             ->where('c.id', '=', $cotizacion_id)->get();
         //return $detallesventa;
-        return view('admin.cotizacion.edit', compact('products','cotizacion','companies','clientes','detallescotizacion'));
+
+        $condiciones = DB::table('condicions as cd')
+            ->join('cotizacions as ct', 'cd.cotizacion_id', '=', 'ct.id')
+            ->select('cd.id as idcondicion','cd.condicion')
+            ->where('ct.id', '=', $cotizacion_id)->get();
+
+        return view('admin.cotizacion.edit', compact('products','cotizacion','companies','clientes','detallescotizacion','condiciones'));
     }
 
     public function update(CotizacionFormRequest $request ,int $cotizacion_id)
@@ -210,20 +227,28 @@ class CotizacionesController extends Controller
                     $Detallecotizacion->save();
         }
     }
+    //traemos y guardamos las condiciones
+    $condicion = $request->Lcondicion;
+    if ($condicion !== null) {
+     for ($i = 0; $i < count($condicion); $i++) {
+         $condicioncotizacion = new Condicion;
+         $condicioncotizacion->cotizacion_id = $cotizacion->id;
+         $condicioncotizacion->condicion = $condicion[$i];
+         $condicioncotizacion->save();
+    } 
+     }
         return redirect('admin/cotizacion')->with('message','Cotizacion Actualizada Satisfactoriamente');
     }
         return redirect('admin/cotizacion')->with('message','No se pudo Actualizar la cotizacion');
     }
     
     public function show($id)
-    {
-
+    { 
         $cotizacion = DB::table('cotizacions as c')
             ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
             ->join('companies as e', 'c.company_id', '=', 'e.id')
             ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
-            ->join('products as p', 'dc.product_id', '=', 'p.id')
-
+            ->join('products as p', 'dc.product_id', '=', 'p.id') 
             ->select(
                 'c.fecha',
                 'c.fechav',
@@ -244,12 +269,23 @@ class CotizacionesController extends Controller
                 'dc.servicio',
                 'dc.preciofinal',
                 'dc.observacionproducto',
-                'c.vendida'
-
+                'c.vendida', 
             )
             ->where('c.id', '=', $id)->get();
 
         return  $cotizacion;
+    }
+    public function showcondiciones($id)
+    { 
+        $condicion = DB::table('cotizacions as c')
+            ->join('condicions as cd', 'cd.cotizacion_id', '=', 'c.id') 
+            ->select( 
+                'cd.condicion',
+                'cd.id', 
+            )
+            ->where('c.id', '=', $id)->get();
+
+        return  $condicion;
     }
 
     public function destroy(int $cotizacion_id)
@@ -257,6 +293,16 @@ class CotizacionesController extends Controller
         $cotizacion = Cotizacion::findOrFail($cotizacion_id);
         $cotizacion->delete();
         return redirect()->back()->with('message','Cotizacion Eliminada');
+     
+    }
+
+    public function destroycondicion(int $condicion_id)
+    {
+        $condicion = Condicion::find($condicion_id);
+        if($condicion){
+            if($condicion->delete()){return 1;}
+            else{return 0;}
+        }else{ return 2;}
      
     }
 

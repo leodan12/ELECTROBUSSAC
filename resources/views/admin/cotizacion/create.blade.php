@@ -17,7 +17,7 @@
     @endif
         <div class="card">
             <div class="card-header">
-                <h4>AÑADIR COTIZACION
+                <h4>AÑADIR COTIZACIÓN
                     <a href="{{ url('admin/cotizacion') }}" class="btn btn-danger text-white float-end">VOLVER</a>
                 </h4>
             </div>
@@ -85,14 +85,14 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group is-required">PRECIO DE LA COTIZACION SIN IGV</label>
+                             <label class="form-label input-group is-required">PRECIO DE LA COTIZACIÓN SIN IGV</label>
                              <span class="input-group-text" id="spancostoventasinigv"></span> 
                             <input type="number" name="costoventasinigv" id= "costoventasinigv"  min="0.1" step="0.01" class="form-control borde required" required readonly />
                         </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group">PRECIO DE LA COTIZACION CON IGV</label>
+                             <label class="form-label input-group">PRECIO DE LA COTIZACIÓN CON IGV</label>
                              <span class="input-group-text" id="spancostoventaconigv"></span> 
                             <input type="number" name="costoventaconigv" id= "costoventaconigv"  min="0.1" step="0.01" class="form-control borde required" required  readonly/>
                         </div>
@@ -109,20 +109,20 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-12">
-        <hr>
-        <nav class="borde" style="border-radius: 5px;">
+        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);"> 
+        <nav class="borde" style="border-radius: 5px; ">
             <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist" >
 
                 <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab" data-bs-target="#nav-detalles" type="button" role="tab" aria-controls="nav-detalles" aria-selected="false">Detalles</button>
                 <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab" data-bs-target="#nav-condiciones" type="button" role="tab" aria-controls="nav-condiciones" aria-selected="false">Condiciones</button>
             </div>
         </nav>
-        <hr>
+        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
         <div class="tab-content" id="nav-tabContent">
 
             <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel" aria-labelledby="nav-detalles-tab" tabindex="0">
                 <br>
-                <h4>Agregar Detalle de la Cotizacion</h4>
+                <h4>Agregar Detalle de la Cotización</h4>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">PRODUCTO</label>
@@ -166,7 +166,7 @@
                     <label class="form-label " id="labelobservacionproducto">OBSERVACION:</label>
                    <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
                </div> 
-               <button type="button" class="btn btn-info" id="addDetalleBatch">  Agregar Producto a la Cotizacion</button>
+               <button type="button" class="btn btn-info" id="addDetalleBatch">  Agregar Producto a la Cotización</button>
                 
                <div class="table-responsive">
                 <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
@@ -193,6 +193,7 @@
 
             </div>
             <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel" aria-labelledby="nav-condiciones-tab" tabindex="0">
+                <h4>Agregar Condiciones a la Cotización</h4>
                 <div class="row">
                     <div class="col-md-10 mb-3"> 
                         <label class="form-label " id="labelcondicion">CONDICION:</label>
@@ -217,6 +218,7 @@
                         </tbody>
                     </table>
                 </div> 
+                
 
             </div>
              

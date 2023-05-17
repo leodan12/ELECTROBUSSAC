@@ -12,8 +12,8 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>REGISTRO DE COTIZACION
-                        <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir cotizacion</a>
+                    <h4>REGISTRO DE COTIZACIÓN
+                        <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir Cotización</a>
                     </h4>
                 </div>
                 <div class="card-body" style="text-align: left;" >
@@ -82,7 +82,7 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Cotizacion</h1>
+                        <h1 class="modal-title fs-5" id="mimodalLabel">Ver Cotización</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -135,34 +135,71 @@
                                 </div> 
                                 </div> 
                                 <div class=" col-md-4   mb-3"  > 
-                                    <label for="verVendida" class="col-form-label">COTIZACION VENDIDA:</label>
+                                    <label for="verVendida" class="col-form-label">COTIZACIÓN VENDIDA:</label>
                                     <input type="text" class="form-control " id="verVendida" readonly>
                                 </div>
-                                
                                  
                             </div>
                         </form>
-                        <div class="table-responsive"  >
-                        <table class="table table-bordered table-striped" id="detallesventa" >
-                            <thead class="fw-bold text-primary">
-                                <tr>
-                                    <th>Producto</th> 
-                                    <th>Observacion</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario(referencial)</th>
-                                    <th>precio Unitario</th> 
-                                    <th>Servicio Adicional</th> 
-                                    <th>Costo Productos</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-lg-12">
+                                <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);"> 
+                                <nav class="borde" style="border-radius: 5px; ">
+                                    <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist" >
+                        
+                                        <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab" data-bs-target="#nav-detalles" type="button" role="tab" aria-controls="nav-detalles" aria-selected="false">Detalles</button>
+                                        <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab" data-bs-target="#nav-condiciones" type="button" role="tab" aria-controls="nav-condiciones" aria-selected="false">Condiciones</button>
+                                    </div>
+                                </nav>
+                                <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                <div class="tab-content" id="nav-tabContent">
+
+                                <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel" aria-labelledby="nav-detalles-tab" tabindex="0">
+                                    <br>
+                                    <div class="table-responsive"  >
+                                        <table class="table table-bordered table-striped" id="detallesventa" >
+                                            <thead class="fw-bold text-primary">
+                                                <tr>
+                                                    <th>Producto</th> 
+                                                    <th>Observacion</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario(referencial)</th>
+                                                    <th>precio Unitario</th> 
+                                                    <th>Servicio Adicional</th> 
+                                                    <th>Costo Productos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                </div>  
+                                <div class="tab-pane fade show " id="nav-condiciones" role="tabpanel" aria-labelledby="nav-condiciones-tab" tabindex="0">
+                                <br>
+                                <div class="table-responsive"  >
+                                    <table class="table table-bordered table-striped" id="condiciones" >
+                                        <thead class="fw-bold text-primary">
+                                            <tr>
+                                                <th>Condicion</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>  
+                                </div>
+                            </div>    
+                        </div>        
+                       
+
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" id="generarcotizacion"> Generar Pdf de la Cotizacion  </button>
+                        <button type="button" class="btn btn-success" id="generarcotizacion"> Generar Pdf de la Cotización  </button>
                         <button type="button" class="btn btn-warning" id="realizarventa"  >Realizar Venta</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
@@ -235,17 +272,26 @@
 
                 filaDetalle ='<tr id="fila' + i + 
                 '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
-                    '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
+                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+simbolomonedafactura+ data[i].servicio+ 
                 '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+simbolomonedafactura+ data[i].preciofinal+ 
                 '</td></tr>';
-               
                 $("#detallesventa>tbody").append(filaDetalle);
             }
-                 
+        });
+
+        var urlcondicion = "{{ url('admin/cotizacion/showcondiciones') }}";
+        $.get(urlcondicion + '/' + id, function(data) { 
+            $('#condiciones tbody tr').slice().remove();
+            for(var i =0 ; i<data.length;i++){
+                filaDetalle ='<tr id="filacondicion' + i + 
+                '"><td><input  type="hidden" name="LCondicion[]" value="' + data[i].condicion  + '"required>'+ data[i].condicion+
+                '</td></tr>';
+                $("#condiciones>tbody").append(filaDetalle);
+            }
         });
 
     })

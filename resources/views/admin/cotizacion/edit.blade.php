@@ -18,7 +18,7 @@
     @endif
         <div class="card">
             <div class="card-header">
-                <h4>EDITAR LA COTIZACION NRO: &nbsp; {{ $cotizacion->numero }}
+                <h4>EDITAR LA COTIZACIÓN NRO: &nbsp; {{ $cotizacion->numero }}
                     <a href="{{ url('admin/cotizacion') }}" class="btn btn-danger text-white float-end">VOLVER</a>
                 </h4>
             </div>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                              <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01"  class="form-control borde" min="1" value="{{ $cotizacion->tasacambio }}"/>
+                            <input type="number" name="tasacambio" id= "tasacambio" step="0.01"  class="form-control borde" min="1" readonly value="{{ $cotizacion->tasacambio }}"/>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label is-required">FORMA DE PAGO</label>
@@ -104,7 +104,7 @@
                    </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group is-required">PRECIO DE LA COTIZACION SIN IGV</label>
+                             <label class="form-label input-group is-required">PRECIO DE LA COTIZACIÓN SIN IGV</label>
                             @if($cotizacion->moneda=="dolares")
                             <span class="input-group-text" id="spancostoventasinigv">$</span>  
                             @elseif($cotizacion->moneda=="soles")
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <div class="input-group">
-                             <label class="form-label input-group">PRECIO DE LA COTIZACION CON IGV</label>
+                             <label class="form-label input-group">PRECIO DE LA COTIZACIÓN CON IGV</label>
                              @if($cotizacion->moneda=="dolares")
                             <span class="input-group-text" id="spancostoventaconigv">$</span>  
                             @elseif($cotizacion->moneda=="soles")
@@ -129,94 +129,162 @@
                             <input type="text" name="observacion" id="observacion" class="form-control borde" value="{{ $cotizacion->observacion }}" />
                         </div>
                         
-                        <hr>
-                        <h4>Agregar Detalle de la Cotizacion</h4>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">PRODUCTO</label>
-                            <select  class="form-select select2 borde" name="product" id="product">
-                                <option  selected disabled value="">Seleccione una opción</option>    
-                                @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-stock="{{$product->stockempresa}}"  data-moneda="{{$product->moneda}}" data-name="{{$product->nombre}}"  data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                             <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
-                            <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                            <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
-                            <span class="input-group-text" id="spanpreciounitarioref"></span> 
-                            <input type="number" name="preciounitario" min="0" step="0.01" id="preciounitario" readonly class="form-control borde" />
-                        </div>
-                        </div> 
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
-                             <span class="input-group-text" id="spanpreciounitario"></span> 
-                             <input type="number" name="preciounitariomo" min="0" step="0.01" id="preciounitariomo" class="form-control borde" />
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
-                             <span class="input-group-text" id="spanservicio"></span>
-                            <input type="number" name="servicio" min="0" step="0.01" id="servicio"class="form-control borde" /> 
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="input-group">
-                             <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
-                             <span class="input-group-text" id="spanpreciototal"></span>
-                            <input type="number" name="preciofinal" min="0" step="0.01" id="preciofinal" readonly class="form-control borde" />
-                            </div>
-                        </div>
-                    <div class="col-md-8 mb-3"> 
-                         <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
-                        <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
-                    </div> 
-                    @php $ind=0 ; @endphp
-                    @php $indice=count($detallescotizacion) ; @endphp
-                        <button type="button" class="btn btn-info" id="addDetalleBatch" onclick="agregarFila('{{$indice}}')"  ><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
-                        <div class="table-responsive">
-                        <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
-                            <thead class="fw-bold text-primary">
-                                <tr>
-                                    <th>PRODUCTO</th>
-                                    <th>OBSERVACION</th>
-                                    <th>CANTIDAD</th>
-                                    <th>PRECIO UNITARIO(REFERENCIAL)</th>
-                                    <th>PRECIO UNITARIO</th>
-                                    <th>SERVICIO ADICIONAL</th>
-                                    <th>PRECIO FINAL DEL PRODUCTO</th>
-                                    <th>ELIMINAR</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php $datobd="db" ;  @endphp
-                                @foreach($detallescotizacion as $detalle)
-                                    @php $ind++;    @endphp
-                                    <tr id="fila{{$ind}}">
-                                        <td> {{$detalle->producto}}</td>
-                                        <td> {{$detalle->observacionproducto}}</td>
-                                        <td> {{$detalle->cantidad}}</td>
-                                        <td> @if($detalle->moneda=="soles") S/.  @elseif($detalle->moneda=="dolares")$ @endif  {{ $detalle->preciounitario }}</td>
-                                        <td> @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->preciounitariomo}}</td>
-                                        <td> @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->servicio}}</td>
-                                        <td><input type="hidden" id="preciof{{ $ind }}" value="{{$detalle->preciofinal}}" />
-                                            @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->preciofinal}}</td>
-                                        <td>
-                                             
-                                            <button type="button" class="btn btn-danger" onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{$detalle->iddetallecotizacion}}'  )" data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
-                                        
-                                        </td>
+                        {{-- ---------------------------------------------------------------------- --}}
 
-                                    </tr>
-                                    @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-12">
+                                <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);"> 
+                                <nav class="borde" style="border-radius: 5px; ">
+                                    <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist" >
+                        
+                                        <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab" data-bs-target="#nav-detalles" type="button" role="tab" aria-controls="nav-detalles" aria-selected="false">Detalles</button>
+                                        <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab" data-bs-target="#nav-condiciones" type="button" role="tab" aria-controls="nav-condiciones" aria-selected="false">Condiciones</button>
+                                    </div>
+                                </nav>
+                                <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                <div class="tab-content" id="nav-tabContent">
+
+                                <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel" aria-labelledby="nav-detalles-tab" tabindex="0">
+                                    <br>
+                                    <h4>Agregar Detalle de la Cotización</h4>
+                                    <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">PRODUCTO</label>
+                                        <select  class="form-select select2 borde" name="product" id="product">
+                                            <option  selected disabled value="">Seleccione una opción</option>    
+                                            @foreach ($products as $product)
+                                            <option value="{{ $product->id }}" data-stock="{{$product->stockempresa}}"  data-moneda="{{$product->moneda}}" data-name="{{$product->nombre}}"  data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                         <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
+                                        <input type="number" name="cantidad" id="cantidad" min="1" step="1" class="form-control borde" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="input-group">
+                                        <label class="form-label input-group"  id="labelpreciounitarioref">PRECIO UNITARIO (REFERENCIAL):</label>
+                                        <span class="input-group-text" id="spanpreciounitarioref"></span> 
+                                        <input type="number" name="preciounitario" min="0" step="0.01" id="preciounitario" readonly class="form-control borde" />
+                                    </div>
+                                    </div> 
+                                    <div class="col-md-4 mb-3">
+                                        <div class="input-group">
+                                         <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
+                                         <span class="input-group-text" id="spanpreciounitario"></span> 
+                                         <input type="number" name="preciounitariomo" min="0" step="0.01" id="preciounitariomo" class="form-control borde" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="input-group">
+                                         <label class="form-label input-group" id="labelservicio" name="labelservicio">SERVICIO ADICIONAL:</label>
+                                         <span class="input-group-text" id="spanservicio"></span>
+                                        <input type="number" name="servicio" min="0" step="0.01" id="servicio"class="form-control borde" /> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="input-group">
+                                         <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR PRODUCTO</label>
+                                         <span class="input-group-text" id="spanpreciototal"></span>
+                                        <input type="number" name="preciofinal" min="0" step="0.01" id="preciofinal" readonly class="form-control borde" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 mb-3"> 
+                                        <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
+                                        <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
+                                    </div>
+                                        @php $ind=0 ; @endphp
+                                        @php $indice=count($detallescotizacion) ; @endphp
+                                    <button type="button" class="btn btn-info" id="addDetalleBatch" onclick="agregarFila('{{$indice}}')"  ><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
+                                    
+                                    <div class="table-responsive">
+                                    <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
+                                        <thead class="fw-bold text-primary">
+                                            <tr>
+                                                <th>PRODUCTO</th>
+                                                <th>OBSERVACION</th>
+                                                <th>CANTIDAD</th>
+                                                <th>PRECIO UNITARIO(REFERENCIAL)</th>
+                                                <th>PRECIO UNITARIO</th>
+                                                <th>SERVICIO ADICIONAL</th>
+                                                <th>PRECIO FINAL DEL PRODUCTO</th>
+                                                <th>ELIMINAR</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php $datobd="db" ;  @endphp
+                                            @foreach($detallescotizacion as $detalle)
+                                                @php $ind++;    @endphp
+                                                <tr id="fila{{$ind}}">
+                                                    <td> {{$detalle->producto}}</td>
+                                                    <td> {{$detalle->observacionproducto}}</td>
+                                                    <td> {{$detalle->cantidad}}</td>
+                                                    <td> @if($detalle->moneda=="soles") S/.  @elseif($detalle->moneda=="dolares")$ @endif  {{ $detalle->preciounitario }}</td>
+                                                    <td> @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->preciounitariomo}}</td>
+                                                    <td> @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->servicio}}</td>
+                                                    <td><input type="hidden" id="preciof{{ $ind }}" value="{{$detalle->preciofinal}}" />
+                                                        @if($cotizacion->moneda=="soles") S/.  @elseif($cotizacion->moneda=="dolares")$ @endif  {{$detalle->preciofinal}}</td>
+                                                    <td>
+                                                         
+                                                        <button type="button" class="btn btn-danger" onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{$detalle->iddetallecotizacion}}'  )" data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
+                                                    
+                                                    </td>
+            
+                                                </tr>
+                                                @endforeach
+                                        </tbody>
+                                    </table>
+                                    </div>
+ 
+                                    </div>
+                                </div>
+                                    <div class="tab-pane fade show " id="nav-condiciones" role="tabpanel" aria-labelledby="nav-condiciones-tab" tabindex="0">
+                                    
+                                        <h4>Agregar Condiciones a la Cotización</h4>
+                                        <div class="row">
+                                            <div class="col-md-10 mb-3"> 
+                                                <label class="form-label " id="labelcondicion">CONDICION:</label>
+                                                <input type="text" name="condicion"   id="condicion"  class="form-control borde gui-input" />
+                                            </div>
+                                            @php $indc=0 ; @endphp
+                                            @php $indicec=count($condiciones) ; @endphp
+                                            <div class="col-md-2 mb-3">
+                                                <label class="form-label " style="color: white">.</label>
+                                                <button type="button" class="btn btn-info form-control" id="addCondicion" onclick="agregarCondicion('{{$indicec}}')"> Agregar</button>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="table-response">
+                                            <table class="table table-row-bordered gy-5 gs-5" id="condiciones">
+                                                <thead class="fw-bold text-primary">
+                                                    <tr >
+                                                        <th>CONDICION</th>
+                                                        <th>ELIMINAR</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php $datobd="db" ;  @endphp
+                                                    @foreach($condiciones as $item)
+                                                    @php $indc++;    @endphp
+                                                    <tr id="filacondicion{{$indc}}">
+                                                        <td> {{$item->condicion}}</td>
+                                                        <td> 
+                                                        <button type="button" class="btn btn-danger" onclick="eliminarCondicion( '{{ $indc }}' ,'{{ $datobd }}', '{{$item->idcondicion}}'  )" data-id="0">ELIMINAR</button>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div> 
+                
+
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>   
+
+
+ 
                         <hr>
                         <div class="col-md-12 mb-3">
                              <button type= "submit" id="btnguardar" name="btnguardar" class="btn btn-primary text-white float-end" disabled>Actualizar</button>
@@ -357,10 +425,36 @@ $(document).ready(function() {
       conigv=igv1;
 });
 
+    var indicecondicion = 0;
+    var pvc = 0;
+
+function agregarCondicion(indicecc){
+
+    if (pvc == 0) {
+        indicecondicion = indicecc;
+        pvc++;
+        indicecondicion++;
+    } else {
+        indicecondicion++;
+    }
+ //datos del detalleSensor
+    var condicion = $('[name="condicion"]').val();
+    if (!condicion) {alert("ingrese una condicion:");   $("#condicion").focus(); return;   }
+    var LCondiciones = [];
+    LCondiciones.push(condicion);
+
+    filaDetalle ='<tr id="filacondicion' + indicecondicion + 
+        '"><td><input  type="hidden" name="Lcondicion[]" value="' + LCondiciones[0]  + '"required>'+ LCondiciones[0]+
+        '</td><td><button type="button" class="btn btn-danger" onclick="quitarCondicion(' + indicecondicion + ')" data-id="0">ELIMINAR</button></td></tr>';
+        $("#condiciones>tbody").append(filaDetalle);
+        indicecondicion++;
+        document.getElementById('condicion').value ="";
+}
+
     var indice = 0;
     var pv = 0;
 
-    function agregarFila(indice1) {
+function agregarFila(indice1) {
 
         if (pv == 0) {
             indice = indice1;
@@ -414,7 +508,7 @@ $(document).ready(function() {
                 var funcion="agregar";
                 botonguardar(funcion);
 
-    }
+}
 
 function preciofinal() {
          
@@ -504,6 +598,53 @@ function quitarFila(indicador){
     botonguardar(funcion);
 }
 
+function quitarCondicion(ind) { 
+    $('#filacondicion' + ind).remove();
+        indicecondicion-- ; 
+    return false;
+} 
+
+function eliminarCondicion(ind,lugardato,idcondicion) {
+        if(lugardato=="db"){
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+ 
+            $.get('/admin/deletecondicion/' + idcondicion, function(data) {
+                //alert(data[0]);
+                if(data[0]==1){ 
+            Swal.fire({
+                text: "Registro Eliminado",
+                icon: "success"
+            });  
+                quitarCondicion(ind);
+                }else if(data[0]==0){
+                    Swal.fire({
+                        text: "No se puede eliminar",
+                        icon: "error"
+                    });  
+                }else if(data[0]==2){
+                    Swal.fire({
+                        text: "Registro no encontrado",
+                        icon: "error"
+                    }); 
+                } 
+            });  
+            }  
+            })  ;
+            }else{
+            quitarFila(ind);
+        } 
+    return false;
+} 
+
 function eliminarTabla(ind) {
     
      $('#fila' + ind).remove();
@@ -526,21 +667,21 @@ function eliminarTabla(ind) {
 } 
 function botonguardar(funcion){
 
-if(funcion == "eliminar"){
-    estadoguardar--;
-}else if(funcion == "agregar"){
-    estadoguardar++;
-}
-if(estadoguardar == 0){
-    $("#btnguardar").prop("disabled", true);
-}else if(estadoguardar > 0){
-    $("#btnguardar").prop("disabled", false);
-}    
+    if(funcion == "eliminar"){
+        estadoguardar--;
+    }else if(funcion == "agregar"){
+        estadoguardar++;
+    }
+    if(estadoguardar == 0){
+        $("#btnguardar").prop("disabled", true);
+    }else if(estadoguardar > 0){
+        $("#btnguardar").prop("disabled", false);
+    }    
 }  
 
 function llenarselectproducto(){
 
-$.get('/admin/venta/productosxempresa/'+idcompany, function(data){ 
+    $.get('/admin/venta/productosxempresa/'+idcompany, function(data){ 
         var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
           for (var i=0; i<data.length;i++){
             producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';

@@ -124,7 +124,9 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::put('/cotizacion/{cotizacion_id}','update');
         Route::get('cotizacion/{cotizacion_id}/delete','destroy');
         Route::get('/deletedetallecotizacion/{id}',  'destroydetallecotizacion');
+        Route::get('/deletecondicion/{id}',  'destroycondicion');
         Route::get('/cotizacion/show/{id}', 'show');//ver  
+        Route::get('/cotizacion/showcondiciones/{id}', 'showcondiciones');//ver  
         Route::get('/cotizacion/vendercotizacion/{id}',  'vendercotizacion');
     });
 });
