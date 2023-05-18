@@ -18,12 +18,13 @@
                     </h4>
                 </div>
                 <div class="card-body"> 
-                    <table class="table table-bordered table-striped" style="width:100%" id="mitabla" name="mitabla" >
+                    <table class="table table-bordered table-striped"   id="mitabla" name="mitabla" >
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>CATEGORIA</th>
                                 <th>NOMBRE</th>
+                                <th>CODIGO</th>
                                 <th>UNIDAD</th>
                                 <th>TIPO DE MONEDA</th>
                                 <th>PRECIO SIN IGV</th>
@@ -46,6 +47,7 @@
                                     @endif
                                 </td>
                                 <td>{{$product->nombre}}</td>
+                                <td>{{$product->codigo}}</td>
                                 <td>{{$product->unidad}}</td>
                                 <td>{{$product->moneda}}</td>
                                 <td>{{$product->NoIGV}}</td>

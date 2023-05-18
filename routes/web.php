@@ -71,6 +71,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::put('/kits/{kit_id}','update');
         Route::get('kits/{kit_id}/delete','destroy');
         Route::get('/kits/show/{kit_id}', 'show');//ver   
+        Route::get('/deletedetallekit/{id}','destroydetallekit');
     }); 
     //Ruta de los Usuarios
     Route::controller(App\Http\Controllers\Admin\UserController::class)->group(function(){

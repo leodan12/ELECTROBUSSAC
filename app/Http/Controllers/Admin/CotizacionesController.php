@@ -315,8 +315,7 @@ class CotizacionesController extends Controller
                 ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
                 ->select('c.id','dc.preciofinal','c.costoventasinigv')
                 ->where('dc.id', '=', $id)->first();
-            
-           
+             
             if($detallecotizacion->delete()){ 
                 $costof = $cotizacion->costoventasinigv;
                 $detalle = $cotizacion->preciofinal; 
@@ -324,9 +323,7 @@ class CotizacionesController extends Controller
                 $editcotizacion = Cotizacion::findOrFail($cotizacion->id);
                 $editcotizacion->costoventasinigv =$costof -$detalle;
                 $editcotizacion->costoventaconigv =round(($costof -$detalle)*1.18,2);
-                $editcotizacion->update();
-    
-                
+                $editcotizacion->update(); 
                 return 1; 
             }else { return 0;}
         }else { return 2;}

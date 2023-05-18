@@ -145,6 +145,7 @@ if (pv == 0) {
                '</td><td><button type="button" class="btn btn-danger" onclick="quitarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
               
                $("#detallesCompra>tbody").append(filaDetalle);
+               $('#empresa').val(null).trigger('change');   
                indice++;
                var mistocktotal = $('[name="stocktotal"]').val();
                stocktotal = parseInt(stockempresa)+parseInt(mistocktotal);

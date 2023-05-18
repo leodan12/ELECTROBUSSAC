@@ -14,13 +14,13 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/products') }}">
-              <i class="mdi mdi-grid-large menu-icon"></i>
+              <i class="mdi mdi-book menu-icon"></i>
               <span class="menu-title">PRODUCTOS</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/kits') }}">
-              <i class="mdi mdi-grid-large menu-icon"></i>
+              <i class="mdi mdi-google-circles-communities menu-icon"></i>
               <span class="menu-title">KITS</span>
             </a>
           </li>
@@ -45,7 +45,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url ('admin/cotizacion') }}">
-              <i class="mdi mdi-format-strikethrough-variant menu-icon"></i>
+              <i class="mdi mdi-currency-usd menu-icon"></i>
               <span class="menu-title">COTIZACION</span>
             </a>
           </li>

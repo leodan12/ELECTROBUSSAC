@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @push('css')
- <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
+ <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" /> 
 @endpush
 @section('content')
 <div class="row">
@@ -100,7 +100,7 @@
                         <hr>
                         <h4>Agregar Detalle de la Venta</h4>
                         <div class="col-md-6 mb-3">
-                             <label class="form-label">PRODUCTO</label>
+                             <label class="form-label" id="labelproducto" name="labelproducto">PRODUCTO</label>
                             <select  class="form-select select2 borde" name="product" id="product" disabled >
                                 <option value="" selected disabled>Seleccione una opción</option>    
                             </select>  
@@ -167,11 +167,12 @@
                         </div>
                     </div>
                 </form>
+                 
             </div>
         </div>
     </div>
 </div>
-
+ 
 
 @endsection
 
@@ -190,215 +191,222 @@
     var simbolomonedaproducto="";
     var simbolomonedafactura="";
     var indicex=0;
-
-    $(document).ready(function() {
-
-        document.getElementById('tasacambio').value = "3.71";
  
-         $('.select2').select2({  });  
-         
-        //accion para diferente comprador y vendedor y para productos x empresa
-        $("#company_id").change(function(){
-        var company = $(this).val();
-        $('#product').removeAttr('disabled');
-        $.get('/admin/venta/productosxempresa/'+company, function(data){ 
-            var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
-              for (var i=0; i<data.length;i++){
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
-              }
-              $("#product").html(producto_select);
-        });
-        $('#cliente_id').removeAttr('disabled');
-        $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
-            var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
-              for (var i=0; i<data.length;i++){
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" >'+data[i].nombre+'</option>';
-              }
-              $("#cliente_id").html(producto_select);
-        });
-        if(indice>0){
-            var indice2=indicex;
+$(document).ready(function() {
+    toastr.options.timeOut = 3500; // 1.5s
+    toastr.info('Page Loaded!');
+    $('#linkButton').click(function() {
+       toastr.success('Click Button');
+    });
+
+    document.getElementById('tasacambio').value = "3.71";
+ 
+    $('.select2').select2({  });   
+    $("#btnguardar").prop("disabled", true);
+    //Para poner automaticamente la fecha actual
+    var hoy = new Date();  
+    var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
+    document.getElementById("fecha").value = fechaActual;
+});
+
+document.getElementById("cantidad").onchange = function() {
+    preciofinal();
+};
+document.getElementById("servicio").onchange = function() {
+    preciofinal();
+};
+document.getElementById("preciounitariomo").onchange = function() {
+    preciofinal();
+};
+
+$("#company_id").change(function(){
+    var company = $(this).val();
+    $('#product').removeAttr('disabled');
+    $.get('/admin/venta/productosxempresa/'+company, function(data){ 
+        var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+        for (var i=0; i<data.length;i++){
+            if(data[i].stockempresa==null){
+                alert(data[i].stockempresa); }
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-tipo="'+data[i].tipo+'"data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+            }
+        $("#product").html(producto_select);
+    });
+    $('#cliente_id').removeAttr('disabled');
+    $.get('/admin/venta/comboempresacliente/'+company, function(data){ 
+        var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+        for (var i=0; i<data.length;i++){
+            producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" >'+data[i].nombre+'</option>';
+        }
+        $("#cliente_id").html(producto_select);
+    });
+    if(indice>0){
+        var indice2=indicex;
         for(var i=0;i<indice2;i++){ 
             eliminarFila(i);
-        }  } 
+        }  
+    } 
     limpiarinputs();  
-    });
+});
 
-        $("#btnguardar").prop("disabled", true);
-        //Para poner automaticamente la fecha actual
-       var hoy = new Date();  
-       var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
-       document.getElementById("fecha").value = fechaActual;
-        
-       //var fechaActual2 = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 2).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
-       //document.getElementById("fechav").value = fechaActual2;
-       
-       document.getElementById("cantidad").onchange = function() {
-       preciofinal();
-       };
-       document.getElementById("servicio").onchange = function() {
-        preciofinal();
-       };
-       document.getElementById("preciounitariomo").onchange = function() {
-        preciofinal();
-       };
+function preciofinal() { 
+    var cantidad = $('[name="cantidad"]').val(); 
+    var preciounit = $('[name="preciounitariomo"]').val(); 
+    var servicio = $('[name="servicio"]').val();
+    if(cantidad >= 1   && preciounit >= 0 && servicio >=0 ){
+        preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(cantidad) * parseFloat(servicio)));
+        document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
+    }   
+}
 
-       function preciofinal() {
-         
-         var cantidad = $('[name="cantidad"]').val(); 
-         var preciounit = $('[name="preciounitariomo"]').val(); 
-         var servicio = $('[name="servicio"]').val();
-         if(cantidad >= 1   && preciounit >= 0 && servicio >=0 ){
-            preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(cantidad) * parseFloat(servicio)));
-            document.getElementById('preciofinal').value = preciototalI.toFixed(2);      
-         }   }
-
-       // var tabla = document.getElementById(detallesVenta);
-       
-        $('#addDetalleBatch').click(function() {
+$('#addDetalleBatch').click(function() {
           
-            //datos del detalleSensor
-            var product = $('[name="product"]').val();
-            var cantidad = $('[name="cantidad"]').val();
-            var preciounitario = $('[name="preciounitario"]').val();
-            var servicio = $('[name="servicio"]').val();
-            var preciofinal = $('[name="preciofinal"]').val();
-            var preciounitariomo = $('[name="preciounitariomo"]').val();
-            var observacionproducto = $('[name="observacionproducto"]').val();
-             
-            //alertas para los detallesBatch
-            if (!product) {  alert("Seleccione un Producto"); return;   }
-            if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
-            if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
-            if (!servicio) {  alert("Ingrese un servicio"); return;   }
-            if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
+    //datos del detalleSensor
+    var product = $('[name="product"]').val();
+    var cantidad = $('[name="cantidad"]').val();
+    var preciounitario = $('[name="preciounitario"]').val();
+    var servicio = $('[name="servicio"]').val();
+    var preciofinal = $('[name="preciofinal"]').val();
+    var preciounitariomo = $('[name="preciounitariomo"]').val();
+    var observacionproducto = $('[name="observacionproducto"]').val();
+           
+    //alertas para los detallesBatch
+    if (!product) {  alert("Seleccione un Producto"); return;   }
+    if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
+    if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
+    if (!servicio) {  alert("Ingrese un servicio"); return;   }
+    if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
 
+           
+    var LVenta = [];
+    var tam = LVenta.length;
+    LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
+      
+        filaDetalle ='<tr id="fila' + indice + 
+        '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
+        '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
+        '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
+        '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
+        '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
+        '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+ LVenta[4]+
+        '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ simbolomonedafactura+LVenta[5]+ 
+        '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
              
-            var LVenta = [];
-            var tam = LVenta.length;
-            LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
-        
-                filaDetalle ='<tr id="fila' + indice + 
-                '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
-                '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
-                '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
-                '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
-                '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
-                '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+ LVenta[4]+
-                '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ simbolomonedafactura+LVenta[5]+ 
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
+        $("#detallesVenta>tbody").append(filaDetalle);
+
+        indice++;
+        indicex++;
+        //alert(indice);
+              
+        ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
+
+        limpiarinputs();
+
+        document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
+              
                
-                $("#detallesVenta>tbody").append(filaDetalle);
+        var funcion="agregar";
+        botonguardar(funcion);
+});
 
-                indice++;
-                indicex++;
-                //alert(indice);
-                
-                ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-  
-                limpiarinputs();
-
-                document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
-                
+$("#product").change(function () {
+            
+    $("#product option:selected").each(function () { 
+        $price = $(this).data("price");
+        $named = $(this).data("name");
+        $moneda = $(this).data("moneda");
+        $stock = $(this).data("stock"); 
+        $tipo = $(this).data("tipo"); 
+        monedaproducto=$moneda;
+        //alert(stocke);
+        var mitasacambio1 = $('[name="tasacambio"]').val();
+        //var mimoneda1 = $('[name="moneda"]').val();
                  
-                var funcion="agregar";
-                botonguardar(funcion);
-        });
-        
-        $("#product").change(function () {
-            
-       $("#product option:selected").each(function () { 
-            $price = $(this).data("price");
-            $named = $(this).data("name");
-            $moneda = $(this).data("moneda");
-            $stock = $(this).data("stock"); 
-            monedaproducto=$moneda;
-            //alert(stocke);
-            var mitasacambio1 = $('[name="tasacambio"]').val();
-            //var mimoneda1 = $('[name="moneda"]').val();
-            
-            document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+ $stock+")";
-            
-            var cant = document.getElementById('cantidad') ;
-            cant.setAttribute("max",$stock);
-            cant.setAttribute("min",1);
-            if($price != null){
-                preciounit = ($price).toFixed(2);
-                if(monedaproducto=="dolares" && monedafactura=="dolares"){
-                    simbolomonedaproducto="$";
-                    preciototalI = ($price).toFixed(2);
-                    document.getElementById('preciounitario').value = ($price).toFixed(2);
-                    document.getElementById('preciounitariomo').value = ($price).toFixed(2);
-                    document.getElementById('preciofinal').value = ($price).toFixed(2);
-                }else if(monedaproducto=="soles" && monedafactura=="soles"){
-                    preciototalI = ($price).toFixed(2);
-                    simbolomonedaproducto="S/.";
-                    document.getElementById('preciounitario').value = ($price).toFixed(2);
-                    document.getElementById('preciounitariomo').value = ($price).toFixed(2); 
-                    document.getElementById('preciofinal').value = ($price).toFixed(2);  
-                }else if(monedaproducto=="dolares" && monedafactura=="soles"){
-                    preciototalI = ($price*mitasacambio1).toFixed(2);
-                    simbolomonedaproducto="$";
-                    document.getElementById('preciounitario').value = ($price).toFixed(2);
-                    document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
-                    document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2);     }
-                else if(monedaproducto=="soles" && monedafactura=="dolares"){
-                    preciototalI = ($price/mitasacambio1).toFixed(2);
-                    simbolomonedaproducto="S/.";
-                    document.getElementById('preciounitario').value = ($price).toFixed(2);
-                    document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
-                    document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
-                   
-                }
-                document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): "+  monedaproducto;
-                document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: "+  monedafactura;
-                document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL: "+  monedafactura;
-                document.getElementById('labelpreciototal').innerHTML = "PRECIO TOTAL POR PRODUCTO: "+  monedafactura;
-                document.getElementById('spanpreciounitarioref').innerHTML = simbolomonedaproducto;
-                document.getElementById('spanpreciounitario').innerHTML = simbolomonedafactura;
-                document.getElementById('spanservicio').innerHTML = simbolomonedafactura;
-                document.getElementById('spanpreciototal').innerHTML = simbolomonedafactura;
+        if($tipo == "estandar"){
+            document.getElementById('labelproducto').innerHTML = "PRODUCTO";
+        }else if($tipo == "kit") {
+            document.getElementById('labelproducto').innerHTML = "PRODUCTO TIPO KIT"; 
+        }
+        document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+ $stock+")";
                  
-                document.getElementById('cantidad').value = 1;
-                document.getElementById('servicio').value = 0;
-                nameproduct = $named;
-                }
-           else if($price == null){
-                document.getElementById('cantidad').value = "";
-                document.getElementById('servicio').value = "";
-                document.getElementById('preciofinal').value = "";
-                document.getElementById('preciounitario').value = "";
-                document.getElementById('preciounitariomo').value = "";
-           }
+        var cant = document.getElementById('cantidad') ;
+        cant.setAttribute("max",$stock);
+        cant.setAttribute("min",1);
+        if($price != null){
+            preciounit = ($price).toFixed(2);
+            if(monedaproducto=="dolares" && monedafactura=="dolares"){
+                simbolomonedaproducto="$";
+                preciototalI = ($price).toFixed(2);
+                document.getElementById('preciounitario').value = ($price).toFixed(2);
+                document.getElementById('preciounitariomo').value = ($price).toFixed(2);
+                document.getElementById('preciofinal').value = ($price).toFixed(2);
+            }else if(monedaproducto=="soles" && monedafactura=="soles"){
+                preciototalI = ($price).toFixed(2);
+                simbolomonedaproducto="S/.";
+                document.getElementById('preciounitario').value = ($price).toFixed(2);
+                document.getElementById('preciounitariomo').value = ($price).toFixed(2); 
+                document.getElementById('preciofinal').value = ($price).toFixed(2);  
+            }else if(monedaproducto=="dolares" && monedafactura=="soles"){
+                preciototalI = ($price*mitasacambio1).toFixed(2);
+                simbolomonedaproducto="$";
+                document.getElementById('preciounitario').value = ($price).toFixed(2);
+                document.getElementById('preciounitariomo').value = ($price*mitasacambio1).toFixed(2);
+                document.getElementById('preciofinal').value = ($price*mitasacambio1).toFixed(2);     }
+            else if(monedaproducto=="soles" && monedafactura=="dolares"){
+                preciototalI = ($price/mitasacambio1).toFixed(2);
+                simbolomonedaproducto="S/.";
+                document.getElementById('preciounitario').value = ($price).toFixed(2);
+                document.getElementById('preciounitariomo').value = ($price/mitasacambio1).toFixed(2);
+                document.getElementById('preciofinal').value = ($price/mitasacambio1).toFixed(2); 
+                        
+            }
+            document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): "+  monedaproducto;
+            document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: "+  monedafactura;
+            document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL: "+  monedafactura;
+            document.getElementById('labelpreciototal').innerHTML = "PRECIO TOTAL POR PRODUCTO: "+  monedafactura;
+            document.getElementById('spanpreciounitarioref').innerHTML = simbolomonedaproducto;
+            document.getElementById('spanpreciounitario').innerHTML = simbolomonedafactura;
+            document.getElementById('spanservicio').innerHTML = simbolomonedafactura;
+            document.getElementById('spanpreciototal').innerHTML = simbolomonedafactura;
+                      
+            document.getElementById('cantidad').value = 1;
+            document.getElementById('servicio').value = 0;
+            nameproduct = $named;
+        }
+        else if($price == null){
+            document.getElementById('cantidad').value = "";
+            document.getElementById('servicio').value = "";
+            document.getElementById('preciofinal').value = "";
+            document.getElementById('preciounitario').value = "";
+            document.getElementById('preciounitariomo').value = "";
+        }
+      
+    });  
+});
 
-
-           //alert(nameprod);
-   });  });
-
-   //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
-   $("#formapago").change(function () { 
-       $("#formapago option:selected").each(function () {
-        $mimoneda = $(this).data("formapago"); 
-        if ($mimoneda == "credito") { 
-                $("#fechav").prop("readonly", false);
-                $("#fechav").prop("required", true);
-                var fechav = document.getElementById("labelfechav");
-                fechav.className += " is-required";
-                document.getElementById('pagada').value = "NO";
-            } else if ($mimoneda == "contado") {
-                $("#fechav").prop("readonly", true);
-                $("#fechav").prop("required", false); 
-                var fechav = document.getElementById("labelfechav");
-                fechav.className = "form-label";
-                document.getElementById('pagada').value = "SI";
-            } 
+//para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
+$("#formapago").change(function () { 
+    $("#formapago option:selected").each(function () {
+    $mimoneda = $(this).data("formapago"); 
+    if ($mimoneda == "credito") { 
+        $("#fechav").prop("readonly", false);
+        $("#fechav").prop("required", true);
+        var fechav = document.getElementById("labelfechav");
+        fechav.className += " is-required";
+        document.getElementById('pagada').value = "NO";
+    } else if ($mimoneda == "contado") {
+        $("#fechav").prop("readonly", true);
+        $("#fechav").prop("required", false); 
+        var fechav = document.getElementById("labelfechav");
+        fechav.className = "form-label";
+        document.getElementById('pagada').value = "SI";
+    } 
    });
-    });
+});
 
-    //para cambiar la moneda de pago y deshabilitar la tasa de cambio
-   $("#moneda").change(function () {
+//para cambiar la moneda de pago y deshabilitar la tasa de cambio
+$("#moneda").change(function () {
     $('#company_id').removeAttr('disabled');
-       $("#moneda option:selected").each(function () {
+        $("#moneda option:selected").each(function () {
         $mimoneda = $(this).data("moneda");  
         if($mimoneda=="dolares"){simbolomonedafactura="$";}
         else if($mimoneda=="soles"){simbolomonedafactura="S/.";}
@@ -415,24 +423,20 @@
                 eliminarTabla(i);
             } 
         } 
-   }); 
+    }); 
    limpiarinputs();
- });
 });
  
-    function eliminarFila(ind) {
-        var resta =0;
-          //document.getElementById('preciot' + ind).value();
-          resta = $('[id="preciof' + ind+'"]').val();
-          //alert(resta);
-          ventatotal = (ventatotal - resta).toFixed(2);
+function eliminarFila(ind) {
+    var resta =0; 
+    resta = $('[id="preciof' + ind+'"]').val(); 
+    ventatotal = (ventatotal - resta).toFixed(2);
 
     $('#fila' + ind).remove();
         indice-- ;
     // damos el valor
     document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
-    //alert(resta);
-
+    
     var funcion="eliminar";
     botonguardar(funcion);
 
@@ -460,23 +464,23 @@ function eliminarTabla(ind) {
 
 function botonguardar(funcion){
 
-if(funcion == "eliminar"){
+    if(funcion == "eliminar"){  
     estadoguardar--;
-}else if(funcion == "agregar"){
+    }else if(funcion == "agregar"){ 
     estadoguardar++;
-}
-if(estadoguardar == 0){
-    $("#btnguardar").prop("disabled", true);
-}else if(estadoguardar > 0){
-    $("#btnguardar").prop("disabled", false);
-}    
+    }
+    if(estadoguardar == 0){
+        $("#btnguardar").prop("disabled", true);
+    }else if(estadoguardar > 0){
+        $("#btnguardar").prop("disabled", false);
+    }    
 }   
 
 function limpiarinputs(){
     $('#product').val(null).trigger('change');
     document.getElementById('labelcantidad').innerHTML = "CANTIDAD";
     document.getElementById('labelpreciounitario').innerHTML = "PRECIO UNITARIO: ";
-    document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO(REFERENCIAL): ";
+    document.getElementById('labelpreciounitarioref').innerHTML = "PRECIO UNITARIO (REFERENCIAL): ";
     document.getElementById('labelservicio').innerHTML = "SERVICIO ADICIONAL:";
     document.getElementById('labelpreciototal').innerHTML = "PRECIO TOTAL POR PRODUCTO:";
     document.getElementById('spanpreciounitarioref').innerHTML = "";

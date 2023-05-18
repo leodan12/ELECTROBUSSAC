@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('moneda');
             $table->double('maximo')->nullable();
             $table->double('minimo')->nullable();
+            $table->double('tasacambio')->nullable();
             $table->double('NoIGV');
             $table->double('SiIGV');
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');

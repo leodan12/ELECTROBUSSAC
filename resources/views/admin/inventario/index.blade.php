@@ -11,7 +11,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>STOCKS DE INVENTARIO
+                    <h4>STOCK DE INVENTARIO DE PRODUCTOS: &nbsp;  &nbsp;  &nbsp;  &nbsp;  <a   class="btn btn-success ">Consultar Stock de Kits</a>
                         <a href="{{ url('admin/inventario/create') }}" class="btn btn-primary float-end">Añadir Stocks</a>
                     </h4>
                 </div>

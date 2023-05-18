@@ -28,9 +28,9 @@ class InventarioController extends Controller
             ->leftjoin('inventarios as i', 'i.product_id', '=', 'p.id') 
             ->select(
                 'p.nombre',
-                'p.id'
-                
-            )->where('i.id','=',null)
+                'p.id'  )
+            ->where('i.id','=',null)
+            ->where('p.tipo','=',"estandar")
             ->get();
 
         $companies = Company::all();

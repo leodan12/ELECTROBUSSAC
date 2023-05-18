@@ -89,45 +89,51 @@
                                 <div class="col-sm-4  mb-3">
                                     <label for="vercategoria" class="col-form-label">CATEGORIA:</label>
                                     <input type="text" class="form-control" id="vercategoria" readonly>
-                                </div>
-                               
+                                </div> 
                                 <div class="col-sm-8 mb-3">
                                     <label for="vernombre" class="col-form-label">NOMBRE:</label>
                                     <input type="text" class="form-control" id="vernombre" readonly>
+                                </div> 
+                                <div class="col-sm-3   mb-3">
+                                    <label for="vermoneda" class="col-form-label">TIPO DE MONEDA:</label>
+                                    <input type="text" class="form-control" id="vermoneda" readonly>
+                                </div>
+                                <div class="col-sm-3   mb-3">
+                                    <label for="vertasacambio" class="col-form-label">TASA CAMBIO:</label>
+                                    <input type="text" class="form-control" id="vertasacambio" readonly>
+                                </div>
+                                <div class="col-sm-3 mb-3">
+                                    <div class="input-group">
+                                    <label for="vernoigv" class="col-form-label input-group">PRECIO SIN IGV:</label>
+                                    <span class="input-group-text" id="spannoigv"></span>
+                                    <input type="number" class="form-control" id="vernoigv" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-3">
+                                    <div class="input-group">
+                                    <label for="versiigv" class="col-form-label  input-group">PRECIO CON IGV:</label>
+                                    <span class="input-group-text" id="spansiigv"></span>
+                                    <input type="number" class="form-control" id="versiigv" readonly>
+                                    </div> 
+                                </div>
+                                <div class="col-sm-3 mb-3">
+                                    <div class="input-group">
+                                    <label for="verminimo" class="col-form-label input-group">PRECIO MÍNIMO:</label>
+                                    <span class="input-group-text" id="spanminimo"></span>
+                                    <input type="number" class="form-control" id="verminimo" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-3">
+                                    <div class="input-group">
+                                    <label for="vermaximo" class="col-form-label input-group">PRECIO MÁXIMO:</label>
+                                    <span class="input-group-text" id="spanmaximo"></span>
+                                    <input type="number" class="form-control" id="vermaximo" readonly >
+                                    </div>
                                 </div>
                                 <div class="col-sm-3   mb-3">
                                     <label for="vercodigo" class="col-form-label">CÓDIGO:</label>
                                     <input type="text" class="form-control" id="vercodigo" readonly>
                                 </div>
-                                <div class="col-sm-3   mb-3">
-                                    <label for="verunidad" class="col-form-label">UNIDAD:</label>
-                                    <input type="text" class="form-control" id="verunidad" readonly>
-                                </div>
-                                <div class="col-sm-3   mb-3">
-                                    <label for="verund" class="col-form-label">UND:</label>
-                                    <input type="text" class="form-control" id="verund" readonly>
-                                </div>
-                                <div class="col-sm-3   mb-3">
-                                    <label for="vermoneda" class="col-form-label">TIPO DE MONEDA:</label>
-                                    <input type="text" class="form-control" id="vermoneda" readonly>
-                                </div>
-                                <div class="col-sm-3 mb-3">
-                                    <label for="vernoigv" class="col-form-label">PRECIO SIN IGV:</label>
-                                    <input type="number" class="form-control" id="vernoigv" readonly>
-                                </div>
-                                <div class="col-sm-3 mb-3">
-                                    <label for="versiigv" class="col-form-label">PRECIO CON IGV:</label>
-                                    <input type="number" class="form-control" id="versiigv" readonly>
-                                </div>
-                                <div class="col-sm-3 mb-3">
-                                    <label for="verminimo" class="col-form-label">PRECIO MÍNIMO:</label>
-                                    <input type="number" class="form-control" id="verminimo" readonly>
-                                </div>
-                                <div class="col-sm-3 mb-3">
-                                    <label for="vermaximo" class="col-form-label">PRECIO MÁXIMO:</label>
-                                    <input type="number" class="form-control" id="vermaximo" readonly >
-                                </div>
-                                
                             </div>
                         </form>
                         <div class="table-responsive">
@@ -177,10 +183,9 @@
             
             document.getElementById("vercategoria").value=data[0].nombrecategoria;  
             document.getElementById("vernombre").value=data[0].nombre;
-            document.getElementById("vercodigo").value=data[0].codigo;
-            document.getElementById("verunidad").value=data[0].unidad;
-            document.getElementById("verund").value=data[0].und;  
+            document.getElementById("vercodigo").value=data[0].codigo; 
             document.getElementById("vermoneda").value=data[0].moneda;  
+            document.getElementById("vertasacambio").value=data[0].tasacambio;
             document.getElementById("vernoigv").value=data[0].NoIGV; 
             document.getElementById("versiigv").value=data[0].SiIGV; 
             document.getElementById("verminimo").value=data[0].minimo; 
@@ -189,6 +194,12 @@
             var monedafactura=data[0].moneda;
             if(monedafactura=="dolares"){simbolomonedafactura="$";}
             else if(monedafactura=="soles"){simbolomonedafactura="S/.";}
+
+            document.getElementById("spannoigv").innerHTML=simbolomonedafactura; 
+            document.getElementById("spansiigv").innerHTML=simbolomonedafactura; 
+            document.getElementById("spanmaximo").innerHTML=simbolomonedafactura; 
+            document.getElementById("spanminimo").innerHTML=simbolomonedafactura; 
+
             $('#kits tbody tr').slice().remove();
             for(var i =0 ; i<data.length;i++){
             var monedaproducto=data[i].kitproductmoneda; 

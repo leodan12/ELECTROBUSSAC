@@ -117,8 +117,7 @@
             //alertas para los detallesBatch
             
             if (!empresa) {  alert("Seleccione una empresa"); return;   }
-            if (!stockempresa) {  alert("ingrese un stock para la empresa"); return;   }
-            $("#empresa option:contains('Seleccione una opción')").attr('selected',false);  
+            if (!stockempresa) {  alert("ingrese un stock para la empresa"); return;   }   
             var LDInventario = [];
             var tam = LDInventario.length;
             LDInventario.push(empresa,stockempresa,nameempresa);
@@ -129,7 +128,7 @@
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
                
                 $("#detallesCompra>tbody").append(filaDetalle);
-                $("#empresa option:contains('Seleccione una opción')").attr('selected',true);   
+                $('#empresa').val(null).trigger('change');   
                 document.getElementById('stockempresa').value = "";
                 indice++;
                 stocktotal = parseInt(stocktotal) + parseInt(stockempresa);

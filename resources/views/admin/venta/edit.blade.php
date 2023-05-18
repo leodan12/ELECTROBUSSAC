@@ -273,7 +273,7 @@
         preciofinal();
        };
 
-       function preciofinal() {
+    function preciofinal() {
          
          var cantidad = $('[name="cantidad"]').val(); 
          var preciounit = $('[name="preciounitariomo"]').val(); 
@@ -284,7 +284,7 @@
          }
     }
  
-        $("#product").change(function () {
+    $("#product").change(function () {
        
        $("#product option:selected").each(function () { 
            $price = $(this).data("price");
@@ -349,7 +349,8 @@
                 document.getElementById('preciounitariomo').value = "";
            }
            //alert(nameprod);
-   });  });
+        });  
+    });
 
    //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
    $("#formapago").change(function () { 
@@ -430,7 +431,7 @@
       
    
 
-    function eliminarFila(ind,lugardato,iddetalle) {
+function eliminarFila(ind,lugardato,iddetalle) {
         if(lugardato=="db"){
             Swal.fire({
                 title: '¿Esta seguro de Eliminar?',
@@ -466,7 +467,7 @@
             }else{
             quitarFila(ind);
         } 
-    return false;
+        return false;
 } 
 
 function quitarFila(indicador){
@@ -477,7 +478,8 @@ function quitarFila(indicador){
     indice-- ;
     document.getElementById('costoventa').value = ventatotal;
     var funcion="eliminar";
-    botonguardar(funcion);
+    botonguardar(funcion); 
+    return false;
 }
 
  function botonguardar(funcion){

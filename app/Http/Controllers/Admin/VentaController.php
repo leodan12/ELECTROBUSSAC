@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\VentaFormRequest;
+use Illuminate\Support\Collection;
 use PDF;
 
 class VentaController extends Controller
@@ -388,19 +389,67 @@ class VentaController extends Controller
     }
 
     public function productosxempresa($id)
-    {
-        //buscamos el registro con el id enviado por la URL
-        //$empresa = Company::find($id);
-        $products = DB::table('detalleinventarios as di')
-                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
-                ->join('companies as c', 'di.company_id', '=', 'c.id')
-                ->join('products as p', 'i.product_id', '=', 'p.id')
-                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
-                ->where('c.id', '=', $id)
-                ->where('p.status', '=', 0)
-                ->where('di.stockempresa', '>', 0)->get();
+    { 
+        $prod = DB::table('detalleinventarios as di')
+            ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+            ->join('companies as c', 'di.company_id', '=', 'c.id')
+            ->join('products as p', 'i.product_id', '=', 'p.id')
+            ->select('p.id','p.nombre','p.NoIGV','p.moneda','p.tipo','di.stockempresa')
+            ->where('c.id', '=', $id)
+            ->where('p.status', '=', 0)
+            ->where('p.tipo', '=', "estandar")
+            ->where('di.stockempresa', '>', 0)->get();
 
+        $kits = DB::table('products as p') 
+            ->where('p.status', '=', 0)
+            ->where('p.tipo', '=', "kit")
+            ->select('p.id','p.nombre','p.NoIGV'  ,'p.moneda','p.tipo')
+            ->get();
+ 
+         
+        $miskits = collect();
+        for( $i=0; $i<count($kits); $i++){ 
+            $stockmin =100000; 
+            $stockkit=100000;
+            $existeinvetario=1;
+            $listakits = DB::table('products as p') 
+                ->join('kits as k', 'k.kitproduct_id', '=', 'p.id') 
+                ->where('k.product_id','=',$kits[$i]->id)
+                ->select('p.id as idkitproduct','p.nombre','p.NoIGV'  ,'p.moneda','p.tipo',
+                'k.id as idkit','k.cantidad','k.preciounitario'  ,'k.preciounitariomo','k.preciofinal')
+                ->get();
+            for( $j=0 ; $j<count($listakits) ; $j++){
+                
+                $inventario = DB::table('inventarios as i') 
+                ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id') 
+                ->where('i.product_id','=',$listakits[$j]->idkitproduct)
+                ->where('di.company_id','=',$id)
+                ->select('i.id as idinventario', 'di.stockempresa' )
+                ->first();  
+                if($inventario != null ){
+                $stockkit = floor($inventario->stockempresa/$listakits[$j]->cantidad); 
+                if($stockkit <$stockmin  ){
+                    $stockmin = $stockkit; 
+                }
+            }else{ $existeinvetario=0;}
+            }
+             
+            if($stockmin != 100000 &&  $existeinvetario==1){ 
+            $mikit = collect();
+            $mikit->put('id',$kits[$i]->id);
+            $mikit->put('nombre',$kits[$i]->nombre);
+            $mikit->put('NoIGV',$kits[$i]->NoIGV);
+            $mikit->put('moneda',$kits[$i]->moneda);
+            $mikit->put('tipo',$kits[$i]->tipo);
+            $mikit->put('stockempresa',$stockmin ); 
+            $miskits->push($mikit);  
+            }
+            
+        }
+
+        $products = $prod->concat($miskits);
         return $products;
+  
     }
 
     public function comboempresacliente($id)
