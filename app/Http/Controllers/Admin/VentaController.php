@@ -103,6 +103,7 @@ class VentaController extends Controller
                     $Detalleventa->servicio= $servicio[$i];
                     $Detalleventa->preciofinal = $preciofinal[$i];
                     if($Detalleventa->save()){
+                        
  
                         $detalle = DB::table('detalleinventarios as di')
                         ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
@@ -330,8 +331,8 @@ class VentaController extends Controller
                     $inventario->stocktotal = $inventario->stocktotal + $detallesventa[$i]->cantidad; 
                     $inventario->update();
             }
+            }
         }
-    }
         $venta->delete();
         return redirect()->back()->with('message','Venta Eliminada');
      
@@ -450,6 +451,18 @@ class VentaController extends Controller
         $products = $prod->concat($miskits);
         return $products;
   
+    }
+
+    public function productosxkit($kit_id)
+    {
+
+        $productosxkit = DB::table('products as p') 
+                ->join('kits as k', 'k.kitproduct_id', '=', 'p.id') 
+                ->where('k.product_id','=',$kit_id)
+                ->select('p.id','p.nombre as producto','k.cantidad')
+                ->get();
+
+        return  $productosxkit;
     }
 
     public function comboempresacliente($id)

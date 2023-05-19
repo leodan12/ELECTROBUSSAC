@@ -29,4 +29,9 @@ class HomeController extends Controller
     {
         return view('admin/dashboard');
     }
+
+    public function prueba()
+    {
+        return view('admin.venta.prueba');
+    }
 }

@@ -25,7 +25,9 @@
     @livewireStyles
     @stack('css')
 </head>
-<body>
+<body >
+
+    @yield('alertax')
 
     <div class="container-scroller">
         @include('layouts.inc.admin.navbar')

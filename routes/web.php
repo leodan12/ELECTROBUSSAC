@@ -20,6 +20,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('inicio');
+ 
 
 Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
 
@@ -110,6 +111,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/productosxempresa/{id}', 'productosxempresa'); //devuelve los productos con stock de una empresa
         Route::get('/venta/pagarfactura/{id}',  'pagarfactura');
         Route::get('/venta/generarfacturapdf/{id}',  'generarfacturapdf');
+        Route::get('/venta/productosxkit/{id}', 'productosxkit');//ver  
     });
 
     //Ruta de ingresos

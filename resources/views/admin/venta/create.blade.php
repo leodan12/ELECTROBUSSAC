@@ -1,8 +1,12 @@
 @extends('layouts.admin')
 @push('css')
  <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" /> 
+
 @endpush
+
 @section('content')
+
+ 
 <div class="row">
     <div class="col-md-12">
     @if (count($errors) > 0)
@@ -15,13 +19,16 @@
                             </ul>
                         </div>
     @endif
-        <div class="card">
+        
+    <div class="card">
             <div class="card-header">
                 <h4>AÑADIR VENTA
                     <a href="{{ url('admin/venta') }}" class="btn btn-danger text-white float-end">VOLVER</a>
                 </h4>
             </div>
             <div class="card-body">
+
+ 
                 <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
@@ -141,7 +148,8 @@
                          <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
                         <input type="text" name="observacionproducto" id="observacionproducto"  class="form-control borde gui-input" />
                     </div> 
-                        <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
+                    
+                        <button type="button" class="btn btn-info" id="addDetalleBatch" ><i class="fa fa-plus"></i> Agregar Producto a la Venta</button>
                         <div class="table-responsive">
                         <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
                             <thead class="fw-bold text-primary">
@@ -167,7 +175,30 @@
                         </div>
                     </div>
                 </form>
-                 
+ 
+                <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
+                    <div class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false"    style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); "  >
+                        <div class="  card-header">
+                            <i class="mdi mdi-information menu-icon"></i>
+                            <strong class="mr-auto"> &nbsp; Productos que incluye el kit:</strong> 
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body"> 
+                                <table   id="detalleskit">
+                                    <thead class="fw-bold text-primary">
+                                        <tr> 
+                                            <th>CANTIDAD</th>  
+                                            <th>PRODUCTO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        <tr></tr>
+                                    </tbody>
+                                </table> 
+                        </div>
+                    </div>
+                </div>
+ 
             </div>
         </div>
     </div>
@@ -191,14 +222,13 @@
     var simbolomonedaproducto="";
     var simbolomonedafactura="";
     var indicex=0;
+    var tipoproducto="";
+    var idproducto=0;
  
 $(document).ready(function() {
-    toastr.options.timeOut = 3500; // 1.5s
-    toastr.info('Page Loaded!');
-    $('#linkButton').click(function() {
-       toastr.success('Click Button');
-    });
 
+    $('.toast').toast();
+     
     document.getElementById('tasacambio').value = "3.71";
  
     $('.select2').select2({  });   
@@ -259,7 +289,7 @@ function preciofinal() {
 }
 
 $('#addDetalleBatch').click(function() {
-          
+    
     //datos del detalleSensor
     var product = $('[name="product"]').val();
     var cantidad = $('[name="cantidad"]').val();
@@ -275,49 +305,62 @@ $('#addDetalleBatch').click(function() {
     if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
     if (!servicio) {  alert("Ingrese un servicio"); return;   }
     if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
+    var milista='<br>';
+    var puntos='';
 
-           
     var LVenta = [];
     var tam = LVenta.length;
     LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
-      
-        filaDetalle ='<tr id="fila' + indice + 
-        '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
-        '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
-        '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
-        '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
-        '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
-        '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+ LVenta[4]+
-        '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ simbolomonedafactura+LVenta[5]+ 
-        '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
-             
-        $("#detallesVenta>tbody").append(filaDetalle);
-
-        indice++;
-        indicex++;
-        //alert(indice);
-              
-        ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-
-        limpiarinputs();
-
-        document.getElementById('costoventa').value = (ventatotal*1).toFixed(2); 
-              
-               
-        var funcion="agregar";
-        botonguardar(funcion);
+   
+    if(tipoproducto=="kit"){
+        puntos=': ';
+        var urlventa = "{{ url('admin/venta/productosxkit') }}";
+            $.get(urlventa + '/' + idproducto, function(data){   
+            
+            for (var i=0; i<data.length;i++){
+                var coma = '<br>';
+                if(i+1==data.length){coma='';} 
+                milista = milista+'-' + data[i].cantidad  +' '+ data[i].producto +coma ;
+            }
+            agregarFilasTabla(LVenta,puntos,milista);
+            }); 
+    }else{
+        agregarFilasTabla(LVenta,puntos,milista);    
+    }     
+        
 });
 
 $("#product").change(function () {
             
     $("#product option:selected").each(function () { 
+        var miproduct = $(this).val();
+        if (miproduct ){
         $price = $(this).data("price");
         $named = $(this).data("name");
         $moneda = $(this).data("moneda");
         $stock = $(this).data("stock"); 
         $tipo = $(this).data("tipo"); 
         monedaproducto=$moneda;
-        //alert(stocke);
+        idproducto=miproduct;
+        tipoproducto=$tipo;
+
+        //mostramos la notificacion
+        if($tipo=="kit"){
+            var urlventa = "{{ url('admin/venta/productosxkit') }}";
+            $.get(urlventa + '/' + miproduct, function(data){  
+            $('#detalleskit tbody tr').slice().remove();
+            for (var i=0; i<data.length;i++){
+                filaDetalle ='<tr style="border-top: 1px solid silver;" id="fila' + i + 
+                '"><td> '+ data[i].cantidad+
+                '</td><td> '+ data[i].producto+ 
+                '</td></tr>';
+                $("#detalleskit>tbody").append(filaDetalle);
+            }
+            });
+
+        $('.toast').toast('show');
+    
+        }
         var mitasacambio1 = $('[name="tasacambio"]').val();
         //var mimoneda1 = $('[name="moneda"]').val();
                  
@@ -379,9 +422,30 @@ $("#product").change(function () {
             document.getElementById('preciounitario').value = "";
             document.getElementById('preciounitariomo').value = "";
         }
-      
+       }
     });  
 });
+
+function agregarFilasTabla(LVenta,puntos,milista){
+    filaDetalle ='<tr id="fila' + indice + 
+        '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+puntos+milista+
+        '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
+        '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
+        '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
+        '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
+        '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+ LVenta[4]+
+        '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ simbolomonedafactura+LVenta[5]+ 
+        '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>'; 
+        $("#detallesVenta>tbody").append(filaDetalle);
+        $('.toast').toast('hide');
+        indice++;
+        indicex++; 
+        ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI); 
+        limpiarinputs(); 
+        document.getElementById('costoventa').value = (ventatotal*1).toFixed(2);  
+        var funcion="agregar";
+        botonguardar(funcion);
+}
 
 //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
 $("#formapago").change(function () { 
