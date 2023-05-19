@@ -137,12 +137,10 @@
                         <hr>
                         <h4>Agregar Detalle de la Venta</h4>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">PRODUCTO</label>
+                            <label class="form-label " id="labelproducto">PRODUCTO</label>
                             <select  class="form-select select2 borde" name="product" id="product">
                                 <option  selected disabled value="">Seleccione una opción</option>    
-                                @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-stock="{{$product->stockempresa}}"  data-moneda="{{$product->moneda}}" data-name="{{$product->nombre}}"  data-price="{{$product->NoIGV}}">{{ $product->nombre }}</option>
-                                @endforeach
+                                
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -204,7 +202,15 @@
                                 @foreach($detallesventa as $detalle)
                                     @php $ind++;    @endphp
                                     <tr id="fila{{$ind}}">
-                                        <td> {{$detalle->producto}}</td>
+                                        <td> {{$detalle->producto}}
+                                        @if($detalle->tipo=="kit"): <br>
+                                            @foreach( $detalleskit as $kit)
+                                            @if($detalle->idproducto == $kit->product_id)
+                                            -{{ $kit->cantidad }} &nbsp; {{ $kit->producto }} <br> 
+                                            @endif
+                                            @endforeach
+                                        @endif
+                                        </td>
                                         <td> {{$detalle->observacionproducto}}</td>
                                         <td> {{$detalle->cantidad}}</td>
                                         <td> @if($detalle->moneda=="soles") S/.  @elseif($detalle->moneda=="dolares")$ @endif  {{ $detalle->preciounitario }}</td>
@@ -230,6 +236,29 @@
                         </div>
                     </div>
                 </form>
+                <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
+                    <div class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false"    style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); "  >
+                        <div class="  card-header">
+                            <i class="mdi mdi-information menu-icon"></i>
+                            <strong class="mr-auto"> &nbsp; Productos que incluye el kit:</strong> 
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body"> 
+                                <table   id="detalleskit">
+                                    <thead class="fw-bold text-primary">
+                                        <tr> 
+                                            <th>CANTIDAD</th>  
+                                            <th>PRODUCTO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        <tr></tr>
+                                    </tbody>
+                                </table> 
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -252,8 +281,11 @@
     var monedaproducto=""; 
     var simbolomonedaproducto="";
     var simbolomonedafactura="";
-    var idcompany="";
-    estadoguardar = @json($detalles);
+    var idcompany=0;
+    var tipoproducto="";
+    var idproducto=0;
+
+    estadoguardar = @json($detalles); 
     idcompany = @json($venta->company_id);
     //alert(estadoguardar);
     var funcion1="inicio";
@@ -261,6 +293,17 @@
     var costoventa = $('[id="costoventa"]').val();
     ventatotal =costoventa;
     $(document).ready(function() {
+        $('.toast').toast();
+
+        $.get('/admin/venta/productosxempresa/'+idcompany, function(data){ 
+        var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+        for (var i=0; i<data.length;i++){
+            if(data[i].stockempresa==null){
+                alert(data[i].stockempresa); }
+                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-tipo="'+data[i].tipo+'"data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+            }
+        $("#product").html(producto_select);
+        });
  
         $('.select2').select2({  }); 
        document.getElementById("cantidad").onchange = function() {
@@ -287,15 +330,42 @@
     $("#product").change(function () {
        
        $("#product option:selected").each(function () { 
-           $price = $(this).data("price");
-           $named = $(this).data("name");
-           $moneda = $(this).data("moneda");
-            $stock = $(this).data("stock"); 
+            var miproduct = $(this).val();
+            
+            $('.toast').toast('hide');
+            if (miproduct ){
+            $price = $(this).data("price");
+            $named = $(this).data("name");
+            $moneda = $(this).data("moneda");
+            $stock = $(this).data("stock");
+            $tipo = $(this).data("tipo");  
             monedaproducto=$moneda;
+            idproducto=miproduct;
+            tipoproducto=$tipo;
             monedafactura = $('[name="moneda"]').val(); 
             if(monedafactura=="dolares"){simbolomonedafactura="$";}
             else if(monedafactura=="soles"){simbolomonedafactura="S/.";}
             //alert(stocke);
+            if($tipo=="kit"){
+                var urlventa = "{{ url('admin/venta/productosxkit') }}";
+                $.get(urlventa + '/' + miproduct, function(data){  
+                $('#detalleskit tbody tr').slice().remove();
+                for (var i=0; i<data.length;i++){
+                    filaDetalle ='<tr style="border-top: 1px solid silver;" id="fila' + i + 
+                    '"><td> '+ data[i].cantidad+
+                    '</td><td> '+ data[i].producto+ 
+                    '</td></tr>';
+                    $("#detalleskit>tbody").append(filaDetalle);
+                }
+                }); 
+                $('.toast').toast('show');
+            }
+            if($tipo == "estandar"){
+            document.getElementById('labelproducto').innerHTML = "PRODUCTO";
+            }else if($tipo == "kit") {
+            document.getElementById('labelproducto').innerHTML = "PRODUCTO TIPO KIT"; 
+            }
+
             var mitasacambio1 = $('[name="tasacambio"]').val();
             document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+  $stock+")";
             var cant = document.getElementById('cantidad') ;
@@ -349,12 +419,13 @@
                 document.getElementById('preciounitariomo').value = "";
            }
            //alert(nameprod);
+        }
         });  
     });
 
    //para cambiar la forma de pago  y dehabilitar la fecha de vencimiento
-   $("#formapago").change(function () { 
-       $("#formapago option:selected").each(function () {
+$("#formapago").change(function () { 
+    $("#formapago option:selected").each(function () {
         $mimoneda = $(this).data("formapago"); 
         if ($mimoneda == "credito") { 
                 $("#fechav").prop("readonly", false);
@@ -368,8 +439,8 @@
                 var fechav = document.getElementById("labelfechav");
                 fechav.className = "form-label ";
             } 
-   });
     });
+});
 
  
 });
@@ -402,34 +473,52 @@
             if (!preciounitariomo) {  alert("Ingrese un precio"); return;   }
             if (!servicio) {  alert("Ingrese un servicio"); return;   }
             if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
-
+            var milista='<br>';
+            var puntos='';
             var LVenta = [];
             var tam = LVenta.length;
-            var datodb ="local";
+            //var datodb ="local";
             LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
+ 
+            if(tipoproducto=="kit"){
+                puntos=': ';
+                var urlventa = "{{ url('admin/venta/productosxkit') }}";
+            $.get(urlventa + '/' + idproducto, function(data){    
+                for (var i=0; i<data.length;i++){
+                    var coma = '<br>';
+                    if(i+1==data.length){coma='';} 
+                    milista = milista+'-' + data[i].cantidad  +' '+ data[i].producto +coma ;
+                }
+                agregarFilasTabla(LVenta,puntos,milista);
+            }); 
+            }else{
+                agregarFilasTabla(LVenta,puntos,milista);    
+            } 
         
-                filaDetalle ='<tr id="fila' + indice + 
-                '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
-                '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
-                '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+   LVenta[2] +
-                '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
-                '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
-                '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+ simbolomonedafactura+LVenta[4]+
-                '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+simbolomonedafactura+ LVenta[5]+ 
-                '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice  +','+  0  + ','+  0  +')" data-id="0">ELIMINAR</button></td></tr>';
-               
-                $("#detallesVenta>tbody").append(filaDetalle);
-
-                indice++;
-                ventatotal = (parseFloat(ventatotal) + parseFloat(preciototalI)).toFixed(2);
-                limpiarinputs();
-                document.getElementById('costoventa').value = ventatotal;
-                var funcion="agregar";
-                botonguardar(funcion);
+                
 
     }
       
-   
+function agregarFilasTabla(LVenta,puntos,milista){
+    filaDetalle ='<tr id="fila' + indice + 
+    '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+puntos+milista+
+    '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
+    '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+   LVenta[2] +
+    '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
+    '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice +'" value="' + LVenta[6] + '"required>'+simbolomonedafactura+ LVenta[6]+ 
+    '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+ simbolomonedafactura+LVenta[4]+
+    '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+simbolomonedafactura+ LVenta[5]+ 
+    '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice  +','+  0  + ','+  0  +')" data-id="0">ELIMINAR</button></td></tr>';
+               
+    $("#detallesVenta>tbody").append(filaDetalle);
+    $('.toast').toast('hide');
+    indice++;
+    ventatotal = (parseFloat(ventatotal) + parseFloat(preciototalI)).toFixed(2);
+    limpiarinputs();
+    document.getElementById('costoventa').value = ventatotal;
+    var funcion="agregar";
+    botonguardar(funcion);
+}   
 
 function eliminarFila(ind,lugardato,iddetalle) {
         if(lugardato=="db"){

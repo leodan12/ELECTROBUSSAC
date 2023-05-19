@@ -334,6 +334,7 @@ $("#product").change(function () {
             
     $("#product option:selected").each(function () { 
         var miproduct = $(this).val();
+        $('.toast').toast('hide');
         if (miproduct ){
         $price = $(this).data("price");
         $named = $(this).data("name");
