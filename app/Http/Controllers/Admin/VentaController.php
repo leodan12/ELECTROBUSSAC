@@ -103,7 +103,33 @@ class VentaController extends Controller
                     $Detalleventa->servicio= $servicio[$i];
                     $Detalleventa->preciofinal = $preciofinal[$i];
                     if($Detalleventa->save()){
-                        
+                    
+                        $miproductox = Product::find($product[$i]);
+
+                        if($miproductox && $miproductox->tipo=="kit"){
+                            $milistaproductos = $this->productosxkit($product[$i]); 
+                            for($j=0;$j<count($milistaproductos);$j++){
+                                $detalle = DB::table('detalleinventarios as di')
+                                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                                ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                                ->where('di.company_id', '=', $company->id)
+                                ->select('di.id')
+                                ->first();
+
+                                $detalleinventario = Detalleinventario::find($detalle->id);
+                                if($detalleinventario){
+                                $mistock=(($detalleinventario->stockempresa) - (($milistaproductos[$j]->cantidad)*$cantidad[$i]));
+                                $detalleinventario->stockempresa = $mistock ;
+                                if($detalleinventario->update()){ 
+                                    $inventario = Inventario::find($detalleinventario->inventario_id);
+                                    $mistockt = $inventario->stocktotal -  (($milistaproductos[$j]->cantidad)*$cantidad[$i]);
+                                    $inventario->stocktotal = $mistockt;
+                                    $inventario->update();
+                                }
+                                }
+                            }
+
+                        }else if($miproductox && $miproductox->tipo=="estandar"){
  
                         $detalle = DB::table('detalleinventarios as di')
                         ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
@@ -123,9 +149,9 @@ class VentaController extends Controller
                             $inventario->update();
                         }
                         }
+                        } 
                     }
-                }
-                return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
+                } 
             }
             return redirect('admin/venta')->with('message','Venta Agregada Satisfactoriamente');
         }
@@ -133,8 +159,7 @@ class VentaController extends Controller
     }
 
     public function edit(int $venta_id)
-    {
-
+    { 
         $venta = Venta::findOrFail($venta_id);
         //$companies = Company::all();
         $companies = DB::table('companies as c')
@@ -143,25 +168,25 @@ class VentaController extends Controller
         ->where('v.id', '=', $venta_id)
         ->get();
         $clientes = Cliente::all();
-        //$products = Product::all();
-
-        $products = DB::table('detalleinventarios as di')
-                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
-                ->join('companies as c', 'di.company_id', '=', 'c.id')
-                ->join('products as p', 'i.product_id', '=', 'p.id')
-                ->select('p.id','p.nombre','p.NoIGV','di.stockempresa','p.moneda')
-                ->where('c.id', '=', $venta->company_id)
-                ->where('di.stockempresa', '>', 0)
-                ->get();
 
 
+       
         $detallesventa = DB::table('detalleventas as dv')
             ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
-            ->select('dv.observacionproducto','p.moneda','dv.id as iddetalleventa','dv.cantidad', 'dv.preciounitario','dv.preciounitariomo','dv.servicio','dv.preciofinal','p.id as idproducto','p.nombre as producto')
+            ->select('dv.observacionproducto','p.tipo','p.moneda','dv.id as iddetalleventa','dv.cantidad', 'dv.preciounitario','dv.preciounitariomo','dv.servicio','dv.preciofinal','p.id as idproducto','p.nombre as producto')
             ->where('v.id', '=', $venta_id)->get();
+
+        $detalleskit = DB::table('kits as k') 
+            ->join('products as p', 'k.kitproduct_id', '=', 'p.id')
+            ->join('products as pv', 'k.product_id', '=', 'pv.id')
+            ->join('detalleventas as dv', 'dv.product_id', '=', 'pv.id')
+            ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
+            ->select('k.cantidad','p.nombre as producto','k.product_id')
+            ->where('v.id', '=', $venta_id)->get();
+        //return $detalleskit;
         //return $detallesventa;
-        return view('admin.venta.edit', compact('products','venta','companies','clientes','detallesventa'));
+        return view('admin.venta.edit', compact( 'venta','companies','clientes','detallesventa','detalleskit'));
     }
 
     public function update(VentaFormRequest $request ,int $venta_id)
@@ -222,6 +247,31 @@ class VentaController extends Controller
                     $Detalleventa->servicio= $servicio[$i];
                     $Detalleventa->preciofinal = $preciofinal[$i];
                     if($Detalleventa->save()){
+                    
+                        $miproductox = Product::find($product[$i]);
+                        if($miproductox && $miproductox->tipo=="kit"){
+                            $milistaproductos = $this->productosxkit($product[$i]); 
+                            for($j=0;$j<count($milistaproductos);$j++){
+                                $detalle = DB::table('detalleinventarios as di')
+                                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                                ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                                ->where('di.company_id', '=', $company->id)
+                                ->select('di.id')
+                                ->first();
+
+                                $detalleinventario = Detalleinventario::find($detalle->id);
+                                if($detalleinventario){
+                                $mistock=(($detalleinventario->stockempresa) - (($milistaproductos[$j]->cantidad)*$cantidad[$i]));
+                                $detalleinventario->stockempresa = $mistock ;
+                                if($detalleinventario->update()){ 
+                                    $inventario = Inventario::find($detalleinventario->inventario_id);
+                                    $mistockt = $inventario->stocktotal - (($milistaproductos[$j]->cantidad)*$cantidad[$i]);
+                                    $inventario->stocktotal = $mistockt;
+                                    $inventario->update();
+                                }
+                                }
+                            }
+                        }else if($miproductox && $miproductox->tipo=="estandar"){
  
                         $detalle = DB::table('detalleinventarios as di')
                         ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
@@ -230,17 +280,19 @@ class VentaController extends Controller
                         ->select('di.id')
                         ->first();
  
-                        $detalleinventario = Detalleinventario::findOrFail($detalle->id);
+                        $detalleinventario = Detalleinventario::find($detalle->id);
                         if($detalleinventario){
-                        $mistock=(($detalleinventario->stockempresa) - $cantidad[$i]);
-                        $detalleinventario->stockempresa = $mistock ;
-                        if($detalleinventario->update()){ 
-                            $inventario = Inventario::find($detalleinventario->inventario_id);
-                            $mistockt = $inventario->stocktotal - $cantidad[$i];
-                            $inventario->stocktotal = $mistockt;
-                            $inventario->update();
+                            $mistock=(($detalleinventario->stockempresa) - $cantidad[$i]);
+                            $detalleinventario->stockempresa = $mistock ;
+                            if($detalleinventario->update()){ 
+                                $inventario = Inventario::find($detalleinventario->inventario_id);
+                                $mistockt = $inventario->stocktotal - $cantidad[$i];
+                                $inventario->stocktotal = $mistockt;
+                                $inventario->update();
+                            }
                         }
                         }
+
                     }
                 }
                 return redirect('admin/venta')->with('message','Venta Actualizada Satisfactoriamente');
@@ -269,6 +321,8 @@ class VentaController extends Controller
                 'v.tasacambio',
                 'v.observacion',
                 'p.moneda as monedaproducto',
+                'p.id as idproducto',
+                'p.tipo',
                 'c.nombre as company',
                 'cl.nombre as cliente',
                 'p.nombre as producto',
@@ -427,7 +481,7 @@ class VentaController extends Controller
                 ->where('di.company_id','=',$id)
                 ->select('i.id as idinventario', 'di.stockempresa' )
                 ->first();  
-                if($inventario != null ){
+                if($inventario != null  &&  ($inventario->stockempresa) != 0){
                 $stockkit = floor($inventario->stockempresa/$listakits[$j]->cantidad); 
                 if($stockkit <$stockmin  ){
                     $stockmin = $stockkit; 

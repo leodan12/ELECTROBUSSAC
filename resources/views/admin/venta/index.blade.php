@@ -307,7 +307,7 @@
               </div>
             </div>
           </div>
-          {{-- fin del modal --}}
+{{-- fin del modal --}}
          
                 </div> 
             </div> 
@@ -331,70 +331,116 @@
         const id = button.getAttribute('data-id');
         var urlventa = "{{ url('admin/venta/show') }}";
         $.get(urlventa + '/' + id, function(data) { 
+            var midata =data;
+            //console.log(midata);
             const modalTitle = mimodal.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` ;
             idventa = id;
-            document.getElementById("verFecha").value=data[0].fecha;  
-            document.getElementById("verFactura").value=data[0].factura;   
-            document.getElementById("verMoneda").value=data[0].moneda;  
-            document.getElementById("verFormapago").value=data[0].formapago; 
-            document.getElementById("verEmpresa").value=data[0].company; 
-            document.getElementById("verCliente").value=data[0].cliente
-            document.getElementById("verPagada").value=data[0].pagada; 
-            document.getElementById("verPrecioventa").value=data[0].costoventa;  
-            if(data[0].moneda=="dolares"){document.getElementById('spancostoventa').innerHTML = "$";}
-            else if(data[0].moneda=="soles"){document.getElementById('spancostoventa').innerHTML = "S/.";}
+            document.getElementById("verFecha").value=midata[0].fecha;  
+            document.getElementById("verFactura").value=midata[0].factura;   
+            document.getElementById("verMoneda").value=midata[0].moneda;  
+            document.getElementById("verFormapago").value=midata[0].formapago; 
+            document.getElementById("verEmpresa").value=midata[0].company; 
+            document.getElementById("verCliente").value=midata[0].cliente
+            document.getElementById("verPagada").value=midata[0].pagada; 
+            document.getElementById("verPrecioventa").value=midata[0].costoventa;  
+            if(midata[0].moneda=="dolares"){document.getElementById('spancostoventa').innerHTML = "$";}
+            else if(midata[0].moneda=="soles"){document.getElementById('spancostoventa').innerHTML = "S/.";}
 
-            if(data[0].fechav == null){
+            if(midata[0].fechav == null){
                 document.getElementById('divfechav').style.display = 'none';
             }else{ 
                 document.getElementById('divfechav').style.display = 'inline';
-                document.getElementById("verFechav").value=data[0].fechav;  
+                document.getElementById("verFechav").value=midata[0].fechav;  
             } 
-                document.getElementById("verTipocambio").value=data[0].tasacambio;   
+                document.getElementById("verTipocambio").value=midata[0].tasacambio;   
              
-            if(data[0].pagada=="NO"){document.getElementById('pagarfactura').style.display = 'inline'; }
-            else if(data[0].pagada=="SI"){document.getElementById('pagarfactura').style.display = 'none';}
+            if(midata[0].pagada=="NO"){document.getElementById('pagarfactura').style.display = 'inline'; }
+            else if(midata[0].pagada=="SI"){document.getElementById('pagarfactura').style.display = 'none';}
 
-            if(data[0].observacion == null){
+            if(midata[0].observacion == null){
                 document.getElementById('divobservacion').style.display = 'none';
             }else{ 
                 document.getElementById('divobservacion').style.display = 'inline';
-                document.getElementById("verObservacion").value=data[0].observacion;  
+                document.getElementById("verObservacion").value=midata[0].observacion;  
             }
             
             
-            var monedafactura=data[0].moneda;
+            var monedafactura=midata[0].moneda;
             var simbolomonedaproducto="";
             var simbolomonedafactura="";
 
+            //comprobar la iteracion del midata porque se pasa un numero y genera error
             
             if(monedafactura=="dolares"){simbolomonedafactura="$";}
             else if(monedafactura=="soles"){simbolomonedafactura="S/.";}
              
             var tabla = document.getElementById(detallesventa);
             $('#detallesventa tbody tr').slice().remove();
-            for(var i =0 ; i<data.length;i++){
-            var monedaproducto=data[i].monedaproducto;
+            for(var ite = 0 ; ite<midata.length; ite++  ){
+            var monedaproducto=midata[ite].monedaproducto;
             if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
             else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
+                console.log('producto nro: '+ite);
+                if(midata[ite].tipo=='kit'){
+                    
+                var urlventa = "{{ url('admin/venta/productosxkit') }}";
+                
+                $.ajax({
+                    type: "GET",
+                    url: urlventa + '/' + midata[ite].idproducto,
+                    async: false,
+                    data: {id:id},
+                    success: function(data1) { 
+                        var milista='<br>';
+                        var  puntos=': ';
+                        for (var j=0; j<data1.length;j++){
+                            var coma = '<br>'; 
+                            milista = milista+'-' + data1[j].cantidad  +' '+ data1[j].producto +coma ;
+                            console.log('producto '+j+ 'del kit:'+ ite); 
+                        }     
+                    filaDetalle ='<tr id="fila' + ite + 
+                    '"><td> <b>'+ midata[ite].producto +'</b>'+  puntos + milista+coma+
+                    '</td><td> '+ midata[ite].observacionproducto+ 
+                    '</td><td> '+ midata[ite].cantidad+ 
+                    '</td><td> '+simbolomonedaproducto+ midata[ite].preciounitario+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciounitariomo+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].servicio+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
+                    '</td></tr>';
+                    $("#detallesventa>tbody").append(filaDetalle);
+                    
+                    milista='<br>';
+                    }
+                });
 
-                filaDetalle ='<tr id="fila' + i + 
-                '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
-                    '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+simbolomonedafactura+ data[i].servicio+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+simbolomonedafactura+ data[i].preciofinal+ 
-                '</td></tr>';
-               
-                $("#detallesventa>tbody").append(filaDetalle);
+                // $.get(urlventa + '/' + midata[ite].idproducto , function(data1)
+                // { 
+                    
+                // }); 
+                }else
+                 if(midata[ite].tipo=='estandar'){
+                    console.log(ite);
+                    filaDetalle ='<tr id="fila' + ite + 
+                    '"><td> <b>'+ midata[ite].producto +'</b>'+ 
+                    '</td><td> '+ midata[ite].observacionproducto+ 
+                    '</td><td> '+ midata[ite].cantidad+ 
+                    '</td><td> '+simbolomonedaproducto+ midata[ite].preciounitario+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciounitariomo+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].servicio+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
+                    '</td></tr>';
+                    $("#detallesventa>tbody").append(filaDetalle);   
+                }
+
+            //termina el for    
             }
                  
         });
 
     })
+
+ 
 
 //mostrar el modal de las ventas por vencer-------------------------------------------------------------------------------------------------
 const mimodalVercreditosxvencer = document.getElementById('modalCreditos1')
@@ -451,41 +497,41 @@ mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
         const button = event.relatedTarget;
         const id = button.getAttribute('data-id');
         var urlventa = "{{ url('admin/venta/show') }}";
-        $.get(urlventa + '/' + id, function(data) { 
+        $.get(urlventa + '/' + id, function(midata) { 
             const modalTitle = mimodalcreditos.querySelector('.modal-title')
             modalTitle.textContent = `Ver Registro ${id}` ;
             idventa = id;
-            document.getElementById("verFecha1").value=data[0].fecha;  
-            document.getElementById("verFactura1").value=data[0].factura;   
-            document.getElementById("verMoneda1").value=data[0].moneda;  
-            document.getElementById("verFormapago1").value=data[0].formapago; 
-            document.getElementById("verEmpresa1").value=data[0].company; 
-            document.getElementById("verCliente1").value=data[0].cliente
-            document.getElementById("verPagada1").value=data[0].pagada; 
-            document.getElementById("verPrecioventa1").value=data[0].costoventa;  
-            if(data[0].moneda=="dolares"){document.getElementById('spancostoventa1').innerHTML = "$";}
-            else if(data[0].moneda=="soles"){document.getElementById('spancostoventa1').innerHTML = "S/.";}
+            document.getElementById("verFecha1").value=midata[0].fecha;  
+            document.getElementById("verFactura1").value=midata[0].factura;   
+            document.getElementById("verMoneda1").value=midata[0].moneda;  
+            document.getElementById("verFormapago1").value=midata[0].formapago; 
+            document.getElementById("verEmpresa1").value=midata[0].company; 
+            document.getElementById("verCliente1").value=midata[0].cliente
+            document.getElementById("verPagada1").value=midata[0].pagada; 
+            document.getElementById("verPrecioventa1").value=midata[0].costoventa;  
+            if(midata[0].moneda=="dolares"){document.getElementById('spancostoventa1').innerHTML = "$";}
+            else if(midata[0].moneda=="soles"){document.getElementById('spancostoventa1').innerHTML = "S/.";}
 
-            if(data[0].fechav == null){
+            if(midata[0].fechav == null){
                 document.getElementById('divfechav1').style.display = 'none';
             }else{ 
                 document.getElementById('divfechav1').style.display = 'inline';
-                document.getElementById("verFechav1").value=data[0].fechav;  
+                document.getElementById("verFechav1").value=midata[0].fechav;  
             } 
-                document.getElementById("verTipocambio1").value=data[0].tasacambio;   
+                document.getElementById("verTipocambio1").value=midata[0].tasacambio;   
              
-            if(data[0].pagada=="NO"){document.getElementById('pagarfactura1').style.display = 'inline'; }
-            else if(data[0].pagada=="SI"){document.getElementById('pagarfactura1').style.display = 'none';}
+            if(midata[0].pagada=="NO"){document.getElementById('pagarfactura1').style.display = 'inline'; }
+            else if(midata[0].pagada=="SI"){document.getElementById('pagarfactura1').style.display = 'none';}
 
-            if(data[0].observacion == null){
+            if(midata[0].observacion == null){
                 document.getElementById('divobservacion1').style.display = 'none';
             }else{ 
                 document.getElementById('divobservacion1').style.display = 'inline';
-                document.getElementById("verObservacion1").value=data[0].observacion;  
+                document.getElementById("verObservacion1").value=midata[0].observacion;  
             }
             
             
-            var monedafactura=data[0].moneda;
+            var monedafactura=midata[0].moneda;
             var simbolomonedaproducto="";
             var simbolomonedafactura="";
 
@@ -495,21 +541,63 @@ mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
              
             var tabla = document.getElementById(detallesventa);
             $('#detallesventa1 tbody tr').slice().remove();
-            for(var i =0 ; i<data.length;i++){
-            var monedaproducto=data[i].monedaproducto;
+            for(var ite =0 ; ite<midata.length;ite++){
+            var monedaproducto=midata[ite].monedaproducto;
             if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
             else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
 
-                filaDetalle ='<tr id="fila' + i + 
-                '"><td><input  type="hidden" name="LEmpresa[]" value="' + data[i].producto  + '"required>'+ data[i].producto+
-                    '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].observacionproducto + '"required>'+ data[i].observacionproducto+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].cantidad + '"required>'+ data[i].cantidad+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitario + '"required>'+simbolomonedaproducto+ data[i].preciounitario+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciounitariomo + '"required>'+simbolomonedafactura+ data[i].preciounitariomo+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].servicio + '"required>'+simbolomonedafactura+ data[i].servicio+ 
-                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[i].preciofinal + '"required>'+simbolomonedafactura+ data[i].preciofinal+ 
-                '</td></tr>';
-                $("#detallesventa1>tbody").append(filaDetalle);
+
+            console.log('producto nro: '+ite);
+                if(midata[ite].tipo=='kit'){
+                    
+                var urlventa = "{{ url('admin/venta/productosxkit') }}";
+                
+                $.ajax({
+                    type: "GET",
+                    url: urlventa + '/' + midata[ite].idproducto,
+                    async: false,
+                    data: {id:id},
+                    success: function(data1) { 
+                        var milista='<br>';
+                        var  puntos=': ';
+                        for (var j=0; j<data1.length;j++){
+                            var coma = '<br>'; 
+                            milista = milista+'-' + data1[j].cantidad  +' '+ data1[j].producto +coma ;
+                            console.log('producto '+j+ 'del kit:'+ ite); 
+                        }     
+                    filaDetalle ='<tr id="fila' + ite + 
+                    '"><td> <b>'+ midata[ite].producto +'</b>'+  puntos + milista+coma+
+                    '</td><td> '+ midata[ite].observacionproducto+ 
+                    '</td><td> '+ midata[ite].cantidad+ 
+                    '</td><td> '+simbolomonedaproducto+ midata[ite].preciounitario+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciounitariomo+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].servicio+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
+                    '</td></tr>';
+                    $("#detallesventa1>tbody").append(filaDetalle);
+                    
+                    milista='<br>';
+                    }
+                });
+ 
+                }else
+                 if(midata[ite].tipo=='estandar'){
+                    console.log(ite);
+                    filaDetalle ='<tr id="fila' + ite + 
+                    '"><td> <b>'+ midata[ite].producto +'</b>'+ 
+                    '</td><td> '+ midata[ite].observacionproducto+ 
+                    '</td><td> '+ midata[ite].cantidad+ 
+                    '</td><td> '+simbolomonedaproducto+ midata[ite].preciounitario+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciounitariomo+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].servicio+ 
+                    '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
+                    '</td></tr>';
+                    $("#detallesventa1>tbody").append(filaDetalle);   
+                }
+
+
+
+
             }
                  
         });
@@ -590,6 +678,8 @@ mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
         mostrarmensaje(numerocreditos);
        
      });
+
+ 
 
     function mostrarmensaje(numCred){
         var registro = "REGISTRO DE VENTAS: " ;

@@ -224,6 +224,7 @@
     var indicex=0;
     var tipoproducto="";
     var idproducto=0;
+    var stockmaximo=0;
  
 $(document).ready(function() {
 
@@ -257,7 +258,7 @@ $("#company_id").change(function(){
         for (var i=0; i<data.length;i++){
             if(data[i].stockempresa==null){
                 alert(data[i].stockempresa); }
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-tipo="'+data[i].tipo+'"data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+                producto_select+='<option id="productoxempresa'+data[i].id+'" value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-tipo="'+data[i].tipo+'"data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
             }
         $("#product").html(producto_select);
     });
@@ -302,7 +303,13 @@ $('#addDetalleBatch').click(function() {
     //alertas para los detallesBatch
     if (!product) {  alert("Seleccione un Producto"); return;   }
     if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
-    if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
+    if (cantidad > stockmaximo) {  alert("La cantidad máxima permitida es: "+stockmaximo);
+    document.getElementById('cantidad').value = stockmaximo ;
+    return;   }
+    if (cantidad < 1) {  alert("La cantidad mínima permitida es: 1"); 
+    document.getElementById('cantidad').value = 1 ;
+    return;   }
+    if (!preciounitariomo) {  alert("Ingrese un precio unitario"); return;   }
     if (!servicio) {  alert("Ingrese un servicio"); return;   }
     if (!observacionproducto) {alert("ingrese una observacion(Nro Serie):");   $("#observacionproducto").focus(); return;   }
     var milista='<br>';
@@ -315,17 +322,22 @@ $('#addDetalleBatch').click(function() {
     if(tipoproducto=="kit"){
         puntos=': ';
         var urlventa = "{{ url('admin/venta/productosxkit') }}";
-            $.get(urlventa + '/' + idproducto, function(data){   
-            
+            $.get(urlventa + '/' + idproducto, function(data){    
             for (var i=0; i<data.length;i++){
                 var coma = '<br>';
                 if(i+1==data.length){coma='';} 
                 milista = milista+'-' + data[i].cantidad  +' '+ data[i].producto +coma ;
+                //agregar la resta para cadaa stock individual 
+                var product1 = document.getElementById('productoxempresa'+data[i].id);  
+                var stock = product1.dataset.stock; 
+                product1.setAttribute( 'data-stock', ( stock -data[i].cantidad) ); 
             }
             agregarFilasTabla(LVenta,puntos,milista);
             }); 
+    
+
     }else{
-        agregarFilasTabla(LVenta,puntos,milista);    
+        agregarFilasTabla(LVenta,puntos,milista);
     }     
         
 });
@@ -333,7 +345,7 @@ $('#addDetalleBatch').click(function() {
 $("#product").change(function () {
             
     $("#product option:selected").each(function () { 
-        var miproduct = $(this).val();
+        var miproduct = $(this).val(); 
         if (miproduct ){
         $price = $(this).data("price");
         $named = $(this).data("name");
@@ -343,6 +355,7 @@ $("#product").change(function () {
         monedaproducto=$moneda;
         idproducto=miproduct;
         tipoproducto=$tipo;
+        stockmaximo=$stock;
 
         //mostramos la notificacion
         if($tipo=="kit"){
@@ -365,6 +378,7 @@ $("#product").change(function () {
         //var mimoneda1 = $('[name="moneda"]').val();
                  
         if($tipo == "estandar"){
+            $('.toast').toast('hide');
             document.getElementById('labelproducto').innerHTML = "PRODUCTO";
         }else if($tipo == "kit") {
             document.getElementById('labelproducto').innerHTML = "PRODUCTO TIPO KIT"; 
@@ -428,7 +442,7 @@ $("#product").change(function () {
 
 function agregarFilasTabla(LVenta,puntos,milista){
     filaDetalle ='<tr id="fila' + indice + 
-        '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+puntos+milista+
+        '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required><b>'+ LVenta[1]+'</b>' +puntos+milista+
         '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
         '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
         '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
@@ -559,6 +573,7 @@ function limpiarinputs(){
     document.getElementById('observacionproducto').value = "";
     monedaproducto="";
     simbolomonedaproducto="";
+    $('.toast').toast('hide');
 }
 
 
