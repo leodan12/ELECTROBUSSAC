@@ -515,20 +515,12 @@ function modificarStock(idproducto,cantidad,operacion){
     var product1 = document.getElementById('productoxempresa'+idproducto);  
     var stock = product1.dataset.stock; 
     if(operacion=="sumar"){
-        product1.setAttribute( 'data-stock', ( stock + cantidad) ); 
-        //$('productoxempresa'+idproducto).data("stock", ( stock + cantidad));
-        //$('#productoxempresa'+idproducto).attr("data-stock",  (stock + cantidad));
+        product1.setAttribute( 'data-stock', ( stock + cantidad) );  
     }
     else if(operacion=="restar"){
-        product1.setAttribute( 'data-stock', ( stock - cantidad) ); 
-        //$('productoxempresa'+idproducto).data("stock", ( stock - cantidad));
-        //$('#productoxempresa'+idproducto).attr("data-stock",  (stock - cantidad));
+        product1.setAttribute( 'data-stock', ( stock - cantidad) );  
     }
-    // console.log('productoxempresa'+idproducto);
-    // console.log(stock);
-    // console.log(cantidad);
-    //console.log(product1.dataset.stock);
-
+   
 }
       
 function agregarFilasTabla(LVenta,puntos,milista){

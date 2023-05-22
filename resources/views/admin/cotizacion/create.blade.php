@@ -125,7 +125,7 @@
                 <h4>Agregar Detalle de la Cotización</h4>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">PRODUCTO</label>
+                        <label class="form-label" name="labelproducto" id="labelproducto">PRODUCTO</label>
                        <select  class="form-select select2 borde" name="product" id="product" disabled >
                            <option value="" selected disabled>Seleccione una opción</option>    
                        </select>  
@@ -232,6 +232,32 @@
                         </div>
                     </div>
                 </form>
+
+
+                <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
+                    <div class="toast " role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false"    style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); "  >
+                        <div class="  card-header">
+                            <i class="mdi mdi-information menu-icon"></i>
+                            <strong class="mr-auto"> &nbsp; Productos que incluye el kit:</strong> 
+                            <button type="button" class="btn-close float-end" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body"> 
+                                <table   id="detalleskit">
+                                    <thead class="fw-bold text-primary">
+                                        <tr> 
+                                            <th>CANTIDAD</th>  
+                                            <th>PRODUCTO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody >
+                                        <tr></tr>
+                                    </tbody>
+                                </table> 
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -255,6 +281,9 @@
     var indicex=0;
     var conigv="SI";
     var indicecondicion=0;
+    var tipoproducto="";
+    var idproducto=0;
+    var stockmaximo=0;
     var hoy = new Date();  
     var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
   
@@ -283,7 +312,7 @@ $("#company_id").change(function(){
         $.get('/admin/venta/productosxempresa/'+company, function(data){ 
             var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
               for (var i=0; i<data.length;i++){
-                producto_select+='<option value="'+data[i].id+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
+                producto_select+='<option id="productoxempresa'+data[i].id+'" value="'+data[i].id+'" data-tipo="'+data[i].tipo+'" data-name="'+data[i].nombre+'" data-stock="'+data[i].stockempresa+'" data-moneda="'+data[i].moneda+'" data-price="'+data[i].NoIGV+'">'+data[i].nombre+'</option>';
               }
               $("#product").html(producto_select);
         });
@@ -329,15 +358,41 @@ $("#moneda").change(function () {
  $("#product").change(function () {
             
             $("#product option:selected").each(function () { 
+                
+            var miproduct = $(this).val(); 
                  $price = $(this).data("price");
                  $named = $(this).data("name");
                  $moneda = $(this).data("moneda");
                  $stock = $(this).data("stock"); 
+                 $tipo = $(this).data("tipo"); 
                  monedaproducto=$moneda;
+                 idproducto=miproduct;
+                tipoproducto=$tipo;
+                stockmaximo=$stock;
                  //alert(stocke);
+                 //mostramos la notificacion
+                if($tipo=="kit"){
+                    var urlventa = "{{ url('admin/venta/productosxkit') }}";
+                    $.get(urlventa + '/' + miproduct, function(data){  
+                    $('#detalleskit tbody tr').slice().remove();
+                    for (var i=0; i<data.length;i++){
+                        filaDetalle ='<tr style="border-top: 1px solid silver;" id="fila' + i + 
+                        '"><td> '+ data[i].cantidad+
+                        '</td><td> '+ data[i].producto+ 
+                        '</td></tr>';
+                    $("#detalleskit>tbody").append(filaDetalle);
+                    }
+                    }); 
+                    $('.toast').toast('show');
+                    }
                  var mitasacambio1 = $('[name="tasacambio"]').val();
                  //var mimoneda1 = $('[name="moneda"]').val();
-                 
+                if($tipo == "estandar"){
+                    $('.toast').toast('hide');
+                    document.getElementById('labelproducto').innerHTML = "PRODUCTO";
+                }else if($tipo == "kit") {
+                    document.getElementById('labelproducto').innerHTML = "PRODUCTO TIPO KIT"; 
+                } 
                  document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:"+ $stock+")";
                  
                  var cant = document.getElementById('cantidad') ;
@@ -411,7 +466,7 @@ $('#addCondicion').click(function() {
         document.getElementById('condicion').value ="";
 
 });
-        $('#addDetalleBatch').click(function() {
+    $('#addDetalleBatch').click(function() {
           
           //datos del detalleSensor
           var product = $('[name="product"]').val();
@@ -425,17 +480,47 @@ $('#addCondicion').click(function() {
           //alertas para los detallesBatch
           if (!product) {  alert("Seleccione un Producto"); return;   }
           if (!cantidad) {  alert("Ingrese una cantidad"); return;   }
+          if (cantidad > stockmaximo) {  alert("La cantidad máxima permitida es: "+stockmaximo);
+            document.getElementById('cantidad').value = stockmaximo ;
+            return;   }
+            if (cantidad < 1) {  alert("La cantidad mínima permitida es: 1"); 
+            document.getElementById('cantidad').value = 1 ;
+            return;   }
           if (!preciounitariomo) {  alert("Ingrese una cantidad"); return;   }
           if (!servicio) {  alert("Ingrese un servicio"); return;   }
           //if (!observacionproducto) {alert("ingrese una observacion:");   $("#observacionproducto").focus(); return;   }
-
-           
+          var milista='<br>';
+            var puntos=''; 
           var LVenta = [];
          // var tam = LVenta.length;
           LVenta.push(product,nameproduct,cantidad,preciounitario,servicio,preciofinal,preciounitariomo,observacionproducto);
       
-              filaDetalle ='<tr id="fila' + indice + 
-              '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required>'+ LVenta[1]+
+        if(tipoproducto=="kit"){
+                puntos=': ';
+            var urlventa = "{{ url('admin/venta/productosxkit') }}";
+            $.get(urlventa + '/' + idproducto, function(data){    
+            for (var i=0; i<data.length;i++){
+                var coma = '<br>';
+                if(i+1==data.length){coma='';} 
+                milista = milista+'-' + data[i].cantidad  +' '+ data[i].producto +coma ;
+                //agregar la resta para cadaa stock individual 
+                var product1 = document.getElementById('productoxempresa'+data[i].id);  
+                var stock = product1.dataset.stock; 
+                product1.setAttribute( 'data-stock', ( stock -data[i].cantidad) ); 
+            }
+            console.log(milista);
+            agregarFilasTabla(LVenta,puntos,milista);
+            });  
+        }else{
+            agregarFilasTabla(LVenta,puntos,milista);
+        } 
+
+              
+    });
+     
+function agregarFilasTabla(LVenta,puntos,milista){
+    filaDetalle ='<tr id="fila' + indice + 
+              '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0]  + '"required><b>'+ LVenta[1]+'</b>' +puntos+milista+
               '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +'" value="' + LVenta[7] + '"required>'+ LVenta[7]+
               '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice +'" value="' + LVenta[2] + '"required>'+ LVenta[2]+
               '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice +'" value="' + LVenta[3] + '"required>'+simbolomonedaproducto+ LVenta[3]+ 
@@ -443,40 +528,34 @@ $('#addCondicion').click(function() {
               '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice +'" value="' + LVenta[4] + '"required>'+simbolomonedafactura+ LVenta[4]+
               '</td><td ><input id="preciof' + indice +'"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>'+ simbolomonedafactura+LVenta[5]+ 
               '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ')" data-id="0">ELIMINAR</button></td></tr>';
-             
               $("#detallesVenta>tbody").append(filaDetalle);
 
               indice++;
               indicex++;
-              //alert(indice);
-              
-              ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
-
-              limpiarinputs();
-
+              //alert(indice); 
+              ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI); 
+              limpiarinputs(); 
               document.getElementById('costoventasinigv').value = (ventatotal*1).toFixed(2);
               if(conigv=="SI"){
                 document.getElementById('costoventaconigv').value = (ventatotal*1.18).toFixed(2); 
               }else{ 
                 document.getElementById('costoventaconigv').value = "";  
-              }
-               
+              } 
               var funcion="agregar";
-              botonguardar(funcion);
-      });
-     
-
+              botonguardar(funcion); 
+              $('.toast').toast('hide');
+}
 
 $(document).ready(function() {
+    $('.toast').toast();
     document.getElementById("fecha").value = fechaActual;
     document.getElementById('tasacambio').value = "3.71";
     var validez = hoy  ;
     validez.setDate(validez.getDate() + 15); 
     var fechavalidez = validez.getFullYear() + '-' + (String(validez.getMonth() + 1).padStart(2, '0')) + '-' + String(validez.getDate()).padStart(2, '0');
     document.getElementById("fechav").value = fechavalidez;
-    $('.select2').select2({  }); 
-
-      
+    $('.select2').select2({  });  
+    $("#btnguardar").prop("disabled", true);
 });
 
 function preciofinal() {

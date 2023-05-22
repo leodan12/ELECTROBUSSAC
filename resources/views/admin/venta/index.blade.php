@@ -324,7 +324,7 @@
     var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy.getDate()).padStart(2, '0');
     var inicializartabla=0; 
     
-  var numerocreditos=0;
+    var numerocreditos=0;
     const mimodal = document.getElementById('mimodal');
     mimodal.addEventListener('show.bs.modal', event => { 
         const button = event.relatedTarget;
@@ -381,7 +381,7 @@
             var monedaproducto=midata[ite].monedaproducto;
             if(monedaproducto=="dolares"){simbolomonedaproducto="$";}
             else if(monedaproducto=="soles"){simbolomonedaproducto="S/.";}
-                console.log('producto nro: '+ite);
+                //console.log('producto nro: '+ite);
                 if(midata[ite].tipo=='kit'){
                     
                 var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -413,11 +413,7 @@
                     milista='<br>';
                     }
                 });
-
-                // $.get(urlventa + '/' + midata[ite].idproducto , function(data1)
-                // { 
-                    
-                // }); 
+ 
                 }else
                  if(midata[ite].tipo=='estandar'){
                     console.log(ite);
@@ -431,17 +427,11 @@
                     '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
                     '</td></tr>';
                     $("#detallesventa>tbody").append(filaDetalle);   
-                }
-
+                } 
             //termina el for    
-            }
-                 
-        });
-
-    })
-
- 
-
+            } 
+        }); 
+    }) 
 //mostrar el modal de las ventas por vencer-------------------------------------------------------------------------------------------------
 const mimodalVercreditosxvencer = document.getElementById('modalCreditos1')
 mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
@@ -593,19 +583,13 @@ mimodalVercreditosxvencer.addEventListener('show.bs.modal', event => {
                     '</td><td> '+simbolomonedafactura+ midata[ite].preciofinal+ 
                     '</td></tr>';
                     $("#detallesventa1>tbody").append(filaDetalle);   
-                }
-
-
-
-
+                } 
             }
                  
         });
 
     });
-// fin de los modales
-
-
+// fin de los modales 
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
         });
