@@ -105,7 +105,6 @@ class VentaController extends Controller
                     if($Detalleventa->save()){
                     
                         $miproductox = Product::find($product[$i]);
-
                         if($miproductox && $miproductox->tipo=="kit"){
                             $milistaproductos = $this->productosxkit($product[$i]); 
                             for($j=0;$j<count($milistaproductos);$j++){
@@ -128,7 +127,6 @@ class VentaController extends Controller
                                 }
                                 }
                             }
-
                         }else if($miproductox && $miproductox->tipo=="estandar"){
  
                         $detalle = DB::table('detalleinventarios as di')
