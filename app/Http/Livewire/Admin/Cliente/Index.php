@@ -7,7 +7,8 @@ use App\Models\Cliente;
 use Livewire\WithPagination;
 use App\Models\Ingreso;
 use App\Models\Venta;
-use App\Models\Detalleinventario;
+use App\Models\Cotizacion;
+use App\Models\Inventario;
 
 
 class Index extends Component
@@ -25,9 +26,10 @@ class Index extends Component
     public function destroyCliente()
     {
         $cliente = Cliente::find($this->cliente_id);
-        $ingreso = Ingreso::all()->where('cliente_id','=',$this->cliente_id); 
-        $venta = Venta::all()->where('cliente_id','=',$this->cliente_id); 
-        if(count($venta)==0 && count($ingreso)==0){ 
+        $ingreso = Ingreso::all()->where('cliente_id','=',$this->cliente_id);   
+        $venta = Venta::all()->where('cliente_id','=',$this->cliente_id);  
+        $cotizacion = Cotizacion::all()->where('cliente_id','=',$this->cliente_id); 
+        if(count($venta)==0 && count($ingreso)==0  && count($cotizacion)==0){ 
             if( $cliente->delete()){
             session()->flash('message','Cliente o Proveedor Eliminada');
             $this->dispatchBrowserEvent('close-modal');

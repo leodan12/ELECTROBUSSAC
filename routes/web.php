@@ -93,6 +93,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('inventario/{inventario_id}/delete','destroy');
         Route::get('/deletedetalleinventario/{id}','destroydetalleinventario');
         Route::get('/inventario/show/{id}', 'show');//ver  
+        Route::get('/inventario/showkits', 'showkits');//ver  
 
     });
 
@@ -112,6 +113,8 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/pagarfactura/{id}',  'pagarfactura');
         Route::get('/venta/generarfacturapdf/{id}',  'generarfacturapdf');
         Route::get('/venta/productosxkit/{id}', 'productosxkit');//ver  
+        Route::get('/venta/stockkitxempresa/{id}', 'stockkitxempresa');//ver  
+        Route::get('/venta/stockxprodxempresa/{idproducto}/{idempresa}', 'stockxprodxempresa');//ver  
     });
 
     //Ruta de ingresos

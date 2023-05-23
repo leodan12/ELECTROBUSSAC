@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ClienteFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Ingreso;
+use App\Models\Inventario;
+use App\Models\Cotizacion;
 use App\Models\Venta;
 
 
@@ -74,18 +76,19 @@ class ClienteController extends Controller
     }
     public function destroy(int $cliente_id)
     {
-        $cliente = Cliente::findOrFail($cliente_id);
-        $ingreso = Ingreso::all()->where('cliente_id','=',$cliente_id); 
-        $venta = Venta::all()->where('cliente_id','=',$cliente_id); 
-        if(count($venta)==0 && count($ingreso)==0){ 
+        $cliente = Cliente::find($cliente_id);
+        $ingreso = Ingreso::all()->where('cliente_id','=',$cliente_id);   
+        $venta = Venta::all()->where('cliente_id','=',$cliente_id);  
+        $cotizacion = Cotizacion::all()->where('cliente_id','=',$cliente_id); 
+        if(count($venta)==0 && count($ingreso)==0   && count($cotizacion)==0){ 
             if( $cliente->delete()){
-                return redirect()->back()->with('message','Cliente Eliminado');
-        } 
+                return redirect('admin/cliente')->with('message','Cliente Eliminado Satisfactoriamente'); 
+        }
+ 
         }else{  
             $cliente->status = 1;
             $cliente->update();
-            return redirect()->back()->with('message','Cliente Eliminado');
+            return redirect('admin/cliente')->with('message','Cliente Eliminado Satisfactoriamente');
         }
-          
      }
 }

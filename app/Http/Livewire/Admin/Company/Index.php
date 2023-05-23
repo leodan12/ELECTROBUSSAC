@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Ingreso;
 use App\Models\Venta;
 use App\Models\Detalleinventario;
+use App\Models\Cotizacion;
 use Livewire\WithPagination;
 
 use Illuminate\Support\Facades\File;
@@ -31,7 +32,8 @@ class Index extends Component
         $detalleinventario = Detalleinventario::all()->where('company_id','=',$this->company_id);  
         $ingreso = Ingreso::all()->where('company_id','=',$this->company_id); 
         $venta = Venta::all()->where('company_id','=',$this->company_id); 
-        if(count($venta)==0 && count($ingreso)==0 && count($detalleinventario)==0){ 
+        $cotizacion = Cotizacion::all()->where('company_id','=',$this->company_id); 
+        if(count($venta)==0 && count($ingreso)==0 && count($detalleinventario)==0 && count($cotizacion)==0){ 
             if( $company->delete()){
         $path = public_path('logos/' . $company2->logo);
             if (File::exists($path)) {   File::delete($path);   

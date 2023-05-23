@@ -132,7 +132,7 @@ class ProductController extends Controller
     {
         $product=DB::table('products as p')
         ->join('categories as c','p.category_id','=','c.id')
-        ->select('p.maximo','p.minimo','c.nombre as nombrecategoria','p.nombre','p.codigo','p.unidad','p.und','p.moneda','p.NoIGV','p.SiIGV')
+        ->select('p.maximo','p.minimo','c.nombre as nombrecategoria','p.tipo','p.nombre','p.codigo','p.unidad','p.und','p.moneda','p.NoIGV','p.SiIGV')
         ->where('p.id','=',$id)->first() ;
         
             return  $product;
