@@ -28,7 +28,7 @@ class CategoryController extends Controller
         $category->nombre = $validatedData['nombre'];
         $category->status = $request->status == true ? '1':'0';
         $category->save();
-
+         
         return redirect('admin/category')->with('message','Categoria Agregada Satisfactoriamente');
     }
 

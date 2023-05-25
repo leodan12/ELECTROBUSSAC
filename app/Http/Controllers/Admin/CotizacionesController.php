@@ -12,6 +12,7 @@ use App\Models\Condicion;
 use App\Models\Product;
 use App\Http\Requests\CotizacionFormRequest;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class CotizacionesController extends Controller
 {
@@ -104,6 +105,7 @@ class CotizacionesController extends Controller
         $cotizacion->tasacambio = $tasacambio;
         $cotizacion->observacion = $observacion;
         $cotizacion->fechav = $request->fechav;
+        $cotizacion->persona = $request->persona;
         $cotizacion->formapago = $formapago;
         //guardamos la venta y los detalles
         if ($cotizacion->save()) {
@@ -208,6 +210,7 @@ class CotizacionesController extends Controller
         $cotizacion->fecha = $fecha;
         $cotizacion->costoventasinigv = $costoventasinigv;
         $cotizacion->costoventaconigv = $request->costoventaconigv;
+        $cotizacion->persona = $request->persona;
         $cotizacion->moneda = $moneda;
         $cotizacion->numero = $request->numero;
         $cotizacion->vendida = "NO";
@@ -288,6 +291,7 @@ class CotizacionesController extends Controller
                 'dc.preciofinal',
                 'dc.observacionproducto',
                 'c.vendida',
+                'c.persona',
                 'p.tipo as tipo',
                 'p.id as idproducto',
             )
@@ -354,5 +358,93 @@ class CotizacionesController extends Controller
         } else {
             return 2;
         }
+    }
+
+    public function generarcotizacionpdf($idcotizacion)
+    { 
+
+        $coti = Cotizacion::findOrFail($idcotizacion);
+        $empresa = Company::findOrFail($coti->company_id);
+        $cliente = Cliente::findOrFail($coti->cliente_id);
+
+        $cotizacion = DB::table('cotizacions as c')
+            ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
+            ->join('companies as e', 'c.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'dc.product_id', '=', 'p.id')
+            ->select(
+                'c.fecha',
+                'c.fechav',
+                'c.numero',
+                'c.formapago',
+                'c.moneda',
+                'c.costoventasinigv',
+                'c.costoventaconigv',
+                'c.tasacambio',
+                'c.observacion',
+                'c.persona',
+                'p.moneda as monedaproducto',
+                'e.nombre as company',
+                'cl.nombre as cliente',
+                'p.nombre as producto',
+                'dc.cantidad',
+                'dc.preciounitario',
+                'dc.preciounitariomo',
+                'dc.servicio',
+                'dc.preciofinal',
+                'dc.observacionproducto',
+                'c.vendida',
+                'p.tipo as tipo',
+                'p.id as idproducto',
+            )
+            ->where('c.id', '=', $idcotizacion)->get();
+
+        $detallekit = DB::table('cotizacions as c')
+            ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
+            ->join('companies as e', 'c.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'dc.product_id', '=', 'p.id')
+            ->join('kits as k', 'k.product_id', '=', 'p.id')
+            ->join('products as pk', 'k.kitproduct_id', '=', 'pk.id')
+            ->select(
+                'pk.nombre as producto',
+                'k.cantidad',
+                'k.product_id as idkit',
+            )
+            ->where('c.id', '=', $idcotizacion)->get();
+
+        //return  $detallekit;
+
+        //$fechahoy = date('d-m-Y');
+        $condiciones = Condicion::all()->where('cotizacion_id', '=', $idcotizacion);
+        $fechaletra = $this->obtenerFechaEnLetra($cotizacion[0]->fecha);
+        $pdf = PDF::loadView(
+            'admin.cotizacion.cotizacionpdf',
+            [
+                "cotizacion" => $cotizacion, "empresa" => $empresa, "fechaletra" => $fechaletra, 
+                "cliente" => $cliente, "detallekit" => $detallekit , "condiciones" => $condiciones
+            ]
+        );
+        //$pdf->set_option('defaultFont', 'Courier');
+
+        return $pdf->stream('venta.pdf');
+    }
+
+    function obtenerFechaEnLetra($fecha)
+    {
+        //$dia= $this->conocerDiaSemanaFecha($fecha);
+        $num = date("j", strtotime($fecha));
+        $anno = date("Y", strtotime($fecha));
+        $mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
+        $mes = $mes[(date('m', strtotime($fecha)) * 1) - 1];
+        //return $dia.', '.$num.' de '.$mes.' del '.$anno;
+        return $num . ' de ' . $mes . ' del ' . $anno;
+    }
+
+    function conocerDiaSemanaFecha($fecha)
+    {
+        $dias = array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');
+        $dia = $dias[date('w', strtotime($fecha))];
+        return $dia;
     }
 }

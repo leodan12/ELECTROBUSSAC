@@ -25,7 +25,7 @@
                     <form action="{{ url('admin/cotizacion') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FECHA</label>
                                 <input type="date" name="fecha" id="fecha" class="form-control borde" required />
                                 @error('fecha')
@@ -33,14 +33,14 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDEZ</label>
                                 <input type="date" name="fechav" id="fechav" class="form-control borde" />
                                 @error('fechav')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">MONEDA</label>
                                 <select name="moneda" id="moneda" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
@@ -51,12 +51,12 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01"
                                     class="form-control borde" min="1" />
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
                                 <select name="formapago" id="formapago" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
@@ -67,7 +67,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">INCLUIR IGV</label>
                                 <select name="igv" id="igv" class="form-select borde" required>
                                     <option value="" disabled>Seleccion una opción</option>
@@ -96,7 +96,7 @@
                                     <option value="" selected disabled>Seleccione una opción</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group is-required">PRECIO DE LA COTIZACIÓN SIN
                                         IGV</label>
@@ -105,12 +105,19 @@
                                         step="0.01" class="form-control borde required" required readonly />
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PRECIO DE LA COTIZACIÓN CON IGV</label>
                                     <span class="input-group-text" id="spancostoventaconigv"></span>
                                     <input type="number" name="costoventaconigv" id="costoventaconigv" min="0.1"
                                         step="0.01" class="form-control borde required" required readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
+                                     <input type="text" name="persona" id="persona" 
+                                         class="form-control borde required"  placeholder="Ejemplo: Sr. Jose Sanchez"  />
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">

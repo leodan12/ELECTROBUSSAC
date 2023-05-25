@@ -27,7 +27,7 @@ class HomeController extends Controller
     }
     public function inicio()
     {
-        return view('admin/dashboard');
+        return view('admin.dashboard');
     }
 
     public function prueba()

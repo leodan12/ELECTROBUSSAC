@@ -29,7 +29,7 @@
                         @method('PUT')
                         <div class="row">
                             <input type="hidden" name="numero" id="numero" value="{{ $cotizacion->numero }}" />
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FECHA</label>
                                 <input type="date" name="fecha" id="fecha" class="form-control borde" readonly
                                     required value="{{ $cotizacion->fecha }}" />
@@ -37,7 +37,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDEZ</label>
                                 <input type="date" name="fechav" id="fechav" class="form-control borde"
                                     value="{{ $cotizacion->fechav }}" />
@@ -45,7 +45,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">MONEDA</label>
                                 <select name="moneda" id="moneda" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
@@ -59,13 +59,13 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01"
                                     class="form-control borde" min="1" readonly
                                     value="{{ $cotizacion->tasacambio }}" />
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
                                 <select name="formapago" id="formapago" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
@@ -79,7 +79,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">INCLUIR IGV</label>
                                 <select name="igv" id="igv" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
@@ -108,16 +108,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2 borde" name="cliente_id" required>
+                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id"  required>
                                     <option value="" select disabled>Seleccione una opción</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}"
-                                            {{ $cliente->id == $cotizacion->cliente_id ? 'selected' : '' }}>
-                                            {{ $cliente->nombre }}</option>
-                                    @endforeach
+                                    
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group is-required">PRECIO DE LA COTIZACIÓN SIN
                                         IGV</label>
@@ -131,7 +127,7 @@
                                         value="{{ $cotizacion->costoventasinigv }}" />
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PRECIO DE LA COTIZACIÓN CON IGV</label>
                                     @if ($cotizacion->moneda == 'dolares')
@@ -142,6 +138,15 @@
                                     <input type="number" name="costoventaconigv" id="costoventaconigv" min="0.1"
                                         step="0.01" class="form-control borde required" required readonly
                                         value="{{ $cotizacion->costoventaconigv }}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="input-group">
+                                    <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
+                                    
+                                    <input type="text" name="persona" id="persona" 
+                                         class="form-control borde  "  
+                                        value="{{ $cotizacion->persona }}" />
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">
@@ -426,9 +431,11 @@
         var tipoproducto = "";
         var idproducto = 0;
         var stockmaximo = 0;
+        var idcliente =0;
 
         estadoguardar = @json($detalles);
         idcompany = @json($cotizacion->company_id);
+        idcliente = @json($cotizacion->cliente_id);
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);
@@ -571,6 +578,20 @@
             $('.toast').toast();
             var igv1 = $('[name="igv"]').val();
             conigv = igv1;
+            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) { 
+                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+                for (var i = 0; i < data.length; i++) {
+                    if(idcliente==data[i].id){
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
+                        '" selected>' + data[i].nombre + '</option>';
+                    }else{
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
+                        '" >' + data[i].nombre + '</option>';
+                    }
+                    
+                }
+                $("#cliente_id").html(producto_select);
+            });
             $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {

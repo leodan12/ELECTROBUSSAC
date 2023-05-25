@@ -101,7 +101,7 @@
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01"
-                                    class="form-control borde" value="{{ $venta->tasacambio }}" />
+                                    class="form-control borde" value="{{ $venta->tasacambio }}" readonly/>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
@@ -109,20 +109,17 @@
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}"
-                                            {{ $company->id == $venta->company_id ? 'selected' : '' }}>{{ $company->nombre }}
+                                            {{ $company->id == $venta->company_id ? 'selected' : '' }}>
+                                            {{ $company->nombre }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2 borde" name="cliente_id" required>
+                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id" required>
                                     <option value="" select disabled>Seleccione una opción</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}"
-                                            {{ $cliente->id == $venta->cliente_id ? 'selected' : '' }}>{{ $cliente->nombre }}
-                                        </option>
-                                    @endforeach
+
                                 </select>
 
                             </div>
@@ -348,9 +345,10 @@
         var tipoproducto = "";
         var idproducto = 0;
         var stockmaximo = 0;
-
+        var idcliente = 0;
         estadoguardar = @json($detalles);
         idcompany = @json($venta->company_id);
+        idcliente = @json($venta->cliente_id);
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);
@@ -358,6 +356,22 @@
         ventatotal = costoventa;
         $(document).ready(function() {
             $('.toast').toast();
+            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
+                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+                for (var i = 0; i < data.length; i++) {
+                    if (idcliente == data[i].id) {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" selected>' + data[i].nombre + '</option>';
+                    } else {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" >' + data[i].nombre + '</option>';
+                    }
+
+                }
+                $("#cliente_id").html(producto_select);
+            });
 
             $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
@@ -438,7 +452,7 @@
                             document.getElementById('labelproducto').innerHTML = "PRODUCTO";
                         } else if ($tipo == "kit") {
                             document.getElementById('labelproducto').innerHTML =
-                            "PRODUCTO TIPO KIT";
+                                "PRODUCTO TIPO KIT";
                         }
                         var mitasacambio1 = $('[name="tasacambio"]').val();
                         document.getElementById('labelcantidad').innerHTML = "CANTIDAD(max:" +
@@ -496,7 +510,7 @@
                             document.getElementById('spanpreciounitario').innerHTML =
                                 simbolomonedafactura;
                             document.getElementById('spanservicio').innerHTML =
-                            simbolomonedafactura;
+                                simbolomonedafactura;
                             document.getElementById('spanpreciototal').innerHTML =
                                 simbolomonedafactura;
                             document.getElementById('cantidad').value = 1;

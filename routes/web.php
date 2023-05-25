@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('inicio');
  
 
@@ -103,6 +103,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/create','create');
         Route::post('/venta','store');
         Route::get('/venta/{venta_id}/edit','edit');
+        Route::get('/venta/create2/{idcotizacion}','create2');
         Route::put('/venta/{venta_id}','update');
         Route::get('venta/{venta_id}/delete','destroy');
         Route::get('/deletedetalleventa/{id}',  'destroydetalleventa');
@@ -115,6 +116,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/productosxkit/{id}', 'productosxkit');//ver  
         Route::get('/venta/stockkitxempresa/{id}', 'stockkitxempresa');//ver  
         Route::get('/venta/stockxprodxempresa/{idproducto}/{idempresa}', 'stockxprodxempresa');//ver  
+        Route::get('/venta/comboempresaclientevi/{id}', 'comboempresaclientevi');
     });
 
     //Ruta de ingresos
@@ -144,5 +146,6 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/cotizacion/show/{id}', 'show');//ver  
         Route::get('/cotizacion/showcondiciones/{id}', 'showcondiciones');//ver  
         Route::get('/cotizacion/vendercotizacion/{id}',  'vendercotizacion');
+        Route::get('/cotizacion/generarcotizacionpdf/{id}',  'generarcotizacionpdf');
     });
 });

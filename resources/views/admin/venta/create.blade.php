@@ -4,8 +4,6 @@
 @endpush
 
 @section('content')
-
-
     <div class="row">
         <div class="col-md-12">
             @if (count($errors) > 0)
@@ -20,16 +18,22 @@
             @endif
 
             <div class="card">
+                <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                 <div class="card-header">
-                    <h4>AÑADIR VENTA
+                    <h4>AÑADIR VENTA &nbsp;&nbsp;&nbsp;
+                        <label>¿REGISTRAR TAMBIEN INGRESO?</label>
+                        {{-- <input class="form-check-input" type="checkbox" name="ingreso" id="ingreso" /> --}}
+                        <select name="ingreso" id="ingreso" class=" borde" style="border-radius: 5px">
+                            <option value="NO" selected>NO</option>
+                            <option value="SI">SI</option>
+                        </select>
                         <a href="{{ url('admin/venta') }}" class="btn btn-danger text-white float-end">VOLVER</a>
                     </h4>
                 </div>
                 <div class="card-body">
-
-
-                    <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
+                    {{-- <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
+                        @csrf --}}
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FECHA</label>
@@ -80,7 +84,6 @@
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01"
                                     class="form-control borde" min="1" />
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
                                 <select class="form-select select2  borde" name="company_id" id="company_id" required
@@ -91,7 +94,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
                                 <select class="form-select select2  borde" name="cliente_id" id="cliente_id" required
@@ -119,7 +121,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <hr>
                             <h4>Agregar Detalle de la Venta</h4>
                             <div class="col-md-6 mb-3">
@@ -172,8 +173,8 @@
                                 <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
                                 <input type="text" name="observacionproducto" id="observacionproducto"
                                     class="form-control borde gui-input" />
+                                <input type="hidden" name="idcotizacion" value="-1" required>
                             </div>
-
                             <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i>
                                 Agregar Producto a la Venta</button>
                             <div class="table-responsive">
@@ -201,7 +202,7 @@
                                     class="btn btn-primary text-white float-end">Guardar</button>
                             </div>
                         </div>
-                    </form>
+                    {{-- </form> --}}
                     <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
                         <div class="toast " role="alert" aria-live="assertive" aria-atomic="true"
                             data-bs-autohide="false" style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); ">
@@ -227,6 +228,7 @@
                         </div>
                     </div>
                 </div>
+            </form>
             </div>
         </div>
     </div>
@@ -251,6 +253,8 @@
         var tipoproducto = "";
         var idproducto = 0;
         var stockmaximo = 0;
+        var idempresa = "-1";
+        var urlclientexempresa = "{{ url('admin/venta/comboempresacliente') }}";
 
         $(document).ready(function() {
 
@@ -270,6 +274,24 @@
             document.getElementById("fechav").value = fechavalidez;
         });
 
+        $("#ingreso").change(function() {
+
+            $("#ingreso option:selected").each(function() {
+                var ingreso = $(this).val();
+                if (ingreso == "SI") {
+                    urlclientexempresa = "{{ url('admin/venta/comboempresaclientevi') }}";
+                    if (idempresa != "-1") {
+                        clientesxempresa(idempresa);
+                    }
+                } else {
+                    urlclientexempresa = "{{ url('admin/venta/comboempresacliente') }}";
+                    if (idempresa != "-1") {
+                        clientesxempresa(idempresa);
+                    }
+                }
+            });
+        });
+ 
         document.getElementById("cantidad").onchange = function() {
             preciofinal();
         };
@@ -282,8 +304,10 @@
 
         $("#company_id").change(function() {
             var company = $(this).val();
+            idempresa = company;
             $('#product').removeAttr('disabled');
-            $.get('/admin/venta/productosxempresa/' + company, function(data) {
+            var urlvent = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(urlvent + '/' + company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].stockempresa == null) {
@@ -296,15 +320,11 @@
                 }
                 $("#product").html(producto_select);
             });
-            $('#cliente_id').removeAttr('disabled');
-            $.get('/admin/venta/comboempresacliente/' + company, function(data) {
-                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
-                for (var i = 0; i < data.length; i++) {
-                    producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" >' + data[i].nombre + '</option>';
-                }
-                $("#cliente_id").html(producto_select);
-            });
+
+            clientesxempresa(company);
+
+
+
             if (indice > 0) {
                 var indice2 = indicex;
                 for (var i = 0; i < indice2; i++) {
@@ -313,6 +333,20 @@
             }
             limpiarinputs();
         });
+
+        function clientesxempresa(idempresa) {
+            $('#cliente_id').removeAttr('disabled');
+            $.get(urlclientexempresa + '/' + idempresa, function(data) {
+                var producto_select =
+                    '<option value="" disabled selected>Seleccione una opción</option>'
+                for (var i = 0; i < data.length; i++) {
+                    producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                        .nombre +
+                        '" >' + data[i].nombre + '</option>';
+                }
+                $("#cliente_id").html(producto_select);
+            });
+        }
 
         function preciofinal() {
             var cantidad = $('[name="cantidad"]').val();

@@ -22,7 +22,7 @@
                                         <th>ID</th>
                                         <th>FACTURA</th>
                                         <th>FECHA</th>
-                                        <th>CLIENTE</th>
+                                        <th>PROVEEDOR</th>
                                         <th>EMPRESA</th>
                                         <th>MONEDA</th>
                                         <th>FORMA PAGO</th>
@@ -127,7 +127,7 @@
                                                 <input type="text" class="form-control " id="verEmpresa" readonly>
                                             </div>
                                             <div class=" col-md-4   mb-3">
-                                                <label for="verCliente" class="col-form-label">CLIENTE:</label>
+                                                <label for="verCliente" class="col-form-label">PROVEEDOR:</label>
                                                 <input type="text" class="form-control " id="verCliente" readonly>
                                             </div>
                                             <div class=" col-md-4   mb-3">
@@ -199,7 +199,7 @@
                                                 <th>ID</th>
                                                 <th>FECHA</th>
                                                 <th>FECHA VENC</th>
-                                                <th>CLIENTE</th>
+                                                <th>PROVEEDOR</th>
                                                 <th>EMPRESA</th>
                                                 <th>MONEDA</th>
                                                 <th>FORMA PAGO</th>
@@ -261,7 +261,7 @@
                                                 <input type="text" class="form-control " id="verEmpresa1" readonly>
                                             </div>
                                             <div class=" col-md-4   mb-3">
-                                                <label for="verCliente1" class="col-form-label">CLIENTE:</label>
+                                                <label for="verCliente1" class="col-form-label">PROVEEDOR:</label>
                                                 <input type="text" class="form-control " id="verCliente1" readonly>
                                             </div>
                                             <div class=" col-md-4   mb-3">
@@ -603,8 +603,7 @@
                                     for (var j = 0; j < data1.length; j++) {
                                         var coma = '<br>';
                                         milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
-                                            .producto + coma;
-                                        console.log('producto ' + j + 'del kit:' + ite);
+                                            .producto + coma; 
                                     }
                                     filaDetalle = '<tr id="fila' + ite +
                                         '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
@@ -626,8 +625,7 @@
                             });
 
                         } else
-                        if (midata[ite].tipo == 'estandar') {
-                            console.log(ite);
+                        if (midata[ite].tipo == 'estandar') { 
                             filaDetalle = '<tr id="fila' + ite +
                                 '"><td> <b>' + midata[ite].producto + '</b>' +
                                 '</td><td> ' + midata[ite].observacionproducto +

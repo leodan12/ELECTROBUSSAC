@@ -355,8 +355,7 @@
                 const id = button.getAttribute('data-id');
                 var urlventa = "{{ url('admin/venta/show') }}";
                 $.get(urlventa + '/' + id, function(data) {
-                    var midata = data;
-                    //console.log(midata);
+                    var midata = data; 
                     const modalTitle = mimodal.querySelector('.modal-title')
                     modalTitle.textContent = `Ver Registro ${id}`;
                     idventa = id;
@@ -646,8 +645,7 @@
                             });
 
                         } else
-                        if (midata[ite].tipo == 'estandar') {
-                            console.log(ite);
+                        if (midata[ite].tipo == 'estandar') { 
                             filaDetalle = '<tr id="fila' + ite +
                                 '"><td> <b>' + midata[ite].producto + '</b>' +
                                 '</td><td> ' + midata[ite].observacionproducto +

@@ -39,8 +39,8 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label is-required">NUMERO DE FACTURA</label>
-                                <input type="text" name="factura" id="factura" class="form-control borde" required
+                                <label class="form-label ">NUMERO DE FACTURA</label>
+                                <input type="text" name="factura" id="factura" class="form-control borde"  
                                     value="{{ $ingreso->factura }}" />
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
@@ -118,14 +118,10 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2 borde" name="cliente_id" required>
+                                <label class="form-label is-required">PROVEEDOR</label>
+                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}"
-                                            {{ $cliente->id == $ingreso->cliente_id ? 'selected' : '' }}>
-                                            {{ $cliente->nombre }}</option>
-                                    @endforeach
+                                    
                                 </select>
 
                             </div>
@@ -367,8 +363,12 @@
         var simbolomonedafactura = "";
         var tipoproducto = "";
         var idproducto = 0;
+        var idcompany = 0;
+        var idcliente=0;
 
         estadoguardar = @json($detalles);
+        idcliente = @json($ingreso->cliente_id);
+        idcompany = @json($ingreso->company_id);
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);
@@ -377,6 +377,20 @@
         $(document).ready(function() {
             $('.toast').toast();
             $('.select2').select2({});
+            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) { 
+                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+                for (var i = 0; i < data.length; i++) {
+                    if(idcliente==data[i].id){
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
+                        '" selected>' + data[i].nombre + '</option>';
+                    }else{
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
+                        '" >' + data[i].nombre + '</option>';
+                    }
+                    
+                }
+                $("#cliente_id").html(producto_select);
+            });
             document.getElementById("cantidad").onchange = function() {
                 preciofinal();
             };
@@ -676,10 +690,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
 
-                        $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) {
-                            //alert(data[0]);
-
-                            console.log(data);
+                        $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) { 
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",

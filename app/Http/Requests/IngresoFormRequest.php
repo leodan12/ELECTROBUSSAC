@@ -49,9 +49,7 @@ class IngresoFormRequest extends FormRequest
             'costoventa' => [
                 'required',
             ],
-            'factura' => [
-                'required',
-            ],
+             
             'observacion' => [
                 'nullable',
             ],

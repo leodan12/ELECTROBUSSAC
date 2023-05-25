@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('numero'); 
             $table->string('moneda');  
             $table->string('formapago');
+            $table->string('persona')->nullable();
             $table->string('observacion')->nullable();
             $table->double('costoventasinigv');
             $table->double('costoventaconigv')->nullable();

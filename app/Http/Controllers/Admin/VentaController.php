@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Venta;
 use App\Models\Company;
 use App\Models\Cliente;
+use App\Models\Cotizacion;
 use App\Models\Product;
 use App\Models\Detalleventa;
 use App\Models\Inventario;
+use App\Models\Detalleingreso;
+use App\Models\Ingreso;
 use App\Models\Detalleinventario;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -59,6 +62,9 @@ class VentaController extends Controller
 
     public function store(VentaFormRequest $request)
     {
+
+        //return $request;
+
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
         $cliente = Cliente::findOrFail($validatedData['cliente_id']);
@@ -93,6 +99,13 @@ class VentaController extends Controller
         }
         //guardamos la venta y los detalles
         if ($venta->save()) {
+
+            $idcotizacion = $request->idcotizacion;
+            if ($idcotizacion != -1) {
+                $cotizacion = Cotizacion::findOrFail($idcotizacion);
+                $cotizacion->vendida = "SI";
+                $cotizacion->update();
+            }
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
             $observacionproducto = $request->Lobservacionproducto;
@@ -161,9 +174,277 @@ class VentaController extends Controller
                     }
                 }
             }
+            
+            //registrar tambien la venta
+            if ($request->ingreso == "SI") {
+                
+                $empresa = DB::table('companies as c') 
+                ->where('c.ruc', '=', $cliente->ruc)  
+                ->first();
+                $client = DB::table('clientes as c') 
+                ->where('c.ruc', '=', $company->ruc)  
+                ->first();
+                $ingreso = new Ingreso;
+                $ingreso->company_id = $empresa->id;
+                $ingreso->cliente_id = $client->id;
+                $ingreso->fecha = $fecha;
+                $ingreso->costoventa = $costoventa;
+                $ingreso->formapago = $formapago;
+                $ingreso->moneda = $moneda;
+                $ingreso->factura = $request->factura;
+                $ingreso->pagada = $pagada;
+                //no obligatorios
+                 
+                $ingreso->observacion = $observacion;
+                if ($formapago == 'credito') {
+                    $ingreso->fechav = $fechav;
+                }
+        
+                $ingreso->tasacambio = $tasacambio;
+        
+                //guardamos la venta y los detalles
+                if ($ingreso->save()) {
+                    $product = $request->Lproduct;
+                    $observacionproducto = $request->Lobservacionproducto;
+                    $cantidad = $request->Lcantidad;
+                    $preciounitario = $request->Lpreciounitario;
+                    $servicio = $request->Lservicio;
+                    $preciofinal = $request->Lpreciofinal;
+                    $preciounitariomo = $request->Lpreciounitariomo;
+                    if ($product !== null) {
+                        for ($i = 0; $i < count($product); $i++) {
+                            $Detalleingreso = new Detalleingreso;
+                            $Detalleingreso->ingreso_id = $ingreso->id;
+                            $Detalleingreso->product_id = $product[$i];
+                            $Detalleingreso->observacionproducto = $observacionproducto[$i];
+                            $Detalleingreso->cantidad = $cantidad[$i];
+                            $Detalleingreso->preciounitario = $preciounitario[$i];
+                            $Detalleingreso->preciounitariomo = $preciounitariomo[$i];
+                            $Detalleingreso->servicio = $servicio[$i];
+                            $Detalleingreso->preciofinal = $preciofinal[$i];
+                            if ($Detalleingreso->save()) {
+        
+                                $productb = Product::find($product[$i]);
+                                //pacar cuanto el producto es un kit
+                                if ($productb && $productb->tipo == "kit") {
+                                    $milistaproductos = $this->productosxkit($product[$i]);
+                                    for ($j = 0; $j < count($milistaproductos); $j++) {
+                                        $detalle = DB::table('detalleinventarios as di')
+                                            ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                                            ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                                            ->where('di.company_id', '=', $company->id)
+                                            ->select('di.id')
+                                            ->first();
+                                        if (!$detalle) {
+                                            $inv3 = DB::table('inventarios as i')
+                                                ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                                                ->select('i.id')
+                                                ->first();
+                                            if ($inv3) {
+                                                $detalle2 = new Detalleinventario;
+                                                $detalle2->company_id = $company->id;
+                                                $detalle2->inventario_id = $inv3->id;
+                                                $detalle2->stockempresa = 0;
+                                                $detalle2->status = 0;
+                                                $detalle2->save();
+                                                $detalle = $detalle2;
+                                            }
+                                        }
+                                        //corregir el error al guardar un producto de un kit sin stock
+                                        $detalleinventario = Detalleinventario::find($detalle->id);
+                                        if ($detalleinventario) {
+                                            $mistock = (($detalleinventario->stockempresa) + (($milistaproductos[$j]->cantidad) * $cantidad[$i]));
+                                            $detalleinventario->stockempresa = $mistock;
+                                            if ($detalleinventario->update()) {
+                                                $inventario = Inventario::find($detalleinventario->inventario_id);
+                                                $mistockt = $inventario->stocktotal +  (($milistaproductos[$j]->cantidad) * $cantidad[$i]);
+                                                $inventario->stocktotal = $mistockt;
+                                                $inventario->update();
+                                            }
+                                        }
+                                    }
+                                }
+                                //para cuando el producto es estandar
+                                else if ($productb && $productb->tipo == "estandar") {
+                                    $detalle = DB::table('detalleinventarios as di')
+                                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                                        ->where('i.product_id', '=', $product[$i])
+                                        ->where('di.company_id', '=', $company->id)
+                                        ->select('di.id')
+                                        ->first();
+                                    if ($detalle == null) {
+                                        $inv3 = DB::table('inventarios as i')
+                                            ->where('i.product_id', '=', $product[$i])
+                                            ->select('i.id')
+                                            ->first();
+                                        //$inventario = Inventario::find($inv3->id);
+                                        $detalle2 = new Detalleinventario;
+                                        $detalle2->company_id = $company->id;
+                                        $detalle2->inventario_id = $inv3->id;
+                                        $detalle2->stockempresa = 0;
+                                        $detalle2->status = 0;
+                                        $detalle2->save();
+                                        $detalle = $detalle2;
+                                    }
+                                    $detalleinventario = Detalleinventario::find($detalle->id);
+                                    if ($detalleinventario) {
+                                        $mistock = (($detalleinventario->stockempresa) + $cantidad[$i]);
+                                        $detalleinventario->stockempresa = $mistock;
+                                        if ($detalleinventario->update()) {
+                                            $inventario = Inventario::find($detalleinventario->inventario_id);
+                                            $mistockt = $inventario->stocktotal + $cantidad[$i];
+                                            $inventario->stocktotal = $mistockt;
+                                            $inventario->update();
+                                        }
+                                    }
+                                }
+                                //para actualizar el precio maximo y minimo
+                                if ($productb) {
+                                    if ($moneda == $productb->moneda) {
+                                        if ($preciounitariomo[$i] > $productb->NoIGV) {
+                                            $productb->maximo = $preciounitariomo[$i];
+                                        } else  if ($preciounitariomo[$i] < $productb->NoIGV) {
+                                            $productb->minimo = $preciounitariomo[$i];
+                                        }
+                                    } else if ($moneda == "dolares" && $productb->moneda == "soles") {
+                                        if ($preciounitariomo[$i] > round(($productb->NoIGV) / $tasacambio, 2)) {
+                                            $productb->maximo = round($preciounitariomo[$i] * $tasacambio, 2);
+                                        } else  if ($preciounitariomo[$i] < round(($productb->NoIGV) / $tasacambio, 2)) {
+                                            $productb->minimo = round($preciounitariomo[$i] * $tasacambio, 2);
+                                        }
+                                    } else if ($moneda == "soles" && $productb->moneda == "dolares") {
+                                        if ($preciounitariomo[$i] > round(($productb->NoIGV) * $tasacambio, 2)) {
+                                            $productb->maximo = round($preciounitariomo[$i] / $tasacambio, 2);
+                                        } else  if ($preciounitariomo[$i] < round(($productb->NoIGV) * $tasacambio, 2)) {
+                                            $productb->minimo = round($preciounitariomo[$i] / $tasacambio, 2);
+                                        }
+                                    }
+                                    $productb->save();
+                                }
+                                //fin del guardar detalle
+                            }
+                        }
+                       
+                    }
+                    
+                }
+
+
+            }
+            //termino de registrar la venta
+
             return redirect('admin/venta')->with('message', 'Venta Agregada Satisfactoriamente');
         }
-        return redirect('admin/venta')->with('message', 'No se pudo Agregar La venta');
+        return redirect('admin/venta')->with('message', 'No se Pudo Agregar la Venta');
+    }
+    public function create2(int $idcotizacion)
+    {
+        $venta = Cotizacion::findOrFail($idcotizacion);
+        $companies = DB::table('companies as c')
+            ->join('cotizacions as cot', 'cot.company_id', '=', 'c.id')
+            ->select('c.id', 'c.nombre', 'c.ruc')
+            ->where('cot.id', '=', $idcotizacion)
+            ->get();
+        $clientes = DB::table('clientes as c')
+            ->join('cotizacions as cot', 'cot.cliente_id', '=', 'c.id')
+            ->select('c.id', 'c.nombre', 'c.ruc')
+            ->where('cot.id', '=', $idcotizacion)
+            ->get();
+
+        $detallesventa = DB::table('detallecotizacions as dc')
+            ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
+            ->join('products as p', 'dc.product_id', '=', 'p.id')
+            ->select(
+                'dc.observacionproducto',
+                'p.tipo',
+                'p.moneda',
+                'dc.id as iddetalleventa',
+                'dc.cantidad',
+                'dc.preciounitario',
+                'dc.preciounitariomo',
+                'dc.servicio',
+                'dc.preciofinal',
+                'p.id as idproducto',
+                'p.nombre as producto'
+            )
+            ->where('c.id', '=', $idcotizacion)->get();
+
+        //return $detallesventa;
+        $prodstock = collect();
+        for ($i = 0; $i < count($detallesventa); $i++) {
+            if ($detallesventa[$i]->tipo == "estandar") {
+                $inventario = DB::table('inventarios as i')
+                    ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
+                    ->where('di.company_id', '=', $venta->company_id)
+                    ->where('i.product_id', '=', $detallesventa[$i]->idproducto)
+                    ->select('di.stockempresa', 'di.company_id', 'i.product_id')
+                    ->first();
+                //dump($inventario);  //dump para imprimir en la terminal sin detener el proceso
+                $stock = collect();
+                $stock->put('idproducto', $detallesventa[$i]->idproducto);
+                $stock->put('producto', $detallesventa[$i]->producto);
+                $stock->put('stockdisponible', $inventario->stockempresa);
+                $stock->put('stockrequerido', $detallesventa[$i]->cantidad);
+                $prodstock->push($stock);
+            } else if ($detallesventa[$i]->tipo == "kit") {
+                $misproductos = $this->productosxkit($detallesventa[$i]->idproducto);
+
+                //return $misproductos;
+                for ($j = 0; $j < count($misproductos); $j++) {
+                    $inventario = DB::table('inventarios as i')
+                        ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
+                        ->join('companies as c', 'di.company_id', '=', 'c.id')
+                        ->where('c.id', '=', $venta->company_id)
+                        ->where('i.product_id', '=', $misproductos[$j]->id)
+                        ->select('di.stockempresa', 'di.company_id', 'i.product_id')
+                        ->first();
+                    $stock = collect();
+                    $stock->put('idproducto', $misproductos[$j]->id);
+                    $stock->put('producto', $misproductos[$j]->producto);
+                    $stock->put('stockdisponible', $inventario->stockempresa);
+                    $stock->put('stockrequerido', ($detallesventa[$i]->cantidad * $misproductos[$j]->cantidad));
+                    $prodstock->push($stock);
+                }
+            }
+        }
+        //dump($prodstock);
+        //return $prodstock;
+        $prodfaltantes = collect();
+        $milista2 = $prodstock->unique('idproducto');
+        $milistaprod = $milista2->values()->all();
+        //return $milistaprod;
+        for ($z = 0; $z < count($milistaprod); $z++) {
+            $mistockrequerido = 0;
+            for ($x = 0; $x < count($prodstock); $x++) {
+                //return($prodstock[$x]["idproducto"]);
+                if ($milistaprod[$z]["idproducto"] == $prodstock[$x]["idproducto"]) {
+                    $mistockrequerido = $mistockrequerido + $prodstock[$x]["stockrequerido"];
+                }
+            }
+            if ($mistockrequerido > $milistaprod[$z]["stockdisponible"]) {
+                $miprod = collect();
+                $miprod->put('idproducto', $milistaprod[$z]["idproducto"]);
+                $miprod->put('producto', $milistaprod[$z]["producto"]);
+                $miprod->put('stockdisponible', $milistaprod[$z]["stockdisponible"]);
+                $miprod->put('stockrequerido', ($mistockrequerido - $milistaprod[$z]["stockdisponible"]));
+                $prodfaltantes->push($miprod);
+            }
+        }
+
+        //return $prodfaltantes;
+
+        $detalleskit = DB::table('kits as k')
+            ->join('products as p', 'k.kitproduct_id', '=', 'p.id')
+            ->join('products as pc', 'k.product_id', '=', 'pc.id')
+            ->join('detallecotizacions as dc', 'dc.product_id', '=', 'pc.id')
+            ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
+            ->select('k.cantidad', 'p.nombre as producto', 'k.product_id')
+            ->where('c.id', '=', $idcotizacion)->get();
+
+
+
+        //return $detalleskit;
+        return view('admin.venta.createventacotizacion', compact('prodfaltantes', 'venta', 'companies', 'clientes', 'detallesventa', 'detalleskit'));
     }
 
     public function edit(int $venta_id)
@@ -631,20 +912,21 @@ class VentaController extends Controller
         return $pdf->stream('venta.pdf');
     }
 
-    public function stockkitxempresa($idkit){
+    public function stockkitxempresa($idkit)
+    {
         $companies = Company::all();
         $milistaproductos = $this->productosxkit($idkit);
-        $mistockkits = collect(); 
-        for($i=0;$i<count($companies);$i++){
-            $existeinventario=1;
-            $stockminimo=100000;
-            for($j=0;$j<count($milistaproductos);$j++){
+        $mistockkits = collect();
+        for ($i = 0; $i < count($companies); $i++) {
+            $existeinventario = 1;
+            $stockminimo = 100000;
+            for ($j = 0; $j < count($milistaproductos); $j++) {
                 $inventario = DB::table('inventarios as i')
-                ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
-                ->where('i.product_id', '=', $milistaproductos[$j]->id)
-                ->where('di.company_id', '=', $companies[$i]->id)
-                ->select('i.id as idinventario', 'di.stockempresa')
-                ->first();
+                    ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
+                    ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                    ->where('di.company_id', '=', $companies[$i]->id)
+                    ->select('i.id as idinventario', 'di.stockempresa')
+                    ->first();
                 if ($inventario != null  &&  (floor($inventario->stockempresa / $milistaproductos[$j]->cantidad) != 0)) {
                     $stockkit = floor($inventario->stockempresa / $milistaproductos[$j]->cantidad);
                     if ($stockkit < $stockminimo) {
@@ -658,32 +940,45 @@ class VentaController extends Controller
                 $mistocke = collect();
                 $mistocke->put('id', $companies[$i]->id);
                 $mistocke->put('empresa', $companies[$i]->nombre);
-                $mistocke->put('stock', $stockminimo); 
+                $mistocke->put('stock', $stockminimo);
                 $mistockkits->push($mistocke);
             }
-            
         }
-    return  $mistockkits;
+        return  $mistockkits;
     }
 
-    public function stockxprodxempresa($idkit , $idempresa ){
+    public function stockxprodxempresa($idkit, $idempresa)
+    {
         $stockprod = collect();
         $milistaproductos = $this->productosxkit($idkit);
         for ($j = 0; $j < count($milistaproductos); $j++) {
 
-        $inventario = DB::table('inventarios as i')
-        ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
-        ->join('products as p', 'i.product_id', '=', 'p.id')
-        ->where('p.id', '=', $milistaproductos[$j]->id)
-        ->where('di.company_id', '=', $idempresa)
-        ->select('p.id','p.nombre', 'di.stockempresa')
-        ->first();
+            $inventario = DB::table('inventarios as i')
+                ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
+                ->join('products as p', 'i.product_id', '=', 'p.id')
+                ->where('p.id', '=', $milistaproductos[$j]->id)
+                ->where('di.company_id', '=', $idempresa)
+                ->select('p.id', 'p.nombre', 'di.stockempresa')
+                ->first();
 
-        if($inventario){
-            $stockprod->push($inventario);
+            if ($inventario) {
+                $stockprod->push($inventario);
+            }
         }
-        }
- 
-    return  $stockprod;
+
+        return  $stockprod;
+    }
+
+    public function comboempresaclientevi($id)
+    {
+        //buscamos el registro con el id enviado por la URL
+        $empresa = Company::find($id);
+
+        $clientes = DB::table('clientes as c')
+            ->join('companies as com', 'com.ruc', '=', 'c.ruc')
+            ->select('c.id', 'c.nombre')
+            ->where('c.ruc', '!=', $empresa->ruc)->get();
+
+        return $clientes;
     }
 }

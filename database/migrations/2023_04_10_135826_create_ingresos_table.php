@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id();
             $table->string('moneda');
-            $table->string('factura');
+            $table->string('factura')->nullable();
             $table->string('formapago');
             $table->string('observacion')->nullable();
             $table->double('costoventa');

@@ -69,17 +69,17 @@ class IngresoController extends Controller
         $moneda = $validatedData['moneda'];
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
-        $factura = $validatedData['factura'];
+        //$factura = $validatedData['factura'];
         $pagada = $validatedData['pagada'];
-        $ingreso = new Ingreso;
 
+        $ingreso = new Ingreso;
         $ingreso->company_id = $company->id;
         $ingreso->cliente_id = $cliente->id;
         $ingreso->fecha = $fecha;
         $ingreso->costoventa = $costoventa;
         $ingreso->formapago = $formapago;
         $ingreso->moneda = $moneda;
-        $ingreso->factura = $factura;
+        $ingreso->factura = $request->factura;
         $ingreso->pagada = $pagada;
         //no obligatorios
         $observacion = $validatedData['observacion'];
@@ -215,10 +215,12 @@ class IngresoController extends Controller
                         //fin del guardar detalle
                     }
                 }
-                return redirect('admin/ingreso')->with('message', 'Ingreso Agregado Satisfactoriamente');
+               
             }
             return redirect('admin/ingreso')->with('message', 'Ingreso Agregado Satisfactoriamente');
         }
+        return redirect('admin/ingreso')->with('message', 'No se Pudo Agregar el Ingreso');
+
     }
 
     public function update(IngresoFormRequest $request, int $ingreso_id)
@@ -231,7 +233,7 @@ class IngresoController extends Controller
         $moneda = $validatedData['moneda'];
         $costoventa = $validatedData['costoventa'];
         $formapago = $validatedData['formapago'];
-        $factura = $validatedData['factura'];
+        //$factura = $validatedData['factura'];
         $pagada = $validatedData['pagada'];
 
         $ingreso =  Ingreso::findOrFail($ingreso_id);
@@ -242,7 +244,7 @@ class IngresoController extends Controller
         $ingreso->costoventa = $costoventa;
         $ingreso->formapago = $formapago;
         $ingreso->moneda = $moneda;
-        $ingreso->factura = $factura;
+        $ingreso->factura = $request->factura;
         $ingreso->pagada = $pagada;
 
 
