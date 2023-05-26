@@ -62,7 +62,7 @@
                                 class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
                                 class="mdi mdi-clipboard-arrow-down menu-icon"></i>SALIDA</a></li>
-                     
+
                 </ul>
             </div>
         </li>

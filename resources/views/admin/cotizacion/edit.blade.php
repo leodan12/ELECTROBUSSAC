@@ -38,7 +38,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDEZ</label>
+                                <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDÉZ</label>
                                 <input type="date" name="fechav" id="fechav" class="form-control borde"
                                     value="{{ $cotizacion->fechav }}" />
                                 @error('fechav')
@@ -142,7 +142,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
-                                    <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
+                                    <label class="form-label input-group">PERSONA QUE SOLICITÓ LA COTIZACIÓN</label>
 
                                     <input type="text" name="persona" id="persona" class="form-control borde  "
                                         value="{{ $cotizacion->persona }}" />

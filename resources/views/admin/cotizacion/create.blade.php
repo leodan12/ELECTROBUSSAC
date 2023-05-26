@@ -34,7 +34,7 @@
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDEZ</label>
+                                <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDÉZ</label>
                                 <input type="date" name="fechav" id="fechav" class="form-control borde" />
                                 @error('fechav')
                                     <small class="text-danger">{{ $message }}</small>
@@ -115,7 +115,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
-                                    <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
+                                    <label class="form-label input-group">PERSONA QUE SOLICITÓ LA COTIZACIÓN</label>
                                     <input type="text" name="persona" id="persona"
                                         class="form-control borde required" placeholder="Ejemplo: Sr. Jose Sanchez" />
                                 </div>
@@ -124,12 +124,6 @@
                                 <label class="form-label">OBSERVACION</label>
                                 <input type="text" name="observacion" id="observacion" class="form-control borde" />
                             </div>
-
-
-
-
-
-
                             <div class="row justify-content-center">
                                 <div class="col-lg-12">
                                     <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
@@ -236,9 +230,6 @@
                                                     </table>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                         <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel"
                                             aria-labelledby="nav-condiciones-tab" tabindex="0">
@@ -255,7 +246,6 @@
                                                         id="addCondicion"> Agregar</button>
                                                 </div>
                                             </div>
-
                                             <div class="table-response">
                                                 <table class="table table-row-bordered gy-5 gs-5" id="condiciones">
                                                     <thead class="fw-bold text-primary">
@@ -269,10 +259,7 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-
-
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -284,8 +271,6 @@
                             </div>
                         </div>
                     </form>
-
-
                     <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
                         <div class="toast " role="alert" aria-live="assertive" aria-atomic="true"
                             data-bs-autohide="false" style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); ">
@@ -310,8 +295,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -337,6 +320,8 @@
         var tipoproducto = "";
         var idproducto = 0;
         var stockmaximo = 0;
+        var condformapago = 0;
+        var idcondformapago = -1;
         var hoy = new Date();
         var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy
             .getDate()).padStart(2, '0');
@@ -350,6 +335,62 @@
         document.getElementById("preciounitariomo").onchange = function() {
             preciofinal();
         };
+
+        $("#fechav").change(function() {
+            var fechav1 = $(this).val();
+            var fecha1 = $('[name="fecha"]').val();
+            var fechav = new Date(fechav1);
+            var fecha = new Date(fecha1);
+            var resta = fechav.getTime() - fecha.getTime();
+            var dias = resta / 1000 / 60 / 60 / 24;
+            var cond = "";
+            cond = "La cotizacion es valida por " + dias + " días";
+            document.getElementById('inputcondicion1').value = cond;
+
+        });
+        $("#fecha").change(function() {
+            var fecha1 = $(this).val();
+            var fechav1 = $('[name="fechav"]').val();
+            var fechav = new Date(fechav1);
+            var fecha = new Date(fecha1);
+            var resta = fechav.getTime() - fecha.getTime();
+            var dias = resta / 1000 / 60 / 60 / 24;
+            var cond = "";
+            cond = "La cotizacion es valida por " + dias + " días";
+            document.getElementById('inputcondicion1').value = cond;
+
+        });
+
+        $("#igv").change(function() {
+            var igv = $(this).val();
+            var condicion1 = "";
+            if (igv == "SI") {
+                condicion1 = "El precio inclúye IGV";
+            } else {
+                condicion1 = "El precio no inclúye IGV";
+            }
+            document.getElementById('inputcondicion0').value = condicion1;
+
+        });
+
+        $("#formapago").change(function() {
+            var forma = $(this).val();
+            var condicion1 = "";
+            if (forma == "credito") {
+                condicion1 = "El pago se realizará a crédito";
+            } else {
+                condicion1 = "El pago se realizará al contado";
+            }
+            var LCondiciones = [];
+            LCondiciones.push(condicion1);
+            if (condformapago == 0) {
+                idcondformapago = indicecondicion;
+                condformapago++;
+                agregarCondicion(LCondiciones);
+            } else {
+                document.getElementById('inputcondicion' + idcondformapago).value = condicion1;
+            }
+        });
 
         $("#igv").change(function() {
             var igv = $(this).val();
@@ -528,17 +569,21 @@
             }
             var LCondiciones = [];
             LCondiciones.push(condicion);
+            agregarCondicion(LCondiciones);
+        });
 
+        function agregarCondicion(LCondiciones) {
             filaDetalle = '<tr id="filacondicion' + indicecondicion +
-                '"><td><input  type="hidden" name="Lcondicion[]" value="' + LCondiciones[0] + '"required>' +
-                LCondiciones[0] +
+                '"><td><input  id="inputcondicion' + indicecondicion +
+                '"  type="text" class="form-control borde" name="Lcondicion[]" value="' + LCondiciones[0] +
+                '"required  >' +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarCondicion(' +
                 indicecondicion + ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#condiciones>tbody").append(filaDetalle);
             indicecondicion++;
             document.getElementById('condicion').value = "";
+        }
 
-        });
         $('#addDetalleBatch').click(function() {
 
             //datos del detalleSensor
@@ -657,6 +702,33 @@
             document.getElementById("fechav").value = fechavalidez;
             $('.select2').select2({});
             $("#btnguardar").prop("disabled", true);
+
+            //agregamos una condicion 1 de precio por defecto
+            var igv = $('[name="igv"]').val();
+            var cond = "";
+            if (igv == "SI") {
+                cond = "El precio inclúye IGV";
+            }
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
+
+            //agregamos una condicion 2 de precio por defecto
+            var fechav1 = $('[name="fechav"]').val();
+            var fecha1 = $('[name="fecha"]').val();
+            var fechav = new Date(fechav1);
+            var fecha = new Date(fecha1);
+            var resta = fechav.getTime() - fecha.getTime();
+            var dias = resta / 1000 / 60 / 60 / 24;
+
+            //var fecha2 = fechav.setDate()
+
+            var cond = "";
+            cond = "La cotizacion es valida por " + dias + " días";
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
+
         });
 
         function preciofinal() {
