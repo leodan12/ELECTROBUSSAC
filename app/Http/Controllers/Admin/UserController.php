@@ -11,8 +11,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();  
-        return view('admin.users.index',compact('users'));
+        $users = User::all();
+        return view('admin.users.index', compact('users'));
     }
 
     public function create()
@@ -36,13 +36,13 @@ class UserController extends Controller
             'role_as' => $request->role_as,
         ]);
 
-        return redirect('/admin/users')->with('message','Usuario Creado Satisfactoriamente');
+        return redirect('/admin/users')->with('message', 'Usuario Creado Satisfactoriamente');
     }
 
     public function edit($userId)
     {
         $user = User::findOrFail($userId);
-        return view('admin.users.edit',compact('user'));
+        return view('admin.users.edit', compact('user'));
     }
 
     public function update(Request $request, int $userId)
@@ -55,18 +55,18 @@ class UserController extends Controller
 
         User::findOrFail($userId)->update([
             'name' => $request->name,
-            
+
             'password' => Hash::make($request->password),
             'role_as' => $request->role_as,
         ]);
 
-        return redirect('/admin/users')->with('message','Usuario Actualizado Satisfactoriamente');
+        return redirect('/admin/users')->with('message', 'Usuario Actualizado Satisfactoriamente');
     }
 
     public function destroy(int $userId)
     {
         $user = User::findOrFail($userId);
         $user->delete();
-        return redirect('/admin/users')->with('message','Usuario Eliminado Satisfactoriamente');
+        return redirect('/admin/users')->with('message', 'Usuario Eliminado Satisfactoriamente');
     }
 }

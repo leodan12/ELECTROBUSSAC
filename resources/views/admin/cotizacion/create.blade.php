@@ -116,8 +116,8 @@
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
-                                     <input type="text" name="persona" id="persona" 
-                                         class="form-control borde required"  placeholder="Ejemplo: Sr. Jose Sanchez"  />
+                                    <input type="text" name="persona" id="persona"
+                                        class="form-control borde required" placeholder="Ejemplo: Sr. Jose Sanchez" />
                                 </div>
                             </div>
                             <div class="col-md-12 mb-3">

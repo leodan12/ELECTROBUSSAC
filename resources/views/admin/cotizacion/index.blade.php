@@ -224,9 +224,10 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" id="generarcotizacion"> Generar Pdf de
                                         la Cotización </button>
-                                        <div id="btnvender" name="btnvender">
-                                    <button type="button" class="btn btn-warning" id="realizarventa" onclick="venderCotizacion()">Realizar
-                                        Venta</button>
+                                    <div id="btnvender" name="btnvender">
+                                        <button type="button" class="btn btn-warning" id="realizarventa"
+                                            onclick="venderCotizacion()">Realizar
+                                            Venta</button>
                                     </div>
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
@@ -250,7 +251,7 @@
                 const button = event.relatedTarget
                 const id = button.getAttribute('data-id')
                 var urlventa = "{{ url('admin/cotizacion/show') }}";
-                $.get(urlventa + '/' + id, function(midata) { 
+                $.get(urlventa + '/' + id, function(midata) {
                     const modalTitle = mimodal.querySelector('.modal-title')
                     modalTitle.textContent = `Ver Cotizacion Nro: ` + midata[0].numero;
                     idventa = id;
@@ -270,16 +271,16 @@
                         document.getElementById('spancostoventasinigv').innerHTML = "S/.";
                         document.getElementById('spancostoventaconigv').innerHTML = "S/.";
                     }
-                    if(midata[0].persona==null){
+                    if (midata[0].persona == null) {
                         document.getElementById('divpersona').style.display = 'none';
-                    }else{
+                    } else {
                         document.getElementById('divpersona').style.display = 'inline';
                         document.getElementById("verPersona").value = midata[0].persona;
                     }
-                    if(midata[0].vendida=="SI"){
+                    if (midata[0].vendida == "SI") {
                         document.getElementById('btnvender').style.display = 'none';
-                    }else if(midata[0].vendida=="NO"){
-                        document.getElementById('btnvender').style.display = 'inline'; 
+                    } else if (midata[0].vendida == "NO") {
+                        document.getElementById('btnvender').style.display = 'inline';
                     }
 
                     document.getElementById("verTipocambio").value = midata[0].tasacambio;
@@ -333,14 +334,14 @@
                                 data: {
                                     id: id
                                 },
-                                success: function(data1) { 
+                                success: function(data1) {
                                     var milista = '<br>';
                                     var puntos = ': ';
                                     for (var j = 0; j < data1.length; j++) {
                                         var coma = '<br>';
                                         milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
-                                            .producto + coma; 
-                                    } 
+                                            .producto + coma;
+                                    }
                                     filaDetalle = '<tr id="fila' + ite +
                                         '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
                                         milista + coma +
@@ -354,13 +355,13 @@
                                         '</td><td> ' + simbolomonedafactura + midata[ite]
                                         .preciofinal +
                                         '</td></tr>';
-                                    $("#detallesventa>tbody").append(filaDetalle); 
+                                    $("#detallesventa>tbody").append(filaDetalle);
                                     milista = '<br>';
                                 }
                             });
 
                         } else
-                        if (midata[ite].tipo == 'estandar') { 
+                        if (midata[ite].tipo == 'estandar') {
                             filaDetalle = '<tr id="fila' + ite +
                                 '"><td> <b>' + midata[ite].producto + '</b>' +
                                 '</td><td> ' + midata[ite].observacionproducto +
@@ -390,19 +391,20 @@
             })
             window.addEventListener('close-modal', event => {
                 $('#deleteModal').modal('hide');
-            }); 
+            });
             $('#generarcotizacion').click(function() {
                 generarfactura(idventa);
             });
- 
+
             function generarfactura($id) {
                 if ($id != -1) {
                     window.open('/admin/cotizacion/generarcotizacionpdf/' + $id);
                 }
             }
-            function venderCotizacion(){
-                var urlventa = "{{ url('admin/venta/create2') }}"; 
-                    window.location = (urlventa+'/'+idventa); 
+
+            function venderCotizacion() {
+                var urlventa = "{{ url('admin/venta/create2') }}";
+                window.location = (urlventa + '/' + idventa);
             }
         </script>
     @endpush

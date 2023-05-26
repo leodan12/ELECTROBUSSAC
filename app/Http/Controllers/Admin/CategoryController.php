@@ -11,8 +11,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-         
-        return view('admin.category.index' );
+
+        return view('admin.category.index');
     }
 
     public function create()
@@ -26,10 +26,10 @@ class CategoryController extends Controller
 
         $category = new Category;
         $category->nombre = $validatedData['nombre'];
-        $category->status = $request->status == true ? '1':'0';
+        $category->status = '0';
         $category->save();
-         
-        return redirect('admin/category')->with('message','Categoria Agregada Satisfactoriamente');
+
+        return redirect('admin/category')->with('message', 'Categoria Agregada Satisfactoriamente');
     }
 
     public function edit(Category $category)
@@ -37,16 +37,16 @@ class CategoryController extends Controller
         return view('admin.category.edit', compact('category'));
     }
 
-    public function update(CategoryFormRequest $request,$category)
+    public function update(CategoryFormRequest $request, $category)
     {
         $validatedData = $request->validated();
 
         $category = Category::findOrFail($category);
 
         $category->nombre = $validatedData['nombre'];
-        $category->status = $request->status == true ? '1':'0';
+        $category->status = '0';
         $category->update();
 
-        return redirect('admin/category')->with('message','Categoria Actualizada Satisfactoriamente');
+        return redirect('admin/category')->with('message', 'Categoria Actualizada Satisfactoriamente');
     }
 }

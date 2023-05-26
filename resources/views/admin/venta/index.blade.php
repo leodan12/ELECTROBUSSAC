@@ -355,7 +355,7 @@
                 const id = button.getAttribute('data-id');
                 var urlventa = "{{ url('admin/venta/show') }}";
                 $.get(urlventa + '/' + id, function(data) {
-                    var midata = data; 
+                    var midata = data;
                     const modalTitle = mimodal.querySelector('.modal-title')
                     modalTitle.textContent = `Ver Registro ${id}`;
                     idventa = id;
@@ -416,7 +416,7 @@
                         } else if (monedaproducto == "soles") {
                             simbolomonedaproducto = "S/.";
                         }
-                         
+
                         if (midata[ite].tipo == 'kit') {
 
                             var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -434,7 +434,7 @@
                                     for (var j = 0; j < data1.length; j++) {
                                         var coma = '<br>';
                                         milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
-                                            .producto + coma; 
+                                            .producto + coma;
                                     }
                                     filaDetalle = '<tr id="fila' + ite +
                                         '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
@@ -456,7 +456,7 @@
                             });
 
                         } else
-                        if (midata[ite].tipo == 'estandar') { 
+                        if (midata[ite].tipo == 'estandar') {
                             filaDetalle = '<tr id="fila' + ite +
                                 '"><td> <b>' + midata[ite].producto + '</b>' +
                                 '</td><td> ' + midata[ite].observacionproducto +
@@ -605,7 +605,7 @@
                         }
 
 
-                         
+
                         if (midata[ite].tipo == 'kit') {
 
                             var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -623,7 +623,7 @@
                                     for (var j = 0; j < data1.length; j++) {
                                         var coma = '<br>';
                                         milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
-                                            .producto + coma; 
+                                            .producto + coma;
                                     }
                                     filaDetalle = '<tr id="fila' + ite +
                                         '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
@@ -645,7 +645,7 @@
                             });
 
                         } else
-                        if (midata[ite].tipo == 'estandar') { 
+                        if (midata[ite].tipo == 'estandar') {
                             filaDetalle = '<tr id="fila' + ite +
                                 '"><td> <b>' + midata[ite].producto + '</b>' +
                                 '</td><td> ' + midata[ite].observacionproducto +

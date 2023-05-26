@@ -99,13 +99,8 @@
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Telefono</label>
-                                        <input type="number" name="telefono" class="form-control  borde" />
-
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Status</label><br>
-                                        <input type="checkbox" name="status" />
-                                    </div>
+                                        <input type="number" name="telefono" class="form-control  borde" /> 
+                                    </div> 
                                 </div>
                             </div>
 

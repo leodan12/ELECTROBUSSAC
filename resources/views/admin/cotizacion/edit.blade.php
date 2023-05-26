@@ -108,9 +108,9 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id"  required>
+                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id" required>
                                     <option value="" select disabled>Seleccione una opción</option>
-                                    
+
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -143,9 +143,8 @@
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PERSONA QUE SOLICITO LA COTIZACION</label>
-                                    
-                                    <input type="text" name="persona" id="persona" 
-                                         class="form-control borde  "  
+
+                                    <input type="text" name="persona" id="persona" class="form-control borde  "
                                         value="{{ $cotizacion->persona }}" />
                                 </div>
                             </div>
@@ -374,7 +373,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                             <hr>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" id="btnguardar" name="btnguardar"
@@ -431,7 +430,7 @@
         var tipoproducto = "";
         var idproducto = 0;
         var stockmaximo = 0;
-        var idcliente =0;
+        var idcliente = 0;
 
         estadoguardar = @json($detalles);
         idcompany = @json($cotizacion->company_id);
@@ -578,17 +577,19 @@
             $('.toast').toast();
             var igv1 = $('[name="igv"]').val();
             conigv = igv1;
-            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) { 
+            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
-                    if(idcliente==data[i].id){
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" selected>' + data[i].nombre + '</option>';
-                    }else{
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" >' + data[i].nombre + '</option>';
+                    if (idcliente == data[i].id) {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" selected>' + data[i].nombre + '</option>';
+                    } else {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" >' + data[i].nombre + '</option>';
                     }
-                    
+
                 }
                 $("#cliente_id").html(producto_select);
             });
@@ -631,7 +632,7 @@
 
             filaDetalle = '<tr id="filacondicion' + indicecondicion +
                 '"><td><input  type="hidden" name="Lcondicion[]" value="' + LCondiciones[0] + '"required>' + LCondiciones[
-                0] +
+                    0] +
                 '</td><td><button type="button" class="btn btn-danger" onclick="quitarCondicion(' + indicecondicion +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#condiciones>tbody").append(filaDetalle);
@@ -711,7 +712,7 @@
             } else {
                 modificarStock(LVenta[0], LVenta[2], "restar");
                 agregarFilasTabla(LVenta, puntos, milista);
-            } 
+            }
         }
 
         function modificarStock(idproducto, cantidad, operacion) {
@@ -722,8 +723,9 @@
                 product1.setAttribute('data-stock', (stock + cantidad));
             } else if (operacion == "restar") {
                 product1.setAttribute('data-stock', (stock - cantidad));
-            } 
-        } 
+            }
+        }
+
         function agregarFilasTabla(LVenta, puntos, milista) {
             filaDetalle = '<tr id="fila' + indice +
                 '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0] + '"required><b>' + LVenta[1] + '</b>' +

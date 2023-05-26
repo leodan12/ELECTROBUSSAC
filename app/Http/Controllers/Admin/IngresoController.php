@@ -215,12 +215,10 @@ class IngresoController extends Controller
                         //fin del guardar detalle
                     }
                 }
-               
             }
             return redirect('admin/ingreso')->with('message', 'Ingreso Agregado Satisfactoriamente');
         }
         return redirect('admin/ingreso')->with('message', 'No se Pudo Agregar el Ingreso');
-
     }
 
     public function update(IngresoFormRequest $request, int $ingreso_id)
@@ -422,7 +420,7 @@ class IngresoController extends Controller
     }
 
     public function show($id)
-    { 
+    {
         $ingreso = DB::table('ingresos as i')
             ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
             ->join('companies as c', 'i.company_id', '=', 'c.id')

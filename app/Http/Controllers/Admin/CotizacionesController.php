@@ -361,7 +361,7 @@ class CotizacionesController extends Controller
     }
 
     public function generarcotizacionpdf($idcotizacion)
-    { 
+    {
 
         $coti = Cotizacion::findOrFail($idcotizacion);
         $empresa = Company::findOrFail($coti->company_id);
@@ -421,8 +421,8 @@ class CotizacionesController extends Controller
         $pdf = PDF::loadView(
             'admin.cotizacion.cotizacionpdf',
             [
-                "cotizacion" => $cotizacion, "empresa" => $empresa, "fechaletra" => $fechaletra, 
-                "cliente" => $cliente, "detallekit" => $detallekit , "condiciones" => $condiciones
+                "cotizacion" => $cotizacion, "empresa" => $empresa, "fechaletra" => $fechaletra,
+                "cliente" => $cliente, "detallekit" => $detallekit, "condiciones" => $condiciones
             ]
         );
         //$pdf->set_option('defaultFont', 'Courier');

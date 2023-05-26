@@ -174,16 +174,16 @@ class VentaController extends Controller
                     }
                 }
             }
-            
+
             //registrar tambien la venta
             if ($request->ingreso == "SI") {
-                
-                $empresa = DB::table('companies as c') 
-                ->where('c.ruc', '=', $cliente->ruc)  
-                ->first();
-                $client = DB::table('clientes as c') 
-                ->where('c.ruc', '=', $company->ruc)  
-                ->first();
+
+                $empresa = DB::table('companies as c')
+                    ->where('c.ruc', '=', $cliente->ruc)
+                    ->first();
+                $client = DB::table('clientes as c')
+                    ->where('c.ruc', '=', $company->ruc)
+                    ->first();
                 $ingreso = new Ingreso;
                 $ingreso->company_id = $empresa->id;
                 $ingreso->cliente_id = $client->id;
@@ -194,14 +194,14 @@ class VentaController extends Controller
                 $ingreso->factura = $request->factura;
                 $ingreso->pagada = $pagada;
                 //no obligatorios
-                 
+
                 $ingreso->observacion = $observacion;
                 if ($formapago == 'credito') {
                     $ingreso->fechav = $fechav;
                 }
-        
+
                 $ingreso->tasacambio = $tasacambio;
-        
+
                 //guardamos la venta y los detalles
                 if ($ingreso->save()) {
                     $product = $request->Lproduct;
@@ -223,7 +223,7 @@ class VentaController extends Controller
                             $Detalleingreso->servicio = $servicio[$i];
                             $Detalleingreso->preciofinal = $preciofinal[$i];
                             if ($Detalleingreso->save()) {
-        
+
                                 $productb = Product::find($product[$i]);
                                 //pacar cuanto el producto es un kit
                                 if ($productb && $productb->tipo == "kit") {
@@ -324,12 +324,8 @@ class VentaController extends Controller
                                 //fin del guardar detalle
                             }
                         }
-                       
                     }
-                    
                 }
-
-
             }
             //termino de registrar la venta
 

@@ -193,15 +193,15 @@
                         <b> Señores: </b> <br>
                     </div>
                     @if ($cotizacion[0]->persona != null)
-                    <div class="linea">
-                        {{ $cliente->nombre }}
-                    </div>
+                        <div class="linea">
+                            {{ $cliente->nombre }}
+                        </div>
                     @else
-                    <div class="lineacliente">
-                        {{ $cliente->nombre }}
-                    </div>
+                        <div class="lineacliente">
+                            {{ $cliente->nombre }}
+                        </div>
                     @endif
-                    
+
                     @if ($cotizacion[0]->persona != null)
                         <div class="lineacliente">
                             Att. {{ $cotizacion[0]->persona }}

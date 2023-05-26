@@ -30,29 +30,29 @@ class CompanyController extends Controller
         $company->nombre = $validatedData['nombre'];
         $company->ruc = $validatedData['ruc'];
         $company->direccion = $request->direccion;
-        $company->telefono= $request->telefono;
+        $company->telefono = $request->telefono;
         $company->email = $request->email;
 
         $company->tipocuentasoles = $request->tipocuentasoles;
-        $company->numerocuentasoles= $request->numerocuentasoles;
+        $company->numerocuentasoles = $request->numerocuentasoles;
         $company->ccisoles = $request->ccisoles;
         $company->tipocuentadolares = $request->tipocuentadolares;
-        $company->numerocuentadolares= $request->numerocuentadolares;
+        $company->numerocuentadolares = $request->numerocuentadolares;
         $company->ccidolares = $request->ccidolares;
 
-        $company->status = $request->status == true ? '1':'0';
+        $company->status = '0';
 
-        if($request->hasFile('logo')&&$request->file('logo')->isValid()){  
-            
-            $imagen =$request->file('logo'); 
-            $nombreimagen = "logo".Str::slug($validatedData['nombre']).".".$imagen->guessExtension();
-            $ruta =public_path("logos");
-            if($imagen->move($ruta,$nombreimagen)){
-                $company->logo =$nombreimagen;
-            } 
+        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+
+            $imagen = $request->file('logo');
+            $nombreimagen = "logo" . Str::slug($validatedData['nombre']) . "." . $imagen->guessExtension();
+            $ruta = public_path("logos");
+            if ($imagen->move($ruta, $nombreimagen)) {
+                $company->logo = $nombreimagen;
+            }
         }
         $company->save();
-        return redirect('admin/company')->with('message','Compañia Agregada Satisfactoriamente');
+        return redirect('admin/company')->with('message', 'Compañia Agregada Satisfactoriamente');
     }
 
     public function edit(Company $company)
@@ -60,47 +60,61 @@ class CompanyController extends Controller
         return view('admin.company.edit', compact('company'));
     }
 
-    public function update(CompanyFormRequest $request,$company)
+    public function update(CompanyFormRequest $request, $company)
     {
         $validatedData = $request->validated();
         $company = Company::findOrFail($company);
         $company->nombre = $validatedData['nombre'];
         $company->ruc = $validatedData['ruc'];
         $company->direccion = $request->direccion;
-        $company->telefono= $request->telefono;
+        $company->telefono = $request->telefono;
         $company->email = $request->email;
 
         $company->tipocuentasoles = $request->tipocuentasoles;
-        $company->numerocuentasoles= $request->numerocuentasoles;
+        $company->numerocuentasoles = $request->numerocuentasoles;
         $company->ccisoles = $request->ccisoles;
         $company->tipocuentadolares = $request->tipocuentadolares;
-        $company->numerocuentadolares= $request->numerocuentadolares;
+        $company->numerocuentadolares = $request->numerocuentadolares;
         $company->ccidolares = $request->ccidolares;
-        
-        $company->status = $request->status == true ? '1':'0';
-        if($request->hasFile('logo')&&$request->file('logo')->isValid()){  
-            $imagen =$request->file('logo');
+
+        $company->status =  '0';
+        if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
+            $imagen = $request->file('logo');
             $path = public_path('logos/' . $company->logo);
-            if (File::exists($path)) {   File::delete($path);   }
-            $nombreimagen = "logo".Str::slug($validatedData['nombre']).".".$imagen->guessExtension();
-            $ruta =public_path("logos");
-            if($imagen->move($ruta,$nombreimagen)){
-                $company->logo =$nombreimagen;
-            } 
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+            $nombreimagen = "logo" . Str::slug($validatedData['nombre']) . "." . $imagen->guessExtension();
+            $ruta = public_path("logos");
+            if ($imagen->move($ruta, $nombreimagen)) {
+                $company->logo = $nombreimagen;
+            }
         }
         $company->update();
 
-        return redirect('admin/company')->with('message','Compañia Actualizado Satisfactoriamente');
+        return redirect('admin/company')->with('message', 'Compañia Actualizado Satisfactoriamente');
     }
 
     public function show($id)
     {
-        $company=DB::table('companies as c')
-        
-        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email','c.logo'
-        ,'c.tipocuentasoles','c.numerocuentasoles','c.ccisoles','c.tipocuentadolares','c.numerocuentadolares','c.ccidolares')
-        ->where('c.id','=',$id)->first() ;
-        
-            return  $company ;
+        $company = DB::table('companies as c')
+
+            ->select(
+                'c.nombre',
+                'c.ruc',
+                'c.direccion',
+                'c.telefono',
+                'c.email',
+                'c.logo',
+                'c.tipocuentasoles',
+                'c.numerocuentasoles',
+                'c.ccisoles',
+                'c.tipocuentadolares',
+                'c.numerocuentadolares',
+                'c.ccidolares'
+            )
+            ->where('c.id', '=', $id)->first();
+
+        return  $company;
     }
 }

@@ -101,15 +101,8 @@
                                             value="{{ $company->telefono }}" />
 
                                     </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label">Status</label><br>
-                                        <input type="checkbox" name="status"
-                                            {{ $company->status == '1' ? 'checked' : '' }} />
-                                    </div>
                                 </div>
                             </div>
-
-
 
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end">Actualizar</button>

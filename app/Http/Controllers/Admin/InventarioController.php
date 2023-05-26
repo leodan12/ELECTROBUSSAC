@@ -47,7 +47,7 @@ class InventarioController extends Controller
             'product_id' => $validatedData['product_id'],
             'stockminimo' => $validatedData['stockminimo'],
             'stocktotal' => $validatedData['stocktotal'],
-            'status' => $request->status == true ? '1' : '0',
+            'status' => '0',
         ]);
         if ($inventario) {
             $empresa = $request->Lempresa;
@@ -92,7 +92,7 @@ class InventarioController extends Controller
         $inventario->product_id = $request->product_id;
         $inventario->stockminimo = $request->stockminimo;
         $inventario->stocktotal = $request->stocktotal;
-        $inventario->status = $request->status == true ? '1' : '0';
+        $inventario->status = '0';
         if ($inventario->update()) {
             $empresa = $request->Lempresa;
             $stockempresa = $request->Lstockempresa;
@@ -133,12 +133,12 @@ class InventarioController extends Controller
     public function showkits()
     {
 
-        $inventario = DB::table('products as p') 
+        $inventario = DB::table('products as p')
             ->select(
                 'p.id',
                 'p.nombre as kit',
                 'p.moneda',
-                'p.NoIGV as precio' 
+                'p.NoIGV as precio'
 
             )
             ->where('p.tipo', '=', "kit")->get();
@@ -182,6 +182,4 @@ class InventarioController extends Controller
             return 1;
         }
     }
-
-   
 }

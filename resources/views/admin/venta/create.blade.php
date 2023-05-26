@@ -20,19 +20,19 @@
             <div class="card">
                 <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                <div class="card-header">
-                    <h4>AÑADIR VENTA &nbsp;&nbsp;&nbsp;
-                        <label>¿REGISTRAR TAMBIEN INGRESO?</label>
-                        {{-- <input class="form-check-input" type="checkbox" name="ingreso" id="ingreso" /> --}}
-                        <select name="ingreso" id="ingreso" class=" borde" style="border-radius: 5px">
-                            <option value="NO" selected>NO</option>
-                            <option value="SI">SI</option>
-                        </select>
-                        <a href="{{ url('admin/venta') }}" class="btn btn-danger text-white float-end">VOLVER</a>
-                    </h4>
-                </div>
-                <div class="card-body">
-                    {{-- <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
+                    <div class="card-header">
+                        <h4>AÑADIR VENTA &nbsp;&nbsp;&nbsp;
+                            <label>¿REGISTRAR TAMBIEN INGRESO?</label>
+                            {{-- <input class="form-check-input" type="checkbox" name="ingreso" id="ingreso" /> --}}
+                            <select name="ingreso" id="ingreso" class=" borde" style="border-radius: 5px">
+                                <option value="NO" selected>NO</option>
+                                <option value="SI">SI</option>
+                            </select>
+                            <a href="{{ url('admin/venta') }}" class="btn btn-danger text-white float-end">VOLVER</a>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        {{-- <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
                         @csrf --}}
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -202,33 +202,33 @@
                                     class="btn btn-primary text-white float-end">Guardar</button>
                             </div>
                         </div>
-                    {{-- </form> --}}
-                    <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
-                        <div class="toast " role="alert" aria-live="assertive" aria-atomic="true"
-                            data-bs-autohide="false" style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); ">
-                            <div class="  card-header">
-                                <i class="mdi mdi-information menu-icon"></i>
-                                <strong class="mr-auto"> &nbsp; Productos que incluye el kit:</strong>
-                                <button type="button" class="btn-close float-end" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="toast-body">
-                                <table id="detalleskit">
-                                    <thead class="fw-bold text-primary">
-                                        <tr>
-                                            <th>CANTIDAD</th>
-                                            <th>PRODUCTO</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr></tr>
-                                    </tbody>
-                                </table>
+                        {{-- </form> --}}
+                        <div class="toast-container position-fixed bottom-0 start-0 p-2" style="z-index: 1000">
+                            <div class="toast " role="alert" aria-live="assertive" aria-atomic="true"
+                                data-bs-autohide="false" style="width: 100%; box-shadow: 0 2px 5px 2px rgb(0, 89, 255); ">
+                                <div class="  card-header">
+                                    <i class="mdi mdi-information menu-icon"></i>
+                                    <strong class="mr-auto"> &nbsp; Productos que incluye el kit:</strong>
+                                    <button type="button" class="btn-close float-end" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="toast-body">
+                                    <table id="detalleskit">
+                                        <thead class="fw-bold text-primary">
+                                            <tr>
+                                                <th>CANTIDAD</th>
+                                                <th>PRODUCTO</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
             </div>
         </div>
     </div>
@@ -291,7 +291,7 @@
                 }
             });
         });
- 
+
         document.getElementById("cantidad").onchange = function() {
             preciofinal();
         };
@@ -322,9 +322,6 @@
             });
 
             clientesxempresa(company);
-
-
-
             if (indice > 0) {
                 var indice2 = indicex;
                 for (var i = 0; i < indice2; i++) {

@@ -37,16 +37,16 @@
 @section('content')
     <div class="row">
         <div class="col-md-12  ">
-            <div class="d-flex justify-content-between flex-wrap">
-                <div class="d-flex align-items-end flex-wrap">
-                    <div class="me-md-3 me-xl-5">
-                        @if (session('message'))
-                            <h2 class="alert alert-success">{{ session('message') }}</h2>
-                        @endif
-                    </div>
-
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label is-required">EMPRESA</label>
+                    <select class="form-select select2  borde" name="company_id" id="company_id" required>
+                        <option value="-1" selected>TODAS</option>
+                        @foreach ($companies as $company)
+                            <option value="{{ $company->id }}">{{ $company->nombre }}</option>
+                        @endforeach
+                    </select>
                 </div>
-
             </div>
             <div class="row">
                 <div class="col-sm-3">
@@ -55,10 +55,10 @@
                             <div class="card-title">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h6>TOTAL COMPRAS<br> DEL MES: &nbsp;</h6>
+                                        <h6> COMPRAS&nbsp; <br> DEL MES: &nbsp;</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verIngresomes">tgggdf </h6>
+                                        <h6 id="verIngresomes"> S/.{{ number_format((float) $ingresomes, 2, '.', '') }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -66,29 +66,24 @@
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>Al Contado:</h5>
+                                        <h5>Esta Semana:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verIngresocontado"> </h5>
+                                        <h5 id="verIngresosemana">S/.{{ number_format((float) $ingresosemana, 2, '.', '') }}
+                                        </h5>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>A Credito:</h5>
+                                        <h5>Este Día:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verIngresocredito"> </h5>
+                                        <h5 id="verIngresodia">S/.{{ number_format((float) $ingresodia, 2, '.', '') }}</h5>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col" style="text-align: left">
-                                        <h5>Por Pagar:</h5>
-                                    </div>
-                                    <div class="col" style="text-align: center">
-                                        <h5 id="verIngresoxpagar"> </h5>
-                                    </div>
-                                </div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -98,10 +93,10 @@
                             <div class="card-title">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h6>TOTAL VENTAS&nbsp;&nbsp;&nbsp; <br> DEL MES: &nbsp;</h6>
+                                        <h6> VENTAS&nbsp;&nbsp; <br>DEL MES: &nbsp; </h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verVentames">tgggdf </h6>
+                                        <h6 id="verVentames"> S/.{{ number_format((float) $ventames, 2, '.', '') }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -109,29 +104,24 @@
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>Al Contado:</h5>
+                                        <h5>Esta Semana:</h5>
                                     </div>
-                                    <div class="col" style="text-align: center">
-                                        <h5 id="verVentacontado"> </h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col" style="text-align: left">
-                                        <h5>A Credito:</h5>
-                                    </div>
-                                    <div class="col" style="text-align: center">
-                                        <h5 id="verVentacredito"> </h5>
+                                    <div class="col " style="text-align: center">
+                                        <h5 id="verVentasemana">S/.{{ number_format((float) $ventasemana, 2, '.', '') }}
+                                        </h5>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>Por Cobrar:</h5>
+                                        <h5>Este Día:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verVentaxpagar"> </h5>
+                                        <h5 id="verVentadia">S/.{{ number_format((float) $ventadia, 2, '.', '') }}</h5>
                                     </div>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -141,10 +131,11 @@
                             <div class="card-title">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h6>TOTAL COTIZACIONES&nbsp;&nbsp;&nbsp;<br> DEL MES: &nbsp;</h6>
+                                        <h6> COTIZACIONES <br> DEL MES:</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verCotizacionmes">tgggdf </h6>
+                                        <h6 id="verCotizacionmes">
+                                            S/.{{ number_format((float) $cotizacionmes, 2, '.', '') }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -152,31 +143,25 @@
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>Al Contado:</h5>
+                                        <h5>Esta Semana:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verCotizacioncontado"> </h5>
+                                        <h5 id="verCotizacionsemana">
+                                            S/.{{ number_format((float) $cotizacionsemana, 2, '.', '') }}</h5>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>A Credito:</h5>
+                                        <h5>Este Día:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verCotizacioncredito"> </h5>
+                                        <h5 id="verCotizaciondia">
+                                            S/.{{ number_format((float) $cotizaciondia, 2, '.', '') }}</h5>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col" style="text-align: left">
-                                        <h5>Vendidas:</h5>
-                                    </div>
-                                    <div class="col" style="text-align: center">
-                                        <h5 id="verCotizacionvendida"> </h5>
-                                    </div>
-                                </div>
-
 
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -186,12 +171,10 @@
                             <div class="card-title">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h6>TOTAL PRODUCTOS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                            <h6 style="color: #D7D080">.</h6>
-                                        </h6>
+                                        <h6> TOTAL PRODUCTOS:</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verProducto">tgggdf </h6>
+                                        <h6 id="verProductomes">{{ $productomes }}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -199,18 +182,10 @@
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col" style="text-align: left">
-                                        <h5>En Stock:</h5>
+                                        <h5>Stock Minimo:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verProductostock"> </h5>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col" style="text-align: left">
-                                        <h5>En Stock Min:</h5>
-                                    </div>
-                                    <div class="col" style="text-align: center">
-                                        <h5 id="verProductominimo"> </h5>
+                                        <h5 id="verProductominimo">{{ $productominimo }}</h5>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -218,10 +193,12 @@
                                         <h5>Sin Stock:</h5>
                                     </div>
                                     <div class="col" style="text-align: center">
-                                        <h5 id="verProductosin"> </h5>
+                                        <h5 id="verProductosin">{{ $productosinstock }}</h5>
                                     </div>
                                 </div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -231,42 +208,38 @@
 
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-
-
-        </div>
-    </div>
 @endsection
 
 
 @push('script')
     <script type="text/javascript">
-        $(document).ready(function() {
-            var urlbalance = "{{ url('admin/reporte/balancemensualinicio') }}";
-            $.get(urlbalance, function(data) {
-                document.getElementById('verIngresomes').innerHTML = (data.ingresomes);
-                document.getElementById('verIngresocredito').innerHTML = (data.ingresocredito);
-                document.getElementById('verIngresocontado').innerHTML = (data.ingresocontado);
-                document.getElementById('verIngresoxpagar').innerHTML = (data.ingresoxpagar);
+        $("#company_id").change(function() {
+            var company = $(this).val();
+            var urlbalance = "{{ url('admin/reporte/obtenerbalance') }}";
+            $.get(urlbalance + '/' + company, function(data) {
+                document.getElementById('verIngresomes').innerHTML = "S/." + (parseFloat(data.ingresomes)
+                    .toFixed(2));
+                document.getElementById('verIngresosemana').innerHTML = "S/." + (parseFloat(data
+                    .ingresosemana).toFixed(2));
+                document.getElementById('verIngresodia').innerHTML = "S/." + (parseFloat(data.ingresodia)
+                    .toFixed(2));
+                document.getElementById('verVentames').innerHTML = "S/." + (parseFloat(data.ventames)
+                    .toFixed(2));
+                document.getElementById('verVentasemana').innerHTML = "S/." + (parseFloat(data.ventasemana)
+                    .toFixed(2));
+                document.getElementById('verVentadia').innerHTML = "S/." + (parseFloat(data.ventadia)
+                    .toFixed(2));
+                document.getElementById('verCotizacionmes').innerHTML = "S/." + (parseFloat(data
+                    .cotizacionmes).toFixed(2));
+                document.getElementById('verCotizacionsemana').innerHTML = "S/." + (parseFloat(data
+                    .cotizacionsemana).toFixed(2));
+                document.getElementById('verCotizaciondia').innerHTML = "S/." + (parseFloat(data
+                    .cotizaciondia).toFixed(2));
 
-                document.getElementById('verVentames').innerHTML = (data.ventames);
-                document.getElementById('verVentacredito').innerHTML = (data.ventacredito);
-                document.getElementById('verVentacontado').innerHTML = (data.ventacontado);
-                document.getElementById('verVentaxpagar').innerHTML = (data.ventaxpagar);
-
-                document.getElementById('verCotizacionmes').innerHTML = (data.cotizacionmes);
-                document.getElementById('verCotizacioncredito').innerHTML = (data.cotizacioncredito);
-                document.getElementById('verCotizacioncontado').innerHTML = (data.cotizacioncontado);
-                document.getElementById('verCotizacionvendida').innerHTML = (data.cotizacionvendida);
-
-                document.getElementById('verProducto').innerHTML = (data.producto);
-                document.getElementById('verProductostock').innerHTML = (data.productostock);
+                document.getElementById('verProductomes').innerHTML = (data.productomes);
                 document.getElementById('verProductominimo').innerHTML = (data.productominimo);
-                document.getElementById('verProductosin').innerHTML = (data.productosin);
-
+                document.getElementById('verProductosin').innerHTML = (data.productosinstock);
             });
-
         });
     </script>
 @endpush

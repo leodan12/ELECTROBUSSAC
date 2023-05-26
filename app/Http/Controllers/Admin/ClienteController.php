@@ -17,7 +17,7 @@ class ClienteController extends Controller
 {
     public function index()
     {
-        $clientes = Cliente::all()->where('status','=',0);
+        $clientes = Cliente::all()->where('status', '=', 0);
         //$clientes = Cliente::orderBy('id', 'asc')->get();
         return view('admin.cliente.index', compact('clientes'));
     }
@@ -35,12 +35,12 @@ class ClienteController extends Controller
         $cliente->nombre = $validatedData['nombre'];
         $cliente->ruc = $validatedData['ruc'];
         $cliente->direccion = $request->direccion;
-        $cliente->telefono= $request->telefono;
+        $cliente->telefono = $request->telefono;
         $cliente->email = $request->email;
-        $cliente->status = $request->status == true ? '1':'0';
+        $cliente->status = '0';
         $cliente->save();
 
-        return redirect('admin/cliente')->with('message','Cliente Agregado Satisfactoriamente');
+        return redirect('admin/cliente')->with('message', 'Cliente Agregado Satisfactoriamente');
     }
 
     public function edit(Cliente $cliente)
@@ -48,7 +48,7 @@ class ClienteController extends Controller
         return view('admin.cliente.edit', compact('cliente'));
     }
 
-    public function update(ClienteFormRequest $request,$cliente)
+    public function update(ClienteFormRequest $request, $cliente)
     {
         $validatedData = $request->validated();
 
@@ -57,38 +57,37 @@ class ClienteController extends Controller
         $cliente->nombre = $validatedData['nombre'];
         $cliente->ruc = $validatedData['ruc'];
         $cliente->direccion = $request->direccion;
-        $cliente->telefono= $request->telefono;
+        $cliente->telefono = $request->telefono;
         $cliente->email = $request->email;
-        $cliente->status = $request->status == true ? '1':'0';
+        $cliente->status =  '0';
         $cliente->update();
 
-        return redirect('admin/cliente')->with('message','Cliente Actualizado Satisfactoriamente');
+        return redirect('admin/cliente')->with('message', 'Cliente Actualizado Satisfactoriamente');
     }
 
     public function show($id)
     {
-        $cliente=DB::table('clientes as c')
-        
-        ->select('c.nombre','c.ruc','c.direccion','c.telefono','c.email')
-        ->where('c.id','=',$id)->first() ;
-        
-            return  $cliente ;
+        $cliente = DB::table('clientes as c')
+
+            ->select('c.nombre', 'c.ruc', 'c.direccion', 'c.telefono', 'c.email')
+            ->where('c.id', '=', $id)->first();
+
+        return  $cliente;
     }
     public function destroy(int $cliente_id)
     {
         $cliente = Cliente::find($cliente_id);
-        $ingreso = Ingreso::all()->where('cliente_id','=',$cliente_id);   
-        $venta = Venta::all()->where('cliente_id','=',$cliente_id);  
-        $cotizacion = Cotizacion::all()->where('cliente_id','=',$cliente_id); 
-        if(count($venta)==0 && count($ingreso)==0   && count($cotizacion)==0){ 
-            if( $cliente->delete()){
-                return redirect('admin/cliente')->with('message','Cliente Eliminado Satisfactoriamente'); 
-        }
- 
-        }else{  
+        $ingreso = Ingreso::all()->where('cliente_id', '=', $cliente_id);
+        $venta = Venta::all()->where('cliente_id', '=', $cliente_id);
+        $cotizacion = Cotizacion::all()->where('cliente_id', '=', $cliente_id);
+        if (count($venta) == 0 && count($ingreso) == 0   && count($cotizacion) == 0) {
+            if ($cliente->delete()) {
+                return redirect('admin/cliente')->with('message', 'Cliente Eliminado Satisfactoriamente');
+            }
+        } else {
             $cliente->status = 1;
             $cliente->update();
-            return redirect('admin/cliente')->with('message','Cliente Eliminado Satisfactoriamente');
+            return redirect('admin/cliente')->with('message', 'Cliente Eliminado Satisfactoriamente');
         }
-     }
+    }
 }

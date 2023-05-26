@@ -40,7 +40,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label ">NUMERO DE FACTURA</label>
-                                <input type="text" name="factura" id="factura" class="form-control borde"  
+                                <input type="text" name="factura" id="factura" class="form-control borde"
                                     value="{{ $ingreso->factura }}" />
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
@@ -121,7 +121,7 @@
                                 <label class="form-label is-required">PROVEEDOR</label>
                                 <select class="form-select select2 borde" name="cliente_id" id="cliente_id" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
-                                    
+
                                 </select>
 
                             </div>
@@ -133,8 +133,8 @@
                                     @elseif($ingreso->moneda == 'soles')
                                         <span class="input-group-text" id="spancostoventa">S/.</span>
                                     @endif
-                                    <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
-                                        class="form-control borde required" required readonly
+                                    <input type="number" name="costoventa" id="costoventa" min="0.1"
+                                        step="0.01" class="form-control borde required" required readonly
                                         value="{{ $ingreso->costoventa }}" />
                                 </div>
                             </div>
@@ -364,7 +364,7 @@
         var tipoproducto = "";
         var idproducto = 0;
         var idcompany = 0;
-        var idcliente=0;
+        var idcliente = 0;
 
         estadoguardar = @json($detalles);
         idcliente = @json($ingreso->cliente_id);
@@ -377,17 +377,19 @@
         $(document).ready(function() {
             $('.toast').toast();
             $('.select2').select2({});
-            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) { 
+            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
-                    if(idcliente==data[i].id){
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" selected>' + data[i].nombre + '</option>';
-                    }else{
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" >' + data[i].nombre + '</option>';
+                    if (idcliente == data[i].id) {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" selected>' + data[i].nombre + '</option>';
+                    } else {
+                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
+                            .nombre +
+                            '" >' + data[i].nombre + '</option>';
                     }
-                    
+
                 }
                 $("#cliente_id").html(producto_select);
             });
@@ -453,7 +455,7 @@
                             document.getElementById('labelproducto').innerHTML = "PRODUCTO";
                         } else if ($tipo == "kit") {
                             document.getElementById('labelproducto').innerHTML =
-                            "PRODUCTO TIPO KIT";
+                                "PRODUCTO TIPO KIT";
                         }
                         if (monedafactura == "dolares") {
                             simbolomonedafactura = "$";
@@ -513,7 +515,7 @@
                             document.getElementById('spanpreciounitario').innerHTML =
                                 simbolomonedafactura;
                             document.getElementById('spanservicio').innerHTML =
-                            simbolomonedafactura;
+                                simbolomonedafactura;
                             document.getElementById('spanpreciototal').innerHTML =
                                 simbolomonedafactura;
                             document.getElementById('cantidad').value = 1;
@@ -690,7 +692,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
 
-                        $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) { 
+                        $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) {
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",

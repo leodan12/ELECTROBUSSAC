@@ -148,4 +148,16 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/cotizacion/vendercotizacion/{id}',  'vendercotizacion');
         Route::get('/cotizacion/generarcotizacionpdf/{id}',  'generarcotizacionpdf');
     });
+    //Ruta de la cotizacion
+    Route::controller(App\Http\Controllers\Admin\ReportesController::class)->group(function(){
+        Route::get('/reporte','index');
+        Route::get('/reporte/obtenerbalance/{idempresa}','obtenerbalance');
+        Route::get('/reporte/balancemensualinicio','balancemensual');
+
+        Route::get('/reporte/create','create');
+        Route::post('/reporte','store');
+        Route::get('/reporte/{cotizacion_id}/edit','edit'); 
+        Route::get('/reporte/{cotizacion_id}/delete','destroy');
+         
+    });
 });

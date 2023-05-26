@@ -290,26 +290,26 @@
         var fechavalidez = validez.getFullYear() + '-' + (String(validez.getMonth() + 1).padStart(2, '0')) +
             '-' + String(validez.getDate()).padStart(2, '0');
 
-            var data = @json($prodfaltantes);
+        var data = @json($prodfaltantes);
         var sinstock = data.length;
 
-        $(document).ready(function() { 
+        $(document).ready(function() {
             $('.toast').toast();
             if (sinstock > 0) {
                 $('#detalleskit tbody tr').slice().remove();
-            for (var i = 0; i < data.length; i++) {
-                filaDetalle = '<tr style="border-top: 1px solid silver;" ' +
-                    '"><td> ' + data[i].stockdisponible +
-                    '</td><td> ' + data[i].stockrequerido +
-                    '</td><td> ' + data[i].producto +
-                    '</td></tr>';
-                $("#listasinstock>tbody").append(filaDetalle);
+                for (var i = 0; i < data.length; i++) {
+                    filaDetalle = '<tr style="border-top: 1px solid silver;" ' +
+                        '"><td> ' + data[i].stockdisponible +
+                        '</td><td> ' + data[i].stockrequerido +
+                        '</td><td> ' + data[i].producto +
+                        '</td></tr>';
+                    $("#listasinstock>tbody").append(filaDetalle);
+                }
+                $('.toast').toast('show');
+                $("#btnguardar").prop("disabled", true);
+            } else {
+                $("#btnguardar").prop("disabled", false);
             }
-            $('.toast').toast('show');
-            $("#btnguardar").prop("disabled", true);
-        } else{
-            $("#btnguardar").prop("disabled", false);
-        }
             $('.select2').select2({});
 
         });
@@ -317,10 +317,5 @@
         if (credito == "credito") {
             document.getElementById("fechav").value = fechavalidez;
         }
-
-         
-
-
-        
     </script>
 @endpush
