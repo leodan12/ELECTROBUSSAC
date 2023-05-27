@@ -33,6 +33,8 @@
             justify-content: center;
         }
     </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 @endpush
 @section('content')
     <div class="row">
@@ -203,6 +205,15 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <label for="">ventas del mes en soles</label>
+                        <canvas id="myChart" name="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -213,6 +224,38 @@
 
 @push('script')
     <script type="text/javascript">
+        var labelsF = @json($fechas);
+        var midatasetV = @json($datosventas);
+        var midatasetC = @json($datoscompras);
+        var midatasetT = @json($datoscotizacions);
+        titulov = "VENTAS";
+        tituloc = "COMPRAS";
+        titulot = "COTIZACIONES";
+        const datasetV = midataset(titulov, midatasetV, '#53CAD4');
+        const datasetC = midataset(tituloc, midatasetC, '#79EB68');
+        const datasetT = midataset(titulot, midatasetT, '#F59075');
+        const graph = document.querySelector("#myChart");
+        const data = {
+            labels: labelsF,
+            datasets: [datasetV, datasetC, datasetT]
+        };
+        const config = {
+            type: 'line',
+            data: data,
+        };
+        new Chart(graph, config);
+
+        function midataset(titulo, midataset, color) {
+            const dataset = {
+                label: titulo,
+                data: midataset,
+                borderColor: color,
+                fill: false,
+                tension: 0.1
+            };
+            return dataset;
+        }
+
         $("#company_id").change(function() {
             var company = $(this).val();
             var urlbalance = "{{ url('admin/reporte/obtenerbalance') }}";
@@ -242,4 +285,5 @@
             });
         });
     </script>
+    <script></script>
 @endpush

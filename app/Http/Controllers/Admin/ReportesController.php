@@ -28,9 +28,23 @@ class ReportesController extends Controller
         $productominimo = $this->obtenerproductos(-1, "minimo");
         $productosinstock = $this->obtenerproductos(-1, "sin");
 
+        $ventas = $this->ventasdelmes();
+        $compras = $this->comprasdelmes();
+        $cotizacions = $this->cotizacionesdelmes();
+
+        $fechas = $this->todasfechas($ventas ,$compras,$cotizacions);
+        $datosventas = $this->misventas($fechas,$ventas);
+        $datoscompras = $this->misventas($fechas,$compras);
+        $datoscotizacions = $this->misventas($fechas,$cotizacions);
+ 
+        //return $datosventas;
         return view(
             'admin.reporte.index',
             compact(
+                'fechas',
+                'datosventas',
+                'datoscompras',
+                'datoscotizacions', 
                 'ingresomes',
                 'ingresosemana',
                 'ingresodia',
@@ -43,10 +57,82 @@ class ReportesController extends Controller
                 'companies',
                 'productomes',
                 'productominimo',
-                'productosinstock',
+                'productosinstock', 
             )
         );
     }
+
+    public function misventas($fechas, $ventas){
+        $datosventas = [];
+        for($i=0;$i<count($fechas);$i++){
+            $sum=0;
+            for($x=0;$x<count($ventas);$x++){
+               if($fechas[$i] ==$ventas[$x]->fecha ){
+                $sum =$sum +$ventas[$x]->costoventa;
+               }
+            }
+        $datosventas[] = $sum; 
+        }  
+        return $datosventas;
+    }
+    
+
+    public function todasfechas($ventas,$compras,$cotizaciones){
+        $fechas = [];
+        for($i=0;$i<count($ventas);$i++){
+            $fechas[] = $ventas[$i]->fecha;
+        } 
+        for($i=0;$i<count($compras);$i++){
+            $fechas[] = $compras[$i]->fecha;
+        } 
+        for($i=0;$i<count($cotizaciones);$i++){
+            $fechas[] = $cotizaciones[$i]->fecha;
+        } 
+        $resultado = ( array_unique($fechas) ); 
+        asort($resultado);
+        return array_values($resultado);
+    }
+
+    public function ventasdelmes()
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $ventas = DB::table('ventas as v')
+            ->where('v.fecha', '<=', $hoy)
+            ->where('v.fecha', '>', $inicio)  
+            ->groupBy('v.fecha')
+            ->select('v.fecha',DB::raw('sum(v.costoventa) as costoventa') )
+            ->get();
+        return $ventas;
+    }
+    public function comprasdelmes()
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $compras = DB::table('ingresos as i')
+            ->where('i.fecha', '<=', $hoy)
+            ->where('i.fecha', '>', $inicio)
+            ->groupBy('i.fecha')
+            ->select('i.fecha',DB::raw('sum(i.costoventa) as costoventa') )
+            ->get();
+        return $compras;
+    }
+    public function cotizacionesdelmes()
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $compras = DB::table('cotizacions as c')
+            ->where('c.fecha', '<=', $hoy)
+            ->where('c.fecha', '>', $inicio)
+            ->groupBy('c.fecha')
+            ->select('c.fecha',DB::raw('sum(c.costoventasinigv) as costoventa') )
+            ->get();
+        return $compras;
+    }
+
     //para los 4 cuadros del index de reportes
     public function obtenerbalance($idempresa)
     {
@@ -66,7 +152,7 @@ class ReportesController extends Controller
         $productominimo = $this->obtenerproductos($idempresa, "minimo");
         $productosinstock = $this->obtenerproductos($idempresa, "sin");
 
-         
+
         $resultados = collect();
         $resultados->put('ingresomes', $ingresomes);
         $resultados->put('ingresosemana', $ingresosemana);
@@ -83,7 +169,7 @@ class ReportesController extends Controller
 
         return $resultados;
     }
- 
+
     public function obteneringresos($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -190,7 +276,7 @@ class ReportesController extends Controller
                 }
             }
             $productos = $cont;
-        } else if ($stock == 'sin'){
+        } else if ($stock == 'sin') {
             $cont = 0;
             if ($idempresa == '-1') {
                 $prod = DB::table('products as p')
