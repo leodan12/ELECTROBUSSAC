@@ -220,6 +220,9 @@
                     <select class="form-select borde" name="tipo_grafico" id="tipo_grafico">
                         <option value="line" selected>Lineas</option>
                         <option value="bar">Barras</option>
+                        <option value="polarArea">Area Polar</option>
+                        <option value="radar">Radar</option>
+                        <option value="doughnut">Pastel</option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
@@ -367,7 +370,7 @@
                     midatasetT, graph);
             } else if (reporte == 'pmv') {
                 llamarydibujargraficoproductos(labelsF, tipo, titulop, midatasetP, graph);
-            }else if(reporte == 'cmc'){
+            } else if (reporte == 'cmc') {
                 llamarydibujargraficoproductos(labelsF, tipo, titulocl, midatasetCL, graph);
             }
         });
@@ -383,8 +386,8 @@
 
         });
         $("#repcantidad").change(function() {
-            var cant  = $(this).val();
-            cantidadcosto = cant ; 
+            var cant = $(this).val();
+            cantidadcosto = cant;
             obtenerreporte();
 
         });
@@ -424,9 +427,9 @@
 
         function colores() {
             miscolores = [
-                '#ADA9FC', '#6AD9C9', '#B9F081', '#D9B76A', '#FC877C', '#f5938b', '#b1ceaf',
+                '#53CAD4', '#79EB68', '#F59075', '#ADA9FC', '#6AD9C9', '#B9F081', '#D9B76A', '#FC877C', '#f5938b',
                 '#e3b8b2', '#f9df94', '#808f12', '#f4324a', '#17a7a8', '#ff6e4a', '#e33258',
-                '#a4f7d4', '#fbc5d8', '#d9764d', '#d1dc5a', '#89fcb3', '#0b8770'
+                '#a4f7d4', '#fbc5d8', '#d9764d', '#d1dc5a', '#89fcb3', '#0b8770', '#b1ceaf'
             ];
             return miscolores;
         }
