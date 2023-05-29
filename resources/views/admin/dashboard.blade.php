@@ -58,7 +58,7 @@
                                         <h6>TOTAL COMPRAS<br> DEL MES: &nbsp;</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verIngresomes">tgggdf </h6>
+                                        <h6 id="verIngresomes"> </h6>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                                         <h6>TOTAL VENTAS&nbsp;&nbsp;&nbsp; <br> DEL MES: &nbsp;</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verVentames">tgggdf </h6>
+                                        <h6 id="verVentames"> </h6>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +144,7 @@
                                         <h6>TOTAL COTIZACIONES&nbsp;&nbsp;&nbsp;<br> DEL MES: &nbsp;</h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verCotizacionmes">tgggdf </h6>
+                                        <h6 id="verCotizacionmes"> </h6>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +191,7 @@
                                         </h6>
                                     </div>
                                     <div class="col centro">
-                                        <h6 id="verProducto">tgggdf </h6>
+                                        <h6 id="verProducto"> </h6>
                                     </div>
                                 </div>
                             </div>

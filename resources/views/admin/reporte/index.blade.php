@@ -33,8 +33,8 @@
             justify-content: center;
         }
     </style>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+    {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @endpush
 @section('content')
     <div class="row">
@@ -42,7 +42,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">EMPRESA</label>
-                    <select class="form-select select2  borde" name="company_id" id="company_id" required>
+                    <select class="form-select  borde" name="company_id" id="company_id" required>
                         <option value="-1" selected>TODAS</option>
                         @foreach ($companies as $company)
                             <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -207,13 +207,35 @@
             </div>
             <br>
             <div class="row">
-                <div class="col">
-                    <div>
-                        <label for="">ventas del mes en soles</label>
-                        <canvas id="myChart" name="myChart"></canvas>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label is-required">Reporte Grafico Sobre:</label>
+                    <select class="form-select borde" name="reporte" id="reporte">
+                        <option value="ccv" selected>Compras, Ventas Y Cotizaciones del Mes(Soles):</option>
+                        <option value="pmv">Productos Mas Vendidos:</option>
+                        <option value="cmc">Clientes Con Mas Compras:</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label is-required">Tipo de grafico</label>
+                    <select class="form-select borde" name="tipo_grafico" id="tipo_grafico">
+                        <option value="line" selected>Lineas</option>
+                        <option value="bar">Barras</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
+                    <label class="form-label is-required">Por Cantidad o Costo(S/.):</label>
+                    <select class="form-select borde" name="repcantidad" id="repcantidad">
+                        <option value="cantidad" selected>Cantidad</option>
+                        <option value="costo">Costo</option>
+                    </select>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <canvas id="myChart" name="myChart"></canvas>
+                </div>
+            </div>
+
 
 
 
@@ -224,40 +246,90 @@
 
 @push('script')
     <script type="text/javascript">
-        var labelsF = @json($fechas);
+        document.getElementById('cantidadcosto').style.display = 'none';
+        var tipo = 'line';
+        var reporte = 'ccv';
+        var empresa = '-1';
+        var cantidadcosto = 'cantidad';
         var midatasetV = @json($datosventas);
         var midatasetC = @json($datoscompras);
         var midatasetT = @json($datoscotizacions);
+        var midatasetP = [];
+        var midatasetCL = [];
         titulov = "VENTAS";
         tituloc = "COMPRAS";
         titulot = "COTIZACIONES";
-        const datasetV = midataset(titulov, midatasetV, '#53CAD4');
-        const datasetC = midataset(tituloc, midatasetC, '#79EB68');
-        const datasetT = midataset(titulot, midatasetT, '#F59075');
-        const graph = document.querySelector("#myChart");
-        const data = {
-            labels: labelsF,
-            datasets: [datasetV, datasetC, datasetT]
-        };
-        const config = {
-            type: 'line',
-            data: data,
-        };
-        new Chart(graph, config);
+        titulop = "PRODUCTOS MAS VENDIDOS";
+        titulocl = "CLIENTES CON MAS COMPRAS";
 
-        function midataset(titulo, midataset, color) {
+        var labelsF = @json($fechas);
+
+        const graph = document.querySelector("#myChart");
+        llamarydibujargraficoccv(labelsF, tipo, titulov, tituloc, titulot, midatasetV, midatasetC, midatasetT, graph);
+
+        function midataset(mitipo, mititulo, midataset, micolor) {
             const dataset = {
-                label: titulo,
+                type: mitipo,
+                label: mititulo,
                 data: midataset,
-                borderColor: color,
+                borderColor: micolor,
+                backgroundColor: micolor,
                 fill: false,
                 tension: 0.1
             };
             return dataset;
         }
 
+        function midata(milabelsF, midatasetx) {
+            const data = {
+                labels: milabelsF,
+                datasets: midatasetx
+            };
+            return data;
+        }
+
+        function miconfig(midata) {
+            const config = {
+                // type: 'bar',
+                data: midata,
+            };
+            return config;
+        }
+
+        function migrafico(migraph, miconfig) {
+            if (window.grafica) {
+                window.grafica.clear();
+                window.grafica.destroy();
+            }
+            window.grafica = new Chart(migraph, miconfig);
+        }
+        //para las compras,ventas y cotizaciones
+        function llamarydibujargraficoccv(D_labelsF, D_tipo, D_titulov, D_tituloc, D_titulot, D_midatasetV, D_midatasetC,
+            D_midatasetT, D_graph) {
+            const datasetV = midataset(D_tipo, D_titulov, D_midatasetV, '#53CAD4');
+            const datasetC = midataset(D_tipo, D_tituloc, D_midatasetC, '#79EB68');
+            const datasetT = midataset(D_tipo, D_titulot, D_midatasetT, '#F59075');
+            const datasetx = [datasetV, datasetC, datasetT];
+            const data = midata(D_labelsF, datasetx);
+            const config = miconfig(data);
+
+            migrafico(D_graph, config);
+
+        }
+
+        function llamarydibujargraficoproductos(D_labelsF, D_tipo, D_titulop, D_midatasetP, D_graph) {
+            var color = colores();
+            const datasetP = midataset(D_tipo, D_titulop, D_midatasetP, color);
+            const datasetx = [datasetP];
+            const data = midata(D_labelsF, datasetx);
+            const config = miconfig(data);
+
+            migrafico(D_graph, config);
+        }
+
         $("#company_id").change(function() {
             var company = $(this).val();
+            empresa = company;
             var urlbalance = "{{ url('admin/reporte/obtenerbalance') }}";
             $.get(urlbalance + '/' + company, function(data) {
                 document.getElementById('verIngresomes').innerHTML = "S/." + (parseFloat(data.ingresomes)
@@ -283,7 +355,81 @@
                 document.getElementById('verProductominimo').innerHTML = (data.productominimo);
                 document.getElementById('verProductosin').innerHTML = (data.productosinstock);
             });
+
+            obtenerreporte();
         });
+
+        $("#tipo_grafico").change(function() {
+            var tipografico = $(this).val();
+            tipo = tipografico;
+            if (reporte == 'ccv') {
+                llamarydibujargraficoccv(labelsF, tipo, titulov, tituloc, titulot, midatasetV, midatasetC,
+                    midatasetT, graph);
+            } else if (reporte == 'pmv') {
+                llamarydibujargraficoproductos(labelsF, tipo, titulop, midatasetP, graph);
+            }else if(reporte == 'cmc'){
+                llamarydibujargraficoproductos(labelsF, tipo, titulocl, midatasetCL, graph);
+            }
+        });
+        $("#reporte").change(function() {
+            var Vreporte = $(this).val();
+            reporte = Vreporte;
+            if (Vreporte == "cmc") {
+                document.getElementById('cantidadcosto').style.display = 'inline';
+            } else {
+                document.getElementById('cantidadcosto').style.display = 'none';
+            }
+            obtenerreporte();
+
+        });
+        $("#repcantidad").change(function() {
+            var cant  = $(this).val();
+            cantidadcosto = cant ; 
+            obtenerreporte();
+
+        });
+
+        function obtenerreporte() {
+            //para las compras,, cotizaciones y ventas
+            if (reporte == 'ccv') {
+                var urldatosgrafico = "{{ url('admin/reporte/obtenerdatosgrafico') }}";
+                $.get(urldatosgrafico + '/' + empresa, function(data) {
+                    labelsF = data['fechas'];
+                    midatasetV = data['datosventas'];
+                    midatasetC = data['datoscompras'];
+                    midatasetT = data['datoscotizacions'];
+
+                    llamarydibujargraficoccv(labelsF, tipo, titulov, tituloc, titulot, midatasetV,
+                        midatasetC, midatasetT, graph);
+                });
+            } else if (reporte == 'pmv') {
+                var urldatosgrafico = "{{ url('admin/reporte/obtenerproductosmasv') }}";
+                $.get(urldatosgrafico + '/' + empresa, function(data) {
+                    labelsF = data['productos'];
+                    midatasetP = data['cantidades'];
+
+                    llamarydibujargraficoproductos(labelsF, tipo, titulop, midatasetP, graph);
+                });
+            } else {
+                var urldatosgrafico = "{{ url('admin/reporte/obtenerclientesmasc') }}";
+                $.get(urldatosgrafico + '/' + empresa + '/' + cantidadcosto, function(data) {
+                    labelsF = data['clientes'];
+                    midatasetCL = data['costos'];
+
+                    llamarydibujargraficoproductos(labelsF, tipo, titulocl, midatasetCL, graph);
+                });
+
+            }
+        }
+
+        function colores() {
+            miscolores = [
+                '#ADA9FC', '#6AD9C9', '#B9F081', '#D9B76A', '#FC877C', '#f5938b', '#b1ceaf',
+                '#e3b8b2', '#f9df94', '#808f12', '#f4324a', '#17a7a8', '#ff6e4a', '#e33258',
+                '#a4f7d4', '#fbc5d8', '#d9764d', '#d1dc5a', '#89fcb3', '#0b8770'
+            ];
+            return miscolores;
+        }
     </script>
     <script></script>
 @endpush

@@ -28,15 +28,15 @@ class ReportesController extends Controller
         $productominimo = $this->obtenerproductos(-1, "minimo");
         $productosinstock = $this->obtenerproductos(-1, "sin");
 
-        $ventas = $this->ventasdelmes();
-        $compras = $this->comprasdelmes();
-        $cotizacions = $this->cotizacionesdelmes();
+        $ventas = $this->ventasdelmes('-1');
+        $compras = $this->comprasdelmes('-1');
+        $cotizacions = $this->cotizacionesdelmes('-1');
 
-        $fechas = $this->todasfechas($ventas ,$compras,$cotizacions);
-        $datosventas = $this->misventas($fechas,$ventas);
-        $datoscompras = $this->misventas($fechas,$compras);
-        $datoscotizacions = $this->misventas($fechas,$cotizacions);
- 
+        $fechas = $this->todasfechas($ventas, $compras, $cotizacions);
+        $datosventas = $this->misventas($fechas, $ventas);
+        $datoscompras = $this->misventas($fechas, $compras);
+        $datoscotizacions = $this->misventas($fechas, $cotizacions);
+
         //return $datosventas;
         return view(
             'admin.reporte.index',
@@ -44,7 +44,7 @@ class ReportesController extends Controller
                 'fechas',
                 'datosventas',
                 'datoscompras',
-                'datoscotizacions', 
+                'datoscotizacions',
                 'ingresomes',
                 'ingresosemana',
                 'ingresodia',
@@ -57,80 +57,369 @@ class ReportesController extends Controller
                 'companies',
                 'productomes',
                 'productominimo',
-                'productosinstock', 
+                'productosinstock',
             )
         );
     }
 
-    public function misventas($fechas, $ventas){
+    //obtener los datos para el grafico
+    public function misventas($fechas, $ventas)
+    {
         $datosventas = [];
-        for($i=0;$i<count($fechas);$i++){
-            $sum=0;
-            for($x=0;$x<count($ventas);$x++){
-               if($fechas[$i] ==$ventas[$x]->fecha ){
-                $sum =$sum +$ventas[$x]->costoventa;
-               }
+        for ($i = 0; $i < count($fechas); $i++) {
+            $sum = 0;
+            for ($x = 0; $x < count($ventas); $x++) {
+                if ($fechas[$i] == $ventas[$x]->fecha) {
+                    if ($ventas[$x]->moneda == 'dolares') {
+                        $sum = $sum + (round($ventas[$x]->costoventa * $ventas[$x]->tasacambio, 2));
+                    } else {
+                        $sum = $sum + $ventas[$x]->costoventa;
+                    }
+                }
             }
-        $datosventas[] = $sum; 
-        }  
+            $datosventas[] = $sum;
+        }
         return $datosventas;
     }
-    
-
-    public function todasfechas($ventas,$compras,$cotizaciones){
+    //para compras , ventas y cotizaciones
+    public function todasfechas($ventas, $compras, $cotizaciones)
+    {
         $fechas = [];
-        for($i=0;$i<count($ventas);$i++){
+        for ($i = 0; $i < count($ventas); $i++) {
             $fechas[] = $ventas[$i]->fecha;
-        } 
-        for($i=0;$i<count($compras);$i++){
+        }
+        for ($i = 0; $i < count($compras); $i++) {
             $fechas[] = $compras[$i]->fecha;
-        } 
-        for($i=0;$i<count($cotizaciones);$i++){
+        }
+        for ($i = 0; $i < count($cotizaciones); $i++) {
             $fechas[] = $cotizaciones[$i]->fecha;
-        } 
-        $resultado = ( array_unique($fechas) ); 
+        }
+        $resultado = (array_unique($fechas));
         asort($resultado);
         return array_values($resultado);
     }
-
-    public function ventasdelmes()
+    public function ventasdelmes($empresa)
     {
         $hoy = date('Y-m-d');
         $dias = date('d');
         $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
-        $ventas = DB::table('ventas as v')
-            ->where('v.fecha', '<=', $hoy)
-            ->where('v.fecha', '>', $inicio)  
-            ->groupBy('v.fecha')
-            ->select('v.fecha',DB::raw('sum(v.costoventa) as costoventa') )
-            ->get();
+        $ventas = "";
+        if ($empresa != '-1') {
+            $ventas = DB::table('ventas as v')
+                ->where('v.company_id', '=', $empresa)
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('v.fecha', 'v.moneda', 'v.tasacambio')
+                ->select('v.fecha', 'v.moneda', 'v.tasacambio', DB::raw('sum(v.costoventa) as costoventa'))
+                ->get();
+        } else {
+            $ventas = DB::table('ventas as v')
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('v.fecha', 'v.moneda', 'v.tasacambio')
+                ->select('v.fecha', 'v.moneda', 'v.tasacambio', DB::raw('sum(v.costoventa) as costoventa'))
+                ->get();
+        }
+
         return $ventas;
     }
-    public function comprasdelmes()
+    public function comprasdelmes($empresa)
     {
         $hoy = date('Y-m-d');
         $dias = date('d');
         $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
-        $compras = DB::table('ingresos as i')
-            ->where('i.fecha', '<=', $hoy)
-            ->where('i.fecha', '>', $inicio)
-            ->groupBy('i.fecha')
-            ->select('i.fecha',DB::raw('sum(i.costoventa) as costoventa') )
-            ->get();
+        $compras = "";
+        if ($empresa != '-1') {
+            $compras = DB::table('ingresos as i')
+                ->where('i.company_id', '=', $empresa)
+                ->where('i.fecha', '<=', $hoy)
+                ->where('i.fecha', '>', $inicio)
+                ->groupBy('i.fecha', 'i.moneda', 'i.tasacambio')
+                ->select('i.fecha', 'i.moneda', 'i.tasacambio', DB::raw('sum(i.costoventa) as costoventa'))
+                ->get();
+        } else {
+            $compras = DB::table('ingresos as i')
+                ->where('i.fecha', '<=', $hoy)
+                ->where('i.fecha', '>', $inicio)
+                ->groupBy('i.fecha', 'i.moneda', 'i.tasacambio')
+                ->select('i.fecha', 'i.moneda', 'i.tasacambio', DB::raw('sum(i.costoventa) as costoventa'))
+                ->get();
+        }
+
         return $compras;
     }
-    public function cotizacionesdelmes()
+    public function cotizacionesdelmes($empresa)
     {
         $hoy = date('Y-m-d');
         $dias = date('d');
         $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
-        $compras = DB::table('cotizacions as c')
-            ->where('c.fecha', '<=', $hoy)
-            ->where('c.fecha', '>', $inicio)
-            ->groupBy('c.fecha')
-            ->select('c.fecha',DB::raw('sum(c.costoventasinigv) as costoventa') )
+        $cotizaciones = "";
+        if ($empresa != '-1') {
+            $cotizaciones = DB::table('cotizacions as c')
+                ->where('c.company_id', '=', $empresa)
+                ->where('c.fecha', '<=', $hoy)
+                ->where('c.fecha', '>', $inicio)
+                ->groupBy('c.fecha', 'c.moneda', 'c.tasacambio')
+                ->select('c.fecha', 'c.moneda', 'c.tasacambio', DB::raw('sum(c.costoventasinigv) as costoventa'))
+                ->get();
+        } else {
+            $cotizaciones = DB::table('cotizacions as c')
+                ->where('c.fecha', '<=', $hoy)
+                ->where('c.fecha', '>', $inicio)
+                ->groupBy('c.fecha', 'c.moneda', 'c.tasacambio')
+                ->select('c.fecha', 'c.moneda', 'c.tasacambio', DB::raw('sum(c.costoventasinigv) as costoventa'))
+                ->get();
+        }
+        return $cotizaciones;
+    }
+    public function obtenerdatosgrafico($empresa)
+    {
+        $ventas = $this->ventasdelmes($empresa);
+        $compras = $this->comprasdelmes($empresa);
+        $cotizacions = $this->cotizacionesdelmes($empresa);
+
+        $fechas = $this->todasfechas($ventas, $compras, $cotizacions);
+        $datosventas = $this->misventas($fechas, $ventas);
+        $datoscompras = $this->misventas($fechas, $compras);
+        $datoscotizacions = $this->misventas($fechas, $cotizacions);
+
+        $misdatos = collect();
+        $misdatos->put('fechas', $fechas);
+        $misdatos->put('datosventas', $datosventas);
+        $misdatos->put('datoscompras', $datoscompras);
+        $misdatos->put('datoscotizacions', $datoscotizacions);
+
+        return $misdatos;
+    }
+    //para los productos mas vendidos
+    public function obtenerproductosmasv($empresa)
+    {
+        $productos = $this->obtenerproductoscantidad($empresa);
+        $productosind = $this->productosindividuales($productos);
+        $micantidadproductos = $this->sumaproductos($productosind);
+        $ordenados = $micantidadproductos->sortByDesc('cantidad');
+        $ordenados20 = $ordenados->take(20);
+        $separados = $this->prodseparados($ordenados20->values()->all());
+        return $separados;
+    }
+    public function obtenerproductoscantidad($empresa)
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $ventas = "";
+        if ($empresa != '-1') {
+            $ventas = DB::table('ventas as v')
+                ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                ->join('products as p', 'dv.product_id', '=', 'p.id')
+                ->where('v.company_id', '=', $empresa)
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('p.tipo', 'p.nombre', 'p.id')
+                ->select('p.tipo', 'p.nombre', 'p.id', DB::raw('sum(dv.cantidad) as cantidad'))
+                ->get();
+        } else {
+            $ventas = DB::table('ventas as v')
+                ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                ->join('products as p', 'dv.product_id', '=', 'p.id')
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('p.tipo', 'p.nombre', 'p.id')
+                ->select('p.tipo', 'p.nombre', 'p.id', DB::raw('sum(dv.cantidad) as cantidad'))
+                ->get();
+        }
+
+        return $ventas;
+    }
+    public function productosindividuales($productos)
+    {
+        $productosL = collect();
+        for ($i = 0; $i < count($productos); $i++) {
+            if ($productos[$i]->tipo == "estandar") {
+                $prod = collect();
+                $prod->put('producto', $productos[$i]->nombre);
+                $prod->put('cantidad', $productos[$i]->cantidad);
+                $productosL->push($prod);
+            } else {
+                $detalleprod = $this->productosxkit($productos[$i]->id);
+                for ($x = 0; $x < count($detalleprod); $x++) {
+                    $prod = collect();
+                    $prod->put('producto', $detalleprod[$x]->producto);
+                    $prod->put('cantidad', ($detalleprod[$x]->cantidad) * $productos[$i]->cantidad);
+                    $productosL->push($prod);
+                }
+            }
+        }
+        return $productosL;
+    }
+    public function productosxkit($kit_id)
+    {
+        $productosxkit = DB::table('products as p')
+            ->join('kits as k', 'k.kitproduct_id', '=', 'p.id')
+            ->where('k.product_id', '=', $kit_id)
+            ->select('p.id', 'p.nombre as producto', 'k.cantidad')
             ->get();
-        return $compras;
+        return $productosxkit;
+    }
+    public function sumaproductos($productos)
+    {
+        $misproductos = collect();
+        $unique = $productos->unique('producto');
+        $misproductosunicos = $unique->values()->all();
+        for ($i = 0; $i < count($misproductosunicos); $i++) {
+            $cont = 0;
+            for ($x = 0; $x < count($productos); $x++) {
+                if ($misproductosunicos[$i]['producto'] == $productos[$x]['producto']) {
+                    $cont = $cont + $productos[$x]['cantidad'];
+                }
+            }
+            $miprod = collect();
+            $miprod->put('producto', $misproductosunicos[$i]['producto']);
+            $miprod->put('cantidad', $cont);
+            $misproductos->push($miprod);
+        }
+
+        return $misproductos;
+    }
+    public function prodseparados($productos)
+    {
+        $misdatos = collect();
+        $prods = [];
+        $cant = [];
+        for ($i = 0; $i < count($productos); $i++) {
+            $prods[] = $productos[$i]['producto'];
+            $cant[] = $productos[$i]['cantidad'];
+        }
+        $misdatos->put('productos', $prods);
+        $misdatos->put('cantidades', $cant);
+
+        return $misdatos;
+    }
+    //para los clientes con mas compras
+    public function obtenerclientesmasc($empresa, $tipo)
+    {
+        $datoscliente = "";
+        if ($tipo == "cantidad") {
+            $clientescantidad = $this->clientescantidad($empresa);
+            $ordenados =   $clientescantidad->sortByDesc('compras');
+            $misclientes  = $ordenados->take(20);
+            $clientes = $misclientes->values()->all();
+            //return $clientes;
+            $datoscliente = $this->devolverclientescant($clientes); 
+
+        } else {
+            $clientes = $this->clientescosto($empresa);
+            $clientesunicos = $this->misclientescosto($clientes);
+            $clienteorder =  $clientesunicos->sortByDesc('costo');
+            $clientetake = $clienteorder->take(20);
+            $client = $clientetake->values()->all();
+            $datoscliente = $this->devolverclientes($client); 
+        }
+        return  $datoscliente;
+    }
+    public function clientescantidad($empresa)
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $ventas = "";
+        if ($empresa != '-1') {
+            $ventas = DB::table('ventas as v')
+                ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+                ->where('v.company_id', '=', $empresa)
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('c.nombre')
+                ->select('c.nombre', DB::raw('count(v.id) as compras'))
+                ->get();
+        } else {
+            $ventas = DB::table('ventas as v')
+                ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->groupBy('c.nombre')
+                ->select('c.nombre', DB::raw('count(v.id) as compras'))
+                ->get();
+        }
+
+        return $ventas;
+    }
+    public function clientescosto($empresa)
+    {
+        $hoy = date('Y-m-d');
+        $dias = date('d');
+        $inicio =  date("Y-m-d", strtotime($hoy . "- $dias days"));
+        $ventas = "";
+        if ($empresa != '-1') {
+            $ventas = DB::table('ventas as v')
+                ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+                ->where('v.company_id', '=', $empresa)
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->select('c.nombre', 'v.moneda', 'tasacambio', 'v.costoventa')
+                ->get();
+        } else {
+            $ventas = DB::table('ventas as v')
+                ->join('clientes as c', 'v.cliente_id', '=', 'c.id')
+                ->where('v.fecha', '<=', $hoy)
+                ->where('v.fecha', '>', $inicio)
+                ->select('c.nombre', 'v.moneda', 'tasacambio', 'v.costoventa')
+                ->get();
+        }
+        return $ventas;
+    }
+    public function misclientescosto($clientes)
+    {
+        $unicos = $clientes->unique('nombre');
+        $clientesunicos = $unicos->values()->all();
+        $misclientes = collect();
+
+        for ($i = 0; $i < count($clientesunicos); $i++) {
+            $sum = 0;
+            for ($x = 0; $x < count($clientes); $x++) {
+                if ($clientesunicos[$i]->nombre == $clientes[$x]->nombre) {
+                    if ($clientes[$x]->moneda == "dolares") {
+                        $sum = $sum + round(($clientes[$x]->costoventa) * $clientes[$x]->tasacambio, 2);
+                    } else {
+                        $sum = $sum + ($clientes[$x]->costoventa);
+                    }
+                }
+            }
+            $miclient = collect();
+            $miclient->put('cliente', $clientesunicos[$i]->nombre);
+            $miclient->put('costo', $sum);
+            $misclientes->push($miclient);
+        }
+
+        return $misclientes;
+    }
+    public function devolverclientescant($clientes)
+    {
+        $misdatos = collect();
+        $cliente = [];
+        $cant = [];
+        for ($i = 0; $i < count($clientes); $i++) {
+            $cliente[] = $clientes[$i]->nombre;
+            $cant[] = $clientes[$i]->compras;
+        }
+        $misdatos->put('clientes', $cliente);
+        $misdatos->put('costos', $cant);
+
+        return $misdatos;
+    }
+    public function devolverclientes($clientes)
+    {
+        $misdatos = collect();
+        $cliente = [];
+        $costo = [];
+        for ($i = 0; $i < count($clientes); $i++) {
+            $cliente[] = $clientes[$i]['cliente'];
+            $costo[] = $clientes[$i]['costo'];
+        }
+        $misdatos->put('clientes', $cliente);
+        $misdatos->put('costos', $costo);
+
+        return $misdatos;
     }
 
     //para los 4 cuadros del index de reportes

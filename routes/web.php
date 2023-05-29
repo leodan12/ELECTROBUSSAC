@@ -153,11 +153,12 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/reporte','index');
         Route::get('/reporte/obtenerbalance/{idempresa}','obtenerbalance');
         Route::get('/reporte/balancemensualinicio','balancemensual');
+        Route::get('/reporte/obtenerdatosgrafico/{idempresa}','obtenerdatosgrafico');
+        Route::get('/reporte/obtenerproductosmasv/{idempresa}','obtenerproductosmasv');
+        Route::get('/reporte/obtenerclientesmasc/{idempresa}/{tipo}','obtenerclientesmasc');
 
-        Route::get('/reporte/create','create');
-        Route::post('/reporte','store');
-        Route::get('/reporte/{cotizacion_id}/edit','edit'); 
-        Route::get('/reporte/{cotizacion_id}/delete','destroy');
+ 
+        
          
     });
 });
