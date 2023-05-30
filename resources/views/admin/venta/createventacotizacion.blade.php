@@ -188,9 +188,17 @@
                                                         @endforeach
                                                     @endif
                                                 </td>
-                                                <td> <input type="text" class="form-control borde"
+                                                @php $v="no"; @endphp
+                                                <td>
+                                                    @if($detalle->observacionproducto!=null) 
+                                                    <input type="text" class="form-control borde"
                                                         name="Lobservacionproducto[]"
-                                                        value="{{ $detalle->observacionproducto }}" required>
+                                                        value="{{ $detalle->observacionproducto }}" required >
+                                                    @else
+                                                    <input type="text" class="form-control borde"
+                                                    name="Lobservacionproducto[]"
+                                                    value="{{ $v }}" required >
+                                                    @endif
                                                 </td>
                                                 <td><input type="hidden" name="Lcantidad[]"
                                                         value="{{ $detalle->cantidad }}" required>

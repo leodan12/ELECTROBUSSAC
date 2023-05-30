@@ -125,6 +125,10 @@
                                                 <label for="verFormapago" class="col-form-label">FORMA DE PAGO:</label>
                                                 <input type="text" class="form-control " id="verFormapago" readonly>
                                             </div>
+                                            <div class=" col-md-3   mb-3" name="divdiascredito" id="divdiascredito">
+                                                <label for="verPersona" class="col-form-label">DIAS DE CREDITO PARA LA COMPRA:</label>
+                                                <input type="text" class="form-control " id="verDiascredito" readonly>
+                                            </div>
                                             <div class=" col-md-3   mb-3">
                                                 <div class="input-group">
                                                     <label for="verPrecioventasinigv"
@@ -276,6 +280,12 @@
                     } else {
                         document.getElementById('divpersona').style.display = 'inline';
                         document.getElementById("verPersona").value = midata[0].persona;
+                    }
+                    if (midata[0].diascredito == null) {
+                        document.getElementById('divdiascredito').style.display = 'none';
+                    } else {
+                        document.getElementById('divdiascredito').style.display = 'inline';
+                        document.getElementById("verDiascredito").value = midata[0].diascredito;
                     }
                     if (midata[0].vendida == "SI") {
                         document.getElementById('btnvender').style.display = 'none';

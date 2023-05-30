@@ -59,16 +59,17 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
                                 <select name="formapago" id="formapago" class="form-select borde" required>
-                                    <option value="" selected disabled>Seleccion una opción</option>
+                                    <option value="" disabled>Seleccion una opción</option>
                                     <option value="credito" data-formapago="credito">Credito</option>
-                                    <option value="contado" data-formapago="contado">Contado</option>
+                                    <option value="contado" data-formapago="contado" selected>Contado</option>
                                 </select>
                                 @error('formapago')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">INCLUIR IGV</label>
+                                <label class="form-label is-required">INCLUIR IGV</label>
                                 <select name="igv" id="igv" class="form-select borde" required>
                                     <option value="" disabled>Seleccion una opción</option>
                                     <option value="SI" data-formapago="SI" selected>SI</option>
@@ -120,7 +121,12 @@
                                         class="form-control borde required" placeholder="Ejemplo: Sr. Jose Sanchez" />
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-4 mb-3" id="divdiascredito">
+                                <label class="form-label is-required">DIAS DE CREDITO PARA LA COMPRA</label>
+                                <input type="number" name="diascredito" id="diascredito" step="1"
+                                    class="form-control borde" min="1" value="15" />
+                            </div>
+                            <div class="col-md-8 mb-3">
                                 <label class="form-label">OBSERVACION</label>
                                 <input type="text" name="observacion" id="observacion" class="form-control borde" />
                             </div>
@@ -326,6 +332,8 @@
         var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy
             .getDate()).padStart(2, '0');
 
+        document.getElementById('divdiascredito').style.display = 'none';
+
         document.getElementById("cantidad").onchange = function() {
             preciofinal();
         };
@@ -367,7 +375,7 @@
             if (igv == "SI") {
                 condicion1 = "El precio inclúye IGV";
             } else {
-                condicion1 = "El precio no inclúye IGV";
+                condicion1 = "El precio NO inclúye IGV";
             }
             document.getElementById('inputcondicion0').value = condicion1;
 
@@ -377,19 +385,15 @@
             var forma = $(this).val();
             var condicion1 = "";
             if (forma == "credito") {
+                document.getElementById('divdiascredito').style.display = 'inline';
                 condicion1 = "El pago se realizará a crédito";
             } else {
+                document.getElementById('divdiascredito').style.display = 'none';
                 condicion1 = "El pago se realizará al contado";
             }
-            var LCondiciones = [];
-            LCondiciones.push(condicion1);
-            if (condformapago == 0) {
-                idcondformapago = indicecondicion;
-                condformapago++;
-                agregarCondicion(LCondiciones);
-            } else {
-                document.getElementById('inputcondicion' + idcondformapago).value = condicion1;
-            }
+
+            document.getElementById('inputcondicion2').value = condicion1;
+
         });
 
         $("#igv").change(function() {
@@ -729,6 +733,15 @@
             LCondiciones.push(cond);
             agregarCondicion(LCondiciones);
 
+            //agregamos la condicion numero 3 del tipo de pago
+            var tipo = $('[name="formapago"]').val();
+            var cond = "";
+            if (tipo == "contado") {
+                cond = "El pago se realizará al contado";
+            }
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
         });
 
         function preciofinal() {

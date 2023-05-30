@@ -33,8 +33,11 @@
             justify-content: center;
         }
     </style>
+    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
     {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
+
+    <script src="{{ asset('admin/chartjs.min.js') }}"></script>
 @endpush
 @section('content')
     <div class="row">
@@ -232,16 +235,17 @@
                         <option value="costo">Costo</option>
                     </select>
                 </div>
+                <div class="col-md-6 mb-3" id="divnumero" name="divnumero">
+                    <label class="form-label is-required">Numero de Resultados:</label>
+                    <input type="number" class="form-control borde" id="numero" name="numero" value="20"
+                        min="1" step="1" />
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <canvas id="myChart" name="myChart"></canvas>
                 </div>
             </div>
-
-
-
-
         </div>
     </div>
 @endsection
@@ -250,6 +254,7 @@
 @push('script')
     <script type="text/javascript">
         document.getElementById('cantidadcosto').style.display = 'none';
+        document.getElementById('divnumero').style.display = 'none';
         var tipo = 'line';
         var reporte = 'ccv';
         var empresa = '-1';
@@ -259,6 +264,7 @@
         var midatasetT = @json($datoscotizacions);
         var midatasetP = [];
         var midatasetCL = [];
+        var traer = 20;
         titulov = "VENTAS";
         tituloc = "COMPRAS";
         titulot = "COTIZACIONES";
@@ -379,8 +385,12 @@
             reporte = Vreporte;
             if (Vreporte == "cmc") {
                 document.getElementById('cantidadcosto').style.display = 'inline';
+                document.getElementById('divnumero').style.display = 'inline';
+            } else if (Vreporte == "pmv") {
+                document.getElementById('divnumero').style.display = 'inline';
             } else {
                 document.getElementById('cantidadcosto').style.display = 'none';
+                document.getElementById('divnumero').style.display = 'none';
             }
             obtenerreporte();
 
@@ -389,6 +399,14 @@
             var cant = $(this).val();
             cantidadcosto = cant;
             obtenerreporte();
+
+        });
+        $("#numero").change(function() {
+            var cant = $(this).val();
+            if (cant > 0) {
+                traer = cant;
+                obtenerreporte();
+            }
 
         });
 
@@ -407,7 +425,7 @@
                 });
             } else if (reporte == 'pmv') {
                 var urldatosgrafico = "{{ url('admin/reporte/obtenerproductosmasv') }}";
-                $.get(urldatosgrafico + '/' + empresa, function(data) {
+                $.get(urldatosgrafico + '/' + empresa + '/' + traer, function(data) {
                     labelsF = data['productos'];
                     midatasetP = data['cantidades'];
 
@@ -415,7 +433,7 @@
                 });
             } else {
                 var urldatosgrafico = "{{ url('admin/reporte/obtenerclientesmasc') }}";
-                $.get(urldatosgrafico + '/' + empresa + '/' + cantidadcosto, function(data) {
+                $.get(urldatosgrafico + '/' + empresa + '/' + cantidadcosto + '/' + traer, function(data) {
                     labelsF = data['clientes'];
                     midatasetCL = data['costos'];
 

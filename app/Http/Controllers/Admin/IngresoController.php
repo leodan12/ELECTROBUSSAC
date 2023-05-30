@@ -42,7 +42,12 @@ class IngresoController extends Controller
             )
             ->count();
 
-        return view('admin.ingreso.index', compact('ingresos', 'creditosxvencer'));
+            $sinnumero = DB::table('ingresos as i')
+            ->where('i.factura', '=', null)
+            ->select('i.id')
+            ->count();
+
+        return view('admin.ingreso.index', compact('ingresos', 'creditosxvencer','sinnumero'));
     }
 
     public function create()

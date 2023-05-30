@@ -23,6 +23,9 @@
                                 </h4>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col"><h5>Tienes {{ $sinnumero }} ventas sin numero de factura</h5></div>
+                        </div>
 
                     </div>
                     <div class="card-body">

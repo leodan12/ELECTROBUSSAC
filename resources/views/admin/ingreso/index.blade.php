@@ -8,10 +8,22 @@
                 @endif
                 <div class="card">
                     <div class="card-header">
-                        <h4>
-                            <h4 id="mititulo"> REGISTRO DE INGRESOS: </h4>
-                            <a href="{{ url('admin/ingreso/create') }}" class="btn btn-primary float-end">Añadir ingreso</a>
-                        </h4>
+                        <div class="row">
+                            <div class="col">
+                                <h4 id="mititulo">REGISTRO DE INGRESOS:
+                                </h4>
+                            </div>
+                            <div class="col">
+                                <h4>
+                                    <a href="{{ url('admin/ingreso/create') }}" class="btn btn-primary float-end">Añadir
+                                        Ingreso</a>
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col"><h5>Tienes {{ $sinnumero }} compras sin numero de factura</h5></div>
+                        </div>
+
                     </div>
 
                     <div class="card-body">

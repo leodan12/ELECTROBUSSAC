@@ -148,7 +148,13 @@
                                         value="{{ $cotizacion->persona }}" />
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-4 mb-3" id="divdiascredito">
+                                <label id="labeldiascredito" class="form-label is-required">DIAS DE CREDITO PARA LA COMPRA</label>
+                                <input type="number" name="diascredito" id="diascredito" step="1"
+                                    class="form-control borde" min="1"  
+                                    value="{{ $cotizacion->diascredito }}" />
+                            </div>
+                            <div class="col-md-8 mb-3">
                                 <label class="form-label">OBSERVACION</label>
                                 <input type="text" name="observacion" id="observacion" class="form-control borde"
                                     value="{{ $cotizacion->observacion }}" />
@@ -435,6 +441,16 @@
         estadoguardar = @json($detalles);
         idcompany = @json($cotizacion->company_id);
         idcliente = @json($cotizacion->cliente_id);
+
+        var formapago = @json($cotizacion->formapago);
+        
+        if(formapago=="contado"){
+            document.getElementById('divdiascredito').style.display = 'none';
+        }else{
+            document.getElementById('divdiascredito').style.display = 'inline';
+        }
+
+        divdiascredito
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);

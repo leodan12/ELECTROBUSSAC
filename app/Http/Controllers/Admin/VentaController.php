@@ -47,9 +47,12 @@ class VentaController extends Controller
                 'v.formapago'
             )
             ->count();
+        $sinnumero = DB::table('ventas as v')
+            ->where('v.factura', '=', null)
+            ->select('v.id')
+            ->count();
 
-
-        return view('admin.venta.index', compact('ventas', 'creditosxvencer'));
+        return view('admin.venta.index', compact('ventas', 'creditosxvencer','sinnumero'));
     }
 
     public function create()
@@ -62,8 +65,6 @@ class VentaController extends Controller
 
     public function store(VentaFormRequest $request)
     {
-
-        //return $request;
 
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
@@ -658,25 +659,51 @@ class VentaController extends Controller
         $venta = Venta::findOrFail($venta_id);
         $detallesventa = DB::table('detalleventas as dv')
             ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
-            ->select('dv.cantidad', 'dv.product_id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->select('dv.cantidad', 'dv.product_id', 'p.tipo', 'p.id')
             ->where('v.id', '=', $venta_id)->get();
         for ($i = 0; $i < count($detallesventa); $i++) {
-            $detallesinventario = DB::table('detalleinventarios as di')
-                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
-                ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
-                //->where('i.id', '=', $venta_id)
-                ->where('i.product_id', '=', $detallesventa[$i]->product_id)
-                ->where('di.company_id', '=', $venta->company_id)
-                ->first();
 
-            $detalleinv = Detalleinventario::find($detallesinventario->id);
-            $inventario = Inventario::find($detallesinventario->inventario_id);
+            if ($detallesventa[$i]->tipo == "estandar") {
+                $detallesinventario = DB::table('detalleinventarios as di')
+                    ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                    ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
+                    ->where('i.product_id', '=', $detallesventa[$i]->product_id)
+                    ->where('di.company_id', '=', $venta->company_id)
+                    ->first();
 
-            if ($detalleinv) {
-                $detalleinv->stockempresa = $detalleinv->stockempresa + $detallesventa[$i]->cantidad;
-                if ($detalleinv->update()) {
-                    $inventario->stocktotal = $inventario->stocktotal + $detallesventa[$i]->cantidad;
-                    $inventario->update();
+                //aca genera error porque no encuentra el inventario del kit
+
+                $detalleinv = Detalleinventario::find($detallesinventario->id);
+                $inventario = Inventario::find($detallesinventario->inventario_id);
+
+                if ($detalleinv) {
+                    $detalleinv->stockempresa = $detalleinv->stockempresa + $detallesventa[$i]->cantidad;
+                    if ($detalleinv->update()) {
+                        $inventario->stocktotal = $inventario->stocktotal + $detallesventa[$i]->cantidad;
+                        $inventario->update();
+                    }
+                }
+            } else if ($detallesventa[$i]->tipo == "kit") {
+                $products = $this->productosxkit($detallesventa[$i]->id);
+                for ($x = 0; $x < count($products); $x++) {
+                    $detallesinventario = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
+                        ->where('i.product_id', '=', $products[$x]->id)
+                        ->where('di.company_id', '=', $venta->company_id)
+                        ->first();
+
+                    $detalleinv = Detalleinventario::find($detallesinventario->id);
+                    $inventario = Inventario::find($detallesinventario->inventario_id);
+
+                    if ($detalleinv) {
+                        $detalleinv->stockempresa = $detalleinv->stockempresa + ($detallesventa[$i]->cantidad * $products[$x]->cantidad);
+                        if ($detalleinv->update()) {
+                            $inventario->stocktotal = $inventario->stocktotal + ($detallesventa[$i]->cantidad * $products[$x]->cantidad);
+                            $inventario->update();
+                        }
+                    }
                 }
             }
         }

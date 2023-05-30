@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('formapago');
             $table->string('persona')->nullable();
             $table->string('observacion')->nullable();
+            $table->string('diascredito')->nullable();
             $table->double('costoventasinigv');
             $table->double('costoventaconigv')->nullable();
             $table->double('tasacambio')->nullable();

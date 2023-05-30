@@ -102,6 +102,9 @@ class CotizacionesController extends Controller
         $tasacambio = $validatedData['tasacambio'];
         $formapago = $validatedData['formapago'];
 
+        if ($formapago == "credito") {
+            $cotizacion->diascredito = $request->diascredito;
+        }
         $cotizacion->tasacambio = $tasacambio;
         $cotizacion->observacion = $observacion;
         $cotizacion->fechav = $request->fechav;
@@ -219,6 +222,9 @@ class CotizacionesController extends Controller
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];
         $formapago = $validatedData['formapago'];
+        if ($formapago == "credito") {
+            $cotizacion->diascredito = $request->diascredito;
+        }
         $cotizacion->tasacambio = $tasacambio;
         $cotizacion->formapago = $formapago;
         $cotizacion->observacion = $observacion;
@@ -280,6 +286,7 @@ class CotizacionesController extends Controller
                 'c.costoventaconigv',
                 'c.tasacambio',
                 'c.observacion',
+                'c.diascredito',
                 'p.moneda as monedaproducto',
                 'e.nombre as company',
                 'cl.nombre as cliente',

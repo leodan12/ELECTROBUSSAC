@@ -192,13 +192,13 @@ class ReportesController extends Controller
         return $misdatos;
     }
     //para los productos mas vendidos
-    public function obtenerproductosmasv($empresa)
+    public function obtenerproductosmasv($empresa,$traer)
     {
         $productos = $this->obtenerproductoscantidad($empresa);
         $productosind = $this->productosindividuales($productos);
         $micantidadproductos = $this->sumaproductos($productosind);
         $ordenados = $micantidadproductos->sortByDesc('cantidad');
-        $ordenados20 = $ordenados->take(20);
+        $ordenados20 = $ordenados->take($traer);
         $separados = $this->prodseparados($ordenados20->values()->all());
         return $separados;
     }
@@ -296,13 +296,13 @@ class ReportesController extends Controller
         return $misdatos;
     }
     //para los clientes con mas compras
-    public function obtenerclientesmasc($empresa, $tipo)
+    public function obtenerclientesmasc($empresa, $tipo,$traer)
     {
         $datoscliente = "";
         if ($tipo == "cantidad") {
             $clientescantidad = $this->clientescantidad($empresa);
             $ordenados =   $clientescantidad->sortByDesc('compras');
-            $misclientes  = $ordenados->take(20);
+            $misclientes  = $ordenados->take($traer);
             $clientes = $misclientes->values()->all();
             //return $clientes;
             $datoscliente = $this->devolverclientescant($clientes); 
@@ -311,7 +311,7 @@ class ReportesController extends Controller
             $clientes = $this->clientescosto($empresa);
             $clientesunicos = $this->misclientescosto($clientes);
             $clienteorder =  $clientesunicos->sortByDesc('costo');
-            $clientetake = $clienteorder->take(20);
+            $clientetake = $clienteorder->take($traer);
             $client = $clientetake->values()->all();
             $datoscliente = $this->devolverclientes($client); 
         }
