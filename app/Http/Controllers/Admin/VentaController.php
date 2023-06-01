@@ -852,7 +852,8 @@ class VentaController extends Controller
             ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
             ->join('products as p', 'i.product_id', '=', 'p.id')
-            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo', 'di.stockempresa')
+            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo', 'di.stockempresa',
+            'p.cantidad2','p.precio2','p.cantidad3','p.precio3')
             ->where('c.id', '=', $id)
             ->where('p.status', '=', 0)
             ->where('p.tipo', '=', "estandar")
@@ -861,7 +862,8 @@ class VentaController extends Controller
         $kits = DB::table('products as p')
             ->where('p.status', '=', 0)
             ->where('p.tipo', '=', "kit")
-            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo')
+            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo',
+            'p.cantidad2','p.precio2','p.cantidad3','p.precio3')
             ->get();
 
 
@@ -912,6 +914,10 @@ class VentaController extends Controller
                 $mikit->put('moneda', $kits[$i]->moneda);
                 $mikit->put('tipo', $kits[$i]->tipo);
                 $mikit->put('stockempresa', $stockmin);
+                $mikit->put('cantidad2', null);
+                $mikit->put('precio2', null);
+                $mikit->put('cantidad3', null);
+                $mikit->put('precio3', null);
                 $miskits->push($mikit);
             }
         }

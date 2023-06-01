@@ -118,7 +118,7 @@ function inicializartabladatos(btns) {
                 }
             },
             "order": [[0, "desc"]],
-            "pageLength": 5,
+            "pageLength": 10,
             scrollX: true,
             autoFill: true,
             dom: btns,

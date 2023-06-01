@@ -72,6 +72,14 @@ class ProductController extends Controller
         $product->NoIGV = $validatedData['NoIGV'];
         $product->SiIGV = $validatedData['SiIGV'];
         $product->status =  '0';
+        if ($request->cantidad2 != null && $request->precio2 != null) {
+            $product->cantidad2 = $request->cantidad2;
+            $product->precio2 = $request->precio2;
+            if ($request->cantidad3 != null && $request->precio3 != null) {
+                $product->cantidad3 = $request->cantidad3;
+                $product->precio3 = $request->precio3;
+            }
+        }
         $product->save();
 
         $inventario = new Inventario;
@@ -117,7 +125,22 @@ class ProductController extends Controller
             $product->NoIGV = $validatedData['NoIGV'];
             $product->SiIGV = $validatedData['SiIGV'];
             $product->status =  '0';
-            $product->update();
+            if ($request->cantidad2 != null && $request->precio2 != null) {
+                $product->cantidad2 = $request->cantidad2;
+                $product->precio2 = $request->precio2;
+                if ($request->cantidad3 != null && $request->precio3 != null) {
+                    $product->cantidad3 = $request->cantidad3;
+                    $product->precio3 = $request->precio3;
+                }
+            } else {
+                $product->cantidad2 = null;
+                $product->precio2 =  null;
+            }
+            if ( $request->cantidad3 == null || $request->precio3 == null  ) {
+                $product->cantidad3 = null;
+                $product->precio3 =  null;
+            }  
+                $product->update();
             return redirect('/admin/products')->with('message', 'Producto Actualizado Satisfactoriamente');
         } else {
             return redirect('admin/products')->with('message', 'No se encontro el ID del Producto');
@@ -161,7 +184,23 @@ class ProductController extends Controller
     {
         $product = DB::table('products as p')
             ->join('categories as c', 'p.category_id', '=', 'c.id')
-            ->select('p.maximo', 'p.minimo', 'c.nombre as nombrecategoria', 'p.tipo', 'p.nombre', 'p.codigo', 'p.unidad', 'p.und', 'p.moneda', 'p.NoIGV', 'p.SiIGV')
+            ->select(
+                'p.maximo',
+                'p.minimo',
+                'c.nombre as nombrecategoria',
+                'p.tipo',
+                'p.nombre',
+                'p.codigo',
+                'p.unidad',
+                'p.und',
+                'p.moneda',
+                'p.NoIGV',
+                'p.SiIGV',
+                'p.cantidad2',
+                'p.precio2',
+                'p.cantidad3',
+                'p.precio3'
+            )
             ->where('p.id', '=', $id)->first();
 
         return  $product;

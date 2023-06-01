@@ -26,6 +26,10 @@ return new class extends Migration
             $table->double('tasacambio')->nullable();
             $table->double('NoIGV');
             $table->double('SiIGV');
+            $table->integer('cantidad2')->nullable();
+            $table->double('precio2')->nullable();
+            $table->integer('cantidad3')->nullable();
+            $table->double('precio3')->nullable();
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
             $table->foreign('category_id')->references('id')->on('categories');//->onDelete('cascade');
             $table->timestamps();

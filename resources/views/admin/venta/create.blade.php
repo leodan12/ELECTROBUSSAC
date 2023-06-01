@@ -263,9 +263,14 @@
         var idproducto = 0;
         var stockmaximo = 0;
         var idempresa = "-1";
-        var facturadisponible="";
+        var facturadisponible = "";
         var urlclientexempresa = "{{ url('admin/venta/comboempresacliente') }}";
-
+        var micantidad2 = null;
+        var miprecio2 = null;
+        var micantidad3 = null;
+        var miprecio3 = null;
+        var miprecio = 0;
+        var mipreciounit = "";
         document.getElementById("validacionfactura").style.display = 'none';
         $(document).ready(function() {
             $('.toast').toast();
@@ -297,7 +302,7 @@
                 var urlvent = "{{ url('admin/venta/facturadisponible') }}";
                 $.get(urlvent + '/' + empresa + '/' + factura, function(data) {
                     enviar = document.getElementById('btnguardar');
-                    facturadisponible =data;
+                    facturadisponible = data;
                     if (data == "SI") {
                         xfactura.style.borderColor = "green";
                         enviar.disabled = false;
@@ -330,6 +335,26 @@
         });
 
         document.getElementById("cantidad").onchange = function() {
+            var xcantidad = document.getElementById("cantidad").value;
+            if (micantidad2 != null) {
+                if (xcantidad >= micantidad2) {
+                    document.getElementById("preciounitariomo").value = miprecio2;
+                    document.getElementById('labelpreciounitario').innerHTML = mipreciounit + '(x' + micantidad2 + ')';
+                    if (micantidad3 != null) {
+                        if (xcantidad >= micantidad3) {
+                            document.getElementById("preciounitariomo").value = miprecio3;
+                            document.getElementById('labelpreciounitario').innerHTML = mipreciounit + '(x' +
+                                micantidad3 + ')';
+                        }
+                    }
+                } else {
+                    document.getElementById("preciounitariomo").value = miprecio;
+                    document.getElementById('labelpreciounitario').innerHTML = mipreciounit;
+                }
+            } else {
+                document.getElementById("preciounitariomo").value = miprecio;
+                document.getElementById('labelpreciounitario').innerHTML = mipreciounit;
+            }
             preciofinal();
         };
         document.getElementById("servicio").onchange = function() {
@@ -357,6 +382,8 @@
                     producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i]
                         .id + '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +
                         '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                        '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
+                        '"data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
@@ -390,6 +417,7 @@
             var cantidad = $('[name="cantidad"]').val();
             var preciounit = $('[name="preciounitariomo"]').val();
             var servicio = $('[name="servicio"]').val();
+
             if (cantidad >= 1 && preciounit >= 0 && servicio >= 0) {
                 preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(parseFloat(
                     cantidad) * parseFloat(servicio)));
@@ -483,10 +511,20 @@
                     $moneda = $(this).data("moneda");
                     $stock = $(this).data("stock");
                     $tipo = $(this).data("tipo");
+
+                    $cantidad2 = $(this).data("cantidad2");
+                    $precio2 = $(this).data("precio2");
+                    $cantidad3 = $(this).data("cantidad3");
+                    $precio3 = $(this).data("precio3");
+
                     monedaproducto = $moneda;
                     idproducto = miproduct;
                     tipoproducto = $tipo;
                     stockmaximo = $stock;
+
+                    micantidad2 = $cantidad2;
+                    micantidad3 = $cantidad3;
+
 
                     //mostramos la notificacion
                     if ($tipo == "kit") {
@@ -525,18 +563,27 @@
                         if (monedaproducto == "dolares" && monedafactura == "dolares") {
                             simbolomonedaproducto = "$";
                             preciototalI = ($price).toFixed(2);
+                            miprecio = $price;
+                            miprecio2 = $precio2;
+                            miprecio3 = $precio3;
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
                             document.getElementById('preciounitariomo').value = ($price).toFixed(2);
                             document.getElementById('preciofinal').value = ($price).toFixed(2);
                         } else if (monedaproducto == "soles" && monedafactura == "soles") {
                             preciototalI = ($price).toFixed(2);
                             simbolomonedaproducto = "S/.";
+                            miprecio = $price;
+                            miprecio2 = $precio2;
+                            miprecio3 = $precio3;
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
                             document.getElementById('preciounitariomo').value = ($price).toFixed(2);
                             document.getElementById('preciofinal').value = ($price).toFixed(2);
                         } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                             preciototalI = ($price * mitasacambio1).toFixed(2);
                             simbolomonedaproducto = "$";
+                            miprecio = ($price * mitasacambio1).toFixed(2);
+                            miprecio2 = ($precio2 * mitasacambio1).toFixed(2);
+                            miprecio3 = ($precio3 * mitasacambio1).toFixed(2);
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
                             document.getElementById('preciounitariomo').value = ($price * mitasacambio1)
                                 .toFixed(2);
@@ -545,6 +592,9 @@
                         } else if (monedaproducto == "soles" && monedafactura == "dolares") {
                             preciototalI = ($price / mitasacambio1).toFixed(2);
                             simbolomonedaproducto = "S/.";
+                            miprecio = ($price / mitasacambio1).toFixed(2);
+                            miprecio2 = ($precio2 / mitasacambio1).toFixed(2);
+                            miprecio3 = ($precio3 / mitasacambio1).toFixed(2);
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
                             document.getElementById('preciounitariomo').value = ($price / mitasacambio1)
                                 .toFixed(2);
@@ -575,6 +625,7 @@
                         document.getElementById('preciounitario').value = "";
                         document.getElementById('preciounitariomo').value = "";
                     }
+                    mipreciounit = document.getElementById('labelpreciounitario').innerHTML;
                 }
             });
         });
@@ -703,9 +754,9 @@
             } else if (estadoguardar > 0) {
                 $("#btnguardar").prop("disabled", false);
             }
-            if(facturadisponible=="NO"){
+            if (facturadisponible == "NO") {
                 $("#btnguardar").prop("disabled", true);
-            }else{
+            } else {
                 $("#btnguardar").prop("disabled", false);
             }
         }

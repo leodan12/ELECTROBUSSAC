@@ -93,6 +93,23 @@
                                                 <input type="number" class="form-control" id="vermaximo" readonly>
                                             </div>
 
+                                            <div class="col-sm-4 mb-3 " id="dcantidad2">
+                                                <label for="vernoigv" class="col-form-label">CANTIDAD 2:</label>
+                                                <input type="number" class="form-control" id="vercantidad2" readonly>
+                                            </div>
+                                            <div class="col-sm-4 mb-3 " id="dprecio2">
+                                                <label for="versiigv" class="col-form-label">PRECIO 2:</label>
+                                                <input type="number" class="form-control" id="verprecio2" readonly>
+                                            </div>
+                                            <div class="col-sm-4 mb-3" id="dcantidad3">
+                                                <label for="verminimo" class="col-form-label">CANTIDAD 3:</label>
+                                                <input type="number" class="form-control" id="vercantidad3" readonly>
+                                            </div>
+                                            <div class="col-sm-4 mb-3" id="dprecio3">
+                                                <label for="vermaximo" class="col-form-label">PRECIO 3:</label>
+                                                <input type="number" class="form-control" id="verprecio3" readonly>
+                                            </div>
+
                                         </div>
                                     </form>
                                 </div>
@@ -224,6 +241,32 @@
                     document.getElementById("versiigv").value = data.SiIGV;
                     document.getElementById("verminimo").value = data.minimo;
                     document.getElementById("vermaximo").value = data.maximo;
+                    document.getElementById("vercantidad2").value = data.cantidad2;
+                    document.getElementById("vercantidad3").value = data.cantidad3;
+                    document.getElementById("verprecio2").value = data.precio2;
+                    document.getElementById("verprecio3").value = data.precio3;
+
+                    if(data.cantidad2!=null){
+                        document.getElementById("dcantidad2").style.display = 'inline';
+                    }else{
+                        document.getElementById("dcantidad2").style.display = 'none';
+                    }
+                    if(data.cantidad3!=null){
+                        document.getElementById("dcantidad3").style.display = 'inline';
+                    }else{
+                        document.getElementById("dcantidad3").style.display = 'none';
+                    }
+                    
+                    if(data.precio2!=null){
+                        document.getElementById("dprecio2").style.display = 'inline';
+                    }else{
+                        document.getElementById("dprecio2").style.display = 'none';
+                    }
+                    if(data.precio3!=null){
+                        document.getElementById("dprecio3").style.display = 'inline';
+                    }else{
+                        document.getElementById("dprecio3").style.display = 'none';
+                    }
 
                 });
 
