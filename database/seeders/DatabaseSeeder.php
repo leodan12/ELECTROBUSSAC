@@ -25,10 +25,10 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class); 
         $this->call(InventarioSeeder::class); 
         $this->call(DetalleInventarioSeeder::class); 
-        //$this->call(VentaSeeder::class); 
-        //$this->call(DetalleventaSeeder::class); 
-        //$this->call(IngresoSeeder::class); 
-        //$this->call(DetalleingresoSeeder::class);
+        $this->call(VentaSeeder::class); 
+        $this->call(DetalleventaSeeder::class); 
+        $this->call(IngresoSeeder::class); 
+        $this->call(DetalleingresoSeeder::class);
         $this->call(CotizacionSeeder::class); 
         $this->call(DetallecotizacionSeeder::class); 
         $this->call(KitSeeder::class); 

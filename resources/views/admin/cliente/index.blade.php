@@ -20,40 +20,21 @@
                     </div>
                     <div class="card-body">
 
-                        <table class="table table-bordered table-striped display  nowrap" style="width:100%" id="mitabla"
+                        <table class="table table-bordered table-striped display  nowrap" id="mitabla"
                             name="mitabla">
-                            <thead>
+                            <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>
                                     <th>NOMBRE</th>
                                     <th>RUC</th>
                                     <th>TELEFONO</th>
                                     <th>EMAIL</th>
+                                    <th>DIRECCION</th>
                                     <th>ACCIONES</th>
                                 </tr>
                             </thead>
                             <Tbody id="tbody-mantenimientos">
-                                @foreach ($clientes as $cliente)
-                                    <tr>
-                                        <td>{{ $cliente->id }}</td>
-                                        <td>{{ $cliente->nombre }}</td>
-                                        <td>{{ $cliente->ruc }}</td>
-                                        <td>{{ $cliente->telefono }}</td>
-                                        <td>{{ $cliente->email }}</td>
-                                        <td>
-                                            <a href="{{ url('admin/cliente/' . $cliente->id . '/edit') }}"
-                                                class="btn btn-success">Editar</a>
-                                            <button type="button" class="btn btn-secondary" data-id="{{ $cliente->id }}"
-                                                data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
-                                            <form action="{{ url('admin/cliente/' . $cliente->id . '/delete') }}"
-                                                class="d-inline formulario-eliminar">
-                                                <button type="submit" class="btn btn-danger formulario-eliminar">
-                                                    Eliminar
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
+
                             </Tbody>
                         </table>
 
@@ -90,7 +71,7 @@
                                             </div>
                                             <div class="col-sm-12 col-lg-12 mb-3" id="divtelefono">
                                                 <label for="vertelefono" class="col-form-label">TELEFONO:</label>
-                                                <input type="number" class="form-control" id="vertelefono" readonly>
+                                                <input type="text" class="form-control" id="vertelefono" readonly>
                                             </div>
 
 
@@ -112,6 +93,89 @@
 @push('script')
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
+        //para inicializar el datatable
+        $(document).ready(function() {
+            var tabla = "#mitabla";
+            var ruta = "{{ route('cliente.index') }}"; //darle un nombre a la ruta index
+            var columnas = [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'nombre',
+                    name: 'nombre'
+                },
+                {
+                    data: 'ruc',
+                    name: 'ruc'
+                },
+                {
+                    data: 'telefono',
+                    name: 'telefono'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'direccion',
+                    name: 'direccion'
+                },
+                {
+                    data: 'acciones',
+                    name: 'acciones',
+                    searchable: false,
+                    orderable: false,
+                },
+            ];
+            var btns = 'lfrtip';
+
+            iniciarTablaIndex(tabla, ruta, columnas, btns);
+
+        });
+        //para borrar un registro de la tabla
+        $(document).on('click', '.btnborrar', function(event) {
+            const idregistro = event.target.dataset.idregistro;
+            var urlventa = "{{ url('admin/cliente') }}";
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlventa + '/' + idregistro + '/delete',
+                        success: function(data1) {
+                            if (data1 == "1") {
+                                $(event.target).closest('tr').remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Registro Eliminado",
+                                });
+                            } else if (data1 == "0") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Eliminado",
+                                });
+                            } else if (data1 == "2") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Encontrado",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        //para los modales
         const mimodal = document.getElementById('mimodal')
         mimodal.addEventListener('show.bs.modal', event => {
 
@@ -119,9 +183,6 @@
             const id = button.getAttribute('data-id')
             var urlregistro = "{{ url('admin/cliente/show') }}";
             $.get(urlregistro + '/' + id, function(data) {
-                console.log(data);
-
-
                 const modalTitle = mimodal.querySelector('.modal-title')
                 modalTitle.textContent = `Ver Registro ${id}`
 
@@ -154,25 +215,6 @@
         })
         window.addEventListener('close-modal', event => {
             $('#deleteModal').modal('hide');
-        });
-    </script>
-    <script>
-        $('.formulario-eliminar').submit(function(e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: '¿Esta seguro de Eliminar?',
-                text: "No lo podra revertir!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí,Eliminar!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            })
         });
     </script>
 @endpush

@@ -13,6 +13,7 @@ class IngresoSeeder extends Seeder
      */
     public function run(): void
     {
+        Ingreso::factory()->count(1000)->create();
         // Ingreso::create([
         //     'moneda' => "dolares",
         //     'factura' => "00001",

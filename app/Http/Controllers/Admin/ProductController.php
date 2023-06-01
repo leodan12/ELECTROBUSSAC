@@ -13,15 +13,37 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all()
-            ->where('status', '=', 0)
-            ->where('tipo', '=', 'estandar');
-        return view('admin.products.index', compact('products'));
+        if ($request->ajax()) {
+
+            $productos = DB::table('products as p')
+                ->join('categories as c', 'p.category_id', '=', 'c.id')
+                ->select(
+                    'p.id',
+                    'c.nombre as categoria',
+                    'p.nombre',
+                    'p.codigo',
+                    'p.unidad',
+                    'p.moneda',
+                    'p.NoIGV',
+                    'p.SiIGV',
+                )->where('p.status', '=', 0)
+                ->where('p.tipo', '=', 'estandar');
+            return DataTables::of($productos)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($productos) {
+                    return view('admin.products.botones', compact('productos'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.products.index');
     }
 
     public function create()
@@ -105,21 +127,34 @@ class ProductController extends Controller
     public function destroy(int $product_id)
     {
         $product = Product::find($product_id);
-        $inv = Inventario::all()->where('product_id', '=', $product_id)->first();
-        $inventario = Detalleinventario::all()->where('product_id', '=', $inv->id);
-        $ingreso = Detalleingreso::all()->where('product_id', '=', $product_id);
-        $venta = Detalleventa::all()->where('product_id', '=', $product_id);
-        $cotizacion = Detallecotizacion::all()->where('product_id', '=', $product_id);
+        if ($product) {
+            $inventario = "";
+            $inv = Inventario::all()->where('product_id', '=', $product_id)->first();
+            if ($inv) {
+                $inventario = Detalleinventario::all()->where('product_id', '=', $inv->id);
+            } else {
+                $inventario = Inventario::all()->where('product_id', '=', $product_id);
+            }
+            $ingreso = Detalleingreso::all()->where('product_id', '=', $product_id);
+            $venta = Detalleventa::all()->where('product_id', '=', $product_id);
+            $cotizacion = Detallecotizacion::all()->where('product_id', '=', $product_id);
 
-        if (count($inventario) == 0 && count($ingreso) == 0 && count($venta) == 0  && count($cotizacion) == 0) {
-            $product->delete();
-            return redirect()->back()->with('message', 'Producto Eliminado');
-            $this->dispatchBrowserEvent('close-modal');
+            if (count($inventario) == 0 && count($ingreso) == 0 && count($venta) == 0  && count($cotizacion) == 0) {
+                if ($product->delete()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $product->status = 1;
+                if ($product->update()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
         } else {
-            $product->status = 1;
-            $product->update();
-            return redirect()->back()->with('message', 'Producto Eliminado');
-            $this->dispatchBrowserEvent('close-modal');
+            return "2";
         }
     }
     public function show($id)

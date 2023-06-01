@@ -67,11 +67,23 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/reporte') }}">
-                <i class="mdi mdi-currency-usd menu-icon"></i>
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
+                aria-controls="ui-basic">
+                <i class="mdi mdi-cart menu-icon"></i>
                 <span class="menu-title">REPORTES</span>
+                <i class="menu-arrow"></i>
             </a>
+            <div class="collapse" id="ui-basic1">
+                <ul class="  flex-column sub-menu" style="list-style: none;">
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
+                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>GRAFICOS</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
+                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>TABLAS</a></li>
+
+                </ul>
+            </div>
         </li>
+        
         @if (Auth::user()->role_as == 1)
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('admin/users') }}">

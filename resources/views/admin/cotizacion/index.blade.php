@@ -16,10 +16,10 @@
                                 Cotización</a>
                         </h4>
                     </div>
-                    <div class="card-body" style="text-align: left;">
+                    <div class="card-body"  >
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped " id="mitabla" name="mitabla">
-                                <thead style="width:100%">
+                            <table style="width: 100%"  class="table table-bordered table-striped display nowrap" id="mitabla" name="mitabla">
+                                <thead  >
                                     <tr class="fw-bold text-primary ">
                                         <th>ID</th>
                                         <th>NUMERO</th>
@@ -34,51 +34,9 @@
                                         <th>ACCIONES</th>
                                     </tr>
                                 </thead>
-                                <Tbody>
-
-                                    @forelse ($cotizaciones as $item)
-                                        <tr>
-                                            <td>{{ $item->id }}</td>
-                                            <td>{{ $item->numero }}</td>
-                                            <td>{{ $item->fecha }}</td>
-                                            <td>
-                                                {{ $item->nombrecliente }}
-
-                                            </td>
-                                            <td>
-                                                {{ $item->nombreempresa }}
-                                            </td>
-                                            <td> {{ $item->moneda }}</td>
-                                            <td> {{ $item->formapago }}</td>
-                                            @if ($item->moneda == 'soles')
-                                                <td>S/. {{ $item->costoventasinigv }}</td>
-                                                <td>S/. {{ $item->costoventaconigv }}</td>
-                                            @elseif($item->moneda == 'dolares')
-                                                <td>$ {{ $item->costoventasinigv }}</td>
-                                                <td>$ {{ $item->costoventaconigv }}</td>
-                                            @endif
-                                            <td>{{ $item->vendida }}</td>
-
-                                            <td>
-                                                <a href="{{ url('admin/cotizacion/' . $item->id . '/edit') }}"
-                                                    class="btn  btn-success">Editar</a>
-                                                <button type="button" class="btn  btn-secondary"
-                                                    data-id="{{ $item->id }}" data-bs-toggle="modal"
-                                                    data-bs-target="#mimodal">Ver</button>
-                                                <form action="{{ url('admin/cotizacion/' . $item->id . '/delete') }}"
-                                                    class="d-inline formulario-eliminar">
-                                                    <button type="submit" class="btn  btn-danger formulario-eliminar">
-                                                        Eliminar
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7">No hay Cotizaciones Disponibles</td>
-                                        </tr>
-                                    @endforelse
-                                </Tbody>
+                                <tbody>
+ 
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -245,8 +203,108 @@
         </div>
     </div>
     </div>
+    @endsection
     @push('script')
         <script src="{{ asset('admin/midatatable.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+            var tabla = "#mitabla";
+            var ruta = "{{ route('cotizacion.index') }}"; //darle un nombre a la ruta index
+            var columnas = [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'numero',
+                    name: 'numero'
+                },
+                {
+                    data: 'fecha',
+                    name: 'fecha'
+                },
+                
+                {
+                    data: 'cliente',
+                    name: 'cl.nombre'
+                },
+                {
+                    data: 'empresa',
+                    name: 'e.nombre'
+                },
+                {
+                    data: 'moneda',
+                    name: 'moneda'
+                },
+                {
+                    data: 'formapago',
+                    name: 'formapago'
+                },
+                {
+                    data: 'costoventasinigv',
+                    name: 'costoventasinigv'
+                },
+                {
+                    data: 'costoventaconigv',
+                    name: 'costoventaconigv'
+                },
+                {
+                    data: 'vendida',
+                    name: 'vendida'
+                },
+                {
+                    data: 'acciones',
+                    name: 'acciones',
+                    searchable: false,
+                    orderable: false,
+                },
+            ];
+            var btns ='lfrtip';
+
+            iniciarTablaIndex(tabla, ruta, columnas,btns);
+
+        });
+        //para borrar un registro de la tabla
+        $(document).on('click', '.btnborrar', function(event) {
+            const idregistro = event.target.dataset.idregistro;
+            var urlregistro = "{{ url('admin/cotizacion') }}";
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlregistro + '/' + idregistro + '/delete',
+                        success: function(data1) {
+                            if (data1 == "1") {
+                                $(event.target).closest('tr').remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Registro Eliminado",
+                                });
+                            } else if (data1 == "0") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Eliminado",
+                                });
+                            } else if (data1 == "2") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Encontrado",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        </script>
         <script>
             var idventa = "";
             const mimodal = document.getElementById('mimodal')
@@ -417,27 +475,4 @@
                 window.location = (urlventa + '/' + idventa);
             }
         </script>
-    @endpush
-@endsection
-@section('js')
-    <script>
-        $('.formulario-eliminar').submit(function(e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: '¿Esta seguro de Eliminar?',
-                text: "No lo podra revertir!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí,Eliminar!',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            })
-        });
-    </script>
-@endsection
+    @endpush 

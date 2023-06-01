@@ -45,32 +45,32 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
     }); 
     //Ruta de los clientes
     Route::controller(App\Http\Controllers\Admin\ClienteController::class)->group(function(){
-        Route::get('/cliente','index');
+        Route::get('/cliente','index')->name('cliente.index');
         Route::get('/cliente/create','create');
         Route::post('/cliente','store');
         Route::get('/cliente/{cliente}/edit','edit');
         Route::put('/cliente/{cliente}','update');
         Route::get('/cliente/show/{id}', 'show');//ver
-        Route::get('cliente/{product_id}/delete','destroy');
+        Route::get('/cliente/{product_id}/delete','destroy');
     });   
     //Rutas de los Productos
     Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function(){
-        Route::get('/products','index');
+        Route::get('/products','index')->name('producto.index');;
         Route::get('/products/create','create');
         Route::post('/products','store');
         Route::get('/products/{product}/edit','edit');
         Route::put('/products/{product}','update');
-        Route::get('products/{product_id}/delete','destroy');
+        Route::get('/products/{product_id}/delete','destroy');
         Route::get('/products/show/{id}', 'show');//ver   
     }); 
     //Rutas de los Kits
     Route::controller(App\Http\Controllers\Admin\DetallekitController::class)->group(function(){
-        Route::get('/kits','index');
+        Route::get('/kits','index')->name('kit.index');
         Route::get('/kits/create','create');
         Route::post('/kits','store');
         Route::get('/kits/{kit_id}/edit','edit');
         Route::put('/kits/{kit_id}','update');
-        Route::get('kits/{kit_id}/delete','destroy');
+        Route::get('/kits/{kit_id}/delete','destroy');
         Route::get('/kits/show/{kit_id}', 'show');//ver   
         Route::get('/deletedetallekit/{id}','destroydetallekit');
     }); 
@@ -81,16 +81,16 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::post('/users','store');
         Route::get('/users/{user_id}/edit','edit');
         Route::put('/users/{user_id}','update');
-        Route::get('users/{user_id}/delete','destroy');
+        Route::get('/users/{user_id}/delete','destroy');
     });
     //Ruta del inventario
     Route::controller(App\Http\Controllers\Admin\InventarioController::class)->group(function(){
-        Route::get('/inventario','index');
+        Route::get('/inventario','index')->name('inventario.index');
         Route::get('/inventario/create','create');
         Route::post('/inventario','store');
         Route::get('/inventario/{inventario_id}/edit','edit');
         Route::put('/inventario/{inventario_id}','update');
-        Route::get('inventario/{inventario_id}/delete','destroy');
+        Route::get('/inventario/{inventario_id}/delete','destroy');
         Route::get('/deletedetalleinventario/{id}','destroydetalleinventario');
         Route::get('/inventario/show/{id}', 'show');//ver  
         Route::get('/inventario/showkits', 'showkits');//ver  
@@ -99,7 +99,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
 
     //Ruta de la venta
     Route::controller(App\Http\Controllers\Admin\VentaController::class)->group(function(){
-        Route::get('/venta','index');
+        Route::get('/venta','index')->name('venta.index');
         Route::get('/venta/create','create');
         Route::post('/venta','store');
         Route::get('/venta/{venta_id}/edit','edit');
@@ -121,7 +121,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
 
     //Ruta de ingresos
     Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function(){
-        Route::get('/ingreso','index');
+        Route::get('/ingreso','index')->name('ingreso.index');
         Route::get('/ingreso/create','create');
         Route::post('/ingreso','store');
         Route::get('/ingreso/{ingreso_id}/edit','edit');
@@ -135,7 +135,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
 
     //Ruta de la cotizacion
     Route::controller(App\Http\Controllers\Admin\CotizacionesController::class)->group(function(){
-        Route::get('/cotizacion','index');
+        Route::get('/cotizacion','index')->name('cotizacion.index');
         Route::get('/cotizacion/create','create');
         Route::post('/cotizacion','store');
         Route::get('/cotizacion/{cotizacion_id}/edit','edit');
@@ -157,6 +157,8 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/reporte/obtenerproductosmasv/{idempresa}/{traer}','obtenerproductosmasv');
         Route::get('/reporte/obtenerclientesmasc/{idempresa}/{tipo}/{traer}','obtenerclientesmasc');
 
+        Route::get('/reporte/tabladatos','infoproductos');
+        Route::get('/reporte/datosproductos/{fechainicio}/{fechafin}/{empresa}/{producto}','datosproductos');
  
         
          

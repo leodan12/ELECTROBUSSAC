@@ -15,14 +15,15 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered table-striped" style="width:100%" id="mitabla" name="mitabla">
-                            <thead>
+                        <table class="table table-bordered table-striped"   id="mitabla" name="mitabla">
+                            <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>
                                     <th>CATEGORIA</th>
                                     <th>NOMBRE</th>
+                                    <th>CODIGO</th>
                                     <th>UNIDAD</th>
-                                    <th>TIPO DE MONEDA</th>
+                                    <th>MONEDA</th>
                                     <th>PRECIO SIN IGV</th>
                                     <th>PRECIO CON IGV</th>
                                     <th>ACCIONES</th>
@@ -30,46 +31,13 @@
                             </thead>
                             <Tbody id="tbody-mantenimientos">
 
-                                @forelse ($kits as $item)
-                                    <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>
-                                            @if ($item->category)
-                                                {{ $item->category->nombre }}
-                                            @else
-                                                No tiene Categoria
-                                            @endif
-                                        </td>
-                                        <td>{{ $item->nombre }}</td>
-                                        <td>{{ $item->unidad }}</td>
-                                        <td>{{ $item->moneda }}</td>
-                                        <td>{{ $item->NoIGV }}</td>
-                                        <td>{{ $item->SiIGV }}</td>
 
-                                        <td>
-                                            <a href="{{ url('admin/kits/' . $item->id . '/edit') }}"
-                                                class="btn btn-success">Editar</a>
-                                            <button type="button" class="btn btn-secondary" data-id="{{ $item->id }}"
-                                                data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
-                                            <form action="{{ url('admin/kits/' . $item->id . '/delete') }}"
-                                                class="d-inline formulario-eliminar">
-                                                <button type="submit" class="btn btn-danger formulario-eliminar">
-                                                    Eliminar
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7">No hay Kits Disponibles</td>
-                                    </tr>
-                                @endforelse
                             </Tbody>
                         </table>
                         <div>
                         </div>
                     </div>
- 
+
                     <div class="modal fade" id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
@@ -154,7 +122,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cerrar</button> 
+                                        data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +134,96 @@
 
     @push('script')
         <script src="{{ asset('admin/midatatable.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+                var tabla = "#mitabla";
+                var ruta = "{{ route('kit.index') }}"; //darle un nombre a la ruta index
+                var columnas = [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'categoria',
+                        name: 'c.nombre'
+                    },
+                    {
+                        data: 'nombre',
+                        name: 'nombre'
+                    },
 
+                    {
+                        data: 'codigo',
+                        name: 'codigo'
+                    },
+                    {
+                        data: 'unidad',
+                        name: 'unidad'
+                    },
+                    {
+                        data: 'moneda',
+                        name: 'moneda'
+                    },
+                    {
+                        data: 'NoIGV',
+                        name: 'NoIGV'
+                    },
+                    {
+                        data: 'SiIGV',
+                        name: 'SiIGV'
+                    },
+                    {
+                        data: 'acciones',
+                        name: 'acciones',
+                        searchable: false,
+                        orderable: false,
+                    },
+                ];
+                var btns = 'lfrtip';
+
+                iniciarTablaIndex(tabla, ruta, columnas, btns);
+
+            });
+            //para borrar un registro de la tabla
+            $(document).on('click', '.btnborrar', function(event) {
+                const idregistro = event.target.dataset.idregistro;
+                var urlregistro = "{{ url('admin/kits') }}";
+                Swal.fire({
+                    title: '¿Esta seguro de Eliminar?',
+                    text: "No lo podra revertir!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí,Eliminar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "GET",
+                            url: urlregistro + '/' + idregistro + '/delete',
+                            success: function(data1) {
+                                if (data1 == "1") {
+                                    $(event.target).closest('tr').remove();
+                                    Swal.fire({
+                                        icon: "success",
+                                        text: "Registro Eliminado",
+                                    });
+                                } else if (data1 == "0") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro No Eliminado",
+                                    });
+                                } else if (data1 == "2") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro No Encontrado",
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
         <script>
             const mimodal = document.getElementById('mimodal')
             mimodal.addEventListener('show.bs.modal', event => {
@@ -237,26 +294,4 @@
             });
         </script>
     @endpush
-@endsection
-
-@section('js')
-    <script>
-        $('.formulario-eliminar').submit(function(e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: '¿Esta seguro de Eliminar?',
-                text: "No lo podra revertir!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí,Eliminar!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            })
-        });
-    </script>
 @endsection

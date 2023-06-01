@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyFormRequest;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\File;
 class CompanyController extends Controller
 {
     public function index()
-    {
+    { 
         return view('admin.company.index');
     }
 

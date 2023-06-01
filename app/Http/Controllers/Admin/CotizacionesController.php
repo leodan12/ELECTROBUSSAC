@@ -13,30 +13,40 @@ use App\Models\Product;
 use App\Http\Requests\CotizacionFormRequest;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use Yajra\DataTables\DataTables;
 
 class CotizacionesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // $cotizaciones = Cotizacion::orderBy('id', 'desc')->get();
-        $cotizaciones = DB::table('cotizacions as c')
-            ->join('companies as e', 'c.company_id', '=', 'e.id')
-            ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
-            ->select(
-                'c.id',
-                'c.fecha',
-                'e.nombre as nombreempresa',
-                'cl.nombre as nombrecliente',
-                'c.moneda',
-                'c.costoventasinigv',
-                'c.costoventaconigv',
-                'c.vendida',
-                'c.numero',
-                'c.formapago'
-            )
-            ->get();
-        //return $cotizaciones;
-        return view('admin.cotizacion.index', compact('cotizaciones'));
+        if ($request->ajax()) {
+
+            // $cotizaciones = Cotizacion::orderBy('id', 'desc')->get();
+            $cotizaciones = DB::table('cotizacions as c')
+                ->join('companies as e', 'c.company_id', '=', 'e.id')
+                ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
+                ->select(
+                    'c.id',
+                    'c.fecha',
+                    'e.nombre as empresa',
+                    'cl.nombre as cliente',
+                    'c.moneda',
+                    'c.costoventasinigv',
+                    'c.costoventaconigv',
+                    'c.vendida',
+                    'c.numero',
+                    'c.formapago'
+                );
+            return DataTables::of($cotizaciones)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($cotizaciones) {
+                    return view('admin.cotizacion.botones', compact('cotizaciones'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.cotizacion.index');
     }
 
     public function create()
@@ -321,9 +331,16 @@ class CotizacionesController extends Controller
 
     public function destroy(int $cotizacion_id)
     {
-        $cotizacion = Cotizacion::findOrFail($cotizacion_id);
-        $cotizacion->delete();
-        return redirect()->back()->with('message', 'Cotizacion Eliminada');
+        $cotizacion = Cotizacion::find($cotizacion_id);
+        if ($cotizacion) {
+            if ($cotizacion->delete()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
+        }
     }
 
     public function destroycondicion(int $condicion_id)

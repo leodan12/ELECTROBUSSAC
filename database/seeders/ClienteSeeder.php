@@ -13,46 +13,8 @@ class ClienteSeeder extends Seeder
      */
     public function run() 
     {
-        Cliente::create([
-            'nombre' => 'CLIENTE 1',
-            'ruc' => '202345678954',
-            'direccion' => 'sin direccion',
-            'telefono' => '987654321',
-            'email' => 'cliente1@gmail.com',
-            'status' => 0,
-          ]);
-          Cliente::create([
-            'nombre' => 'CLIENTE 2',
-            'ruc' => '2045788954',
-            'direccion' => 'sin direccion',
-            'telefono' => '987654321',
-            'email' => 'cliente2@gmail.com',
-            'status' => 0,
-          ]);
-          Cliente::create([
-            'nombre' => 'CLIENTE 3',
-            'ruc' => '2089654724',
-            'direccion' => 'sin direccion',
-            'telefono' => '987654321',
-            'email' => 'cliente3@gmail.com',
-            'status' => 0,
-          ]);
-          Cliente::create([
-            'nombre' => 'CLIENTE 4',
-            'ruc' => '2094563254',
-            'direccion' => 'sin direccion',
-            'telefono' => '987654321',
-            'email' => 'cliente4@gmail.com',
-            'status' => 0,
-          ]);
-          Cliente::create([
-            'nombre' => 'CLIENTE 5',
-            'ruc' => '2094563254',
-            'direccion' => 'sin direccion',
-            'telefono' => '987654321',
-            'email' => 'cliente5@gmail.com',
-            'status' => 0,
-          ]);
+      Cliente::factory()->count(500)->create();
+        
           Cliente::create([
             'nombre' => 'ELECTROBUS SAC',
             'ruc' => '20477263284',

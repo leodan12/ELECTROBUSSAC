@@ -11,15 +11,34 @@ use App\Models\Ingreso;
 use App\Models\Inventario;
 use App\Models\Cotizacion;
 use App\Models\Venta;
+use Yajra\DataTables\DataTables;
 
 
 class ClienteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clientes = Cliente::all()->where('status', '=', 0);
-        //$clientes = Cliente::orderBy('id', 'asc')->get();
-        return view('admin.cliente.index', compact('clientes'));
+        if ($request->ajax()) { 
+            
+            $clientes = DB::table('clientes as c')
+                ->select(
+                    'c.id',
+                    'c.nombre',
+                    'c.telefono',
+                    'c.ruc',
+                    'c.email',
+                    'c.direccion',
+                )->where('c.status','=',0);
+            return DataTables::of($clientes)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($clientes) {
+                    return view('admin.cliente.botones', compact('clientes'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.cliente.index');
     }
 
     public function create()
@@ -77,17 +96,28 @@ class ClienteController extends Controller
     public function destroy(int $cliente_id)
     {
         $cliente = Cliente::find($cliente_id);
-        $ingreso = Ingreso::all()->where('cliente_id', '=', $cliente_id);
-        $venta = Venta::all()->where('cliente_id', '=', $cliente_id);
-        $cotizacion = Cotizacion::all()->where('cliente_id', '=', $cliente_id);
-        if (count($venta) == 0 && count($ingreso) == 0   && count($cotizacion) == 0) {
-            if ($cliente->delete()) {
-                return redirect('admin/cliente')->with('message', 'Cliente Eliminado Satisfactoriamente');
+        if ($cliente) {
+            $ingreso = Ingreso::all()->where('cliente_id', '=', $cliente_id);
+            $venta = Venta::all()->where('cliente_id', '=', $cliente_id);
+            $cotizacion = Cotizacion::all()->where('cliente_id', '=', $cliente_id);
+            if (count($venta) == 0 && count($ingreso) == 0   && count($cotizacion) == 0) {
+                if ($cliente->delete()) {
+
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $cliente->status = 1;
+                if ($cliente->update()) {
+
+                    return "1";
+                } else {
+                    return "0";
+                }
             }
         } else {
-            $cliente->status = 1;
-            $cliente->update();
-            return redirect('admin/cliente')->with('message', 'Cliente Eliminado Satisfactoriamente');
+            return "2";
         }
     }
 }

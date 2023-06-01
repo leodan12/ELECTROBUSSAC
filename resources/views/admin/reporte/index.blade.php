@@ -34,9 +34,7 @@
         }
     </style>
     <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-    {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> --}}
-    {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
-
+    
     <script src="{{ asset('admin/chartjs.min.js') }}"></script>
 @endpush
 @section('content')

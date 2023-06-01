@@ -13,12 +13,13 @@ use App\Models\Inventario;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\IngresoFormRequest;
+use Yajra\DataTables\DataTables;
 
 class IngresoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ingresos = Ingreso::orderBy('id', 'desc')->get();
+
         $fechahoy = date('Y-m-d');
         $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
 
@@ -42,12 +43,37 @@ class IngresoController extends Controller
             )
             ->count();
 
-            $sinnumero = DB::table('ingresos as i')
+        $sinnumero = DB::table('ingresos as i')
             ->where('i.factura', '=', null)
             ->select('i.id')
             ->count();
 
-        return view('admin.ingreso.index', compact('ingresos', 'creditosxvencer','sinnumero'));
+        if ($request->ajax()) {
+
+            $ingresos = DB::table('ingresos as i')
+                ->join('clientes as c', 'i.cliente_id', '=', 'c.id')
+                ->join('companies as e', 'i.company_id', '=', 'e.id')
+                ->select(
+                    'i.id',
+                    'c.nombre as cliente',
+                    'e.nombre as empresa',
+                    'i.moneda',
+                    'i.formapago',
+                    'i.factura',
+                    'i.costoventa',
+                    'i.pagada',
+                    'i.fecha',
+                );
+            return DataTables::of($ingresos)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($ingresos) {
+                    return view('admin.ingreso.botones', compact('ingresos'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.ingreso.index', compact('creditosxvencer', 'sinnumero'));
     }
 
     public function create()
@@ -463,33 +489,40 @@ class IngresoController extends Controller
 
     public function destroy(int $ingreso_id)
     {
-        $ingreso = Ingreso::findOrFail($ingreso_id);
-        $detallesingreso = DB::table('detalleingresos as di')
-            ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-            ->select('di.cantidad', 'di.product_id')
-            ->where('i.id', '=', $ingreso_id)->get();
-        for ($i = 0; $i < count($detallesingreso); $i++) {
-            $detallesinventario = DB::table('detalleinventarios as di')
-                ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
-                ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
-                //->where('i.id', '=', $venta_id)
-                ->where('i.product_id', '=', $detallesingreso[$i]->product_id)
-                ->where('di.company_id', '=', $ingreso->company_id)
-                ->first();
+        $ingreso = Ingreso::find($ingreso_id);
+        if ($ingreso) {
+            $detallesingreso = DB::table('detalleingresos as di')
+                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
+                ->select('di.cantidad', 'di.product_id')
+                ->where('i.id', '=', $ingreso_id)->get();
+            for ($i = 0; $i < count($detallesingreso); $i++) {
+                $detallesinventario = DB::table('detalleinventarios as di')
+                    ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                    ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
+                    //->where('i.id', '=', $venta_id)
+                    ->where('i.product_id', '=', $detallesingreso[$i]->product_id)
+                    ->where('di.company_id', '=', $ingreso->company_id)
+                    ->first();
 
-            $detalleinv = Detalleinventario::find($detallesinventario->id);
-            $inventario = Inventario::find($detallesinventario->inventario_id);
+                $detalleinv = Detalleinventario::find($detallesinventario->id);
+                $inventario = Inventario::find($detallesinventario->inventario_id);
 
-            if ($detalleinv) {
-                $detalleinv->stockempresa = $detalleinv->stockempresa - $detallesingreso[$i]->cantidad;
-                if ($detalleinv->update()) {
-                    $inventario->stocktotal = $inventario->stocktotal - $detallesingreso[$i]->cantidad;
-                    $inventario->update();
+                if ($detalleinv) {
+                    $detalleinv->stockempresa = $detalleinv->stockempresa - $detallesingreso[$i]->cantidad;
+                    if ($detalleinv->update()) {
+                        $inventario->stocktotal = $inventario->stocktotal - $detallesingreso[$i]->cantidad;
+                        $inventario->update();
+                    }
                 }
             }
+            if ($ingreso->delete()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
         }
-        $ingreso->delete();
-        return redirect()->back()->with('message', 'Ingreso Eliminado');
     }
 
     public function showcreditos()

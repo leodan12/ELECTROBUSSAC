@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('unidad');
             $table->string('und')->nullable();
             $table->string('tipo');
-            $table->integer('unico');
+            $table->integer('unico')->nullable();
             $table->string('moneda');
             $table->double('maximo')->nullable();
             $table->double('minimo')->nullable();

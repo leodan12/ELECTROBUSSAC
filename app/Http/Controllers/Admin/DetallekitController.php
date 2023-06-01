@@ -13,15 +13,37 @@ use App\Models\Detallecotizacion;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductFormRequest;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class DetallekitController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kits = Product::all()
-            ->where('status', '=', 0)
-            ->where('tipo', '=', 'kit');
-        return view('admin.kit.index', compact('kits'));
+        if ($request->ajax()) {
+
+            $kits = DB::table('products as p')
+                ->join('categories as c', 'p.category_id', '=', 'c.id')
+                ->select(
+                    'p.id',
+                    'c.nombre as categoria',
+                    'p.nombre',
+                    'p.codigo',
+                    'p.unidad',
+                    'p.moneda',
+                    'p.NoIGV',
+                    'p.SiIGV',
+                )->where('p.status', '=', 0)
+                ->where('p.tipo', '=', 'kit');
+            return DataTables::of($kits)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($kits) {
+                    return view('admin.kit.botones', compact('kits'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.kit.index');
     }
 
     public function create()
@@ -143,6 +165,7 @@ class DetallekitController extends Controller
 
     public function show($id)
     {
+
         $product = DB::table('products as p')
             ->join('categories as c', 'p.category_id', '=', 'c.id')
             ->join('kits as k', 'k.product_id', '=', 'p.id')
@@ -181,20 +204,29 @@ class DetallekitController extends Controller
     public function destroy(int $kit_id)
     {
         $product = Product::find($kit_id);
+        if ($product) {
+           
+            $ingreso = Detalleingreso::all()->where('product_id', '=', $kit_id);
+            $venta = Detalleventa::all()->where('product_id', '=', $kit_id);
+            $cotizacion = Detallecotizacion::all()->where('product_id', '=', $kit_id);
 
-        $inventario = Inventario::all()->where('product_id', '=', $kit_id);
-        $ingreso = Detalleingreso::all()->where('product_id', '=', $kit_id);
-        $venta = Detalleventa::all()->where('product_id', '=', $kit_id);
-        $cotizacion = Detallecotizacion::all()->where('product_id', '=', $kit_id);
-
-        if (count($inventario) == 0 && count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
-            $product->delete();
+            if (  count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
+                if ($product->delete()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $product->status = 1;
+                if ($product->update()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
         } else {
-            $product->status = 1;
-            $product->update();
+            return "2";
         }
-        return redirect()->back()->with('message', 'Kit de Productos Eliminado');
-        $this->dispatchBrowserEvent('close-modal');
     }
 
     public function destroydetallekit($id)

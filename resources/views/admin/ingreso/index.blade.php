@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
-                                <h4 id="mititulo">REGISTRO DE INGRESOS:
+                                <h4 id="mititulo">REGISTRO DE INGRESOS O COMPRAS:
                                 </h4>
                             </div>
                             <div class="col">
@@ -21,7 +21,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col"><h5>Tienes {{ $sinnumero }} compras sin numero de factura</h5></div>
+                            <div class="col">
+                                <h5>Tienes {{ $sinnumero }} compras sin numero de factura</h5>
+                            </div>
                         </div>
 
                     </div>
@@ -43,58 +45,9 @@
                                         <th>ACCIONES</th>
                                     </tr>
                                 </thead>
-                                <Tbody id="tbody-mantenimientos">
+                                <tbody id="tbody-mantenimientos">
 
-                                    @forelse ($ingresos as $ingreso)
-                                        <tr>
-                                            <td>{{ $ingreso->id }}</td>
-                                            <td>{{ $ingreso->factura }}</td>
-                                            <td>{{ $ingreso->fecha }}</td>
-                                            <td>
-                                                @if ($ingreso->cliente)
-                                                    {{ $ingreso->cliente->nombre }}
-                                                @else
-                                                    No esta la empresa registrada
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if ($ingreso->company)
-                                                    {{ $ingreso->company->nombre }}
-                                                @else
-                                                    No esta la empresa registrada
-                                                @endif
-                                            </td>
-                                            <td> {{ $ingreso->moneda }}</td>
-                                            <td> {{ $ingreso->formapago }}</td>
-                                            @if ($ingreso->moneda == 'soles')
-                                                <td>S/. {{ $ingreso->costoventa }}</td>
-                                            @elseif($ingreso->moneda == 'dolares')
-                                                <td>$. {{ $ingreso->costoventa }}</td>
-                                            @endif
-                                            <td id="ventapagada{{ $ingreso->id }}">{{ $ingreso->pagada }}</td>
-
-                                            <td>
-                                                <a href="{{ url('admin/ingreso/' . $ingreso->id . '/edit') }}"
-                                                    class="btn btn-success">Editar</a>
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-id="{{ $ingreso->id }}" data-bs-toggle="modal"
-                                                    data-bs-target="#mimodal">Ver</button>
-                                                <form action="{{ url('admin/ingreso/' . $ingreso->id . '/delete') }}"
-                                                    class="d-inline formulario-eliminar">
-                                                    <button type="submit" class="btn btn-danger formulario-eliminar">
-                                                        Eliminar
-                                                    </button>
-                                                </form>
-
-
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7">No hay Productos Disponibles</td>
-                                        </tr>
-                                    @endforelse
-                                </Tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -317,8 +270,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" id="generarfactura1"> Generar Pdf de
-                                        la Factura </button>
+                                    {{-- <button type="button" class="btn btn-success" id="generarfactura1"> Generar Pdf de
+                                        la Factura </button> --}}
                                     <button type="button" class="btn btn-warning" id="pagarfactura1">Pagar
                                         Factura</button>
                                     <button class="btn btn-primary" data-bs-target="#modalCreditos1"
@@ -333,10 +286,105 @@
             </div>
         </div>
     </div>
-    </div>
+    </div> 
+@endsection
     @push('script')
         <script src="{{ asset('admin/midatatable.js') }}"></script>
+        <script>
+            $(document).ready(function() {
+            var tabla = "#mitabla";
+            var ruta = "{{ route('ingreso.index') }}"; //darle un nombre a la ruta index
+            var columnas = [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'factura',
+                    name: 'factura'
+                },
+                {
+                    data: 'fecha',
+                    name: 'fecha'
+                },
+                
+                {
+                    data: 'cliente',
+                    name: 'c.nombre'
+                },
+                {
+                    data: 'empresa',
+                    name: 'e.nombre'
+                },
+                {
+                    data: 'moneda',
+                    name: 'moneda'
+                },
+                {
+                    data: 'formapago',
+                    name: 'formapago'
+                },
+                {
+                    data: 'costoventa',
+                    name: 'costoventa'
+                },
+                {
+                    data: 'pagada',
+                    name: 'pagada'
+                }, 
+                {
+                    data: 'acciones',
+                    name: 'acciones',
+                    searchable: false,
+                    orderable: false,
+                },
+            ];
+            var btns ='lfrtip';
 
+            iniciarTablaIndex(tabla, ruta, columnas,btns);
+
+        });
+        //para borrar un registro de la tabla
+        $(document).on('click', '.btnborrar', function(event) {
+            const idregistro = event.target.dataset.idregistro;
+            var urlregistro = "{{ url('admin/ingreso') }}";
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlregistro + '/' + idregistro + '/delete',
+                        success: function(data1) {
+                            if (data1 == "1") {
+                                $(event.target).closest('tr').remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Registro Eliminado",
+                                });
+                            } else if (data1 == "0") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Eliminado",
+                                });
+                            } else if (data1 == "2") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Encontrado",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        </script>
         <script>
             var idventa = "";
             var inicializartabla = 0;
@@ -658,11 +706,7 @@
             window.addEventListener('close-modal', event => {
                 $('#deleteModal').modal('hide');
             });
-
-            // $( document ).ready(function() {
-            // $('#modalCreditos1').modal('toggle')
-            // });
-
+ 
             $('#pagarfactura').click(function() {
                 pagarfacturaingreso();
             });
@@ -723,7 +767,7 @@
             });
 
             function mostrarmensaje(numCred) {
-                var registro = "REGISTRO DE INGRESOS: ";
+                var registro = "REGISTRO DE INGRESOS O COMPRAS: ";
                 var tienes = "Tienes ";
                 var pago = " Creditos por Pagar ";
                 var boton =
@@ -753,26 +797,3 @@
             }
         </script>
     @endpush
-@endsection
-@section('js')
-    <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
-    <script>
-        $('.formulario-eliminar').submit(function(e) {
-            e.preventDefault();
-
-            Swal.fire({
-                title: '¿Esta seguro de Eliminar?',
-                text: "No lo podra revertir!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí,Eliminar!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.submit();
-                }
-            })
-        });
-    </script>
-@endsection

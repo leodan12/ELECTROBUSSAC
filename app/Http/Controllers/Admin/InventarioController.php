@@ -11,13 +11,35 @@ use App\Models\Detalleinventario;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InventarioFormRequest;
 use App\Http\Requests\DetalleInventarioFormRequest;
+use Yajra\DataTables\DataTables;
 
 class InventarioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $inventarios = Inventario::all()->where('status', '=', 0);
-        return view('admin.inventario.index', compact('inventarios'));
+        if ($request->ajax()) {
+
+            $inventarios = DB::table('inventarios as i')
+                ->join('products as p', 'i.product_id', '=', 'p.id')
+                ->join('categories as c', 'p.category_id', '=', 'c.id')
+                ->select(
+                    'i.id',
+                    'c.nombre as categoria',
+                    'p.nombre as producto',
+                    'i.stockminimo',
+                    'i.stocktotal',
+                )->where('i.status', '=', 0);
+            return DataTables::of($inventarios)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($inventarios) {
+                    return view('admin.inventario.botones', compact('inventarios'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+
+        return view('admin.inventario.index');
     }
 
     public function create()
@@ -115,6 +137,15 @@ class InventarioController extends Controller
     {
 
         $inventario = DB::table('inventarios as i')
+            ->join('products as p', 'i.product_id', '=', 'p.id')
+            ->select(
+                'p.nombre',
+                'i.stockminimo',
+                'i.stocktotal'
+
+            )
+            ->where('i.id', '=', $id)->get();
+        $detalle = DB::table('inventarios as i')
             ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
             ->join('products as p', 'i.product_id', '=', 'p.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
@@ -127,8 +158,18 @@ class InventarioController extends Controller
 
             )
             ->where('i.id', '=', $id)->get();
+        $datos = collect();
+        $datos->put('inventario', $inventario);
+        if (count($detalle) == 0) {
+            $datos->put('haydetalle', "no");
+        } else {
+            $datos->put('haydetalle', "si");
+            
+            $datos->put('detalle', $detalle);
+        }
 
-        return  $inventario;
+
+        return  $datos;
     }
     public function showkits()
     {
@@ -148,15 +189,25 @@ class InventarioController extends Controller
 
     public function destroy(int $inventario_id)
     {
-        $inventario = Inventario::findOrFail($inventario_id);
-        $detalle = Detalleinventario::all()->where('inventario_id', '=', $inventario_id);
-        if (count($detalle) == 0) {
-            $inventario->delete();
-            return redirect()->back()->with('message', 'Inventario Eliminado');
+        $inventario = Inventario::find($inventario_id);
+        if ($inventario) {
+            $detalle = Detalleinventario::all()->where('inventario_id', '=', $inventario_id);
+            if (count($detalle) == 0) {
+                if ($inventario->delete()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $inventario->status = 1;
+                if ($inventario->update()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
         } else {
-            $inventario->status = 1;
-            $inventario->update();
-            return redirect()->back()->with('message', 'Inventario Eliminado');
+            return "2";
         }
     }
 

@@ -449,8 +449,7 @@
         }else{
             document.getElementById('divdiascredito').style.display = 'inline';
         }
-
-        divdiascredito
+ 
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);

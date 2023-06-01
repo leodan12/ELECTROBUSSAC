@@ -41,7 +41,7 @@
                             placeholder="Filtrar por nombre...">
                     </div>
                     <table class="table table-bordered table-striped">
-                        <thead>
+                        <thead class="fw-bold text-primary">
                             <tr>
                                 <th>ID</th>
                                 <th>NOMBRE</th>
