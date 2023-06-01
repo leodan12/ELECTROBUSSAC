@@ -101,6 +101,12 @@ class VentaController extends Controller
         $factura = $validatedData['factura'];
         $pagada = $validatedData['pagada'];
 
+        if($factura != null){
+        $nrofacturadisponible = $this->facturadisponible($company->id,$factura);
+        if( $nrofacturadisponible =="NO"){ 
+            return redirect()->back()->with('message','Numero de Factura YA Registrado') ;  
+        }}
+
         $venta = new Venta;
 
         $venta->company_id = $company->id;
@@ -366,6 +372,8 @@ class VentaController extends Controller
             return redirect('admin/venta')->with('message', 'Venta Agregada Satisfactoriamente');
         }
         return redirect('admin/venta')->with('message', 'No se Pudo Agregar la Venta');
+   
+   
     }
     public function create2(int $idcotizacion)
     {
@@ -1043,5 +1051,20 @@ class VentaController extends Controller
             ->where('c.ruc', '!=', $empresa->ruc)->get();
 
         return $clientes;
+    }
+
+    public function facturadisponible($empresa, $factura)
+    {
+
+        $ventas = DB::table('ventas as v')
+            ->where('v.company_id', '=', $empresa)
+            ->where('v.factura', '=', $factura)
+            ->select('v.id')
+            ->get(); 
+        if (count($ventas) > 0) {
+            return "NO";
+        } else {
+            return "SI";
+        } 
     }
 }

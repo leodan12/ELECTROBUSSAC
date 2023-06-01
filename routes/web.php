@@ -117,6 +117,7 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/venta/stockkitxempresa/{id}', 'stockkitxempresa');//ver  
         Route::get('/venta/stockxprodxempresa/{idproducto}/{idempresa}', 'stockxprodxempresa');//ver  
         Route::get('/venta/comboempresaclientevi/{id}', 'comboempresaclientevi');
+        Route::get('/venta/facturadisponible/{empresa}/{factura}', 'facturadisponible');
     });
 
     //Ruta de ingresos

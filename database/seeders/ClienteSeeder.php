@@ -13,7 +13,7 @@ class ClienteSeeder extends Seeder
      */
     public function run() 
     {
-      Cliente::factory()->count(500)->create();
+      //Cliente::factory()->count(500)->create();
         
           Cliente::create([
             'nombre' => 'ELECTROBUS SAC',

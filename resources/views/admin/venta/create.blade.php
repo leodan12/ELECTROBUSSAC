@@ -16,6 +16,10 @@
                     </ul>
                 </div>
             @endif
+            @if (session('message'))
+                <div class="alert alert-danger">{{ session('message') }}</div>
+            @endif
+
 
             <div class="card">
                 <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
@@ -44,12 +48,17 @@
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">NUMERO DE FACTURA</label>
+                                <label class="form-label" id="labelfactura" name="labelfactura">NUMERO DE FACTURA</label>
                                 <input type="text" name="factura" id="factura" class="form-control borde" />
+                                <div class="invalid-feedback" name="validacionfactura" id="validacionfactura"
+                                    style="color: red;">
+                                    Numero de Factura ya Registrado
+                                </div>
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
                                 <select name="formapago" id="formapago" class="form-select borde" required>
@@ -105,8 +114,8 @@
                                 <div class="input-group">
                                     <label class="form-label input-group is-required">PRECIO DE LA VENTA </label>
                                     <span class="input-group-text" id="spancostoventa"></span>
-                                    <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
-                                        class="form-control borde required" required readonly />
+                                    <input type="number" name="costoventa" id="costoventa" min="0.1"
+                                        step="0.01" class="form-control borde required" required readonly />
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -254,10 +263,11 @@
         var idproducto = 0;
         var stockmaximo = 0;
         var idempresa = "-1";
+        var facturadisponible="";
         var urlclientexempresa = "{{ url('admin/venta/comboempresacliente') }}";
 
+        document.getElementById("validacionfactura").style.display = 'none';
         $(document).ready(function() {
-
             $('.toast').toast();
             document.getElementById('tasacambio').value = "3.71";
             $('.select2').select2({});
@@ -273,6 +283,33 @@
                 '-' + String(validez.getDate()).padStart(2, '0');
             document.getElementById("fechav").value = fechavalidez;
         });
+        factura.oninput = function() {
+            var mifactura = document.getElementById("factura");
+            var empresa = document.getElementById("company_id").value;
+            verificarfactura(empresa, mifactura.value);
+
+        };
+
+        function verificarfactura(empresa, factura) {
+            var xfactura = document.getElementById("factura");
+            var validacion = document.getElementById("validacionfactura");
+            if (empresa && factura) {
+                var urlvent = "{{ url('admin/venta/facturadisponible') }}";
+                $.get(urlvent + '/' + empresa + '/' + factura, function(data) {
+                    enviar = document.getElementById('btnguardar');
+                    facturadisponible =data;
+                    if (data == "SI") {
+                        xfactura.style.borderColor = "green";
+                        enviar.disabled = false;
+                        validacion.style.display = 'none';
+                    } else {
+                        xfactura.style.borderColor = "red";
+                        enviar.disabled = true;
+                        validacion.style.display = 'inline';
+                    }
+                });
+            }
+        }
 
         $("#ingreso").change(function() {
 
@@ -305,6 +342,10 @@
         $("#company_id").change(function() {
             var company = $(this).val();
             idempresa = company;
+
+            var factura = document.getElementById("factura").value;
+            verificarfactura(company, factura);
+
             $('#product').removeAttr('disabled');
             var urlvent = "{{ url('admin/venta/productosxempresa') }}";
             $.get(urlvent + '/' + company, function(data) {
@@ -660,6 +701,11 @@
             if (estadoguardar == 0) {
                 $("#btnguardar").prop("disabled", true);
             } else if (estadoguardar > 0) {
+                $("#btnguardar").prop("disabled", false);
+            }
+            if(facturadisponible=="NO"){
+                $("#btnguardar").prop("disabled", true);
+            }else{
                 $("#btnguardar").prop("disabled", false);
             }
         }
