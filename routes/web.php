@@ -160,8 +160,9 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
 
         Route::get('/reporte/tabladatos','infoproductos');
         Route::get('/reporte/datosproductos/{fechainicio}/{fechafin}/{empresa}/{producto}','datosproductos');
- 
-        
-         
+        Route::get('/reporte/rotacionstock','rotacionstock');
+        Route::get('/reporte/datosrotacionstock/{fechainicio}/{fechafin}/{empresa}/{producto}','datosrotacionstock');
+        Route::get('/reporte/detallecompras/{fechainicio}/{fechafin}/{empresa}/{producto}','detallecompras');
+        Route::get('/reporte/detalleventas/{fechainicio}/{fechafin}/{empresa}/{producto}','detalleventas'); 
     });
 });

@@ -776,8 +776,8 @@ class ReportesController extends Controller
         $miscompras = $this->obtenerdatosproductoscompra($fechainicio, $fechafin, $empresa, $producto);
         $misventas = $this->obtenerdatosproductosventa($fechainicio, $fechafin, $empresa, $producto);
 
-        $datos = $this->coninfocompleta($miscompras,$misventas );
-        
+        $datos = $this->coninfocompleta($miscompras, $misventas);
+
 
         return $datos;
     }
@@ -796,8 +796,16 @@ class ReportesController extends Controller
                     ->where('i.fecha', '>=', $fechainicio)
                     ->where('e.id', '=', $empresa)
                     ->where('p.id', '=', $producto)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'di.cantidad','di.preciounitariomo','di.preciofinal','i.moneda','i.fecha')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha'
+                    )
                     ->get();
             } else {
                 $compras = DB::table('ingresos as i')
@@ -808,8 +816,16 @@ class ReportesController extends Controller
                     ->where('i.fecha', '<=', $fechafin)
                     ->where('i.fecha', '>=', $fechainicio)
                     ->where('e.id', '=', $empresa)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'di.cantidad','di.preciounitariomo','di.preciofinal','i.moneda','i.fecha')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha'
+                    )
                     ->get();
             }
         } else {
@@ -820,10 +836,18 @@ class ReportesController extends Controller
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->join('products as p', 'di.product_id', '=', 'p.id')
                     ->where('i.fecha', '<=', $fechafin)
-                    ->where('i.fecha', '>=', $fechainicio) 
+                    ->where('i.fecha', '>=', $fechainicio)
                     ->where('p.id', '=', $producto)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'di.cantidad','di.preciounitariomo','di.preciofinal','i.moneda','i.fecha')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha'
+                    )
                     ->get();
             } else {
                 $compras = DB::table('ingresos as i')
@@ -832,9 +856,17 @@ class ReportesController extends Controller
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->join('products as p', 'di.product_id', '=', 'p.id')
                     ->where('i.fecha', '<=', $fechafin)
-                    ->where('i.fecha', '>=', $fechainicio) 
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'di.cantidad','di.preciounitariomo','di.preciofinal','i.moneda','i.fecha')
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha'
+                    )
                     ->get();
             }
         }
@@ -854,8 +886,16 @@ class ReportesController extends Controller
                     ->where('v.fecha', '>=', $fechainicio)
                     ->where('e.id', '=', $empresa)
                     ->where('p.id', '=', $producto)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'dv.cantidad','dv.preciounitariomo','dv.preciofinal','v.moneda','v.fecha')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha'
+                    )
                     ->get();
             } else {
                 $ventas = DB::table('ventas as v')
@@ -865,9 +905,17 @@ class ReportesController extends Controller
                     ->join('products as p', 'dv.product_id', '=', 'p.id')
                     ->where('v.fecha', '<=', $fechafin)
                     ->where('v.fecha', '>=', $fechainicio)
-                    ->where('e.id', '=', $empresa) 
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'dv.cantidad','dv.preciounitariomo','dv.preciofinal','v.moneda','v.fecha')
+                    ->where('e.id', '=', $empresa)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha'
+                    )
                     ->get();
             }
         } else {
@@ -878,10 +926,18 @@ class ReportesController extends Controller
                     ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
                     ->join('products as p', 'dv.product_id', '=', 'p.id')
                     ->where('v.fecha', '<=', $fechafin)
-                    ->where('v.fecha', '>=', $fechainicio) 
+                    ->where('v.fecha', '>=', $fechainicio)
                     ->where('p.id', '=', $producto)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'dv.cantidad','dv.preciounitariomo','dv.preciofinal','v.moneda','v.fecha')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha'
+                    )
                     ->get();
             } else {
                 $ventas = DB::table('ventas as v')
@@ -891,46 +947,368 @@ class ReportesController extends Controller
                     ->join('products as p', 'dv.product_id', '=', 'p.id')
                     ->where('v.fecha', '<=', $fechafin)
                     ->where('v.fecha', '>=', $fechainicio)
-                    ->select('e.nombre as empresa','cl.nombre as cliente','p.nombre as producto',
-                    'dv.cantidad','dv.preciounitariomo','dv.preciofinal','v.moneda','v.fecha') 
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha'
+                    )
                     ->get();
 
-                   // return 0;
+                // return 0;
             }
         }
         return $ventas;
     }
-    public function coninfocompleta($miscompras,$misventas ){
-        $todoslosdatos= collect();
-        for($i=0;$i<count($miscompras);$i++){
+    public function coninfocompleta($miscompras, $misventas)
+    {
+        $todoslosdatos = collect();
+        for ($i = 0; $i < count($miscompras); $i++) {
             $micompra = collect();
-            $micompra->put('compraventa','INGRESO');
-            $micompra->put('empresa',$miscompras[$i]->empresa);
-            $micompra->put('cliente',$miscompras[$i]->cliente);
-            $micompra->put('producto',$miscompras[$i]->producto);
-            $micompra->put('cantidad',$miscompras[$i]->cantidad);
-            $micompra->put('preciounitariomo',$miscompras[$i]->preciounitariomo);
-            $micompra->put('preciofinal',$miscompras[$i]->preciofinal);
-            $micompra->put('moneda',$miscompras[$i]->moneda);
-            $micompra->put('fecha',$miscompras[$i]->fecha);
-            
+            $micompra->put('compraventa', 'INGRESO');
+            $micompra->put('empresa', $miscompras[$i]->empresa);
+            $micompra->put('cliente', $miscompras[$i]->cliente);
+            $micompra->put('producto', $miscompras[$i]->producto);
+            $micompra->put('cantidad', $miscompras[$i]->cantidad);
+            $micompra->put('preciounitariomo', $miscompras[$i]->preciounitariomo);
+            $micompra->put('preciofinal', $miscompras[$i]->preciofinal);
+            $micompra->put('moneda', $miscompras[$i]->moneda);
+            $micompra->put('fecha', $miscompras[$i]->fecha);
+
             $todoslosdatos->push($micompra);
         }
-        for($x=0;$x<count($misventas);$x++){
+        for ($x = 0; $x < count($misventas); $x++) {
             $miventa = collect();
-            $miventa->put('compraventa','VENTA');
-            $miventa->put('empresa',$misventas[$x]->empresa);
-            $miventa->put('cliente',$misventas[$x]->cliente);
-            $miventa->put('producto',$misventas[$x]->producto);
-            $miventa->put('cantidad',$misventas[$x]->cantidad);
-            $miventa->put('preciounitariomo',$misventas[$x]->preciounitariomo);
-            $miventa->put('preciofinal',$misventas[$x]->preciofinal);
-            $miventa->put('moneda',$misventas[$x]->moneda);
-            $miventa->put('fecha',$misventas[$x]->fecha);
-            
+            $miventa->put('compraventa', 'VENTA');
+            $miventa->put('empresa', $misventas[$x]->empresa);
+            $miventa->put('cliente', $misventas[$x]->cliente);
+            $miventa->put('producto', $misventas[$x]->producto);
+            $miventa->put('cantidad', $misventas[$x]->cantidad);
+            $miventa->put('preciounitariomo', $misventas[$x]->preciounitariomo);
+            $miventa->put('preciofinal', $misventas[$x]->preciofinal);
+            $miventa->put('moneda', $misventas[$x]->moneda);
+            $miventa->put('fecha', $misventas[$x]->fecha);
+
             $todoslosdatos->push($miventa);
         }
         return $todoslosdatos;
+    }
+    //para obtener la rotacion del inventario
+    public function rotacionstock()
+    {
+        $companies = Company::all();
+        $productos = Product::all()->where('tipo', '=', 'estandar');
+        return view('admin.reporte.rotacionstock', compact('companies', 'productos'));
+    }
 
+    public function datosrotacionstock($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misventas = $this->misproductosvendidos($fechainicio, $fechafin, $empresa, $producto);
+        $miresultadoventas = $this->resultadoventas($misventas, 'venta');
+        $miscompras = $this->misproductoscomprados($fechainicio, $fechafin, $empresa, $producto);
+        $miresultadocompras = $this->resultadoventas($miscompras, 'compra');
+
+        $resultadostotales = $miresultadoventas->concat($miresultadocompras);
+
+        return $resultadostotales;
+    }
+    public function misproductosvendidos($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misproductos = "";
+        if ($empresa != "-1") {
+            if ($producto != "-1") {
+                $misproductos = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('p.id', '=', $producto)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'v.moneda',
+                        'v.tasacambio',
+                        'dv.preciofinal',
+                        'v.fecha'
+                    )
+                    ->get();
+            } else {
+                $misproductos = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'v.moneda',
+                        'v.tasacambio',
+                        'dv.preciofinal',
+                        'v.fecha'
+                    )
+                    ->get();
+            }
+        } else {
+            if ($producto != "-1") {
+                $misproductos = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('p.id', '=', $producto)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'v.moneda',
+                        'v.tasacambio',
+                        'dv.preciofinal',
+                        'v.fecha'
+                    )
+                    ->get();
+            } else {
+                $misproductos = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'v.moneda',
+                        'v.tasacambio',
+                        'dv.preciofinal',
+                        'v.fecha'
+                    )
+                    ->get();
+            }
+        }
+        return $misproductos;
+    }
+    public function resultadoventas($misventas, $compraventa)
+    {
+        $resultado = collect();
+        //return $misventas;
+        $unicas = $misventas->unique(function ($item) {
+            return $item->empresa . $item->producto;
+        });
+        $misventasunicas = $unicas->values()->all();
+        for ($x = 0; $x < count($misventasunicas); $x++) {
+            $sumcant = 0;
+            $sumcosto = 0;
+            for ($i = 0; $i < count($misventas); $i++) {
+                if (
+                    $misventas[$i]->producto == $misventasunicas[$x]->producto &&
+                    $misventas[$i]->empresa == $misventasunicas[$x]->empresa
+                ) {
+                    if ($misventas[$i]->moneda == "dolares") {
+                        $sumcosto = $sumcosto + round($misventas[$i]->tasacambio * $misventas[$i]->preciofinal, 2);
+                    } else {
+                        $sumcosto = $sumcosto + $misventas[$i]->preciofinal;
+                    }
+                    $sumcant = $sumcant + $misventas[$i]->cantidad;
+                }
+            }
+            $producto = collect();
+            $producto->put('empresa', $misventasunicas[$x]->empresa);
+            $producto->put('compraventa', $compraventa);
+            $producto->put('producto', $misventasunicas[$x]->producto);
+            $producto->put('cantidad', $sumcant);
+            $producto->put('preciofinal', $sumcosto);
+            $producto->put('moneda', "soles");
+            $producto->put('fecha', $misventasunicas[$x]->fecha);
+            $resultado->push($producto);
+        }
+        return $resultado;
+    }
+    public function misproductoscomprados($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misproductos = "";
+        if ($empresa != "-1") {
+            if ($producto != "-1") {
+                $misproductos = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('p.id', '=', $producto)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'i.moneda',
+                        'i.tasacambio',
+                        'di.preciofinal',
+                        'i.fecha'
+                    )
+                    ->get();
+            } else {
+                $misproductos = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'i.moneda',
+                        'i.tasacambio',
+                        'di.preciofinal',
+                        'i.fecha'
+                    )
+                    ->get();
+            }
+        } else {
+            if ($producto != "-1") {
+                $misproductos = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('p.id', '=', $producto)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'i.moneda',
+                        'i.tasacambio',
+                        'di.preciofinal',
+                        'i.fecha'
+                    )
+                    ->get();
+            } else {
+                $misproductos = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->select(
+                        'e.nombre as empresa',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'i.moneda',
+                        'i.tasacambio',
+                        'di.preciofinal',
+                        'i.fecha'
+                    )
+                    ->get();
+            }
+        }
+        return $misproductos;
+    }
+
+    public function detalleventas($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misventas = $this->obtenermisventas($fechainicio, $fechafin, $empresa, $producto);
+        $resultado  = $this->sumarresultado($misventas, 'venta');
+
+        return $resultado;
+    }
+    public function obtenermisventas($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misproductos = DB::table('ventas as v')
+            ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+            ->join('companies as e', 'v.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->where('v.fecha', '<=', $fechafin)
+            ->where('v.fecha', '>=', $fechainicio)
+            ->where('e.nombre', '=', $empresa)
+            ->where('p.nombre', '=', $producto)
+            ->select(
+                'e.nombre as empresa',
+                'p.nombre as producto',
+                'cl.nombre as cliente',
+                'dv.cantidad',
+                'v.moneda',
+                'v.tasacambio',
+                'dv.preciofinal',
+                'v.fecha'
+            )
+            ->get();
+        return $misproductos;
+    }
+    public function sumarresultado($misventas, $compraventa)
+    {
+        $resultado = collect();
+        $unica = $misventas->unique('cliente');
+        $unicaempresa = $unica->values()->all();
+        for ($x = 0; $x < count($unicaempresa); $x++) {
+            $sumcant = 0;
+            $sumcosto = 0;
+            for ($i = 0; $i < count($misventas); $i++) {
+                if ($misventas[$i]->cliente == $unicaempresa[$x]->cliente) {
+                    if ($misventas[$i]->moneda == "dolares") {
+                        $sumcosto = $sumcosto + round($misventas[$i]->tasacambio * $misventas[$i]->preciofinal, 2);
+                    } else {
+                        $sumcosto = $sumcosto + $misventas[$i]->preciofinal;
+                    }
+                    $sumcant = $sumcant + $misventas[$i]->cantidad;
+                }
+            }
+            $producto = collect();
+            $producto->put('empresa', $unicaempresa[$x]->empresa);
+            $producto->put('cliente', $unicaempresa[$x]->cliente);
+            $producto->put('compraventa', $compraventa);
+            $producto->put('producto', $unicaempresa[$x]->producto);
+            $producto->put('cantidad', $sumcant);
+            $producto->put('preciofinal', $sumcosto);
+            $producto->put('moneda', "soles");
+            $producto->put('fecha', $unicaempresa[$x]->fecha);
+            $resultado->push($producto);
+        }
+        return $resultado;
+    }
+    public function detallecompras($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $miscompras = $this->obtenermiscompras($fechainicio, $fechafin, $empresa, $producto);
+        $resultado  = $this->sumarresultado($miscompras, 'compra');
+
+        return $resultado;
+    }
+
+    public function obtenermiscompras($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $misproductos = DB::table('ingresos as i')
+            ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+            ->join('companies as e', 'i.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'di.product_id', '=', 'p.id')
+            ->where('i.fecha', '<=', $fechafin)
+            ->where('i.fecha', '>=', $fechainicio)
+            ->where('e.nombre', '=', $empresa)
+            ->where('p.nombre', '=', $producto)
+            ->select(
+                'e.nombre as empresa',
+                'p.nombre as producto',
+                'cl.nombre as cliente',
+                'di.cantidad',
+                'i.moneda',
+                'i.tasacambio',
+                'di.preciofinal',
+                'i.fecha'
+            )
+            ->get();
+        return $misproductos;
     }
 }

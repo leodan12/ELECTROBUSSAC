@@ -62,7 +62,6 @@
                                 class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
                                 class="mdi mdi-clipboard-arrow-down menu-icon"></i>SALIDA</a></li>
-
                 </ul>
             </div>
         </li>
@@ -78,12 +77,13 @@
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
                                 class="mdi mdi-clipboard-arrow-down menu-icon"></i>GRAFICOS</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>TABLAS</a></li>
-
+                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>DATOS VENTAS</a></li>
+                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
+                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>ROTACION STOCK</a></li>
                 </ul>
             </div>
         </li>
-        
+
         @if (Auth::user()->role_as == 1)
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('admin/users') }}">

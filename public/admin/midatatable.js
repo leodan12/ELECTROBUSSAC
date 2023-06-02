@@ -89,8 +89,8 @@ function inicializartabla1(inicializart) {
     }
 }
 
-function inicializartabladatos(btns) { 
-        $('#mitablaprod').DataTable({
+function inicializartabladatos(btns,tabla,titulo) { 
+        $(tabla).DataTable({
             "language": {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -126,6 +126,7 @@ function inicializartabladatos(btns) {
                 extend: 'excel',
                 className: 'btn-success',
                 text: 'Descargar Excel',
+                title: titulo,
                 exportOptions: {
                     columns: ':visible'
                 }

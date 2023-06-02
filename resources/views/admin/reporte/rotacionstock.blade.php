@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" /> 
+    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
     <div class="row">
@@ -11,7 +11,8 @@
                     <select class="form-select  borde" name="company_id" id="company_id" required>
                         <option value="-1" selected>TODAS</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->id }}" data-miempresa="{{ $company->nombre }}">{{ $company->nombre }}</option>
+                            <option value="{{ $company->id }}" data-miempresa="{{ $company->nombre }}">
+                                {{ $company->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -20,7 +21,8 @@
                     <select class="form-select select2 borde" name="producto" id="producto">
                         <option value="-1" selected>TODOS</option>
                         @foreach ($productos as $item)
-                            <option value="{{ $item->id }}" data-miproducto="{{ $item->nombre }}">{{ $item->nombre }}</option>
+                            <option value="{{ $item->id }}" data-miproducto="{{ $item->nombre }}">{{ $item->nombre }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -41,15 +43,13 @@
                         <thead class="fw-bold text-primary">
                             <tr>
 
-                                <th>FECHA</th>
                                 <th>COMPRA O VENTA</th>
                                 <th>EMPRESA</th>
-                                <th>CLIENTE/PROVEEDOR</th>
                                 <th>PRODUCTO</th>
-                                <th>CANTIDAD</th>
-                                <th>PRECIO UNITARIO</th>
-                                <th>PRECIO FINAL</th>
+                                <th>CANTIDAD TOTAL</th>
+                                <th>PRECIO TOTAL</th>
                                 <th>MONEDA</th>
+                                <th>VER REGISTROS</th>
 
                             </tr>
                         </thead>
@@ -61,6 +61,43 @@
             </div>
         </div>
     </div>
+    {{-- mis modales para ver los creditos vencidos --}}
+    <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalVer2Label" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalVer2Label1"> </h1>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-bordered table-striped " id="mitablaresultados" name="mitablaresultados">
+                        <thead class="fw-bold text-primary">
+                            <tr>
+                                <th>FECHA</th>
+                                <th>COMPRA O VENTA</th>
+                                <th>EMPRESA</th>
+                                <th>CLIENTE</th>
+                                <th>PRODUCTO</th>
+                                <th>CANTIDAD TOTAL</th>
+                                <th>PRECIO TOTAL </th>
+                                <th>MONEDA</th>
+
+                            </tr>
+                        </thead>
+                        <Tbody id="tbody-mantenimientos">
+                            <tr></tr>
+
+                        </Tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -68,7 +105,8 @@
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script type="text/javascript">
         var contini = 0;
-        var mitituloexcel="";
+        var contini2 = 0;
+        var mitituloexcel = "";
         $(document).ready(function() {
             $('.select2').select2({});
             var hoy = new Date();
@@ -92,15 +130,16 @@
             var empresa = document.getElementById("company_id").value;
             var producto = document.getElementById("producto").value;
 
-            var urldatosproductos = "{{ url('admin/reporte/datosproductos') }}";
+            var urldatosproductos = "{{ url('admin/reporte/datosrotacionstock') }}";
             $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
+
                 llenartabla(data);
             });
         }
 
         function llenartabla(datos) {
-            
-            var btns = 'lBfrtip'; 
+
+            var btns = 'lBfrtip';
             var tabla = '#mitablaprod';
             if (contini > 0) {
                 $("#mitablaprod").dataTable().fnDestroy(); //eliminar las filas de la tabla  
@@ -108,42 +147,46 @@
             $('#mitablaprod tbody tr').slice().remove();
             for (var i = 0; i < datos.length; i++) {
                 filaDetalle =
-                    '<tr><td> ' + datos[i].fecha + '</td>' +
-                    '<td> ' + datos[i].compraventa + '</td>' +
+                    '<tr> <td> ' + datos[i].compraventa + '</td>' +
                     '<td> ' + datos[i].empresa + '</td>' +
-                    '<td> ' + datos[i].cliente + '</td>' +
                     '<td> ' + datos[i].producto + '</td>' +
                     '<td> ' + datos[i].cantidad + '</td>' +
-                    '<td> ' + datos[i].preciounitariomo + '</td>' +
                     '<td> ' + datos[i].preciofinal + '</td>' +
                     '<td> ' + datos[i].moneda + '</td>' +
+                    '<td> <button class= "btn btn-info" data-empresa="' + datos[i].empresa + '" data-producto="' + datos[i]
+                    .producto + '" data-compraventa="' + datos[i].compraventa +
+                    '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver </button>   <a  href="' +
+                    '</td>' +
                     '</tr>';
                 $("#mitablaprod>tbody").append(filaDetalle);
-            } 
-            inicializartabladatos( btns,tabla,mitituloexcel);
+            }
+
+            inicializartabladatos(btns, tabla, mitituloexcel);
             contini++;
         }
         $("#company_id").change(function() {
             var company = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
 
         $("#producto").change(function() {
             var tipografico = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
         $("#fechainicio").change(function() {
             var Vreporte = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
         $("#fechafin").change(function() {
             var cant = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
+
         });
+
         function mititulo() {
             var fechainicio = document.getElementById("fechainicio").value;
             var fechafin = document.getElementById("fechafin").value;
@@ -169,6 +212,56 @@
                     mitituloexcel = 'Ventas y compras_' + fechainicio + '_' + fechafin;
                 }
             }
+        }
+
+        const mimodalcreditos = document.getElementById('modalVer2')
+        mimodalcreditos.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const xempresa = button.getAttribute('data-empresa');
+            const xproducto = button.getAttribute('data-producto');
+            const compraventa = button.getAttribute('data-compraventa');
+            var miurl = "";
+            if (compraventa == "venta") {
+                miurl = "{{ url('admin/reporte/detalleventas') }}";
+            } else if (compraventa == "compra") {
+                miurl = "{{ url('admin/reporte/detallecompras') }}";
+            }
+            var xfechainicio = document.getElementById("fechainicio").value;
+            var xfechafin = document.getElementById("fechafin").value;
+            $.get(miurl + '/' + xfechainicio + '/' + xfechafin + '/' + xempresa + '/' + xproducto, function(
+                midata) {
+                llenartabla2(midata);
+
+            });
+        });
+
+        function llenartabla2(datos) {
+            var fechainicio = document.getElementById("fechainicio").value;
+            var fechafin = document.getElementById("fechafin").value;
+            var btns = 'lBfrtip';
+            var tabla = '#mitablaresultados';
+            if (contini2 > 0) {
+                $("#mitablaresultados").dataTable().fnDestroy(); //eliminar las filas de la tabla   
+            }
+            $('#mitablaresultados tbody tr').slice().remove();
+            for (var i = 0; i < datos.length; i++) {
+
+                filaDetalle =
+                    '<tr> <td> ' + datos[i].fecha + '</td>' +
+                    '<td> ' + datos[i].compraventa + '</td>' +
+                    '<td> ' + datos[i].empresa + '</td>' +
+                    '<td> ' + datos[i].cliente + '</td>' +
+                    '<td> ' + datos[i].producto + '</td>' +
+                    '<td> ' + datos[i].cantidad + '</td>' +
+                    '<td> ' + datos[i].preciofinal + '</td>' +
+                    '<td> ' + datos[i].moneda + '</td>' +
+                    '</tr>';
+                $("#mitablaresultados>tbody").append(filaDetalle);
+            }
+
+            inicializartabladatos(btns, tabla, datos[0].compraventa + '_' + datos[0].empresa + '_' + datos[0].producto +
+                '_' + fechainicio + '_' + fechafin);
+            contini2++;
         }
     </script>
     <script></script>
