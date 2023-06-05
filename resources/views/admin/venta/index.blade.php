@@ -18,8 +18,10 @@
                             </div>
                             <div class="col">
                                 <h4>
+                                    @can('crear-venta')
                                     <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir
                                         venta</a>
+                                    @endcan
                                 </h4>
                             </div>
                         </div>

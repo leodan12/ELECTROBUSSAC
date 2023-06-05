@@ -405,8 +405,8 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
-                        $.get('/admin/deletedetallekit/' + iddetalle, function(data) {
+                        var miurl = "{{ url('admin/deletedetallekit') }}";
+                        $.get(miurl +'/'+ iddetalle, function(data) {
                             //alert(data[0]);
                             if (data[0] == 1) {
                                 Swal.fire({

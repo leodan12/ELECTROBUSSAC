@@ -362,7 +362,8 @@
         ventatotal = costoventa;
         $(document).ready(function() {
             $('.toast').toast();
-            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
+            var url1 = "{{ url('admin/venta/comboempresacliente') }}";
+            $.get(url1 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
@@ -378,8 +379,8 @@
                 }
                 $("#cliente_id").html(producto_select);
             });
-
-            $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
+            var url2 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url2 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].stockempresa == null) {
@@ -738,8 +739,8 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
-                        $.get('/admin/deletedetalleventa/' + iddetalle, function(data) {
+                        var url2 = "{{ url('admin/deletedetalleventa') }}";
+                        $.get(url2 +'/'+ iddetalle, function(data) {
                             //alert(data[0]);
                             if (data[0] == 1) {
                                 Swal.fire({
@@ -814,8 +815,8 @@
         }
 
         function llenarselectproducto() {
-
-            $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
+            var url3 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url3 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i].id +

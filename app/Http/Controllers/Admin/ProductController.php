@@ -15,8 +15,17 @@ use App\Http\Requests\ProductFormRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
+
 class ProductController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-producto|editar-producto|crear-producto|eliminar-producto', ['only' => ['index','show']]);
+        $this->middleware('permission:crear-producto', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-producto', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-producto', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -136,11 +145,11 @@ class ProductController extends Controller
                 $product->cantidad2 = null;
                 $product->precio2 =  null;
             }
-            if ( $request->cantidad3 == null || $request->precio3 == null  ) {
+            if ($request->cantidad3 == null || $request->precio3 == null) {
                 $product->cantidad3 = null;
                 $product->precio3 =  null;
-            }  
-                $product->update();
+            }
+            $product->update();
             return redirect('/admin/products')->with('message', 'Producto Actualizado Satisfactoriamente');
         } else {
             return redirect('admin/products')->with('message', 'No se encontro el ID del Producto');

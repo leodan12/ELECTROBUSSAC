@@ -17,6 +17,15 @@ use Yajra\DataTables\DataTables;
 
 class CotizacionesController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-cotizacion|editar-cotizacion|crear-cotizacion|eliminar-cotizacion',
+        ['only' => ['index','show','generarcotizacionpdf','showcondiciones']]);
+        $this->middleware('permission:crear-cotizacion', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-cotizacion', ['only' => ['edit', 'update','destroycondicion','destroydetallecotizacion']]);
+        $this->middleware('permission:eliminar-cotizacion', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -48,7 +57,6 @@ class CotizacionesController extends Controller
 
         return view('admin.cotizacion.index');
     }
-
     public function create()
     {
         $companies = Company::all();
@@ -160,7 +168,6 @@ class CotizacionesController extends Controller
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Agregar la Cotizacion');
     }
-
     public function edit(int $cotizacion_id)
     {
 
@@ -205,7 +212,6 @@ class CotizacionesController extends Controller
 
         return view('admin.cotizacion.edit', compact('detalleskit', 'products', 'cotizacion', 'companies', 'clientes', 'detallescotizacion', 'condiciones'));
     }
-
     public function update(CotizacionFormRequest $request, int $cotizacion_id)
     {
         $validatedData = $request->validated();
@@ -278,7 +284,6 @@ class CotizacionesController extends Controller
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Actualizar la cotizacion');
     }
-
     public function show($id)
     {
         $cotizacion = DB::table('cotizacions as c')
@@ -328,7 +333,6 @@ class CotizacionesController extends Controller
 
         return  $condicion;
     }
-
     public function destroy(int $cotizacion_id)
     {
         $cotizacion = Cotizacion::find($cotizacion_id);
@@ -342,7 +346,6 @@ class CotizacionesController extends Controller
             return "2";
         }
     }
-
     public function destroycondicion(int $condicion_id)
     {
         $condicion = Condicion::find($condicion_id);
@@ -356,7 +359,6 @@ class CotizacionesController extends Controller
             return 2;
         }
     }
-
     public function destroydetallecotizacion($id)
     {
         //buscamos el registro con el id enviado por la URL
@@ -383,7 +385,6 @@ class CotizacionesController extends Controller
             return 2;
         }
     }
-
     public function generarcotizacionpdf($idcotizacion)
     {
 
@@ -453,7 +454,6 @@ class CotizacionesController extends Controller
 
         return $pdf->stream('venta.pdf');
     }
-
     function obtenerFechaEnLetra($fecha)
     {
         //$dia= $this->conocerDiaSemanaFecha($fecha);
@@ -464,7 +464,6 @@ class CotizacionesController extends Controller
         //return $dia.', '.$num.' de '.$mes.' del '.$anno;
         return $num . ' de ' . $mes . ' del ' . $anno;
     }
-
     function conocerDiaSemanaFecha($fecha)
     {
         $dias = array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');

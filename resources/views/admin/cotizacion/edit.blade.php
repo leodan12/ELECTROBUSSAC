@@ -592,7 +592,8 @@
             $('.toast').toast();
             var igv1 = $('[name="igv"]').val();
             conigv = igv1;
-            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
+            var url5 = "{{ url('admin/venta/comboempresacliente') }}";
+            $.get(url5 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
@@ -608,7 +609,8 @@
                 }
                 $("#cliente_id").html(producto_select);
             });
-            $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
+            var url6 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url6 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].stockempresa == null) {
@@ -821,7 +823,8 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.get('/admin/deletedetallecotizacion/' + iddetalle, function(data) {
+                        var urle = "{{ url('admin/deletedetallecotizacion') }}";
+                        $.get(urle +'/'+ iddetalle, function(data) {
                             //alert(data[0]);
                             if (data[0] == 1) {
                                 Swal.fire({
@@ -880,8 +883,8 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        $.get('/admin/deletecondicion/' + idcondicion, function(data) {
-                            //alert(data[0]);
+                        var urle2 = "{{ url('admin/deletecondicion') }}";
+                        $.get(urle2 +'/'+ idcondicion, function(data) { 
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",
@@ -938,7 +941,8 @@
         }
 
         function llenarselectproducto() {
-            $.get('/admin/venta/productosxempresa/' + idcompany, function(data) {
+            var urlp2 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(urlp2 +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +

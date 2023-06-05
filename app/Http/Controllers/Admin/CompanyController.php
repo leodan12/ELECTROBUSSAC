@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\File;
 
 class CompanyController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-empresa|editar-empresa|crear-empresa|eliminar-empresa', ['only' => ['index','show']]);
+        $this->middleware('permission:crear-empresa', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-empresa', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-empresa', ['only' => ['destroy']]);
+    }
+
     public function index()
     { 
         return view('admin.company.index');

@@ -13,8 +13,10 @@
                         <h4>STOCK DE INVENTARIO DE PRODUCTOS: &nbsp; &nbsp; &nbsp; &nbsp;
                             <a type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#modalkits">Consultar Stock de Kits</a>
-                            <a href="{{ url('admin/inventario/create') }}" class="btn btn-primary float-end">Añadir
-                                Stocks</a>
+                            @can('crear-inventario')
+                                <a href="{{ url('admin/inventario/create') }}" class="btn btn-primary float-end">Añadir
+                                    Stocks</a>
+                            @endcan
                         </h4>
                     </div>
 
@@ -234,81 +236,80 @@
         <script src="{{ asset('admin/midatatable.js') }}"></script>
         <script>
             $(document).ready(function() {
-            var tabla = "#mitabla";
-            var ruta = "{{ route('inventario.index') }}"; //darle un nombre a la ruta index
-            var columnas = [{
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'categoria',
-                    name: 'c.nombre'
-                },
-                {
-                    data: 'producto',
-                    name: 'p.nombre'
-                }, 
-                {
-                    data: 'stockminimo',
-                    name: 'stockminimo'
-                },
-                {
-                    data: 'stocktotal',
-                    name: 'stocktotal'
-                },
-                {
-                    data: 'acciones',
-                    name: 'acciones',
-                    searchable: false,
-                    orderable: false,
-                },
-            ];
-            var btns ='lfrtip';
+                var tabla = "#mitabla";
+                var ruta = "{{ route('inventario.index') }}"; //darle un nombre a la ruta index
+                var columnas = [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'categoria',
+                        name: 'c.nombre'
+                    },
+                    {
+                        data: 'producto',
+                        name: 'p.nombre'
+                    },
+                    {
+                        data: 'stockminimo',
+                        name: 'stockminimo'
+                    },
+                    {
+                        data: 'stocktotal',
+                        name: 'stocktotal'
+                    },
+                    {
+                        data: 'acciones',
+                        name: 'acciones',
+                        searchable: false,
+                        orderable: false,
+                    },
+                ];
+                var btns = 'lfrtip';
 
-            iniciarTablaIndex(tabla, ruta, columnas,btns);
+                iniciarTablaIndex(tabla, ruta, columnas, btns);
 
-        });
-        //para borrar un registro de la tabla
-        $(document).on('click', '.btnborrar', function(event) {
-            const idregistro = event.target.dataset.idregistro;
-            var urlregistro = "{{ url('admin/inventario') }}";
-            Swal.fire({
-                title: '¿Esta seguro de Eliminar?',
-                text: "No lo podra revertir!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí,Eliminar!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "GET",
-                        url: urlregistro + '/' + idregistro + '/delete',
-                        success: function(data1) {
-                            if (data1 == "1") {
-                                $(event.target).closest('tr').remove();
-                                Swal.fire({
-                                    icon: "success",
-                                    text: "Registro Eliminado",
-                                });
-                            } else if (data1 == "0") {
-                                Swal.fire({
-                                    icon: "error",
-                                    text: "Registro No Eliminado",
-                                });
-                            } else if (data1 == "2") {
-                                Swal.fire({
-                                    icon: "error",
-                                    text: "Registro No Encontrado",
-                                });
-                            }
-                        }
-                    });
-                }
             });
-        });
-
+            //para borrar un registro de la tabla
+            $(document).on('click', '.btnborrar', function(event) {
+                const idregistro = event.target.dataset.idregistro;
+                var urlregistro = "{{ url('admin/inventario') }}";
+                Swal.fire({
+                    title: '¿Esta seguro de Eliminar?',
+                    text: "No lo podra revertir!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí,Eliminar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "GET",
+                            url: urlregistro + '/' + idregistro + '/delete',
+                            success: function(data1) {
+                                if (data1 == "1") {
+                                    $(event.target).closest('tr').remove();
+                                    Swal.fire({
+                                        icon: "success",
+                                        text: "Registro Eliminado",
+                                    });
+                                } else if (data1 == "0") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro No Eliminado",
+                                    });
+                                } else if (data1 == "2") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro No Encontrado",
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            });
         </script>
         <script>
             var inicializartabla = 0;
@@ -318,27 +319,29 @@
                 const button = event.relatedTarget;
                 const id = button.getAttribute('data-id')
                 var urlinventario = "{{ url('admin/inventario/show') }}";
-                $.get(urlinventario + '/' + id, function(data) { 
+                $.get(urlinventario + '/' + id, function(data) {
                     const modalTitle = mimodal.querySelector('.modal-title');
                     modalTitle.textContent = `Ver Registro ${id}`;
                     document.getElementById("verProducto").value = data['inventario'][0].nombre;
                     document.getElementById("verStockminimo").value = data['inventario'][0].stockminimo;
                     document.getElementById("verStocktotal").value = data['inventario'][0].stocktotal;
 
-                    if(data['haydetalle']=="si"){ 
-                    var tabla = document.getElementById(detallesInventario);
-                    $('#detallesInventario tbody tr').slice().remove();
-                    for (var i = 0; i < data['detalle'].length; i++) {
-                        filaDetalle = '<tr id="fila' + i +
-                            '"><td><input  type="hidden" name="LEmpresa[]" value="' + data['detalle'][i].nombrempresa +
-                            '"required>' + data['detalle'][i].nombrempresa +
-                            '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data['detalle'][i]
-                            .stockempresa + '"required>' + data['detalle'][i].stockempresa +
-                            '</td></tr>';
+                    if (data['haydetalle'] == "si") {
+                        var tabla = document.getElementById(detallesInventario);
+                        $('#detallesInventario tbody tr').slice().remove();
+                        for (var i = 0; i < data['detalle'].length; i++) {
+                            filaDetalle = '<tr id="fila' + i +
+                                '"><td><input  type="hidden" name="LEmpresa[]" value="' + data['detalle'][i]
+                                .nombrempresa +
+                                '"required>' + data['detalle'][i].nombrempresa +
+                                '</td><td><input  type="hidden" name="Lstockempresa[]" value="' + data[
+                                    'detalle'][i]
+                                .stockempresa + '"required>' + data['detalle'][i].stockempresa +
+                                '</td></tr>';
 
-                        $("#detallesInventario>tbody").append(filaDetalle);
-                     }
-                }
+                            $("#detallesInventario>tbody").append(filaDetalle);
+                        }
+                    }
                 });
 
             })

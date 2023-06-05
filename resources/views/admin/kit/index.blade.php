@@ -11,11 +11,13 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>KITS
-                            <a href="{{ url('admin/kits/create') }}" class="btn btn-primary float-end">Añadir Kit</a>
+                            @can('crear-kit')
+                                <a href="{{ url('admin/kits/create') }}" class="btn btn-primary float-end">Añadir Kit</a>
+                            @endcan
                         </h4>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered table-striped"   id="mitabla" name="mitabla">
+                        <table class="table table-bordered table-striped" style="width:100%;" id="mitabla" name="mitabla">
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>

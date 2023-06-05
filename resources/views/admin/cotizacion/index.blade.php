@@ -12,13 +12,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>REGISTRO DE COTIZACIÓN
+                            @can('crear-cotizacion')
                             <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir
                                 Cotización</a>
+                            @endcan
                         </h4>
                     </div>
                     <div class="card-body"  >
                         <div class="table-responsive">
-                            <table style="width: 100%"  class="table table-bordered table-striped display nowrap" id="mitabla" name="mitabla">
+                            <table  class="table table-bordered table-striped"  id="mitabla" name="mitabla">
                                 <thead  >
                                     <tr class="fw-bold text-primary ">
                                         <th>ID</th>

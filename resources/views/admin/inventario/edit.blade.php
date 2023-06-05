@@ -180,8 +180,8 @@
 
 
         function eliminarFila(idBD, ind, stockemp) {
-
-            $.get('/admin/deletedetalleinventario/' + idBD, function(data) {
+            var miurl = "{{ url('admin/deletedetalleinventario') }}";
+            $.get(miurl +'/'+ idBD, function(data) {
                 $('#fila' + ind).remove();
                 var stocktotal2 = 0;
 

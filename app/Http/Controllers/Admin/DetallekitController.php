@@ -17,6 +17,14 @@ use Yajra\DataTables\DataTables;
 
 class DetallekitController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-kit|editar-kit|crear-kit|eliminar-kit', ['only' => ['index','show']]);
+        $this->middleware('permission:crear-kit', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-kit', ['only' => ['edit', 'update','destroydetallekit']]);
+        $this->middleware('permission:eliminar-kit', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

@@ -52,7 +52,7 @@
                                 <input type="text" name="factura" id="factura" class="form-control borde" />
                                 <div class="invalid-feedback" name="validacionfactura" id="validacionfactura"
                                     style="color: red;">
-                                    Numero de Factura ya Registrado
+                                    ¡Numero de Factura ya Registrado!
                                 </div>
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>

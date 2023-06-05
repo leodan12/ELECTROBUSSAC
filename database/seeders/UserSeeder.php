@@ -10,8 +10,8 @@ use Spatie\Permission\Models\Permission;
 
 class UserSeeder extends Seeder
 {
-    
-    public function run() 
+
+    public function run()
     {
         $usuarioadmin = User::create([
             'name' => 'admin',
@@ -26,17 +26,27 @@ class UserSeeder extends Seeder
         $usuarioadmin->assignRole([$roladmin->id]);
 
 
-       
+
         $usuariouser = User::create([
             'name' => 'usuario1',
             'email' => 'usuario1@gmail.com',
             'password' => '$2y$10$x605uXRasyIZuY9sbJlyiOCPPUnBvPpm4X5ERa7JrzD9CNXjTIGQW',
         ]);
         $roluser =  Role::create([
-            'name' => 'Usuario',  
+            'name' => 'Usuario',
         ]);
-        $permisosuser = ['ver-cliente','crear-cliente','editar-cliente','eliminar-cliente'];
- 
+        $permisosuser =  [
+            'ver-categoria', 'crear-categoria', 'editar-categoria', 'eliminar-categoria',
+            'ver-producto', 'crear-producto', 'editar-producto', 'eliminar-producto',
+            'ver-kit', 'crear-kit', 'editar-kit', 'eliminar-kit',
+            'ver-empresa', 'crear-empresa', 'editar-empresa', 'eliminar-empresa',
+            'ver-cliente', 'crear-cliente',  'editar-cliente',  'eliminar-cliente',
+            'ver-inventario', 'crear-inventario', 'editar-inventario', 'eliminar-inventario',
+            'ver-cotizacion', 'crear-cotizacion', 'editar-cotizacion', 'eliminar-cotizacion',
+            'ver-ingreso', 'crear-ingreso', 'editar-ingreso', 'eliminar-ingreso',
+            'ver-venta', 'crear-venta', 'editar-venta', 'eliminar-venta'
+        ];
+
         $roluser->syncPermissions($permisosuser);
         $usuariouser->assignRole([$roluser->id]);
     }

@@ -11,16 +11,16 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>CLIENTES / PROVEEDORES
-
+                        <h4>CLIENTES / PROVEEDORES 
+                            @can('crear-cliente')
                             <a href="{{ url('admin/cliente/create') }}" class="btn btn-primary float-end">Añadir
                                 Cliente/Proveedor</a>
-                            {{-- <a  class="btn btn-warning float-end" style="margin-right: 2em">Ver todos los registros</a>   --}}
-                        </h4>
+                            @endcan
+                         </h4>
                     </div>
                     <div class="card-body">
 
-                        <table class="table table-bordered table-striped display  nowrap" id="mitabla"
+                        <table class="table table-bordered table-striped display " id="mitabla"
                             name="mitabla">
                             <thead class="fw-bold text-primary">
                                 <tr>

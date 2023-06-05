@@ -76,7 +76,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function (){
     }); 
     //Ruta de los Usuarios
     Route::controller(App\Http\Controllers\Admin\UserController::class)->group(function(){
-        Route::get('/users','index');
+        Route::get('/users','index')->name('usuario.index');
         Route::get('/users/create','create');
         Route::post('/users','store');
         Route::get('/users/{user_id}/edit','edit');

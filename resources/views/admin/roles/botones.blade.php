@@ -5,5 +5,5 @@
  
 <button type="button" class="btn btn-danger btnborrar"  data-idregistro="{{ $roles->id }}"   >Borrar</button>
 
-{{-- ----------------------------------------- --}}
+
  

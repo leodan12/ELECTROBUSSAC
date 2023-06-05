@@ -377,7 +377,8 @@
         $(document).ready(function() {
             $('.toast').toast();
             $('.select2').select2({});
-            $.get('/admin/venta/comboempresacliente/' + idcompany, function(data) {
+            var miurl = "{{ url('admin/venta/comboempresacliente') }}";
+            $.get(miurl +'/'+ idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
@@ -691,8 +692,8 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-
-                        $.get('/admin/deletedetalleingreso/' + iddetalle, function(data) {
+                        var miurl2 = "{{ url('admin/deletedetalleingreso') }}";
+                        $.get(miurl2 +'/'+ iddetalle, function(data) {
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",

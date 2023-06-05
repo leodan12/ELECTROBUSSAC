@@ -15,6 +15,14 @@ use Yajra\DataTables\DataTables;
 
 class InventarioController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-inventario|editar-inventario|crear-inventario|eliminar-inventario',
+        ['only' => ['index','show','showkits']]);
+        $this->middleware('permission:crear-inventario', ['only' => ['create','store']]);
+        $this->middleware('permission:editar-inventario', ['only' => ['edit','update','destroydetalleinventario']]);
+        $this->middleware('permission:eliminar-inventario', ['only' => ['destroy']]);
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -41,7 +49,6 @@ class InventarioController extends Controller
 
         return view('admin.inventario.index');
     }
-
     public function create()
     {
         //$products = Product::all()->where('status','=',0);
@@ -59,7 +66,6 @@ class InventarioController extends Controller
         $companies = Company::all();
         return view('admin.inventario.create', compact('products', 'companies'));
     }
-
     public function store(InventarioFormRequest $request)
     {
 
@@ -88,7 +94,6 @@ class InventarioController extends Controller
             }
         }
     }
-
     public function edit(int $inventario_id)
     {
         $companies = Company::all();
@@ -107,7 +112,6 @@ class InventarioController extends Controller
 
         return view('admin.inventario.edit', compact('products', 'inventario', 'companies', 'detalleinventario'));
     }
-
     public function update(Request $request, int $inventario_id)
     {
         $inventario = Inventario::findOrFail($inventario_id);
@@ -132,7 +136,6 @@ class InventarioController extends Controller
             return redirect('admin/inventario')->with('message', 'Stock Actualizado Satisfactoriamente');
         }
     }
-
     public function show($id)
     {
 
@@ -186,7 +189,6 @@ class InventarioController extends Controller
 
         return  $inventario;
     }
-
     public function destroy(int $inventario_id)
     {
         $inventario = Inventario::find($inventario_id);
@@ -210,7 +212,6 @@ class InventarioController extends Controller
             return "2";
         }
     }
-
     public function destroydetalleinventario($id)
     {
         //buscamos el registro con el id enviado por la URL

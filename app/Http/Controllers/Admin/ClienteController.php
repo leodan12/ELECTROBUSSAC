@@ -16,6 +16,14 @@ use Yajra\DataTables\DataTables;
 
 class ClienteController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-cliente|editar-cliente|crear-cliente|eliminar-cliente', ['only' => ['index','show']]);
+        $this->middleware('permission:crear-cliente', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-cliente', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-cliente', ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) { 

@@ -22,6 +22,18 @@ use Yajra\DataTables\DataTables;
 
 class VentaController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-venta|editar-venta|crear-venta|eliminar-venta',
+        ['only' => ['index','show','showcreditos','pagarfactura','generarfacturapdf']]);
+        $this->middleware('permission:crear-venta', ['only' => ['create', 'store','create2','facturadisponible']]);
+        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update','destroydetalleventa']]);
+        $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
+        $this->middleware('permission:crear-venta|crear-cotizacion|crear-ingreso|editar-venta|editar-cotizacion|editar-ingreso', 
+        ['only' => ['productosxempresa','productosxkit','comboempresacliente','comboempresaclientevi',
+        'stockkitxempresa','stockxprodxempresa','facturadisponible']]);
+    }
+
     public function index(Request $request)
     {
         $fechahoy = date('Y-m-d');

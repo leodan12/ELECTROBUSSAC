@@ -17,6 +17,14 @@ use Yajra\DataTables\DataTables;
 
 class IngresoController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:ver-ingreso|editar-ingreso|crear-ingreso|eliminar-ingreso',
+        ['only' => ['index','show','showcreditos','pagarfactura','productosxkit']]);
+        $this->middleware('permission:crear-ingreso', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-ingreso', ['only' => ['edit', 'update','destroydetalleingreso']]);
+        $this->middleware('permission:eliminar-ingreso', ['only' => ['destroy']]);
+    }
     public function index(Request $request)
     {
 
@@ -75,7 +83,6 @@ class IngresoController extends Controller
 
         return view('admin.ingreso.index', compact('creditosxvencer', 'sinnumero'));
     }
-
     public function create()
     {
         $companies = Company::all();
@@ -89,7 +96,6 @@ class IngresoController extends Controller
 
         return view('admin.ingreso.create', compact('companies', 'products', 'clientes'));
     }
-
     public function store(IngresoFormRequest $request)
     {
         $validatedData = $request->validated();
@@ -251,7 +257,6 @@ class IngresoController extends Controller
         }
         return redirect('admin/ingreso')->with('message', 'No se Pudo Agregar el Ingreso');
     }
-
     public function update(IngresoFormRequest $request, int $ingreso_id)
     {
         $validatedData = $request->validated();
@@ -419,7 +424,6 @@ class IngresoController extends Controller
             return redirect('admin/ingreso')->with('message', 'Ingreso Actualizado Satisfactoriamente');
         }
     }
-
     public function edit(int $ingreso_id)
     {
         //$companies = Company::all();
@@ -449,7 +453,6 @@ class IngresoController extends Controller
 
         return view('admin.ingreso.edit', compact('products', 'ingreso', 'companies', 'clientes', 'detalleskit', 'detallesingreso'));
     }
-
     public function show($id)
     {
         $ingreso = DB::table('ingresos as i')
@@ -486,7 +489,6 @@ class IngresoController extends Controller
 
         return  $ingreso;
     }
-
     public function destroy(int $ingreso_id)
     {
         $ingreso = Ingreso::find($ingreso_id);
@@ -524,7 +526,6 @@ class IngresoController extends Controller
             return "2";
         }
     }
-
     public function showcreditos()
     {
         $fechahoy = date('Y-m-d');
@@ -553,7 +554,6 @@ class IngresoController extends Controller
 
         return $creditosvencidos;
     }
-
     public function pagarfactura($id)
     {
         //buscamos el registro con el id enviado por la URL
@@ -569,7 +569,6 @@ class IngresoController extends Controller
             return 2;
         }
     }
-
     public function destroydetalleingreso($id)
     {
         //buscamos el registro con el id enviado por la URL
@@ -642,7 +641,6 @@ class IngresoController extends Controller
             return 2;
         }
     }
-
     public function productosxkit($kit_id)
     {
 

@@ -6,49 +6,83 @@
                 <span class="menu-title">INICIO</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/category') }}">
-                <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
-                <span class="menu-title">CATEGORIAS</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/products') }}">
-                <i class="mdi mdi-book menu-icon"></i>
-                <span class="menu-title">PRODUCTOS</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/kits') }}">
-                <i class="mdi mdi-google-circles-communities menu-icon"></i>
-                <span class="menu-title">KITS</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/company') }}">
-                <i class="mdi mdi-store menu-icon"></i>
-                <span class="menu-title">MIS EMPRESAS</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/cliente') }}">
-                <i class="mdi mdi-hospital-building menu-icon"></i>
-                <span class="menu-title">CLIENTES/PROVEEDORES</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/inventario') }}">
-                <i class="mdi mdi-playlist-check menu-icon"></i>
-                <span class="menu-title">INVENTARIO</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin/cotizacion') }}">
-                <i class="mdi mdi-currency-usd menu-icon"></i>
-                <span class="menu-title">COTIZACION</span>
-            </a>
-        </li>
+        @if (auth()->user()->can('ver-categoria') ||
+                auth()->user()->can('crear-categoria') ||
+                auth()->user()->can('editar-categoria') ||
+                auth()->user()->can('eliminar-categoria'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/category') }}">
+                    <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
+                    <span class="menu-title">CATEGORIAS</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-producto') ||
+                auth()->user()->can('crear-producto') ||
+                auth()->user()->can('editar-producto') ||
+                auth()->user()->can('eliminar-producto'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/products') }}">
+                    <i class="mdi mdi-book menu-icon"></i>
+                    <span class="menu-title">PRODUCTOS</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-kit') ||
+                auth()->user()->can('crear-kit') ||
+                auth()->user()->can('editar-kit') ||
+                auth()->user()->can('eliminar-kit'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/kits') }}">
+                    <i class="mdi mdi-google-circles-communities menu-icon"></i>
+                    <span class="menu-title">KITS</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-empresa') ||
+                auth()->user()->can('crear-empresa') ||
+                auth()->user()->can('editar-empresa') ||
+                auth()->user()->can('eliminar-empresa'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/company') }}">
+                    <i class="mdi mdi-store menu-icon"></i>
+                    <span class="menu-title">MIS EMPRESAS</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-cliente') ||
+                auth()->user()->can('crear-cliente') ||
+                auth()->user()->can('editar-cliente') ||
+                auth()->user()->can('eliminar-cliente'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/cliente') }}">
+                    <i class="mdi mdi-hospital-building menu-icon"></i>
+                    <span class="menu-title">CLIENTES/PROVEEDORES</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-inventario') ||
+                auth()->user()->can('crear-inventario') ||
+                auth()->user()->can('editar-cliente') ||
+                auth()->user()->can('eliminar-inventario'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/inventario') }}">
+                    <i class="mdi mdi-playlist-check menu-icon"></i>
+                    <span class="menu-title">INVENTARIO</span>
+                </a>
+            </li>
+        @endif
+        @if (auth()->user()->can('ver-cotizacion') ||
+                auth()->user()->can('crear-cotizacion') ||
+                auth()->user()->can('editar-cotizacion') ||
+                auth()->user()->can('eliminar-cotizacion'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/cotizacion') }}">
+                    <i class="mdi mdi-currency-usd menu-icon"></i>
+                    <span class="menu-title">COTIZACION</span>
+                </a>
+            </li>
+        @endif
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
                 aria-controls="ui-basic">
@@ -58,10 +92,20 @@
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="  flex-column sub-menu" style="list-style: none;">
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ingreso') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>SALIDA</a></li>
+                    @if (auth()->user()->can('ver-ingreso') ||
+                            auth()->user()->can('crear-ingreso') ||
+                            auth()->user()->can('editar-ingreso') ||
+                            auth()->user()->can('eliminar-ingreso'))
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ingreso') }}"><i
+                                    class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
+                    @endif
+                    @if (auth()->user()->can('ver-venta') ||
+                            auth()->user()->can('crear-venta') ||
+                            auth()->user()->can('editar-venta') ||
+                            auth()->user()->can('eliminar-venta'))
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
+                                    class="mdi mdi-clipboard-arrow-down menu-icon"></i>SALIDA</a></li>
+                    @endif
                 </ul>
             </div>
         </li>

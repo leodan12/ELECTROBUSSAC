@@ -408,7 +408,8 @@
         $("#company_id").change(function() {
             var company = $(this).val();
             $('#product').removeAttr('disabled');
-            $.get('/admin/venta/productosxempresa/' + company, function(data) {
+            var url3 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url3 +'/'+ company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i]
@@ -419,7 +420,8 @@
                 $("#product").html(producto_select);
             });
             $('#cliente_id').removeAttr('disabled');
-            $.get('/admin/venta/comboempresacliente/' + company, function(data) {
+            var url4 = "{{ url('admin/venta/comboempresacliente') }}";
+            $.get(url4 +'/' + company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
@@ -648,8 +650,7 @@
                         var product1 = document.getElementById('productoxempresa' + data[i].id);
                         var stock = product1.dataset.stock;
                         product1.setAttribute('data-stock', (stock - data[i].cantidad));
-                    }
-                    console.log(milista);
+                    } 
                     agregarFilasTabla(LVenta, puntos, milista);
                 });
             } else {

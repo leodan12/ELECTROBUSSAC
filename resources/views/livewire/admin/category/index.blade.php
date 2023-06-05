@@ -30,8 +30,10 @@
             <div class="card">
                 <div class="card-header">
                     <h4>CATEGORIA
-                        <a href="{{ url('admin/category/create') }}" class="btn btn-primary float-end">Añadir
-                            Categoria</a>
+                        @can('crear-categoria')
+                            <a href="{{ url('admin/category/create') }}" class="btn btn-primary float-end">Añadir
+                                Categoria</a>
+                        @endcan
                     </h4>
                 </div>
 
@@ -54,11 +56,15 @@
                                     <td>{{ $category->id }}</td>
                                     <td>{{ $category->nombre }}</td>
                                     <td>
-                                        <a href="{{ url('admin/category/' . $category->id . '/edit') }}"
-                                            class="btn btn-success">Editar</a>
-                                        <a href="#" wire:click="deleteCategory({{ $category->id }})"
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            class="btn btn-danger">Eliminar</a>
+                                        @can('editar-categoria')
+                                            <a href="{{ url('admin/category/' . $category->id . '/edit') }}"
+                                                class="btn btn-success">Editar</a>
+                                        @endcan
+                                        @can('eliminar-categoria')
+                                            <a href="#" wire:click="deleteCategory({{ $category->id }})"
+                                                data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                class="btn btn-danger">Eliminar</a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

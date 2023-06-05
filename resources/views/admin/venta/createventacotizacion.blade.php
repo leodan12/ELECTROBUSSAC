@@ -31,15 +31,18 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FECHA</label>
-                                <input type="date" name="fecha" id="fecha" class="form-control borde" required />
+                                <input type="date" name="fecha" id="fecha" class="form-control borde" required /> 
                                 @error('fecha')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label  ">NUMERO DE FACTURA</label>
                                 <input type="text" name="factura" id="factura" class="form-control borde" />
+                                <div class="invalid-feedback" name="validacionfactura" id="validacionfactura"
+                                style="color: red;">
+                                ¡Numero de Factura ya Registrado!
+                            </div>
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -58,9 +61,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
-
-
                             <div class="col-md-6 mb-3">
                                 @if ($venta->formapago == 'contado')
                                     <label id="labelfechav" class="form-label">FECHA DE VENCIMIENTO</label>
@@ -100,7 +100,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2 borde" name="company_id" required>
+                                <select class="form-select select2 borde" name="company_id" id="company_id" required>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}"
@@ -131,8 +131,8 @@
                                     @elseif($venta->moneda == 'soles')
                                         <span class="input-group-text" id="spancostoventa">S/.</span>
                                     @endif
-                                    <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
-                                        class="form-control borde required" required readonly
+                                    <input type="number" name="costoventa" id="costoventa" min="0.1"
+                                        step="0.01" class="form-control borde required" required readonly
                                         value="{{ $venta->costoventasinigv }}" />
                                 </div>
                             </div>
@@ -190,14 +190,14 @@
                                                 </td>
                                                 @php $v="no"; @endphp
                                                 <td>
-                                                    @if($detalle->observacionproducto!=null) 
-                                                    <input type="text" class="form-control borde"
-                                                        name="Lobservacionproducto[]"
-                                                        value="{{ $detalle->observacionproducto }}" required >
+                                                    @if ($detalle->observacionproducto != null)
+                                                        <input type="text" class="form-control borde"
+                                                            name="Lobservacionproducto[]"
+                                                            value="{{ $detalle->observacionproducto }}" required>
                                                     @else
-                                                    <input type="text" class="form-control borde"
-                                                    name="Lobservacionproducto[]"
-                                                    value="{{ $v }}" required >
+                                                        <input type="text" class="form-control borde"
+                                                            name="Lobservacionproducto[]" value="{{ $v }}"
+                                                            required>
                                                     @endif
                                                 </td>
                                                 <td><input type="hidden" name="Lcantidad[]"
@@ -300,6 +300,35 @@
 
         var data = @json($prodfaltantes);
         var sinstock = data.length;
+        document.getElementById("validacionfactura").style.display = 'none';
+
+        factura.oninput = function() {
+            var mifactura = document.getElementById("factura");
+            var empresa = document.getElementById("company_id").value;
+            verificarfactura(empresa, mifactura.value);
+
+        };
+
+        function verificarfactura(empresa, factura) {
+            var xfactura = document.getElementById("factura");
+            var validacion = document.getElementById("validacionfactura");
+            if (empresa && factura) {
+                var urlvent = "{{ url('admin/venta/facturadisponible') }}";
+                $.get(urlvent + '/' + empresa + '/' + factura, function(data) {
+                    enviar = document.getElementById('btnguardar');
+                    facturadisponible = data;
+                    if (data == "SI") {
+                        xfactura.style.borderColor = "green";
+                        enviar.disabled = false;
+                        validacion.style.display = 'none';
+                    } else {
+                        xfactura.style.borderColor = "red";
+                        enviar.disabled = true;
+                        validacion.style.display = 'inline';
+                    }
+                });
+            }
+        }
 
         $(document).ready(function() {
             $('.toast').toast();

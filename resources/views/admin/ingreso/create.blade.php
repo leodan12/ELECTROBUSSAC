@@ -254,7 +254,8 @@
             $("#company_id").change(function() {
                 var company = $(this).val();
                 $('#cliente_id').removeAttr('disabled');
-                $.get('/admin/venta/comboempresacliente/' + company, function(data) {
+                var miurl = "{{ url('admin/venta/comboempresacliente') }}";
+                $.get(miurl +'/'+ company, function(data) {
                     var producto_select =
                         '<option value="" disabled selected>Seleccione una opcion</option>'
                     for (var i = 0; i < data.length; i++) {
