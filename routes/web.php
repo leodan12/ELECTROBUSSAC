@@ -21,8 +21,8 @@ Auth::routes();
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('inicio');
  
-
-Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
+Route::group(['middleware' => ['auth']],function(){
+Route::prefix('admin')->middleware(['auth'])->group(function (){
 
     Route::get('dashboard',[App\Http\Controllers\Admin\DashboardController::class, 'index']);
 
@@ -165,4 +165,14 @@ Route::prefix('admin')->middleware(['auth','isAdmin'])->group(function (){
         Route::get('/reporte/detallecompras/{fechainicio}/{fechafin}/{empresa}/{producto}','detallecompras');
         Route::get('/reporte/detalleventas/{fechainicio}/{fechafin}/{empresa}/{producto}','detalleventas'); 
     });
+    //rutas de los roles
+    Route::controller(App\Http\Controllers\Admin\RolController::class)->group(function(){
+        Route::get('/rol','index')->name('rol.index');
+        Route::get('/rol/create','create');
+        Route::post('/rol','store');
+        Route::get('/rol/{cliente}/edit','edit');
+        Route::put('/rol/{cliente}','update'); 
+        Route::get('/rol/{product_id}/delete','destroy');
+    });  
+});
 });

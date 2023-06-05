@@ -183,6 +183,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Spatie\Activitylog\ActivitylogServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
         /*
          * Package Service Providers...
          */

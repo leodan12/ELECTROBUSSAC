@@ -84,7 +84,10 @@
             </div>
         </li>
 
-        @if (Auth::user()->role_as == 1)
+        @if (auth()->user()->can('ver-usuario') ||
+                auth()->user()->can('crear-usuario') ||
+                auth()->user()->can('editar-usuario') ||
+                auth()->user()->can('eliminar-usuario'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('admin/users') }}">
                     <i class="mdi mdi-account-multiple menu-icon"></i>
@@ -92,6 +95,18 @@
                 </a>
             </li>
         @endif
+        @if (auth()->user()->can('ver-rol') ||
+                auth()->user()->can('crear-rol') ||
+                auth()->user()->can('editar-rol') ||
+                auth()->user()->can('eliminar-rol'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/rol') }}">
+                    <i class="mdi mdi-account-multiple menu-icon"></i>
+                    <span class="menu-title">ROLES</span>
+                </a>
+            </li>
+        @endif
+
 
     </ul>
 </nav>

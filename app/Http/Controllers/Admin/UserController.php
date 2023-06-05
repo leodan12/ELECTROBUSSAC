@@ -4,69 +4,94 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\Controller; 
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Arr; 
+use Illuminate\Support\Facades\Hash; 
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index()
+    function __construct()
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $this->middleware('permission:ver-usuario|editar-usuario|crear-usuario|eliminar-usuario', ['only' => ['index']]);
+        $this->middleware('permission:crear-usuario', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-usuario', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:eliminar-usuario', ['only' => ['destroy']]);
+    }
+
+    public function index(Request $request)
+    {
+       $usuarios = User::all();
+
+        return view('admin.usuario.index',compact('usuarios'));
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        $roles = Role::select('id','name')->get();
+
+        return view('admin.usuario.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
-            'role_as' => ['required', 'integer'],
-        ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_as' => $request->role_as,
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+            'roles' => 'required',
         ]);
+        $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
 
-        return redirect('/admin/users')->with('message', 'Usuario Creado Satisfactoriamente');
+        $user = User::create($input);
+        $user->assignRole($request->input('roles'));
+        return redirect()->route('usuario.index');
     }
 
-    public function edit($userId)
+    public function edit($id)
     {
-        $user = User::findOrFail($userId);
-        return view('admin.users.edit', compact('user'));
+        $user = User::find($id);
+        $roles = Role::select('id','name')->get();
+        $userRole = DB::table('users as ur')
+            ->join('model_has_roles as mhr','mhr.model_id','=','ur.id')
+            ->where('ur.id', '=', $id)
+            ->select( 'mhr.role_id')
+            ->first();
+        //$userRole = $user->roles->pluck('name', 'name')->all();
+
+       // return $userRole;
+        return view('admin.usuario.edit', compact('user', 'roles', 'userRole'));
     }
 
-    public function update(Request $request, int $userId)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8'],
-            'role_as' => ['required', 'integer'],
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,'.$id, 
+            'roles' => 'required',
         ]);
+        $input = $request->all();
 
-        User::findOrFail($userId)->update([
-            'name' => $request->name,
+        if (!empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
+            $input = Arr::except($input, array('password'));
+        }
 
-            'password' => Hash::make($request->password),
-            'role_as' => $request->role_as,
-        ]);
+        $user = User::find($id);
+        $user->update($input);
+        DB::table('model_has_roles')->where('model_id', $id)->delete();
 
-        return redirect('/admin/users')->with('message', 'Usuario Actualizado Satisfactoriamente');
+        $user->assignRole($request->input('roles'));
+        return redirect()->route('usuario.index');
     }
-
-    public function destroy(int $userId)
+    public function destroy($id)
     {
-        $user = User::findOrFail($userId);
-        $user->delete();
-        return redirect('/admin/users')->with('message', 'Usuario Eliminado Satisfactoriamente');
+       User::find($id)->delete();
+        return redirect()->route('usuario.index');
     }
 }
