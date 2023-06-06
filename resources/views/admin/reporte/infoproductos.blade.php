@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" /> 
+    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
 @endpush
 @section('content')
     <div class="row">
@@ -11,7 +11,8 @@
                     <select class="form-select  borde" name="company_id" id="company_id" required>
                         <option value="-1" selected>TODAS</option>
                         @foreach ($companies as $company)
-                            <option value="{{ $company->id }}" data-miempresa="{{ $company->nombre }}">{{ $company->nombre }}</option>
+                            <option value="{{ $company->id }}" data-miempresa="{{ $company->nombre }}">
+                                {{ $company->nombre }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -20,7 +21,8 @@
                     <select class="form-select select2 borde" name="producto" id="producto">
                         <option value="-1" selected>TODOS</option>
                         @foreach ($productos as $item)
-                            <option value="{{ $item->id }}" data-miproducto="{{ $item->nombre }}">{{ $item->nombre }}</option>
+                            <option value="{{ $item->id }}" data-miproducto="{{ $item->nombre }}">{{ $item->nombre }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -36,8 +38,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <table class="table table-bordered table-striped" style="width: 100%" id="mitablaprod"
-                        name="mitablaprod">
+                    <table class="table table-bordered table-striped" id="mitablaprod" name="mitablaprod">
                         <thead class="fw-bold text-primary">
                             <tr>
 
@@ -68,7 +69,7 @@
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script type="text/javascript">
         var contini = 0;
-        var mitituloexcel="";
+        var mitituloexcel = "";
         $(document).ready(function() {
             $('.select2').select2({});
             var hoy = new Date();
@@ -99,8 +100,8 @@
         }
 
         function llenartabla(datos) {
-            
-            var btns = 'lBfrtip'; 
+
+            var btns = 'lBfrtip';
             var tabla = '#mitablaprod';
             if (contini > 0) {
                 $("#mitablaprod").dataTable().fnDestroy(); //eliminar las filas de la tabla  
@@ -119,44 +120,45 @@
                     '<td> ' + datos[i].moneda + '</td>' +
                     '</tr>';
                 $("#mitablaprod>tbody").append(filaDetalle);
-            } 
-            inicializartabladatos( btns,tabla,mitituloexcel);
+            }
+            inicializartabladatos(btns, tabla, mitituloexcel);
             contini++;
         }
         $("#company_id").change(function() {
             var company = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
 
         $("#producto").change(function() {
             var tipografico = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
         $("#fechainicio").change(function() {
             var Vreporte = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
         $("#fechafin").change(function() {
             var cant = $(this).val();
             mititulo();
-            traerdatos(); 
+            traerdatos();
         });
+
         function mititulo() {
             var fechainicio = document.getElementById("fechainicio").value;
             var fechafin = document.getElementById("fechafin").value;
             var idcompany_id = document.getElementById("company_id").value;
-            var idproducto = document.getElementById("producto").value; 
+            var idproducto = document.getElementById("producto").value;
             var company_id = document.getElementById("company_id");
-            var producto = document.getElementById("producto"); 
+            var producto = document.getElementById("producto");
             if (idcompany_id != "-1") {
                 if (idproducto != "-1") {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
                     var nameproducto = producto[producto.selectedIndex].getAttribute('data-miproducto');
                     mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + nameproducto + '_' + fechainicio + '_' +
-                        fechafin; 
+                        fechafin;
                 } else {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
                     mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + fechainicio + '_' + fechafin;

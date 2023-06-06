@@ -191,15 +191,15 @@
             var fechainicio = document.getElementById("fechainicio").value;
             var fechafin = document.getElementById("fechafin").value;
             var idcompany_id = document.getElementById("company_id").value;
-            var idproducto = document.getElementById("producto").value; 
+            var idproducto = document.getElementById("producto").value;
             var company_id = document.getElementById("company_id");
-            var producto = document.getElementById("producto"); 
+            var producto = document.getElementById("producto");
             if (idcompany_id != "-1") {
                 if (idproducto != "-1") {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
                     var nameproducto = producto[producto.selectedIndex].getAttribute('data-miproducto');
                     mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + nameproducto + '_' + fechainicio + '_' +
-                        fechafin; 
+                        fechafin;
                 } else {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
                     mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + fechainicio + '_' + fechafin;
@@ -230,7 +230,9 @@
             var xfechafin = document.getElementById("fechafin").value;
             $.get(miurl + '/' + xfechainicio + '/' + xfechafin + '/' + xempresa + '/' + xproducto, function(
                 midata) {
+                console.log(midata);
                 llenartabla2(midata);
+
 
             });
         });
@@ -245,7 +247,6 @@
             }
             $('#mitablaresultados tbody tr').slice().remove();
             for (var i = 0; i < datos.length; i++) {
-
                 filaDetalle =
                     '<tr> <td> ' + datos[i].fecha + '</td>' +
                     '<td> ' + datos[i].compraventa + '</td>' +

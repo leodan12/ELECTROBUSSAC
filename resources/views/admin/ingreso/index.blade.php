@@ -136,8 +136,10 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
+                                    @can('editar-ingreso')
                                     <button type="button" class="btn btn-success" id="pagarfactura">Pagar
                                         Factura</button>
+                                    @endcan
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
 

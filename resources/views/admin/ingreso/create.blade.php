@@ -361,10 +361,7 @@
                             }
                             milista = milista + '-' + data[i].cantidad + ' ' + data[i].producto +
                                 coma;
-                            //agregar la resta para cadaa stock individual 
-                            var product1 = document.getElementById('productoxempresa' + data[i].id);
-                            var stock = product1.dataset.stock;
-                            product1.setAttribute('data-stock', (stock - data[i].cantidad));
+                           
                         }
                         agregarFilasTabla(LVenta, puntos, milista);
                     });

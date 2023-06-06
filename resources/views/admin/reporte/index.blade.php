@@ -385,6 +385,7 @@
                 document.getElementById('cantidadcosto').style.display = 'inline';
                 document.getElementById('divnumero').style.display = 'inline';
             } else if (Vreporte == "pmv") {
+                document.getElementById('cantidadcosto').style.display = 'none';
                 document.getElementById('divnumero').style.display = 'inline';
             } else {
                 document.getElementById('cantidadcosto').style.display = 'none';

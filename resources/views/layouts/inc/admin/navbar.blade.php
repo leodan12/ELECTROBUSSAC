@@ -22,15 +22,15 @@
               <span class="nav-profile-name">{{ Auth::user()->name }}</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
+              {{-- <a class="dropdown-item">
                 <i class="mdi mdi-settings text-primary"></i>
                 Settings
-              </a>
+              </a> --}}
               
               <a class="dropdown-item" href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-                  <i class="mdi mdi-logout text-primary"></i> {{ __('Logout') }}
+                  <i class="mdi mdi-logout text-primary"></i> {{ __('Salir') }}
               </a>
 
               <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

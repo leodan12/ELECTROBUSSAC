@@ -189,9 +189,11 @@
                                     <button type="button" class="btn btn-success" id="generarcotizacion"> Generar Pdf de
                                         la Cotización </button>
                                     <div id="btnvender" name="btnvender">
+                                        @can('editar-cotizacion')
                                         <button type="button" class="btn btn-warning" id="realizarventa"
                                             onclick="venderCotizacion()">Realizar
                                             Venta</button>
+                                        @endcan
                                     </div>
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>

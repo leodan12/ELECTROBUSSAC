@@ -19,8 +19,8 @@
                             <div class="col">
                                 <h4>
                                     @can('crear-venta')
-                                    <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir
-                                        venta</a>
+                                        <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir
+                                            venta</a>
                                     @endcan
                                 </h4>
                             </div>
@@ -142,8 +142,10 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" id="generarfactura"> Generar Pdf de la
                                         Factura </button>
-                                    <button type="button" class="btn btn-warning" id="pagarfactura">Pagar
-                                        Factura</button>
+                                    @can('editar-venta')
+                                        <button type="button" class="btn btn-warning" id="pagarfactura">Pagar
+                                            Factura</button>
+                                    @endcan
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
 

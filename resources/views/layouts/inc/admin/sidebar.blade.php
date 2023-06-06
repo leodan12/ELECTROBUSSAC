@@ -104,7 +104,7 @@
                             auth()->user()->can('editar-venta') ||
                             auth()->user()->can('eliminar-venta'))
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
-                                    class="mdi mdi-clipboard-arrow-down menu-icon"></i>SALIDA</a></li>
+                                    class="mdi mdi-clipboard-arrow-up menu-icon"></i>SALIDA</a></li>
                     @endif
                 </ul>
             </div>
@@ -112,18 +112,18 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
                 aria-controls="ui-basic">
-                <i class="mdi mdi-cart menu-icon"></i>
+                <i class="mdi mdi-chart-bar menu-icon"></i>
                 <span class="menu-title">REPORTES</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-basic1">
-                <ul class="  flex-column sub-menu" style="list-style: none;">
+                <ul class="flex-column sub-menu" style="list-style: none;">
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>GRAFICOS</a></li>
+                                class="mdi mdi-chart-line menu-icon"></i>GRAFICOS</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>DATOS VENTAS</a></li>
+                                class="mdi mdi-file-excel menu-icon"></i>DATOS VENTAS</a></li>
                     <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
-                                class="mdi mdi-clipboard-arrow-down menu-icon"></i>ROTACION STOCK</a></li>
+                                class="mdi mdi-timetable menu-icon"></i>ROTACION STOCK</a></li>
                 </ul>
             </div>
         </li>
@@ -145,7 +145,7 @@
                 auth()->user()->can('eliminar-rol'))
             <li class="nav-item">
                 <a class="nav-link" href="{{ url('admin/rol') }}">
-                    <i class="mdi mdi-account-multiple menu-icon"></i>
+                    <i class="mdi mdi-account-settings menu-icon"></i>
                     <span class="menu-title">ROLES</span>
                 </a>
             </li>
