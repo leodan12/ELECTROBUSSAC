@@ -15,65 +15,64 @@
                     <div class="card-header">
                         <h4>USUARIOS
                             @can('crear-usuario')
-                            <a href="{{ url('admin/users/create') }}" class="btn btn-primary float-end">Añadir Usuario</a>
+                                <a href="{{ url('admin/users/create') }}" class="btn btn-primary float-end">Añadir Usuario</a>
                             @endcan
                         </h4>
                     </div>
                     <div class="card-body">
-
-                        <table class="table table-bordered table-striped dt-responsive nowrap" id="mitabla" name="mitabla">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>NAME</th>
-                                    <th>EMAIL</th>
-                                     <th>ROL</th> 
-                                    <th>ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-mantenimientos">
-                                @foreach($usuarios as $usuario)
-                                <tr>
-                                    <td>{{ $usuario->id }}</td>
-                                    <td>{{ $usuario->name }}</td>
-                                    <td>{{ $usuario->email }}</td>
-                                    <td>
-                                    @if(!empty($usuario->getRoleNames()))
-                                    @foreach($usuario->getRoleNames() as $rolName)
-                                        <h5><span>{{ $rolName }}</span></h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap" id="mitabla"
+                                name="mitabla">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>NAME</th>
+                                        <th>EMAIL</th>
+                                        <th>ROL</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-mantenimientos">
+                                    @foreach ($usuarios as $usuario)
+                                        <tr>
+                                            <td>{{ $usuario->id }}</td>
+                                            <td>{{ $usuario->name }}</td>
+                                            <td>{{ $usuario->email }}</td>
+                                            <td>
+                                                @if (!empty($usuario->getRoleNames()))
+                                                    @foreach ($usuario->getRoleNames() as $rolName)
+                                                        <h5><span>{{ $rolName }}</span></h5>
+                                                    @endforeach
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @can('editar-usuario')
+                                                    <a href="{{ url('admin/users/' . $usuario->id . '/edit') }}"
+                                                        class="btn btn-success">
+                                                        Editar
+                                                    </a>
+                                                @endcan
+                                                @can('eliminar-usuario')
+                                                    <form action="{{ url('admin/users/' . $usuario->id . '/delete') }}"
+                                                        class="d-inline formulario-eliminar">
+                                                        <button type="submit" class="btn btn-danger formulario-eliminar">
+                                                            Eliminar
+                                                        </button>
+                                                    </form>
+                                                @endcan
+                                            </td>
+                                        </tr>
                                     @endforeach
-                                    @endif    
-                                    </td>
-                                    <td>
-                                        @can('editar-usuario')
-                                        <a href="{{ url('admin/users/' . $usuario->id . '/edit') }}" class="btn btn-success">
-                                            Editar
-                                        </a>
-                                        @endcan
-                                        @can('eliminar-usuario')
-                                        <form action="{{ url('admin/users/' . $usuario->id . '/delete') }}"
-                                            class="d-inline formulario-eliminar">
-                                            <button type="submit" class="btn btn-danger formulario-eliminar">
-                                                Eliminar
-                                            </button>
-                                        </form> 
-                                        @endcan
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        <div>  
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @endsection
-    @push('script')
-    
+@endsection
+@push('script')
 @endpush
-
- 

@@ -31,7 +31,7 @@
                 <div class="card-header">
                     <h4>MIS EMPRESAS
                         @can('crear-empresa')
-                        <a href="{{ url('admin/company/create') }}" class="btn btn-primary float-end">Añadir Empresa</a>
+                            <a href="{{ url('admin/company/create') }}" class="btn btn-primary float-end">Añadir Empresa</a>
                         @endcan
                     </h4>
                 </div>
@@ -40,42 +40,44 @@
                         <input type="text" class="form-control" id="input-search"
                             placeholder="Filtrar por nombre...">
                     </div>
-                    <table class="table table-bordered table-striped ">
-                        <thead class="fw-bold text-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>NOMBRE</th>
-                                <th>RUC</th>
-                                <th>TELEFONO</th>
-                                <th>ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <Tbody id="tbody-mantenimientos">
-                            @foreach ($companies as $company)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped " style="width: 100%;">
+                            <thead class="fw-bold text-primary">
                                 <tr>
-                                    <td>{{ $company->id }}</td>
-                                    <td>{{ $company->nombre }}</td>
-                                    <td>{{ $company->ruc }}</td>
-                                    <td>{{ $company->telefono }}</td>
-                                    <td>
-                                        @can('editar-empresa')
-                                        <a href="{{ url('admin/company/' . $company->id . '/edit') }}"
-                                            class="btn btn-success">Editar</a>
-                                        @endcan
-                                        
-                                        <button type="button" class="btn btn-secondary" data-id="{{ $company->id }}"
-                                            data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>
-                                        @can('eliminar-empresa')
-                                        <a href="#" wire:click="deleteCompany({{ $company->id }})"
-                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                            class="btn btn-danger">Eliminar</a>
-                                        @endcan
-                                    </td>
+                                    <th>ID</th>
+                                    <th>NOMBRE</th>
+                                    <th>RUC</th>
+                                    <th>TELEFONO</th>
+                                    <th>ACCIONES</th>
                                 </tr>
-                            @endforeach
-                        </Tbody>
-                    </table>
+                            </thead>
+                            <Tbody id="tbody-mantenimientos">
+                                @foreach ($companies as $company)
+                                    <tr>
+                                        <td>{{ $company->id }}</td>
+                                        <td>{{ $company->nombre }}</td>
+                                        <td>{{ $company->ruc }}</td>
+                                        <td>{{ $company->telefono }}</td>
+                                        <td>
+                                            @can('editar-empresa')
+                                                <a href="{{ url('admin/company/' . $company->id . '/edit') }}"
+                                                    class="btn btn-success">Editar</a>
+                                            @endcan
 
+                                            <button type="button" class="btn btn-secondary"
+                                                data-id="{{ $company->id }}" data-bs-toggle="modal"
+                                                data-bs-target="#mimodal">Ver</button>
+                                            @can('eliminar-empresa')
+                                                <a href="#" wire:click="deleteCompany({{ $company->id }})"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                    class="btn btn-danger">Eliminar</a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </Tbody>
+                        </table>
+                    </div>
                     <div>
                         {{ $companies->links() }}
                     </div>
@@ -117,8 +119,8 @@
                                                 <div class="col-md-4  mb-3" id="div">
                                                     <label for="vertipocuentasoles" class="col-form-label">Tipo
                                                         Cuenta:</label>
-                                                    <input type="text" class="form-control" id="vertipocuentasoles"
-                                                        readonly>
+                                                    <input type="text" class="form-control"
+                                                        id="vertipocuentasoles" readonly>
                                                 </div>
                                                 <div class="col-md-4  mb-3" id="div">
                                                     <label for="vernumerocuentasoles" class="col-form-label">Numero

@@ -42,34 +42,36 @@
                         <input type="text" class="form-control" id="input-search"
                             placeholder="Filtrar por nombre...">
                     </div>
-                    <table class="table table-bordered table-striped">
-                        <thead class="fw-bold text-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>NOMBRE</th>
-                                <th>ACCIONES</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-mantenimientos">
-                            @foreach ($categories as $category)
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead class="fw-bold text-primary">
                                 <tr>
-                                    <td>{{ $category->id }}</td>
-                                    <td>{{ $category->nombre }}</td>
-                                    <td>
-                                        @can('editar-categoria')
-                                            <a href="{{ url('admin/category/' . $category->id . '/edit') }}"
-                                                class="btn btn-success">Editar</a>
-                                        @endcan
-                                        @can('eliminar-categoria')
-                                            <a href="#" wire:click="deleteCategory({{ $category->id }})"
-                                                data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                class="btn btn-danger">Eliminar</a>
-                                        @endcan
-                                    </td>
+                                    <th>ID</th>
+                                    <th>NOMBRE</th>
+                                    <th>ACCIONES</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody id="tbody-mantenimientos">
+                                @foreach ($categories as $category)
+                                    <tr>
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->nombre }}</td>
+                                        <td>
+                                            @can('editar-categoria')
+                                                <a href="{{ url('admin/category/' . $category->id . '/edit') }}"
+                                                    class="btn btn-success">Editar</a>
+                                            @endcan
+                                            @can('eliminar-categoria')
+                                                <a href="#" wire:click="deleteCategory({{ $category->id }})"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                                    class="btn btn-danger">Eliminar</a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     <div>
                         {{ $categories->links() }}
                     </div>

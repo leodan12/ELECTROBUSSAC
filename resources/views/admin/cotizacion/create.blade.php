@@ -252,7 +252,7 @@
                                                         id="addCondicion"> Agregar</button>
                                                 </div>
                                             </div>
-                                            <div class="table-response">
+                                            <div class="table-responsive">
                                                 <table class="table table-row-bordered gy-5 gs-5" id="condiciones">
                                                     <thead class="fw-bold text-primary">
                                                         <tr>
@@ -676,7 +676,7 @@
                 '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice +
+                '</td><td><button type="button" class="btn  btn-danger" onclick="eliminarFila(' + indice +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#detallesVenta>tbody").append(filaDetalle);
 
