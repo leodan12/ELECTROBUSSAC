@@ -118,6 +118,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/venta/stockxprodxempresa/{idproducto}/{idempresa}', 'stockxprodxempresa'); //ver  
             Route::get('/venta/comboempresaclientevi/{id}', 'comboempresaclientevi');
             Route::get('/venta/facturadisponible/{empresa}/{factura}', 'facturadisponible');
+            Route::get('/venta/misdetallesventa/{idventa}', 'misdetallesventa'); //ver  
         });
 
         //Ruta de ingresos

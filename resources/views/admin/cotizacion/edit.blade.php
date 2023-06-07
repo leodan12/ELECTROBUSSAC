@@ -149,10 +149,10 @@
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3" id="divdiascredito">
-                                <label id="labeldiascredito" class="form-label is-required">DIAS DE CREDITO PARA LA COMPRA</label>
+                                <label id="labeldiascredito" class="form-label is-required">DIAS DE CREDITO PARA LA
+                                    COMPRA</label>
                                 <input type="number" name="diascredito" id="diascredito" step="1"
-                                    class="form-control borde" min="1"  
-                                    value="{{ $cotizacion->diascredito }}" />
+                                    class="form-control borde" min="1" value="{{ $cotizacion->diascredito }}" />
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label">OBSERVACION</label>
@@ -187,14 +187,7 @@
                                                         id="product">
                                                         <option selected disabled value="">Seleccione una opción
                                                         </option>
-                                                        @foreach ($products as $product)
-                                                            <option value="{{ $product->id }}"
-                                                                data-stock="{{ $product->stockempresa }}"
-                                                                data-moneda="{{ $product->moneda }}"
-                                                                data-name="{{ $product->nombre }}"
-                                                                data-price="{{ $product->NoIGV }}">{{ $product->nombre }}
-                                                            </option>
-                                                        @endforeach
+
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
@@ -322,7 +315,7 @@
                                                                     </td>
                                                                     <td>
                                                                         <button type="button" class="btn btn-danger"
-                                                                            onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetallecotizacion }}'  )"
+                                                                            onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetallecotizacion }}', '{{ $detalle->idproducto }}'  )"
                                                                             data-id="0"><i
                                                                                 class="bi bi-trash-fill"></i>ELIMINAR</button>
                                                                     </td>
@@ -437,19 +430,20 @@
         var idproducto = 0;
         var stockmaximo = 0;
         var idcliente = 0;
+        var detallesagregados = [];
 
-        estadoguardar = @json($detalles);
+
         idcompany = @json($cotizacion->company_id);
         idcliente = @json($cotizacion->cliente_id);
-
+        var misdetalles = @json($detallescotizacion);
         var formapago = @json($cotizacion->formapago);
-        
-        if(formapago=="contado"){
+
+        if (formapago == "contado") {
             document.getElementById('divdiascredito').style.display = 'none';
-        }else{
+        } else {
             document.getElementById('divdiascredito').style.display = 'inline';
         }
- 
+
         //alert(estadoguardar);
         var funcion1 = "inicio";
         botonguardar(funcion1);
@@ -593,7 +587,7 @@
             var igv1 = $('[name="igv"]').val();
             conigv = igv1;
             var url5 = "{{ url('admin/venta/comboempresacliente') }}";
-            $.get(url5 +'/'+ idcompany, function(data) {
+            $.get(url5 + '/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
@@ -609,16 +603,29 @@
                 }
                 $("#cliente_id").html(producto_select);
             });
-            var url6 = "{{ url('admin/venta/productosxempresa') }}";
-            $.get(url6 +'/'+ idcompany, function(data) {
-                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+            var url22 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url22 + '/' + idcompany, function(data) {
+                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>';
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].stockempresa == null) {
                         alert(data[i].stockempresa);
                     }
-                    producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i]
-                        .id + '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +
+                    var desabilitado = "";
+                    var contx = 0;
+                    for (var x = 0; x < misdetalles.length; x++) {
+                        if (misdetalles[x].idproducto == data[i].id) {
+                            contx++;
+                        }
+                    }
+                    if (contx > 0) {
+                        desabilitado = "disabled";
+                    }
+                    producto_select += '<option ' + desabilitado + ' id="productoxempresa' + data[i].id +
+                        '" value="' + data[i].id +
+                        '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +
                         '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                        '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
+                        '"data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
@@ -760,7 +767,7 @@
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
                 '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + 0 + ',' +
-                0 + ')" data-id="0">ELIMINAR</button></td></tr>';
+                0 + ',' + LVenta[0] + ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesVenta>tbody").append(filaDetalle);
 
@@ -773,6 +780,8 @@
             } else {
                 document.getElementById('costoventaconigv').value = "";
             }
+            document.getElementById('productoxempresa' + LVenta[0]).disabled = true;
+            detallesagregados.push(LVenta[0]);
             var funcion = "agregar";
             botonguardar(funcion);
 
@@ -811,7 +820,7 @@
             simbolomonedaproducto = "";
         }
 
-        function eliminarFila(ind, lugardato, iddetalle) {
+        function eliminarFila(ind, lugardato, iddetalle, idproducto) {
             if (lugardato == "db") {
                 Swal.fire({
                     title: '¿Esta seguro de Eliminar?',
@@ -823,8 +832,10 @@
                     confirmButtonText: 'Sí,Eliminar!'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        document.getElementById('product').disabled = true;
+                        $('.product').select2("destroy");
                         var urle = "{{ url('admin/deletedetallecotizacion') }}";
-                        $.get(urle +'/'+ iddetalle, function(data) {
+                        $.get(urle + '/' + iddetalle, function(data) {
                             //alert(data[0]);
                             if (data[0] == 1) {
                                 Swal.fire({
@@ -832,7 +843,10 @@
                                     icon: "success"
                                 });
                                 quitarFila(ind);
-                                llenarselectproducto();
+                                document.getElementById('productoxempresa' + idproducto).disabled = false;
+                                document.getElementById('product').disabled = false;
+                                $('.select2').select2({});
+                                //llenarselectproducto();
                             } else if (data[0] == 0) {
                                 Swal.fire({
                                     text: "No se puede eliminar",
@@ -884,7 +898,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var urle2 = "{{ url('admin/deletecondicion') }}";
-                        $.get(urle2 +'/'+ idcondicion, function(data) { 
+                        $.get(urle2 + '/' + idcondicion, function(data) {
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",
@@ -941,15 +955,52 @@
         }
 
         function llenarselectproducto() {
-            var urlp2 = "{{ url('admin/venta/productosxempresa') }}";
-            $.get(urlp2 +'/'+ idcompany, function(data) {
-                var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
+
+            var url3 = "{{ url('admin/venta/productosxempresa') }}";
+            $.get(url3 + '/' + idcompany, function(data) {
+
+                var urlregistro = "{{ url('admin/venta/misdetallesventa') }}";
+                var misdatosdetalles;
+                $.ajax({
+                    type: "GET",
+                    async: false,
+                    url: urlregistro + '/' + idventa,
+                    success: function(data1) {
+                        misdatosdetalles = data1;
+                    }
+                });
+
+                var producto_select = '<option  value="" disabled selected>Seleccione una opción</option>';
                 for (var i = 0; i < data.length; i++) {
-                    producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
-                        '" data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                    var desabilitado = "";
+                    var contx = 0;
+                    for (var x = 0; x < misdatosdetalles.length; x++) {
+                        if (misdatosdetalles[x].idproducto == data[i].id) {
+                            contx++;
+                        }
+                    }
+                    for (var z = 0; z < detallesagregados.length; z++) {
+                        if (detallesagregados[z] == data[i].id) {
+                            contx++;
+                        }
+                    }
+                    if (contx > 0) {
+                        desabilitado = "disabled";
+                    } else {
+                        desabilitado = "";
+                    }
+
+                    producto_select += '<option ' + desabilitado + ' id="productoxempresa' + data[i].id +
+                        '" value="' + data[i].id +
+                        '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +
+                        '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                        '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
+                        '"data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
+                document.getElementById('product').disabled = false;
+                $('.select2').select2({});
             });
         }
     </script>

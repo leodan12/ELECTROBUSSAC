@@ -1113,4 +1113,15 @@ class VentaController extends Controller
             return "SI";
         }
     }
+
+    public function misdetallesventa($venta_id)
+    {
+        $detallesventa = DB::table('detalleventas as dv')
+            ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->select('dv.observacionproducto', 'p.tipo', 'p.moneda', 'dv.id as iddetalleventa', 'dv.cantidad', 'dv.preciounitario', 'dv.preciounitariomo', 'dv.servicio', 'dv.preciofinal', 'p.id as idproducto', 'p.nombre as producto')
+            ->where('v.id', '=', $venta_id)->get();
+
+        return  $detallesventa;
+    }
 }
