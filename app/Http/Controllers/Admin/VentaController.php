@@ -29,7 +29,7 @@ class VentaController extends Controller
             ['only' => ['index', 'show', 'showcreditos', 'pagarfactura', 'generarfacturapdf']]
         );
         $this->middleware('permission:crear-venta', ['only' => ['create', 'store', 'create2', 'facturadisponible']]);
-        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update', 'destroydetalleventa']]);
+        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update', 'destroydetalleventa','misdetallesventa']]);
         $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
         $this->middleware(
             'permission:crear-venta|crear-cotizacion|crear-ingreso|editar-venta|editar-cotizacion|editar-ingreso|ver-venta|ver-ingreso|ver-cotizacion|eliminar-venta|eliminar-ingreso|eliminar-cotizacion',
