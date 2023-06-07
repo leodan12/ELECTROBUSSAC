@@ -24,14 +24,20 @@ class VentaController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-venta|editar-venta|crear-venta|eliminar-venta',
-        ['only' => ['index','show','showcreditos','pagarfactura','generarfacturapdf']]);
-        $this->middleware('permission:crear-venta', ['only' => ['create', 'store','create2','facturadisponible']]);
-        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update','destroydetalleventa']]);
+        $this->middleware(
+            'permission:ver-venta|editar-venta|crear-venta|eliminar-venta',
+            ['only' => ['index', 'show', 'showcreditos', 'pagarfactura', 'generarfacturapdf']]
+        );
+        $this->middleware('permission:crear-venta', ['only' => ['create', 'store', 'create2', 'facturadisponible']]);
+        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update', 'destroydetalleventa']]);
         $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
-        $this->middleware('permission:crear-venta|crear-cotizacion|crear-ingreso|editar-venta|editar-cotizacion|editar-ingreso', 
-        ['only' => ['productosxempresa','productosxkit','comboempresacliente','comboempresaclientevi',
-        'stockkitxempresa','stockxprodxempresa','facturadisponible']]);
+        $this->middleware(
+            'permission:crear-venta|crear-cotizacion|crear-ingreso|editar-venta|editar-cotizacion|editar-ingreso|ver-venta|ver-ingreso|ver-cotizacion|eliminar-venta|eliminar-ingreso|eliminar-cotizacion',
+            ['only' => [
+                'productosxempresa', 'productosxkit', 'comboempresacliente', 'comboempresaclientevi',
+                'stockkitxempresa', 'stockxprodxempresa', 'facturadisponible'
+            ]]
+        );
     }
 
     public function index(Request $request)
@@ -113,11 +119,12 @@ class VentaController extends Controller
         $factura = $validatedData['factura'];
         $pagada = $validatedData['pagada'];
 
-        if($factura != null){
-        $nrofacturadisponible = $this->facturadisponible($company->id,$factura);
-        if( $nrofacturadisponible =="NO"){ 
-            return redirect()->back()->with('message','Numero de Factura YA Registrado') ;  
-        }}
+        if ($factura != null) {
+            $nrofacturadisponible = $this->facturadisponible($company->id, $factura);
+            if ($nrofacturadisponible == "NO") {
+                return redirect()->back()->with('message', 'Numero de Factura YA Registrado');
+            }
+        }
 
         $venta = new Venta;
 
@@ -384,8 +391,6 @@ class VentaController extends Controller
             return redirect('admin/venta')->with('message', 'Venta Agregada Satisfactoriamente');
         }
         return redirect('admin/venta')->with('message', 'No se Pudo Agregar la Venta');
-   
-   
     }
     public function create2(int $idcotizacion)
     {
@@ -864,8 +869,18 @@ class VentaController extends Controller
             ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
             ->join('products as p', 'i.product_id', '=', 'p.id')
-            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo', 'di.stockempresa',
-            'p.cantidad2','p.precio2','p.cantidad3','p.precio3')
+            ->select(
+                'p.id',
+                'p.nombre',
+                'p.NoIGV',
+                'p.moneda',
+                'p.tipo',
+                'di.stockempresa',
+                'p.cantidad2',
+                'p.precio2',
+                'p.cantidad3',
+                'p.precio3'
+            )
             ->where('c.id', '=', $id)
             ->where('p.status', '=', 0)
             ->where('p.tipo', '=', "estandar")
@@ -874,8 +889,17 @@ class VentaController extends Controller
         $kits = DB::table('products as p')
             ->where('p.status', '=', 0)
             ->where('p.tipo', '=', "kit")
-            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo',
-            'p.cantidad2','p.precio2','p.cantidad3','p.precio3')
+            ->select(
+                'p.id',
+                'p.nombre',
+                'p.NoIGV',
+                'p.moneda',
+                'p.tipo',
+                'p.cantidad2',
+                'p.precio2',
+                'p.cantidad3',
+                'p.precio3'
+            )
             ->get();
 
 
@@ -957,7 +981,9 @@ class VentaController extends Controller
 
         $products = DB::table('clientes as c')
             ->select('c.id', 'c.nombre')
-            ->where('c.ruc', '!=', $empresa->ruc)->get();
+            ->where('c.ruc', '!=', $empresa->ruc)
+            ->where('c.status', '=', '0')
+            ->get();
 
         return $products;
     }
@@ -1066,7 +1092,9 @@ class VentaController extends Controller
         $clientes = DB::table('clientes as c')
             ->join('companies as com', 'com.ruc', '=', 'c.ruc')
             ->select('c.id', 'c.nombre')
-            ->where('c.ruc', '!=', $empresa->ruc)->get();
+            ->where('c.ruc', '!=', $empresa->ruc)
+            ->where('c.status', '=', '0')
+            ->get();
 
         return $clientes;
     }
@@ -1078,11 +1106,11 @@ class VentaController extends Controller
             ->where('v.company_id', '=', $empresa)
             ->where('v.factura', '=', $factura)
             ->select('v.id')
-            ->get(); 
+            ->get();
         if (count($ventas) > 0) {
             return "NO";
         } else {
             return "SI";
-        } 
+        }
     }
 }

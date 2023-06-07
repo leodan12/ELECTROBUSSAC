@@ -19,10 +19,12 @@ class IngresoController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-ingreso|editar-ingreso|crear-ingreso|eliminar-ingreso',
-        ['only' => ['index','show','showcreditos','pagarfactura','productosxkit']]);
+        $this->middleware(
+            'permission:ver-ingreso|editar-ingreso|crear-ingreso|eliminar-ingreso',
+            ['only' => ['index', 'show', 'showcreditos', 'pagarfactura', 'productosxkit']]
+        );
         $this->middleware('permission:crear-ingreso', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-ingreso', ['only' => ['edit', 'update','destroydetalleingreso']]);
+        $this->middleware('permission:editar-ingreso', ['only' => ['edit', 'update', 'destroydetalleingreso']]);
         $this->middleware('permission:eliminar-ingreso', ['only' => ['destroy']]);
     }
     public function index(Request $request)
@@ -428,7 +430,7 @@ class IngresoController extends Controller
     {
         //$companies = Company::all();
         $clientes = Cliente::all();
-        $products = Product::all();
+        $products = Product::all()->where('status','=',0);
         $companies = DB::table('companies as c')
             ->join('ingresos as i', 'i.company_id', '=', 'c.id')
             ->select('c.id', 'c.nombre', 'c.ruc')
@@ -440,7 +442,9 @@ class IngresoController extends Controller
         $detallesingreso = DB::table('detalleingresos as di')
             ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
             ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select('di.observacionproducto', 'p.tipo', 'p.moneda', 'di.id as iddetalleingreso', 'di.cantidad', 'di.preciounitario', 'di.preciounitariomo', 'di.servicio', 'di.preciofinal', 'p.id as idproducto', 'p.nombre as producto')
+            ->select('di.observacionproducto', 'p.tipo', 'p.moneda', 'di.id as iddetalleingreso', 'di.cantidad', 
+            'di.preciounitario', 'di.preciounitariomo', 'di.servicio', 'di.preciofinal', 'p.id as idproducto', 
+            'p.nombre as producto')
             ->where('i.id', '=', $ingreso_id)->get();
         //return $detallesventa;
         $detalleskit = DB::table('kits as k')
@@ -494,26 +498,51 @@ class IngresoController extends Controller
         $ingreso = Ingreso::find($ingreso_id);
         if ($ingreso) {
             $detallesingreso = DB::table('detalleingresos as di')
-                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-                ->select('di.cantidad', 'di.product_id')
+                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id') 
+                ->join('products as p', 'di.product_id', '=', 'p.id')
+                ->select('di.cantidad', 'di.product_id', 'p.tipo', 'p.id')
                 ->where('i.id', '=', $ingreso_id)->get();
             for ($i = 0; $i < count($detallesingreso); $i++) {
-                $detallesinventario = DB::table('detalleinventarios as di')
-                    ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
-                    ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
-                    //->where('i.id', '=', $venta_id)
-                    ->where('i.product_id', '=', $detallesingreso[$i]->product_id)
-                    ->where('di.company_id', '=', $ingreso->company_id)
-                    ->first();
 
-                $detalleinv = Detalleinventario::find($detallesinventario->id);
-                $inventario = Inventario::find($detallesinventario->inventario_id);
+                if ($detallesingreso[$i]->tipo == "estandar") {
+                    $detallesinventario = DB::table('detalleinventarios as di')
+                        ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                        ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
+                        //->where('i.id', '=', $venta_id)
+                        ->where('i.product_id', '=', $detallesingreso[$i]->product_id)
+                        ->where('di.company_id', '=', $ingreso->company_id)
+                        ->first();
 
-                if ($detalleinv) {
-                    $detalleinv->stockempresa = $detalleinv->stockempresa - $detallesingreso[$i]->cantidad;
-                    if ($detalleinv->update()) {
-                        $inventario->stocktotal = $inventario->stocktotal - $detallesingreso[$i]->cantidad;
-                        $inventario->update();
+                    $detalleinv = Detalleinventario::find($detallesinventario->id);
+                    $inventario = Inventario::find($detallesinventario->inventario_id);
+
+                    if ($detalleinv) {
+                        $detalleinv->stockempresa = $detalleinv->stockempresa - $detallesingreso[$i]->cantidad;
+                        if ($detalleinv->update()) {
+                            $inventario->stocktotal = $inventario->stocktotal - $detallesingreso[$i]->cantidad;
+                            $inventario->update();
+                        }
+                    }
+                } else if ($detallesingreso[$i]->tipo == "kit") {
+                    $products = $this->productosxkit($detallesingreso[$i]->id);
+                    for ($x = 0; $x < count($products); $x++) {
+                        $detallesinventario = DB::table('detalleinventarios as di')
+                            ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
+                            ->select('di.id', 'di.company_id', 'di.stockempresa', 'i.product_id', 'di.inventario_id')
+                            ->where('i.product_id', '=', $products[$x]->id)
+                            ->where('di.company_id', '=', $ingreso->company_id)
+                            ->first();
+
+                        $detalleinv = Detalleinventario::find($detallesinventario->id);
+                        $inventario = Inventario::find($detallesinventario->inventario_id);
+
+                        if ($detalleinv) {
+                            $detalleinv->stockempresa = $detalleinv->stockempresa - ($detallesingreso[$i]->cantidad * $products[$x]->cantidad);
+                            if ($detalleinv->update()) {
+                                $inventario->stocktotal = $inventario->stocktotal - ($detallesingreso[$i]->cantidad * $products[$x]->cantidad);
+                                $inventario->update();
+                            }
+                        }
                     }
                 }
             }

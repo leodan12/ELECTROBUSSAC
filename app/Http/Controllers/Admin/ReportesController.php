@@ -10,6 +10,21 @@ use App\Models\Product;
 
 class ReportesController extends Controller
 {
+    function __construct()
+    { 
+        $this->middleware('permission:ver-reporte', 
+        ['only' => ['index','misventas','todasfechas','ventasdelmes','comprasdelmes' 
+        ,'cotizacionesdelmes','obtenerdatosgrafico','obtenerproductosmasv','obtenerproductoscantidad','productosindividuales'
+        ,'productosxkit','sumaproductos','prodseparados','obtenerclientesmasc','clientescantidad'
+        ,'clientescosto','misclientescosto','obtenerbalance','devolverclientes','devolverclientescant'
+        ,'sumarcostoventa','obtenerproductos','obtenercotizaciones','obtenerventas','obteneringresos'
+        ,'numeroproductos','numerocotizaciones','numeroingresos','numeroventas','balancemensual'
+        ,'coninfocompleta','obtenerdatosproductosventa','obtenerdatosproductoscompra','datosproductos','infoproductos'
+        ,'resultadoventas','productosestandar','misproductosvendidos','datosrotacionstock','rotacionstock'
+        ,'detallecompras','sumarresultado','obtenermisventas','detalleventas','misproductoscomprados'
+        ,'obtenermiscompras','productosestandar2']]);
+    }
+
     public function index()
     {
         $companies = Company::all();

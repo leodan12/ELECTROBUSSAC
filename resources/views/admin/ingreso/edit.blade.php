@@ -37,7 +37,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label ">NUMERO DE FACTURA</label>
                                 <input type="text" name="factura" id="factura" class="form-control borde"
@@ -52,9 +51,7 @@
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     @if ($ingreso->formapago == 'credito')
                                         <option value="credito" data-formapago="credito" selected>Credito</option>
-                                        {{-- <option value="contado" data-formapago="contado">Contado</option> --}}
                                     @elseif($ingreso->formapago == 'contado')
-                                        {{-- <option value="credito" data-formapago="credito"  >Credito</option> --}}
                                         <option value="contado" data-formapago="contado" selected>Contado</option>
                                     @endif
                                 </select>
@@ -62,9 +59,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
-
-
                             <div class="col-md-6 mb-3">
                                 @if ($ingreso->formapago == 'contado')
                                     <label id="labelfechav" class="form-label">FECHA DE VENCIMIENTO</label>
@@ -88,13 +82,10 @@
                                 <select name="moneda" id="moneda" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     @if ($ingreso->moneda == 'soles')
-                                        {{-- <option value="dolares" data-moneda="dolares" >Dolares Americanos</option> --}}
                                         <option value="soles" data-moneda="soles" selected>Soles</option>
                                     @elseif($ingreso->moneda == 'dolares')
                                         <option value="dolares" data-moneda="dolares" selected>Dolares Americanos</option>
-                                        {{-- <option value="soles" data-moneda="soles" >Soles</option> --}}
                                     @endif
-
                                 </select>
                                 @error('tipo')
                                     <small class="text-danger">{{ $message }}</small>
@@ -104,7 +95,6 @@
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01" readonly
                                     class="form-control borde" value="{{ $ingreso->tasacambio }}" />
-
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
@@ -123,7 +113,6 @@
                                     <option value="" selected disabled>Seleccione una opción</option>
 
                                 </select>
-
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="input-group">
@@ -147,7 +136,6 @@
                                         <option value="SI">SI</option>
                                     @elseif($ingreso->pagada == 'SI')
                                         <option value="SI" selected>SI</option>
-                                        {{-- <option value="NO" >NO</option> --}}
                                     @endif
                                 </select>
                             </div>
@@ -166,10 +154,24 @@
                                 <select class="form-select select2 borde" name="product" id="product">
                                     <option selected disabled value="">Seleccione una opción</option>
                                     @foreach ($products as $product)
-                                        <option id="productoxempresa{{ $product->id }}" value="{{ $product->id }}"
-                                            data-tipo="{{ $product->tipo }}" data-name="{{ $product->nombre }}"
-                                            data-moneda="{{ $product->moneda }}" data-price="{{ $product->NoIGV }}">
-                                            {{ $product->nombre }}</option>
+                                        @php $contp=0;    @endphp
+                                        @foreach ($detallesingreso as $item)
+                                            @if ($product->id == $item->idproducto)
+                                                @php $contp++;    @endphp
+                                            @endif
+                                        @endforeach
+                                        @if ($contp == 0)
+                                            <option id="productoxempresa{{ $product->id }}" value="{{ $product->id }}"
+                                                data-tipo="{{ $product->tipo }}" data-name="{{ $product->nombre }}"
+                                                data-moneda="{{ $product->moneda }}" data-price="{{ $product->NoIGV }}">
+                                                {{ $product->nombre }}</option>
+                                        @else
+                                            <option disabled id="productoxempresa{{ $product->id }}"
+                                                value="{{ $product->id }}" data-tipo="{{ $product->tipo }}"
+                                                data-name="{{ $product->nombre }}" data-moneda="{{ $product->moneda }}"
+                                                data-price="{{ $product->NoIGV }}">
+                                                {{ $product->nombre }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -219,7 +221,6 @@
                                 <div class="input-group">
                                     <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR
                                         PRODUCTO:</label>
-
                                     <span class="input-group-text" id="spanpreciototal"></span>
                                     <input type="number" name="preciofinal" min="0.1" step="0.01"
                                         id="preciofinal" readonly class="form-control borde" />
@@ -301,7 +302,7 @@
                                                 </td>
 
                                                 <td><button type="button" class="btn btn-danger"
-                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetalleingreso }}'  )"
+                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetalleingreso }}', '{{ $detalle->idproducto }}'  )"
                                                         data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
                                                 </td>
 
@@ -378,7 +379,7 @@
             $('.toast').toast();
             $('.select2').select2({});
             var miurl = "{{ url('admin/venta/comboempresacliente') }}";
-            $.get(miurl +'/'+ idcompany, function(data) {
+            $.get(miurl + '/' + idcompany, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
@@ -665,7 +666,7 @@
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
                 '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + 0 + ',' +
-                0 + ')" data-id="0">ELIMINAR</button></td></tr>';
+                0 +','+LVenta[0]+ ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesVenta>tbody").append(filaDetalle);
             $('.toast').toast('hide');
@@ -674,13 +675,14 @@
             $('#product').val(null).trigger('change');
             document.getElementById('costoventa').value = (ventatotal).toFixed(2);
             limpiarinputs();
+            document.getElementById('productoxempresa' + LVenta[0]).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
 
         }
 
 
-        function eliminarFila(ind, lugardato, iddetalle) {
+        function eliminarFila(ind, lugardato, iddetalle, idproducto) {
             if (lugardato == "db") {
                 Swal.fire({
                     title: '¿Esta seguro de Eliminar?',
@@ -693,7 +695,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var miurl2 = "{{ url('admin/deletedetalleingreso') }}";
-                        $.get(miurl2 +'/'+ iddetalle, function(data) {
+                        $.get(miurl2 + '/' + iddetalle, function(data) {
                             if (data[0] == 1) {
                                 Swal.fire({
                                     text: "Registro Eliminado",
@@ -718,6 +720,7 @@
             } else {
                 quitarFila(ind);
             }
+            document.getElementById('productoxempresa' + idproducto).disabled = false;
             return false;
         }
 

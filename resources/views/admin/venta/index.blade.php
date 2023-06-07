@@ -282,8 +282,10 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" id="generarfactura1"> Generar Pdf de
                                         la Factura </button>
-                                    <button type="button" class="btn btn-warning" id="pagarfactura1">Pagar
-                                        Factura</button>
+                                    @can('editar-venta')
+                                        <button type="button" class="btn btn-warning" id="pagarfactura1">Pagar
+                                            Factura</button>
+                                    @endcan
                                     <button class="btn btn-primary" data-bs-target="#modalCreditos1"
                                         data-bs-toggle="modal">Volver</button>
                                 </div>
@@ -437,9 +439,15 @@
                 document.getElementById("verTipocambio").value = midata[0].tasacambio;
 
                 if (midata[0].pagada == "NO") {
-                    document.getElementById('pagarfactura').style.display = 'inline';
+                    var btnventa = document.getElementById('pagarfactura')
+                    if (btnventa) {
+                        btnventa.style.display = 'inline';
+                    }
                 } else if (midata[0].pagada == "SI") {
-                    document.getElementById('pagarfactura').style.display = 'none';
+                    var btnventa = document.getElementById('pagarfactura')
+                    if (btnventa) {
+                        btnventa.style.display = 'none';
+                    }
                 }
 
                 if (midata[0].observacion == null) {
@@ -575,12 +583,13 @@
                             i].formapago +
                         '</td><td><input  type="hidden"  value="' + data[i].costoventa + '"required>' +
                         simbolomonedafact + data[i].costoventa +
-                        '</td><td><a  href="' + miurl + '/' + data[i].id +
-                        '/edit" class="btn btn-success">Editar</a> ' +
+                        '</td><td>@can('editar-venta')<a  href="' + miurl + '/' + data[i]
+                        .id +
+                        '/edit" class="btn btn-success">Editar</a> @endcan' +
                         '<button type="button" class="btn btn-secondary" data-id="' + data[i].id +
                         '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>' +
-                        '<form action="' + miurl + '/' + data[i].id +
-                        '/delete" class="d-inline formulario-eliminar"> <button type="submit" class="btn btn-danger formulario-eliminar">Eliminar </button></form>' +
+                        '@can('eliminar-venta')<form action="' + miurl + '/' + data[i].id +
+                        '/delete" class="d-inline formulario-eliminar"> <button type="submit" class="btn btn-danger formulario-eliminar">Eliminar </button></form>@endcan' +
                         '</td></tr>';
 
                     $("#mitabla1>tbody").append(filaDetalle);
@@ -625,9 +634,15 @@
                 document.getElementById("verTipocambio1").value = midata[0].tasacambio;
 
                 if (midata[0].pagada == "NO") {
-                    document.getElementById('pagarfactura1').style.display = 'inline';
+                    var pagarfactura = document.getElementById('pagarfactura1');
+                    if (pagarfactura) {
+                        pagarfactura.style.display = 'inline';
+                    }
                 } else if (midata[0].pagada == "SI") {
-                    document.getElementById('pagarfactura1').style.display = 'none';
+                    var pagarfactura = document.getElementById('pagarfactura1');
+                    if (pagarfactura) {
+                        pagarfactura.style.display = 'none';
+                    }
                 }
 
                 if (midata[0].observacion == null) {

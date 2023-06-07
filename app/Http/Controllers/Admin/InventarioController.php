@@ -17,10 +17,12 @@ class InventarioController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-inventario|editar-inventario|crear-inventario|eliminar-inventario',
-        ['only' => ['index','show','showkits']]);
-        $this->middleware('permission:crear-inventario', ['only' => ['create','store']]);
-        $this->middleware('permission:editar-inventario', ['only' => ['edit','update','destroydetalleinventario']]);
+        $this->middleware(
+            'permission:ver-inventario|editar-inventario|crear-inventario|eliminar-inventario',
+            ['only' => ['index', 'show', 'showkits']]
+        );
+        $this->middleware('permission:crear-inventario', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar-inventario', ['only' => ['edit', 'update', 'destroydetalleinventario']]);
         $this->middleware('permission:eliminar-inventario', ['only' => ['destroy']]);
     }
     public function index(Request $request)
@@ -96,8 +98,9 @@ class InventarioController extends Controller
     }
     public function edit(int $inventario_id)
     {
-        $companies = Company::all();
-        //$products = Product::all()->where('status','=',0);
+        $companies = DB::table('companies as c')->select('id', 'nombre')->get();
+         
+       
         $products = DB::table('products as p')
             ->join('inventarios as i', 'i.product_id', '=', 'p.id')
             ->select('p.id', 'p.nombre', 'p.status')
@@ -107,7 +110,7 @@ class InventarioController extends Controller
         $detalleinventario = DB::table('detalleinventarios as di')
             ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
-            ->select('di.id as iddetalleinventario', 'c.nombre', 'di.stockempresa')
+            ->select('di.id as iddetalleinventario', 'c.nombre', 'di.stockempresa','c.id as idcompany')
             ->where('i.id', '=', $inventario_id)->get();
 
         return view('admin.inventario.edit', compact('products', 'inventario', 'companies', 'detalleinventario'));
@@ -167,7 +170,7 @@ class InventarioController extends Controller
             $datos->put('haydetalle', "no");
         } else {
             $datos->put('haydetalle', "si");
-            
+
             $datos->put('detalle', $detalle);
         }
 

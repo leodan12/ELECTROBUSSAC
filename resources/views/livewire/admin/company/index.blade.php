@@ -192,10 +192,7 @@
             const button = event.relatedTarget
             const id = button.getAttribute('data-id')
             var urlregistro = "{{ url('admin/company/show') }}";
-            $.get(urlregistro + '/' + id, function(data) {
-                console.log(data);
-
-
+            $.get(urlregistro + '/' + id, function(data) { 
                 const modalTitle = mimodal.querySelector('.modal-title')
                 modalTitle.textContent = `Ver Registro ${id}`
 
@@ -210,7 +207,7 @@
                 document.getElementById("vernumerocuentadolares").value = data.numerocuentadolares;
                 document.getElementById("verccidolares").value = data.ccidolares;
 
-                document.getElementById("verLogo").src = "/logos/" + data.logo;
+
                 if (data.direccion == null) {
                     document.getElementById('divdireccion').style.display = 'none';
                 } else {
@@ -233,7 +230,8 @@
                     document.getElementById('divlogo').style.display = 'none';
                 } else {
                     document.getElementById('divlogo').style.display = 'inline';
-                    document.getElementById("verlogo").value = data.logo;
+                    document.getElementById("verLogo").value = data.logo;
+                    document.getElementById("verLogo").src = "/logos/" + data.logo;
                 }
 
             });

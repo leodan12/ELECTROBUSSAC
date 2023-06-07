@@ -86,9 +86,23 @@
                                 <select class="form-select select2 borde" name="product" id="product">
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $prod)
-                                        <option value="{{ $prod->id }}" data-name="{{ $prod->nombre }}"
-                                            data-moneda="{{ $prod->moneda }}" data-stock="{{ $prod->stockempresa }}"
-                                            data-price="{{ $prod->NoIGV }}">{{ $prod->nombre }}</option>
+                                        @php $contp=0;    @endphp
+                                        @foreach ($kitdetalles as $item)
+                                            @if ($prod->id == $item->kitproduct_id)
+                                                @php $contp++;    @endphp
+                                            @endif
+                                        @endforeach
+                                        @if ($contp == 0)
+                                            <option id="miproducto{{ $prod->id }}" value="{{ $prod->id }}"
+                                                data-name="{{ $prod->nombre }}" data-moneda="{{ $prod->moneda }}"
+                                                data-stock="{{ $prod->stockempresa }}" data-price="{{ $prod->NoIGV }}">
+                                                {{ $prod->nombre }}</option>
+                                        @else
+                                            <option disabled id="miproducto{{ $prod->id }}"
+                                                value="{{ $prod->id }}" data-name="{{ $prod->nombre }}"
+                                                data-moneda="{{ $prod->moneda }}" data-stock="{{ $prod->stockempresa }}"
+                                                data-price="{{ $prod->NoIGV }}">{{ $prod->nombre }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -178,7 +192,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger"
-                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $item->id }}'  )"
+                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $item->id }}', '{{ $item->idproducto }}'  )"
                                                         data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
                                                 </td>
                                             </tr>
@@ -359,8 +373,6 @@
                 return;
             }
 
-
-            //$("#product option:contains('Seleccione una opción')").attr('selected',false);  
             var LVenta = [];
             var tam = LVenta.length;
             LVenta.push(product, nameproduct, cantidad, preciounitario, preciounitariomo, preciofinal);
@@ -376,7 +388,7 @@
                 '</td><td><input  type="hidden" name="Lpreciofinal[]" id="preciof' + indice + '" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + 0 + ',' +
-                0 + ')" data-id="0">ELIMINAR</button></td></tr>';
+                0 + ',' + product  + ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesKit>tbody").append(filaDetalle);
 
@@ -388,12 +400,12 @@
             limpiarinputs();
             document.getElementById('NoIGV').value = ventatotal;
             document.getElementById('SiIGV').value = (ventatotal * 1.18).toFixed(2);
-
+            document.getElementById('miproducto' + product).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
         }
 
-        function eliminarFila(ind, lugardato, iddetalle) {
+        function eliminarFila(ind, lugardato, iddetalle, producto) {
             if (lugardato == "db") {
                 Swal.fire({
                     title: '¿Esta seguro de Eliminar?',
@@ -406,7 +418,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var miurl = "{{ url('admin/deletedetallekit') }}";
-                        $.get(miurl +'/'+ iddetalle, function(data) {
+                        $.get(miurl + '/' + iddetalle, function(data) {
                             //alert(data[0]);
                             if (data[0] == 1) {
                                 Swal.fire({
@@ -427,6 +439,8 @@
             } else {
                 quitarFila(ind);
             }
+
+            document.getElementById('miproducto' + producto).disabled = false;
             return false;
         }
 

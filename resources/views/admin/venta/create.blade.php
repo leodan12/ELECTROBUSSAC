@@ -379,7 +379,7 @@
                     if (data[i].stockempresa == null) {
                         alert(data[i].stockempresa);
                     }
-                    producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i]
+                    producto_select += '<option  id="productoxempresa' + data[i].id + '" value="' + data[i]
                         .id + '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +
                         '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
                         '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
@@ -646,7 +646,7 @@
                 '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice +
+                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice+','+ LVenta[0]+
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#detallesVenta>tbody").append(filaDetalle);
             $('.toast').toast('hide');
@@ -655,6 +655,7 @@
             ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
             limpiarinputs();
             document.getElementById('costoventa').value = (ventatotal * 1).toFixed(2);
+            document.getElementById('productoxempresa' + LVenta[0]).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
         }
@@ -706,7 +707,7 @@
             limpiarinputs();
         });
 
-        function eliminarFila(ind) {
+        function eliminarFila(ind,idproducto) {
             var resta = 0;
             resta = $('[id="preciof' + ind + '"]').val();
             ventatotal = (ventatotal - resta).toFixed(2);
@@ -718,6 +719,7 @@
 
             var funcion = "eliminar";
             botonguardar(funcion);
+            document.getElementById('productoxempresa' + idproducto).disabled = false;
 
             return false;
         }

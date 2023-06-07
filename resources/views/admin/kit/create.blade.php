@@ -88,9 +88,10 @@
                                 <select class="form-select select2 borde" name="product" id="product" disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" data-name="{{ $product->nombre }}"
-                                            data-moneda="{{ $product->moneda }}" data-stock="{{ $product->stockempresa }}"
-                                            data-price="{{ $product->NoIGV }}">{{ $product->nombre }}</option>
+                                        <option id="miproducto{{ $product->id }}" value="{{ $product->id }}"
+                                            data-name="{{ $product->nombre }}" data-moneda="{{ $product->moneda }}"
+                                            data-stock="{{ $product->stockempresa }}" data-price="{{ $product->NoIGV }}">
+                                            {{ $product->nombre }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -344,7 +345,8 @@
                 '" value="' + LVenta[4] + '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td><input  type="hidden" name="Lpreciofinal[]" id="preciof' + indice + '" value="' + LVenta[
                     5] + '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice +
+                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' +
+                    product +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesKit>tbody").append(filaDetalle);
@@ -355,12 +357,12 @@
             limpiarinputs();
             document.getElementById('NoIGV').value = ventatotal;
             document.getElementById('SiIGV').value = (ventatotal * 1.18).toFixed(2);
-
+            document.getElementById('miproducto'+product).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
         });
 
-        function eliminarFila(ind) {
+        function eliminarFila(ind, product) {
             var resta = 0;
             resta = $('[id="preciof' + ind + '"]').val();
             //alert(resta);
@@ -372,6 +374,7 @@
             document.getElementById('NoIGV').value = (ventatotal).toFixed(2);
             document.getElementById('SiIGV').value = (ventatotal * 1.18).toFixed(2);
             //alert(resta);
+            document.getElementById('miproducto' + product).disabled = false;
 
             var funcion = "eliminar";
             botonguardar(funcion);

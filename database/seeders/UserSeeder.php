@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             'ver-inventario', 'crear-inventario', 'editar-inventario', 'eliminar-inventario',
             'ver-cotizacion', 'crear-cotizacion', 'editar-cotizacion', 'eliminar-cotizacion',
             'ver-ingreso', 'crear-ingreso', 'editar-ingreso', 'eliminar-ingreso',
-            'ver-venta', 'crear-venta', 'editar-venta', 'eliminar-venta'
+            'ver-venta', 'crear-venta', 'editar-venta', 'eliminar-venta','ver-reporte'
         ];
 
         $roluser->syncPermissions($permisosuser);

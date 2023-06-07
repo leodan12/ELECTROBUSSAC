@@ -117,7 +117,7 @@
                                 <select class="form-select select2 borde" name="product" id="product" disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" data-name="{{ $product->nombre }}"
+                                        <option id="miproducto{{ $product->id }}" value="{{ $product->id }}" data-name="{{ $product->nombre }}"
                                             data-moneda="{{ $product->moneda }}" data-tipo="{{ $product->tipo }}"
                                             {{-- data-stock="{{ $product->stockempresa }}" --}} data-price="{{ $product->NoIGV }}">
                                             {{ $product->nombre }}</option>
@@ -552,7 +552,7 @@
                 '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>' +
                 simbolomonedafactura + LVenta[5] +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' +
-                indice + ')" data-id="0">ELIMINAR</button></td></tr>';
+                indice+','+LVenta[0] + ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesVenta>tbody").append(filaDetalle);
 
@@ -562,12 +562,12 @@
 
             limpiarinputs();
             document.getElementById('costoventa').value = (ventatotal.toFixed(2));
-
+            document.getElementById('miproducto' + LVenta[0]).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
         }
 
-        function eliminarFila(ind) {
+        function eliminarFila(ind,idproducto) {
             var resta = 0;
             //document.getElementById('preciot' + ind).value();
             resta = $('[id="preciof' + ind + '"]').val();
@@ -579,7 +579,7 @@
             // damos el valor
             document.getElementById('costoventa').value = (ventatotal.toFixed(2));
             //alert(resta);
-
+            document.getElementById('miproducto' + idproducto).disabled = false;
             var funcion = "eliminar";
             botonguardar(funcion);
 

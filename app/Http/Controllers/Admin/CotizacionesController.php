@@ -194,7 +194,9 @@ class CotizacionesController extends Controller
         $detallescotizacion = DB::table('detallecotizacions as dc')
             ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
             ->join('products as p', 'dc.product_id', '=', 'p.id')
-            ->select('dc.observacionproducto', 'p.tipo', 'p.moneda', 'dc.id as iddetallecotizacion', 'dc.cantidad', 'dc.preciounitario', 'dc.preciounitariomo', 'dc.servicio', 'dc.preciofinal', 'p.id as idproducto', 'p.nombre as producto')
+            ->select('dc.observacionproducto', 'p.tipo', 'p.moneda', 'dc.id as iddetallecotizacion', 'dc.cantidad', 
+            'dc.preciounitario', 'dc.preciounitariomo', 'dc.servicio', 'dc.preciofinal', 'p.id as idproducto', 
+            'p.nombre as producto')
             ->where('c.id', '=', $cotizacion_id)->get();
         //return $detallesventa;
         $detalleskit = DB::table('kits as k')

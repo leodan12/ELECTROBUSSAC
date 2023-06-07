@@ -409,10 +409,10 @@
             var company = $(this).val();
             $('#product').removeAttr('disabled');
             var url3 = "{{ url('admin/venta/productosxempresa') }}";
-            $.get(url3 +'/'+ company, function(data) {
+            $.get(url3 + '/' + company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
-                    producto_select += '<option id="productoxempresa' + data[i].id + '" value="' + data[i]
+                    producto_select += '<option id="miproducto'+data[i].id+'" id="productoxempresa' + data[i].id + '" value="' + data[i]
                         .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +
                         '" data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
@@ -421,7 +421,7 @@
             });
             $('#cliente_id').removeAttr('disabled');
             var url4 = "{{ url('admin/venta/comboempresacliente') }}";
-            $.get(url4 +'/' + company, function(data) {
+            $.get(url4 + '/' + company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option value="' + data[i].id + '" data-name="' + data[i].nombre +
@@ -646,11 +646,8 @@
                             coma = '';
                         }
                         milista = milista + '-' + data[i].cantidad + ' ' + data[i].producto + coma;
-                        //agregar la resta para cadaa stock individual 
-                        var product1 = document.getElementById('productoxempresa' + data[i].id);
-                        var stock = product1.dataset.stock;
-                        product1.setAttribute('data-stock', (stock - data[i].cantidad));
-                    } 
+                        
+                    }
                     agregarFilasTabla(LVenta, puntos, milista);
                 });
             } else {
@@ -676,7 +673,7 @@
                 '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn  btn-danger" onclick="eliminarFila(' + indice +
+                '</td><td><button type="button" class="btn  btn-danger" onclick="eliminarFila(' + indice+','+LVenta[0] +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#detallesVenta>tbody").append(filaDetalle);
 
@@ -691,6 +688,7 @@
             } else {
                 document.getElementById('costoventaconigv').value = "";
             }
+            document.getElementById('miproducto' + LVenta[0]).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
             $('.toast').toast('hide');
@@ -778,7 +776,7 @@
             simbolomonedaproducto = "";
         }
 
-        function eliminarFila(ind) {
+        function eliminarFila(ind,idproducto) {
             var resta = 0;
             //document.getElementById('preciot' + ind).value();
             resta = $('[id="preciof' + ind + '"]').val();
@@ -794,6 +792,7 @@
             } else {
                 document.getElementById('costoventaconigv').value = "";
             }
+            document.getElementById('miproducto' + idproducto).disabled = false;
             var funcion = "eliminar";
             botonguardar(funcion);
 

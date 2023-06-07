@@ -68,7 +68,9 @@ class PermisosSeeder extends Seeder
             'ver-venta',
             'crear-venta',
             'editar-venta',
-            'eliminar-venta'
+            'eliminar-venta',
+            //para reportes
+            'ver-reporte'
         ];
 
         foreach($permisos as $permiso){

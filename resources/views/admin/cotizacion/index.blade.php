@@ -13,15 +13,15 @@
                     <div class="card-header">
                         <h4>REGISTRO DE COTIZACIÓN
                             @can('crear-cotizacion')
-                            <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir
-                                Cotización</a>
+                                <a href="{{ url('admin/cotizacion/create') }}" class="btn btn-primary float-end">Añadir
+                                    Cotización</a>
                             @endcan
                         </h4>
                     </div>
-                    <div class="card-body"  >
+                    <div class="card-body">
                         <div class="table-responsive">
-                            <table  class="table table-bordered table-striped"  id="mitabla" name="mitabla">
-                                <thead  >
+                            <table class="table table-bordered table-striped" id="mitabla" name="mitabla">
+                                <thead>
                                     <tr class="fw-bold text-primary ">
                                         <th>ID</th>
                                         <th>NUMERO</th>
@@ -37,7 +37,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
- 
+
                                 </tbody>
                             </table>
                         </div>
@@ -86,7 +86,8 @@
                                                 <input type="text" class="form-control " id="verFormapago" readonly>
                                             </div>
                                             <div class=" col-md-3   mb-3" name="divdiascredito" id="divdiascredito">
-                                                <label for="verPersona" class="col-form-label">DIAS DE CREDITO PARA LA COMPRA:</label>
+                                                <label for="verPersona" class="col-form-label">DIAS DE CREDITO PARA LA
+                                                    COMPRA:</label>
                                                 <input type="text" class="form-control " id="verDiascredito" readonly>
                                             </div>
                                             <div class=" col-md-3   mb-3">
@@ -190,9 +191,9 @@
                                         la Cotización </button>
                                     <div id="btnvender" name="btnvender">
                                         @can('editar-cotizacion')
-                                        <button type="button" class="btn btn-warning" id="realizarventa"
-                                            onclick="venderCotizacion()">Realizar
-                                            Venta</button>
+                                            <button type="button" class="btn btn-warning" id="realizarventa"
+                                                onclick="venderCotizacion()">Realizar
+                                                Venta</button>
                                         @endcan
                                     </div>
                                     <button type="button" class="btn btn-secondary"
@@ -207,11 +208,11 @@
         </div>
     </div>
     </div>
-    @endsection
-    @push('script')
-        <script src="{{ asset('admin/midatatable.js') }}"></script>
-        <script>
-            $(document).ready(function() {
+@endsection
+@push('script')
+    <script src="{{ asset('admin/midatatable.js') }}"></script>
+    <script>
+        $(document).ready(function() {
             var tabla = "#mitabla";
             var ruta = "{{ route('cotizacion.index') }}"; //darle un nombre a la ruta index
             var columnas = [{
@@ -226,7 +227,7 @@
                     data: 'fecha',
                     name: 'fecha'
                 },
-                
+
                 {
                     data: 'cliente',
                     name: 'cl.nombre'
@@ -262,9 +263,9 @@
                     orderable: false,
                 },
             ];
-            var btns ='lfrtip';
+            var btns = 'lfrtip';
 
-            iniciarTablaIndex(tabla, ruta, columnas,btns);
+            iniciarTablaIndex(tabla, ruta, columnas, btns);
 
         });
         //para borrar un registro de la tabla
@@ -307,176 +308,180 @@
                 }
             });
         });
+    </script>
+    <script>
+        var idventa = "";
+        const mimodal = document.getElementById('mimodal')
+        mimodal.addEventListener('show.bs.modal', event => {
 
-        </script>
-        <script>
-            var idventa = "";
-            const mimodal = document.getElementById('mimodal')
-            mimodal.addEventListener('show.bs.modal', event => {
-
-                const button = event.relatedTarget
-                const id = button.getAttribute('data-id')
-                var urlventa = "{{ url('admin/cotizacion/show') }}";
-                $.get(urlventa + '/' + id, function(midata) {
-                    const modalTitle = mimodal.querySelector('.modal-title')
-                    modalTitle.textContent = `Ver Cotizacion Nro: ` + midata[0].numero;
-                    idventa = id;
-                    document.getElementById("verFecha").value = midata[0].fecha;
-                    document.getElementById("verFechav").value = midata[0].fechav;
-                    document.getElementById("verMoneda").value = midata[0].moneda;
-                    document.getElementById("verEmpresa").value = midata[0].company;
-                    document.getElementById("verCliente").value = midata[0].cliente
-                    document.getElementById("verVendida").value = midata[0].vendida;
-                    document.getElementById("verFormapago").value = midata[0].formapago;
-                    document.getElementById("verPrecioventasinigv").value = midata[0].costoventasinigv;
-                    document.getElementById("verPrecioventaconigv").value = midata[0].costoventaconigv;
-                    if (midata[0].moneda == "dolares") {
-                        document.getElementById('spancostoventasinigv').innerHTML = "$";
-                        document.getElementById('spancostoventaconigv').innerHTML = "$";
-                    } else if (midata[0].moneda == "soles") {
-                        document.getElementById('spancostoventasinigv').innerHTML = "S/.";
-                        document.getElementById('spancostoventaconigv').innerHTML = "S/.";
-                    }
-                    if (midata[0].persona == null) {
-                        document.getElementById('divpersona').style.display = 'none';
-                    } else {
-                        document.getElementById('divpersona').style.display = 'inline';
-                        document.getElementById("verPersona").value = midata[0].persona;
-                    }
-                    if (midata[0].diascredito == null) {
-                        document.getElementById('divdiascredito').style.display = 'none';
-                    } else {
-                        document.getElementById('divdiascredito').style.display = 'inline';
-                        document.getElementById("verDiascredito").value = midata[0].diascredito;
-                    }
-                    if (midata[0].vendida == "SI") {
-                        document.getElementById('btnvender').style.display = 'none';
-                    } else if (midata[0].vendida == "NO") {
-                        document.getElementById('btnvender').style.display = 'inline';
-                    }
-
-                    document.getElementById("verTipocambio").value = midata[0].tasacambio;
-
-                    if (midata[0].vendida == "NO") {
-                        document.getElementById('realizarventa').style.display = 'inline';
-                    } else if (midata[0].vendida == "SI") {
-                        document.getElementById('realizarventa').style.display = 'none';
-                    }
-
-                    if (midata[0].observacion == null) {
-                        document.getElementById('divobservacion').style.display = 'none';
-                    } else {
-                        document.getElementById('divobservacion').style.display = 'inline';
-                        document.getElementById("verObservacion").value = midata[0].observacion;
-                    }
-
-
-                    var monedafactura = midata[0].moneda;
-                    var simbolomonedaproducto = "";
-                    var simbolomonedafactura = "";
-
-
-                    if (monedafactura == "dolares") {
-                        simbolomonedafactura = "$";
-                    } else if (monedafactura == "soles") {
-                        simbolomonedafactura = "S/.";
-                    }
-
-                    var tabla = document.getElementById(detallesventa);
-                    $('#detallesventa tbody tr').slice().remove();
-                    for (var ite = 0; ite < midata.length; ite++) {
-                        var monedaproducto = midata[ite].monedaproducto;
-                        if (monedaproducto == "dolares") {
-                            simbolomonedaproducto = "$";
-                        } else if (monedaproducto == "soles") {
-                            simbolomonedaproducto = "S/.";
-                        }
-                        var obsproducto = "";
-                        if (midata[ite].observacionproducto != null) {
-                            obsproducto = midata[ite].observacionproducto;
-                        }
-
-                        if (midata[ite].tipo == 'kit') {
-
-                            var urlventa = "{{ url('admin/venta/productosxkit') }}";
-                            $.ajax({
-                                type: "GET",
-                                url: urlventa + '/' + midata[ite].idproducto,
-                                async: false,
-                                data: {
-                                    id: id
-                                },
-                                success: function(data1) {
-                                    var milista = '<br>';
-                                    var puntos = ': ';
-                                    for (var j = 0; j < data1.length; j++) {
-                                        var coma = '<br>';
-                                        milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
-                                            .producto + coma;
-                                    }
-                                    filaDetalle = '<tr id="fila' + ite +
-                                        '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
-                                        milista + coma +
-                                        '</td><td> ' + midata[ite].observacionproducto +
-                                        '</td><td> ' + midata[ite].cantidad +
-                                        '</td><td> ' + simbolomonedaproducto + midata[ite]
-                                        .preciounitario +
-                                        '</td><td> ' + simbolomonedafactura + midata[ite]
-                                        .preciounitariomo +
-                                        '</td><td> ' + simbolomonedafactura + midata[ite].servicio +
-                                        '</td><td> ' + simbolomonedafactura + midata[ite]
-                                        .preciofinal +
-                                        '</td></tr>';
-                                    $("#detallesventa>tbody").append(filaDetalle);
-                                    milista = '<br>';
-                                }
-                            });
-
-                        } else
-                        if (midata[ite].tipo == 'estandar') {
-                            filaDetalle = '<tr id="fila' + ite +
-                                '"><td> <b>' + midata[ite].producto + '</b>' +
-                                '</td><td> ' + midata[ite].observacionproducto +
-                                '</td><td> ' + midata[ite].cantidad +
-                                '</td><td> ' + simbolomonedaproducto + midata[ite].preciounitario +
-                                '</td><td> ' + simbolomonedafactura + midata[ite].preciounitariomo +
-                                '</td><td> ' + simbolomonedafactura + midata[ite].servicio +
-                                '</td><td> ' + simbolomonedafactura + midata[ite].preciofinal +
-                                '</td></tr>';
-                            $("#detallesventa>tbody").append(filaDetalle);
-                        }
-                    }
-                });
-
-                var urlcondicion = "{{ url('admin/cotizacion/showcondiciones') }}";
-                $.get(urlcondicion + '/' + id, function(data) {
-                    $('#condiciones tbody tr').slice().remove();
-                    for (var i = 0; i < data.length; i++) {
-                        filaDetalle = '<tr id="filacondicion' + i +
-                            '"><td><input  type="hidden" name="LCondicion[]" value="' + data[i].condicion +
-                            '"required>' + data[i].condicion +
-                            '</td></tr>';
-                        $("#condiciones>tbody").append(filaDetalle);
-                    }
-                });
-
-            })
-            window.addEventListener('close-modal', event => {
-                $('#deleteModal').modal('hide');
-            });
-            $('#generarcotizacion').click(function() {
-                generarfactura(idventa);
-            });
-
-            function generarfactura($id) {
-                if ($id != -1) {
-                    window.open('/admin/cotizacion/generarcotizacionpdf/' + $id);
+            const button = event.relatedTarget
+            const id = button.getAttribute('data-id')
+            var urlventa = "{{ url('admin/cotizacion/show') }}";
+            $.get(urlventa + '/' + id, function(midata) {
+                const modalTitle = mimodal.querySelector('.modal-title')
+                modalTitle.textContent = `Ver Cotizacion Nro: ` + midata[0].numero;
+                idventa = id;
+                document.getElementById("verFecha").value = midata[0].fecha;
+                document.getElementById("verFechav").value = midata[0].fechav;
+                document.getElementById("verMoneda").value = midata[0].moneda;
+                document.getElementById("verEmpresa").value = midata[0].company;
+                document.getElementById("verCliente").value = midata[0].cliente
+                document.getElementById("verVendida").value = midata[0].vendida;
+                document.getElementById("verFormapago").value = midata[0].formapago;
+                document.getElementById("verPrecioventasinigv").value = midata[0].costoventasinigv;
+                document.getElementById("verPrecioventaconigv").value = midata[0].costoventaconigv;
+                if (midata[0].moneda == "dolares") {
+                    document.getElementById('spancostoventasinigv').innerHTML = "$";
+                    document.getElementById('spancostoventaconigv').innerHTML = "$";
+                } else if (midata[0].moneda == "soles") {
+                    document.getElementById('spancostoventasinigv').innerHTML = "S/.";
+                    document.getElementById('spancostoventaconigv').innerHTML = "S/.";
                 }
-            }
+                if (midata[0].persona == null) {
+                    document.getElementById('divpersona').style.display = 'none';
+                } else {
+                    document.getElementById('divpersona').style.display = 'inline';
+                    document.getElementById("verPersona").value = midata[0].persona;
+                }
+                if (midata[0].diascredito == null) {
+                    document.getElementById('divdiascredito').style.display = 'none';
+                } else {
+                    document.getElementById('divdiascredito').style.display = 'inline';
+                    document.getElementById("verDiascredito").value = midata[0].diascredito;
+                }
+                if (midata[0].vendida == "SI") {
+                    document.getElementById('btnvender').style.display = 'none';
+                } else if (midata[0].vendida == "NO") {
+                    document.getElementById('btnvender').style.display = 'inline';
+                }
 
-            function venderCotizacion() {
-                var urlventa = "{{ url('admin/venta/create2') }}";
-                window.location = (urlventa + '/' + idventa);
+                document.getElementById("verTipocambio").value = midata[0].tasacambio;
+
+                if (midata[0].observacion == null) {
+                    document.getElementById('divobservacion').style.display = 'none';
+                } else {
+                    document.getElementById('divobservacion').style.display = 'inline';
+                    document.getElementById("verObservacion").value = midata[0].observacion;
+                }
+
+
+                var monedafactura = midata[0].moneda;
+                var simbolomonedaproducto = "";
+                var simbolomonedafactura = "";
+
+
+                if (monedafactura == "dolares") {
+                    simbolomonedafactura = "$";
+                } else if (monedafactura == "soles") {
+                    simbolomonedafactura = "S/.";
+                }
+
+                var tabla = document.getElementById(detallesventa);
+                $('#detallesventa tbody tr').slice().remove();
+                for (var ite = 0; ite < midata.length; ite++) {
+                    var monedaproducto = midata[ite].monedaproducto;
+                    if (monedaproducto == "dolares") {
+                        simbolomonedaproducto = "$";
+                    } else if (monedaproducto == "soles") {
+                        simbolomonedaproducto = "S/.";
+                    }
+                    var obsproducto = "";
+                    if (midata[ite].observacionproducto != null) {
+                        obsproducto = midata[ite].observacionproducto;
+                    }
+
+                    if (midata[ite].tipo == 'kit') {
+
+                        var urlventa = "{{ url('admin/venta/productosxkit') }}";
+                        $.ajax({
+                            type: "GET",
+                            url: urlventa + '/' + midata[ite].idproducto,
+                            async: false,
+                            data: {
+                                id: id
+                            },
+                            success: function(data1) {
+                                var milista = '<br>';
+                                var puntos = ': ';
+                                for (var j = 0; j < data1.length; j++) {
+                                    var coma = '<br>';
+                                    milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
+                                        .producto + coma;
+                                }
+                                filaDetalle = '<tr id="fila' + ite +
+                                    '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
+                                    milista + coma +
+                                    '</td><td> ' + midata[ite].observacionproducto +
+                                    '</td><td> ' + midata[ite].cantidad +
+                                    '</td><td> ' + simbolomonedaproducto + midata[ite]
+                                    .preciounitario +
+                                    '</td><td> ' + simbolomonedafactura + midata[ite]
+                                    .preciounitariomo +
+                                    '</td><td> ' + simbolomonedafactura + midata[ite].servicio +
+                                    '</td><td> ' + simbolomonedafactura + midata[ite]
+                                    .preciofinal +
+                                    '</td></tr>';
+                                $("#detallesventa>tbody").append(filaDetalle);
+                                milista = '<br>';
+                            }
+                        });
+
+                    } else
+                    if (midata[ite].tipo == 'estandar') {
+                        filaDetalle = '<tr id="fila' + ite +
+                            '"><td> <b>' + midata[ite].producto + '</b>' +
+                            '</td><td> ' + midata[ite].observacionproducto +
+                            '</td><td> ' + midata[ite].cantidad +
+                            '</td><td> ' + simbolomonedaproducto + midata[ite].preciounitario +
+                            '</td><td> ' + simbolomonedafactura + midata[ite].preciounitariomo +
+                            '</td><td> ' + simbolomonedafactura + midata[ite].servicio +
+                            '</td><td> ' + simbolomonedafactura + midata[ite].preciofinal +
+                            '</td></tr>';
+                        $("#detallesventa>tbody").append(filaDetalle);
+                    }
+                }
+                if (midata[0].vendida == "NO") {
+                    var btnventa = document.getElementById('realizarventa')
+                    if (btnventa) {
+                        btnventa.style.display = 'inline';
+                    }
+                } else if (midata[0].vendida == "SI") {
+                    var btnventa = document.getElementById('realizarventa')
+                    if (btnventa) {
+                        btnventa.style.display = 'none';
+                    }
+                }
+            });
+
+            var urlcondicion = "{{ url('admin/cotizacion/showcondiciones') }}";
+            $.get(urlcondicion + '/' + id, function(data) {
+                $('#condiciones tbody tr').slice().remove();
+                for (var i = 0; i < data.length; i++) {
+                    filaDetalle = '<tr id="filacondicion' + i +
+                        '"><td><input  type="hidden" name="LCondicion[]" value="' + data[i].condicion +
+                        '"required>' + data[i].condicion +
+                        '</td></tr>';
+                    $("#condiciones>tbody").append(filaDetalle);
+                }
+            });
+
+        })
+        window.addEventListener('close-modal', event => {
+            $('#deleteModal').modal('hide');
+        });
+        $('#generarcotizacion').click(function() {
+            generarfactura(idventa);
+        });
+
+        function generarfactura($id) {
+            if ($id != -1) {
+                window.open('/admin/cotizacion/generarcotizacionpdf/' + $id);
             }
-        </script>
-    @endpush 
+        }
+
+        function venderCotizacion() {
+            var urlventa = "{{ url('admin/venta/create2') }}";
+            window.location = (urlventa + '/' + idventa);
+        }
+    </script>
+@endpush

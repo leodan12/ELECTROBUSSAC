@@ -52,7 +52,7 @@
                                 <input type="number" name="stocktotal" id="stocktotal"
                                     value="{{ $inventario->stocktotal }}" readonly class="form-control" />
 
-                            </div> 
+                            </div>
                             <hr>
                             <h5>Agregar Detalle de Inventario</h5>
                             <div class="col-md-6 mb-3">
@@ -60,8 +60,21 @@
                                 <select class="form-select select2 borde" name="empresa" id="empresa">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($companies as $company)
-                                        <option value="{{ $company->id }}" data-name="{{ $company->nombre }}">
-                                            {{ $company->nombre }}</option>
+                                        @php $conte=0; @endphp
+                                        @foreach ($detalleinventario as $detalle)
+                                            @if ($detalle->idcompany == $company->id)
+                                                @php $conte++; @endphp
+                                            @endif
+                                        @endforeach
+                                        @if ($conte == 0)
+                                            <option id="micompany{{ $company->id }}" value="{{ $company->id }}"
+                                                data-name="{{ $company->nombre }}">
+                                                {{ $company->nombre }}</option>
+                                        @else
+                                            <option disabled id="micompany{{ $company->id }}" value="{{ $company->id }}"
+                                                data-name="{{ $company->nombre }}">
+                                                {{ $company->nombre }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -93,7 +106,7 @@
                                                 <td> {{ $detalle->nombre }}</td>
                                                 <td> {{ $detalle->stockempresa }}</td>
                                                 <td><button type="button" class="btn btn-danger"
-                                                        onclick="eliminarFila(  '{{ $detalle->iddetalleinventario }}','{{ $ind }}','{{ $detalle->stockempresa }}'  )"
+                                                        onclick="eliminarFila(  '{{ $detalle->iddetalleinventario }}','{{ $ind }}','{{ $detalle->stockempresa }}','{{ $detalle->idcompany }}'  )"
                                                         data-id="0">ELIMINAR</button></td>
 
                                             </tr>
@@ -156,7 +169,7 @@
                 '"><td><input  type="hidden" name="Lempresa[]" value="' + LDInventario[0] + '"required>' + LDInventario[2] +
                 '</td><td><input  type="hidden" name="Lstockempresa[]" id="stockempresa' + indice + '" value="' +
                 LDInventario[1] + '"required>' + LDInventario[1] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="quitarFila(' + indice +
+                '</td><td><button type="button" class="btn btn-danger" onclick="quitarFila(' + indice + ',' + empresa +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesCompra>tbody").append(filaDetalle);
@@ -166,6 +179,7 @@
             stocktotal = parseInt(stockempresa) + parseInt(mistocktotal);
             document.getElementById('stocktotal').value = stocktotal;
             document.getElementById('stockempresa').value = null;
+            document.getElementById('micompany' + empresa).disabled = true;
         };
         $("#empresa").change(function() {
 
@@ -179,9 +193,9 @@
 
 
 
-        function eliminarFila(idBD, ind, stockemp) {
+        function eliminarFila(idBD, ind, stockemp, idempresa) {
             var miurl = "{{ url('admin/deletedetalleinventario') }}";
-            $.get(miurl +'/'+ idBD, function(data) {
+            $.get(miurl + '/' + idBD, function(data) {
                 $('#fila' + ind).remove();
                 var stocktotal2 = 0;
 
@@ -191,10 +205,11 @@
                 stocktotal2 = stocktotal2 - stockemp;
                 document.getElementById('stocktotal').value = stocktotal2;
                 stocktotal = stocktotal2;
+                document.getElementById('micompany' + idempresa).disabled = false;
             });
         }
 
-        function quitarFila(ind) {
+        function quitarFila(ind, empresa) {
 
             var resta = 0;
 
@@ -208,7 +223,7 @@
             // damos el valor
             document.getElementById('stocktotal').value = stocktotal;
             //alert(resta);
-
+            document.getElementById('micompany' + empresa).disabled = false;
             return false;
 
         }

@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar">
+<nav class="sidebar sidebar-offcanvas" id="sidebar"  >
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link" href="{{ url('admin/dashboard') }}">
@@ -109,6 +109,7 @@
                 </ul>
             </div>
         </li>
+        @if (auth()->user()->can('ver-reporte'))
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
                 aria-controls="ui-basic">
@@ -127,7 +128,7 @@
                 </ul>
             </div>
         </li>
-
+        @endif
         @if (auth()->user()->can('ver-usuario') ||
                 auth()->user()->can('crear-usuario') ||
                 auth()->user()->can('editar-usuario') ||

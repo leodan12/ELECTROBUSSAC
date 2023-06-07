@@ -177,7 +177,7 @@
             if (cantidad.length != 0) {
                 //alert("final");
                 preciototal = parseFloat(cantidad) + (parseFloat(cantidad) * 0.18);
-                document.getElementById('NoIGV').value = preciototal;
+                document.getElementById('SiIGV').value = preciototal.toFixed(2);
 
             }
         }

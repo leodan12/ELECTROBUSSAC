@@ -163,7 +163,7 @@ class ProductController extends Controller
             $inventario = "";
             $inv = Inventario::all()->where('product_id', '=', $product_id)->first();
             if ($inv) {
-                $inventario = Detalleinventario::all()->where('product_id', '=', $inv->id);
+                $inventario = Detalleinventario::all()->where('inventario_id', '=', $inv->id);
             } else {
                 $inventario = Inventario::all()->where('product_id', '=', $product_id);
             }

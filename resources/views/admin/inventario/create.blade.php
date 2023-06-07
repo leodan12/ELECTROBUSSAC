@@ -55,7 +55,7 @@
                                 <select class="form-select select2 borde" name="empresa" id="empresa">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($companies as $company)
-                                        <option value="{{ $company->id }}" data-name="{{ $company->nombre }}">
+                                        <option id="micompany{{$company->id}}" value="{{ $company->id }}" data-name="{{ $company->nombre }}">
                                             {{ $company->nombre }}</option>
                                     @endforeach
                                 </select>
@@ -109,7 +109,7 @@
         var tabla = document.getElementById(detallesCompra);
 
         document.getElementById('stockminimo').value = 1;
-
+        
         $('#addDetalleBatch').click(function() {
 
             //datos del detalleSensor
@@ -136,7 +136,7 @@
                 LDInventario[2] +
                 '</td><td><input  type="hidden" name="Lstockempresa[]" id="stockempresa' + indice + '" value="' +
                 LDInventario[1] + '"required>' + LDInventario[1] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice +
+                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice+','+empresa +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesCompra>tbody").append(filaDetalle);
@@ -144,7 +144,8 @@
             document.getElementById('stockempresa').value = "";
             indice++;
             stocktotal = parseInt(stocktotal) + parseInt(stockempresa);
-            document.getElementById('stocktotal').value = stocktotal;
+            document.getElementById('stocktotal').value = stocktotal; 
+            document.getElementById('micompany'+empresa).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
         });
@@ -158,10 +159,8 @@
             });
         });
 
-        function eliminarFila(ind) {
-            var resta = 0;
-
-            //document.getElementById('preciot' + ind).value();
+        function eliminarFila(ind,empresa) {
+            var resta = 0;  
             resta = $('[id="stockempresa' + ind + '"]').val();
             //alert(resta);
             stocktotal = stocktotal - resta;
@@ -170,6 +169,7 @@
             indice--;
             // damos el valor
             document.getElementById('stocktotal').value = stocktotal;
+            document.getElementById('micompany'+empresa).disabled = false;
             //alert(resta);
             var funcion = "eliminar";
             botonguardar(funcion);
