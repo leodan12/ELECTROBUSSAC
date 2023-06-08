@@ -633,15 +633,19 @@ class ReportesController extends Controller
 
     public function balancemensual()
     {
-        $ventames = $this->numeroventas('-1', '');
-        $ventacontado = $this->numeroventas('contado', 'SI');
-        $ventacredito = $ventames - $ventacontado;
-        $ventaxpagar = $this->numeroventas('credito', 'NO');
+        $fecha = date('Y-m-d');
+        $dia = date('d');
+        $inicio =  date("Y-m-d", strtotime($fecha . "- $dia days"));
 
-        $ingresomes = $this->numeroingresos('-1', '');
-        $ingresocontado = $this->numeroingresos('contado', 'SI');
+        $ventames = $this->numeroventas('-1', '',$inicio);
+        $ventacontado = $this->numeroventas('contado', 'SI',$inicio);
+        $ventacredito = $ventames - $ventacontado;
+        $ventaxpagar = $this->numeroventas('credito', 'NO','2010-01-01');
+
+        $ingresomes = $this->numeroingresos('-1', '',$inicio);
+        $ingresocontado = $this->numeroingresos('contado', 'SI',$inicio);
         $ingresocredito = $ingresomes - $ingresocontado;
-        $ingresoxpagar = $this->numeroingresos('credito', 'NO');
+        $ingresoxpagar = $this->numeroingresos('credito', 'NO','2010-01-01');
 
         $cotizacionmes = $this->numerocotizaciones('-1', '');
         $cotizacioncontado = $this->numerocotizaciones('contado', '');
@@ -676,11 +680,10 @@ class ReportesController extends Controller
         return $datos;
     }
 
-    public function numeroventas($formapago, $pagado)
+    public function numeroventas($formapago, $pagado,$inicio)
     {
         $fecha = date('Y-m-d');
-        $dia = date('d');
-        $inicio =  date("Y-m-d", strtotime($fecha . "- $dia days"));
+        
         $ventas = "";
         if ($formapago != '-1') {
             $ventas = DB::table('ventas as v')
@@ -695,11 +698,10 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
-    public function numeroingresos($formapago, $pagado)
+    public function numeroingresos($formapago, $pagado,$inicio)
     {
         $fecha = date('Y-m-d');
-        $dia = date('d');
-        $inicio =  date("Y-m-d", strtotime($fecha . "- $dia days"));
+         
         $ventas = "";
         if ($formapago != '-1') {
             $ventas = DB::table('ingresos as i')

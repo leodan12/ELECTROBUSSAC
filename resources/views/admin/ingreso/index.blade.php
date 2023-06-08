@@ -751,7 +751,7 @@
                         $('#mimodal').modal('hide');
                         $('#modalVer2').modal('hide');
                         if (data[0] == 1) {
-                            document.getElementById('ventapagada' + idventa).innerHTML = "SI";
+                            recargartabla();
                             numerocreditos--;
                             mostrarmensaje(numerocreditos);
                             Swal.fire({

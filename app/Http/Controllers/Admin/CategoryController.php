@@ -22,6 +22,10 @@ class CategoryController extends Controller
     }
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('categories as c')
+        ->where('c.status', '=', 1)
+        ->select('c.id')
+        ->count();
         if ($request->ajax()) {
 
             $categorias = DB::table('categories as c') 
@@ -38,7 +42,7 @@ class CategoryController extends Controller
                 ->make(true);
         }
 
-        return view('admin.category.index');
+        return view('admin.category.index',compact('datoseliminados'));
     }
 
     public function create()

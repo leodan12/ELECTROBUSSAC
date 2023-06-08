@@ -27,6 +27,11 @@ class ClienteController extends Controller
 
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('clientes as c')
+            ->where('c.status', '=', 1) 
+            ->select('c.id')
+            ->count();
+
         if ($request->ajax()) {
 
             $clientes = DB::table('clientes as c')
@@ -47,7 +52,7 @@ class ClienteController extends Controller
                 ->make(true);
         }
 
-        return view('admin.cliente.index');
+        return view('admin.cliente.index',compact('datoseliminados'));
     }
 
     public function create()

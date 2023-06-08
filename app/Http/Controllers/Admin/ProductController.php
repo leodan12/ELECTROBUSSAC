@@ -24,11 +24,16 @@ class ProductController extends Controller
         $this->middleware('permission:crear-producto', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-producto', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-producto', ['only' => ['destroy']]);
-        $this->middleware('permission:recuperar-producto', ['only' => ['showrestore','restaurar']]);
+        $this->middleware('permission:recuperar-producto', ['only' => ['showrestore', 'restaurar']]);
     }
 
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('products as c')
+            ->where('c.status', '=', 1)
+            ->where('c.tipo', '=', 'estandar')
+            ->select('c.id')
+            ->count();
         if ($request->ajax()) {
 
             $productos = DB::table('products as p')
@@ -53,7 +58,7 @@ class ProductController extends Controller
                 ->make(true);
         }
 
-        return view('admin.products.index');
+        return view('admin.products.index',compact('datoseliminados'));
     }
 
     public function create()

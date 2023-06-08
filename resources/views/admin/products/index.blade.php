@@ -3,21 +3,26 @@
 @section('content')
     <div>
         <div class="row">
-            <div class="col-md-12"> 
+            <div class="col-md-12">
                 @if (session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
-                @endif 
+                @endif
                 <div class="card">
                     <div class="card-header">
-                        <h4>PRODUCTOS&nbsp;&nbsp;
-                            @can('recuperar-producto')
-                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalkits"> Restaurar Eliminados
-                            </button>
-                            @endcan
-                            @can('crear-producto')
-                                <a href="{{ url('admin/products/create') }}" class="btn btn-primary float-end">Añadir Producto</a>
-                            @endcan
-                        </h4>
+                        <div class="row">
+                            <div class="col">
+                                <h4 id="mititulo">PRODUCTOS:
+                                </h4>
+                            </div>
+                            <div class="col">
+                                <h4>
+                                    @can('crear-producto')
+                                        <a href="{{ url('admin/products/create') }}" class="btn btn-primary float-end">Añadir
+                                            Producto</a>
+                                    @endcan
+                                </h4>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered table-striped" style="width:100%;" id="mitabla" name="mitabla">
@@ -175,6 +180,7 @@
 @push('script')
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
+         var numeroeliminados = 0;
         $(document).ready(function() {
             var tabla = "#mitabla";
             var ruta = "{{ route('producto.index') }}"; //darle un nombre a la ruta index
@@ -219,7 +225,8 @@
                 },
             ];
             var btns = 'lfrtip';
-
+            numeroeliminados = @json($datoseliminados);
+            mostrarmensaje(numeroeliminados);
             iniciarTablaIndex(tabla, ruta, columnas, btns);
 
         });
@@ -241,7 +248,9 @@
                         type: "GET",
                         url: urlregistro + '/' + idregistro + '/delete',
                         success: function(data1) {
-                            if (data1 == "1") { 
+                            if (data1 == "1") {
+                                numeroeliminados++;
+                                mostrarmensaje(numeroeliminados);
                                 recargartabla();
                                 $(event.target).closest('tr').remove();
                                 Swal.fire({
@@ -264,8 +273,6 @@
                 }
             });
         });
-    </script>
-    <script>
         //modal para ver el producto
         const mimodal = document.getElementById('mimodal')
         mimodal.addEventListener('show.bs.modal', event => {
@@ -326,7 +333,7 @@
         const modalkits = document.getElementById('modalkits');
         modalkits.addEventListener('show.bs.modal', event => {
             var urlinventario = "{{ url('admin/products/showrestore') }}";
-            $.get(urlinventario, function(data) { 
+            $.get(urlinventario, function(data) {
                 var btns = 'lfrtip';
                 var tabla = '#mitablarestore';
                 if (inicializartabla > 0) {
@@ -369,6 +376,8 @@
                         url: urlregistro + '/' + idregistro,
                         success: function(data1) {
                             if (data1 == "1") {
+                                numeroeliminados--;
+                                mostrarmensaje(numeroeliminados);
                                 recargartabla();
                                 $('#modalkits').modal('hide');
                                 Swal.fire({
@@ -390,6 +399,17 @@
                     });
                 }
             });
+        }
+
+        function mostrarmensaje(numeliminados) {
+            var registro = "PRODUCTOS: ";
+            var boton =
+                ' @can('recuperar-producto') <button id="btnrestore" class="btn btn-info btn-sm" data-bs-toggle="modal"  data-bs-target="#modalkits"> Restaurar Eliminados </button> @endcan ';
+            if (numeliminados > 0) {
+                document.getElementById('mititulo').innerHTML = registro + boton;
+            } else {
+                document.getElementById('mititulo').innerHTML = registro;
+            }
         }
     </script>
 @endpush

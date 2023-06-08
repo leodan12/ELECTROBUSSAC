@@ -29,6 +29,11 @@ class CompanyController extends Controller
 
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('companies as c')
+            ->where('c.status', '=', 1) 
+            ->select('c.id')
+            ->count();
+
         if ($request->ajax()) {
 
             $empresas = DB::table('companies as c')
@@ -47,7 +52,7 @@ class CompanyController extends Controller
                 ->make(true);
         }
 
-        return view('admin.company.index');
+        return view('admin.company.index',compact('datoseliminados'));
     }
 
     public function create()

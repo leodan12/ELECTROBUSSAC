@@ -734,12 +734,7 @@
 
         });
         // fin de los modales 
-        window.addEventListener('close-modal', event => {
-            $('#deleteModal').modal('hide');
-        });
-
-
-
+        
         $('#pagarfactura').click(function() {
             pagarfactura();
         });
@@ -777,7 +772,7 @@
                         $('#mimodal').modal('hide');
                         $('#modalVer2').modal('hide');
                         if (data[0] == 1) {
-                            document.getElementById('ventapagada' + idventa).innerHTML = "SI";
+                            recargartabla();
                             numerocreditos--;
                             mostrarmensaje(numerocreditos);
                             Swal.fire({

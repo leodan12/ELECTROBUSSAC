@@ -11,17 +11,21 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>CLIENTES / PROVEEDORES&nbsp;&nbsp;
-                            @can('recuperar-cliente')
-                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalkits"> Restaurar
-                                Eliminados
-                            </button>
-                            @endcan
-                            @can('crear-cliente')
-                                <a href="{{ url('admin/cliente/create') }}" class="btn btn-primary float-end">Añadir
-                                    Cliente/Proveedor</a>
-                            @endcan
-                        </h4>
+                        <div class="row">
+                            <div class="col">
+                                <h4 id="mititulo">CLIENTES / PROVEEDORES:&nbsp;&nbsp;
+                                </h4>
+                            </div>
+                            <div class="col">
+                                <h4>
+                                    @can('crear-cliente')
+                                    <a href="{{ url('admin/cliente/create') }}" class="btn btn-primary float-end">Añadir
+                                        Cliente/Proveedor</a>
+                                @endcan
+                                </h4>
+                            </div>
+                        </div>
+ 
                     </div>
                     <div class="card-body">
 
@@ -136,6 +140,7 @@
 @push('script')
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
+         var numeroeliminados = 0;
         //para inicializar el datatable
         $(document).ready(function() {
             var tabla = "#mitabla";
@@ -172,7 +177,8 @@
                 },
             ];
             var btns = 'lfrtip';
-
+            numeroeliminados = @json($datoseliminados);
+            mostrarmensaje(numeroeliminados);
             iniciarTablaIndex(tabla, ruta, columnas, btns);
 
         });
@@ -195,6 +201,8 @@
                         url: urlventa + '/' + idregistro + '/delete',
                         success: function(data1) {
                             if (data1 == "1") {
+                                numeroeliminados++;
+                                mostrarmensaje(numeroeliminados);
                                 recargartabla();
                                 $(event.target).closest('tr').remove();
                                 Swal.fire({
@@ -307,6 +315,8 @@
                         url: urlregistro + '/' + idregistro,
                         success: function(data1) {
                             if (data1 == "1") {
+                                numeroeliminados--;
+                                mostrarmensaje(numeroeliminados);
                                 recargartabla();
                                 $('#modalkits').modal('hide');
                                 Swal.fire({
@@ -328,6 +338,17 @@
                     });
                 }
             });
+        }
+
+        function mostrarmensaje(numeliminados) {
+            var registro = "CLIENTES / PROVEEDORES: ";
+            var boton =
+                ' @can('recuperar-cliente') <button id="btnrestore" class="btn btn-info btn-sm" data-bs-toggle="modal"  data-bs-target="#modalkits"> Restaurar Eliminados </button> @endcan ';
+            if (numeliminados > 0) {
+                document.getElementById('mititulo').innerHTML = registro + boton;
+            } else {
+                document.getElementById('mititulo').innerHTML = registro;
+            }
         }
     </script>
 @endpush

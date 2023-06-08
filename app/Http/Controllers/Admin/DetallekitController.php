@@ -23,11 +23,17 @@ class DetallekitController extends Controller
         $this->middleware('permission:crear-kit', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-kit', ['only' => ['edit', 'update', 'destroydetallekit']]);
         $this->middleware('permission:eliminar-kit', ['only' => ['destroy']]);
-        $this->middleware('permission:recuperar-kit', ['only' => ['showrestore','restaurar']]);
+        $this->middleware('permission:recuperar-kit', ['only' => ['showrestore', 'restaurar']]);
     }
 
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('products as c')
+            ->where('c.status', '=', 1)
+            ->where('c.tipo', '=', 'kit')
+            ->select('c.id')
+            ->count();
+
         if ($request->ajax()) {
 
             $kits = DB::table('products as p')
@@ -52,7 +58,7 @@ class DetallekitController extends Controller
                 ->make(true);
         }
 
-        return view('admin.kit.index');
+        return view('admin.kit.index',compact('datoseliminados'));
     }
 
     public function create()
@@ -123,8 +129,17 @@ class DetallekitController extends Controller
             ->where('tipo', '=', 'estandar');
         $kitdetalles = DB::table('products as p')
             ->join('kits as k', 'k.kitproduct_id', '=', 'p.id')
-            ->select('p.moneda', 'k.id', 'k.product_id', 'k.kitproduct_id', 'k.cantidad', 'k.preciounitario',
-             'k.preciounitariomo', 'k.preciofinal', 'p.nombre as producto' )
+            ->select(
+                'p.moneda',
+                'k.id',
+                'k.product_id',
+                'k.kitproduct_id',
+                'k.cantidad',
+                'k.preciounitario',
+                'k.preciounitariomo',
+                'k.preciofinal',
+                'p.nombre as producto'
+            )
             ->where('k.product_id', '=', $kit_id)->get();
         return view('admin.kit.edit', compact('categories', 'product', 'kitdetalles', 'products'));
     }
