@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 @push('css')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <style rel="stylesheet">
+        #scroll {
+            overflow: scroll;
+            height: 600px;  
+        }
+    </style>
 @endpush
 @section('content')
     <div>
@@ -20,8 +26,8 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap" id="mitabla"
+                        <div id="scroll" class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap scroll" id="mitabla"
                                 name="mitabla">
                                 <thead>
                                     <tr>
@@ -63,6 +69,7 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                    
                                 </tbody>
                             </table>
                         </div>

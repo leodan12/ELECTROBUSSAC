@@ -18,16 +18,17 @@ class ClienteController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-cliente|editar-cliente|crear-cliente|eliminar-cliente', ['only' => ['index','show']]);
+        $this->middleware('permission:ver-cliente|editar-cliente|crear-cliente|eliminar-cliente', ['only' => ['index', 'show']]);
         $this->middleware('permission:crear-cliente', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-cliente', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-cliente', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-cliente', ['only' => ['showrestore','restaurar']]);
     }
 
     public function index(Request $request)
     {
-        if ($request->ajax()) { 
-            
+        if ($request->ajax()) {
+
             $clientes = DB::table('clientes as c')
                 ->select(
                     'c.id',
@@ -36,7 +37,7 @@ class ClienteController extends Controller
                     'c.ruc',
                     'c.email',
                     'c.direccion',
-                )->where('c.status','=',0);
+                )->where('c.status', '=', 0);
             return DataTables::of($clientes)
                 ->addColumn('acciones', 'Acciones')
                 ->editColumn('acciones', function ($clientes) {
@@ -123,6 +124,38 @@ class ClienteController extends Controller
                 } else {
                     return "0";
                 }
+            }
+        } else {
+            return "2";
+        }
+    }
+
+    public function showrestore()
+    {
+        $empresas   = DB::table('clientes as c')
+            ->where('c.status', '=', 1)
+            ->select(
+                'c.id',
+                'c.nombre',
+                'C.ruc',
+                'C.telefono',
+                'C.email',
+                'C.direccion',
+            )->get();
+
+
+        return $empresas->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $registro = Cliente::find($idregistro);
+        if ($registro) {
+            $registro->status = 0;
+            if ($registro->update()) {
+                return "1";
+            } else {
+                return "0";
             }
         } else {
             return "2";

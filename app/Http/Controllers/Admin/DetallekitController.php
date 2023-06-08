@@ -19,10 +19,11 @@ class DetallekitController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-kit|editar-kit|crear-kit|eliminar-kit', ['only' => ['index','show']]);
+        $this->middleware('permission:ver-kit|editar-kit|crear-kit|eliminar-kit', ['only' => ['index', 'show']]);
         $this->middleware('permission:crear-kit', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-kit', ['only' => ['edit', 'update','destroydetallekit']]);
+        $this->middleware('permission:editar-kit', ['only' => ['edit', 'update', 'destroydetallekit']]);
         $this->middleware('permission:eliminar-kit', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-kit', ['only' => ['showrestore','restaurar']]);
     }
 
     public function index(Request $request)
@@ -122,7 +123,8 @@ class DetallekitController extends Controller
             ->where('tipo', '=', 'estandar');
         $kitdetalles = DB::table('products as p')
             ->join('kits as k', 'k.kitproduct_id', '=', 'p.id')
-            ->select('p.moneda', 'k.id', 'k.product_id', 'k.kitproduct_id', 'k.cantidad', 'k.preciounitario', 'k.preciounitariomo', 'k.preciofinal', 'p.nombre as producto')
+            ->select('p.moneda', 'k.id', 'k.product_id', 'k.kitproduct_id', 'k.cantidad', 'k.preciounitario',
+             'k.preciounitariomo', 'k.preciofinal', 'p.nombre as producto' )
             ->where('k.product_id', '=', $kit_id)->get();
         return view('admin.kit.edit', compact('categories', 'product', 'kitdetalles', 'products'));
     }
@@ -213,12 +215,12 @@ class DetallekitController extends Controller
     {
         $product = Product::find($kit_id);
         if ($product) {
-           
+
             $ingreso = Detalleingreso::all()->where('product_id', '=', $kit_id);
             $venta = Detalleventa::all()->where('product_id', '=', $kit_id);
             $cotizacion = Detallecotizacion::all()->where('product_id', '=', $kit_id);
 
-            if (  count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
+            if (count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
                 if ($product->delete()) {
                     return "1";
                 } else {
@@ -261,6 +263,42 @@ class DetallekitController extends Controller
             }
         } else {
             return 2;
+        }
+    }
+
+    public function showrestore()
+    {
+        $productos   = DB::table('products as p')
+            ->join('categories as c', 'p.category_id', '=', 'c.id')
+            ->where('p.status', '=', 1)
+            ->where('p.tipo', '=', 'kit')
+            ->select(
+                'p.id',
+                'c.nombre as categoria',
+                'p.nombre',
+                'p.codigo',
+                'p.unidad',
+                'p.moneda',
+                'p.NoIGV',
+                'p.SiIGV',
+            )->get();
+
+
+        return $productos->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $registro = Product::find($idregistro);
+        if ($registro) {
+            $registro->status = 0;
+            if ($registro->update()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
         }
     }
 }

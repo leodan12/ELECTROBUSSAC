@@ -132,7 +132,6 @@
 
             var urldatosproductos = "{{ url('admin/reporte/datosrotacionstock') }}";
             $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
-
                 llenartabla(data);
             });
         }
@@ -155,7 +154,7 @@
                     '<td> ' + datos[i].moneda + '</td>' +
                     '<td> <button class= "btn btn-info" data-empresa="' + datos[i].empresa + '" data-producto="' + datos[i]
                     .producto + '" data-compraventa="' + datos[i].compraventa +
-                    '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver </button>   <a  href="' +
+                    '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver </button>   ' +
                     '</td>' +
                     '</tr>';
                 $("#mitablaprod>tbody").append(filaDetalle);
@@ -230,7 +229,6 @@
             var xfechafin = document.getElementById("fechafin").value;
             $.get(miurl + '/' + xfechainicio + '/' + xfechafin + '/' + xempresa + '/' + xproducto, function(
                 midata) {
-                console.log(midata);
                 llenartabla2(midata);
 
 

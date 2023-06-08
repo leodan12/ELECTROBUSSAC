@@ -10,7 +10,13 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>STOCK DE INVENTARIO DE PRODUCTOS: &nbsp; &nbsp; &nbsp; &nbsp;
+                        <h4>STOCK DE INVENTARIO DE PRODUCTOS:&nbsp;&nbsp;
+                            @can('recuperar-inventario')
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalrestore">
+                                    Restaurar
+                                    Eliminados
+                                </button>
+                            @endcan &nbsp; &nbsp;
                             <a type="button" class="btn btn-success" data-bs-toggle="modal"
                                 data-bs-target="#modalkits">Consultar Stock de Kits</a>
                             @can('crear-inventario')
@@ -226,7 +232,44 @@
                         </div>
                     </div>
 
+                    <div class="modal fade " id="modalrestore" tabindex="-1" aria-labelledby="modalrestore"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="mimodalLabel">Lista de Inventarios Eliminadas</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
 
+                                    <div class="table-responsive">
+                                        <table class="table table-row-bordered gy-5 gs-5" style="width: 100%"
+                                            id="mitablarestore" name="mitablarestore">
+                                            <thead class="fw-bold text-primary">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>CATEGORIA</th>
+                                                    <th>PRODUCTO</th>
+                                                    <th>STOCK MINIMO</th>
+                                                    <th>STOCK TOTAL</th>
+                                                    <th>ACCION</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -289,6 +332,7 @@
                             url: urlregistro + '/' + idregistro + '/delete',
                             success: function(data1) {
                                 if (data1 == "1") {
+                                    recargartabla();
                                     $(event.target).closest('tr').remove();
                                     Swal.fire({
                                         icon: "success",
@@ -313,7 +357,7 @@
         </script>
         <script>
             var inicializartabla = 0;
-            const mimodal = document.getElementById('mimodal')
+            const mimodal = document.getElementById('mimodal');
             mimodal.addEventListener('show.bs.modal', event => {
 
                 const button = event.relatedTarget;
@@ -349,7 +393,7 @@
                 $('#deleteModal').modal('hide');
             });
 
-            const modalkits = document.getElementById('modalkits')
+            const modalkits = document.getElementById('modalkits');
             modalkits.addEventListener('show.bs.modal', event => {
                 var urlinventario = "{{ url('admin/inventario/showkits') }}";
                 $.get(urlinventario, function(data) {
@@ -369,7 +413,7 @@
                     inicializartabla++;
                 });
             });
-            const mikit = document.getElementById('mikit')
+            const mikit = document.getElementById('mikit');
             mikit.addEventListener('show.bs.modal', event => {
                 const button = event.relatedTarget;
                 const idkit = button.getAttribute('data-id');
@@ -431,6 +475,74 @@
 
             function cerrartoast() {
                 $('.toast').toast('hide');
+            }
+
+            //modal para ver los eliminados
+            var inicializartablares = 0;
+            const modalrestore = document.getElementById('modalrestore');
+            modalrestore.addEventListener('show.bs.modal', event => {
+                var urlinventario = "{{ url('admin/inventario/showrestore') }}";
+                $.get(urlinventario, function(data) {
+                    var btns = 'lfrtip';
+                    var tabla = '#mitablarestore';
+                    if (inicializartablares > 0) {
+                        $("#mitablarestore").dataTable().fnDestroy(); //eliminar las filas de la tabla  
+                    }
+                    $('#mitablarestore tbody tr').slice().remove();
+                    for (var i = 0; i < data.length; i++) {
+                        filaDetalle = '<tr id="fila' + i +
+                            '"><td>' + data[i].id +
+                            '</td><td>' + data[i].categoria +
+                            '</td><td>' + data[i].producto +
+                            '</td><td>' + data[i].stockminimo +
+                            '</td><td>' + data[i].stocktotal +
+                            '</td><td><button type="button" class="btn btn-info"  ' +
+                            ' onclick="RestaurarRegistro(' + data[i].id + ')" >Restaurar</button></td>  ' +
+                            '</tr>';
+                        $("#mitablarestore>tbody").append(filaDetalle);
+                    }
+                    inicializartabladatos(btns, tabla, "");
+                    inicializartablares++;
+                });
+            });
+
+            function RestaurarRegistro(idregistro) {
+                var urlregistro = "{{ url('admin/inventario/restaurar') }}";
+                Swal.fire({
+                    title: '¿Desea Restaurar El Registro?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí,Restaurar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "GET",
+                            url: urlregistro + '/' + idregistro,
+                            success: function(data1) {
+                                if (data1 == "1") {
+                                    recargartabla();
+                                    $('#modalrestore').modal('hide');
+                                    Swal.fire({
+                                        icon: "success",
+                                        text: "Registro Restaurado",
+                                    });
+                                } else if (data1 == "0") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro NO Restaurado",
+                                    });
+                                } else if (data1 == "2") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro NO Encontrado",
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
             }
         </script>
     @endpush

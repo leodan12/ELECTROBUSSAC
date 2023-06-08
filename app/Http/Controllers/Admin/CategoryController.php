@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryFormRequest;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\DataTables;
 
 class CategoryController extends Controller
 {
@@ -15,9 +18,25 @@ class CategoryController extends Controller
         $this->middleware('permission:crear-categoria', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-categoria', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-categoria', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-categoria', ['only' => ['showcategoryrestore','restaurar']]);
     }
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->ajax()) {
+
+            $categorias = DB::table('categories as c') 
+                ->select(
+                    'c.id',
+                    'c.nombre',
+                )->where('c.status', '=', 0) ;
+            return DataTables::of($categorias)
+                ->addColumn('accion', 'Accion')
+                ->editColumn('accion', function ($categorias) {
+                    return view('admin.category.botones', compact('categorias'));
+                })
+                ->rawColumns(['accion'])
+                ->make(true);
+        }
 
         return view('admin.category.index');
     }
@@ -55,5 +74,53 @@ class CategoryController extends Controller
         $category->update();
 
         return redirect('admin/category')->with('message', 'Categoria Actualizada Satisfactoriamente');
+    }
+
+    public function destroy(int $idcategoria)
+    {
+        $category = Category::find($idcategoria);
+        if ($category) { 
+            $producto = Product::all()->where('category_id','=',$category->id);   
+            if (count($producto) == 0 ) {
+                if ($category->delete()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $category->status = 1;
+                if ($category->update()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
+        } else {
+            return "2";
+        }
+    }
+
+    public function showcategoryrestore()
+    {
+        $categorias =  Category::all()
+            ->where('status', '=', 1);
+
+
+        return $categorias->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $categoria = Category::find($idregistro);
+        if ($categoria) {
+            $categoria->status = 0;
+            if ($categoria->update()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
+        }
     }
 }

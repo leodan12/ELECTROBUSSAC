@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 //Auth::routes();
 Auth::routes(["register" => false]);
- 
+
 Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('inicio');
 
 Route::group(['middleware' => ['auth']], function () {
@@ -28,20 +28,26 @@ Route::group(['middleware' => ['auth']], function () {
 
         //Rutas de las Categorias
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function () {
-            Route::get('/category', 'index');
+            Route::get('/category', 'index')->name("categorias.index");
             Route::get('/category/create', 'create');
             Route::post('/category', 'store');
             Route::get('/category/{category}/edit', 'edit');
             Route::put('/category/{category}', 'update');
+            Route::get('/category/{category_id}/delete', 'destroy');
+            Route::get('/category/showcategoryrestore', 'showcategoryrestore');
+            Route::get('/category/restaurar/{idregistro}', 'restaurar');
         });
-        //Rutas de los proveedores
+        //Rutas de las empresas
         Route::controller(App\Http\Controllers\Admin\CompanyController::class)->group(function () {
-            Route::get('/company', 'index');
+            Route::get('/company', 'index')->name('empresas.index');
             Route::get('/company/create', 'create');
             Route::post('/company', 'store');
             Route::get('/company/{company}/edit', 'edit');
             Route::put('/company/{company}', 'update');
             Route::get('/company/show/{id}', 'show'); //ver   
+            Route::get('/company/{company_id}/delete', 'destroy');
+            Route::get('/company/showrestore', 'showrestore');
+            Route::get('/company/restaurar/{idregistro}', 'restaurar');
         });
         //Ruta de los clientes
         Route::controller(App\Http\Controllers\Admin\ClienteController::class)->group(function () {
@@ -52,6 +58,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::put('/cliente/{cliente}', 'update');
             Route::get('/cliente/show/{id}', 'show'); //ver
             Route::get('/cliente/{product_id}/delete', 'destroy');
+            Route::get('/cliente/showrestore', 'showrestore');
+            Route::get('/cliente/restaurar/{idregistro}', 'restaurar');
         });
         //Rutas de los Productos
         Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function () {
@@ -61,7 +69,9 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/products/{product}/edit', 'edit');
             Route::put('/products/{product}', 'update');
             Route::get('/products/{product_id}/delete', 'destroy');
-            Route::get('/products/show/{id}', 'show'); //ver   
+            Route::get('/products/show/{id}', 'show'); //ver  
+            Route::get('/products/showrestore', 'showrestore');
+            Route::get('/products/restaurar/{idregistro}', 'restaurar');
         });
         //Rutas de los Kits
         Route::controller(App\Http\Controllers\Admin\DetallekitController::class)->group(function () {
@@ -73,6 +83,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/kits/{kit_id}/delete', 'destroy');
             Route::get('/kits/show/{kit_id}', 'show'); //ver   
             Route::get('/deletedetallekit/{id}', 'destroydetallekit');
+            Route::get('/kits/showrestore', 'showrestore');
+            Route::get('/kits/restaurar/{idregistro}', 'restaurar');
         });
         //Ruta de los Usuarios
         Route::controller(App\Http\Controllers\Admin\UserController::class)->group(function () {
@@ -94,7 +106,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/deletedetalleinventario/{id}', 'destroydetalleinventario');
             Route::get('/inventario/show/{id}', 'show'); //ver  
             Route::get('/inventario/showkits', 'showkits'); //ver  
-
+            Route::get('/inventario/showrestore', 'showrestore');
+            Route::get('/inventario/restaurar/{idregistro}', 'restaurar');
         });
 
         //Ruta de la venta

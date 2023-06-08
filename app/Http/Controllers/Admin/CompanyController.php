@@ -10,19 +10,43 @@ use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
+use App\Models\Ingreso;
+use App\Models\Venta;
+use App\Models\Detalleinventario;
+use App\Models\Cotizacion;
 
 class CompanyController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-empresa|editar-empresa|crear-empresa|eliminar-empresa', ['only' => ['index','show']]);
+        $this->middleware('permission:ver-empresa|editar-empresa|crear-empresa|eliminar-empresa', ['only' => ['index', 'show']]);
         $this->middleware('permission:crear-empresa', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-empresa', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-empresa', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-empresa', ['only' => ['showrestore','restaurar']]);
     }
 
-    public function index()
-    { 
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $empresas = DB::table('companies as c')
+                ->select(
+                    'c.id',
+                    'c.nombre',
+                    'c.ruc',
+                    'c.telefono',
+                )->where('c.status', '=', 0);
+            return DataTables::of($empresas)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($empresas) {
+                    return view('admin.company.botones', compact('empresas'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
         return view('admin.company.index');
     }
 
@@ -125,5 +149,65 @@ class CompanyController extends Controller
             ->where('c.id', '=', $id)->first();
 
         return  $company;
+    }
+    public function destroy(int $idempresa)
+    {
+        $company = Company::find($idempresa);
+        if ($company) {
+            $company2 = $company;
+            $detalleinventario = Detalleinventario::all()->where('company_id', '=', $idempresa);
+            $ingreso = Ingreso::all()->where('company_id', '=', $idempresa);
+            $venta = Venta::all()->where('company_id', '=', $idempresa);
+            $cotizacion = Cotizacion::all()->where('company_id', '=', $idempresa);
+            if (count($venta) == 0 && count($ingreso) == 0 && count($detalleinventario) == 0 && count($cotizacion) == 0) {
+                if ($company->delete()) {
+                    $path = public_path('logos/' . $company2->logo);
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
+                    return "1";
+                } else {
+                    return "0";
+                }
+            } else {
+                $company->status = 1;
+                if ($company->update()) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
+        } else {
+            return "2";
+        }
+    }
+    public function showrestore()
+    {
+        $empresas   = DB::table('companies as c')
+            ->where('c.status', '=', 1)
+            ->select(
+                'c.id',
+                'c.nombre',
+                'C.ruc',
+                'C.telefono',
+            )->get();
+
+
+        return $empresas->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $registro = Company::find($idregistro);
+        if ($registro) {
+            $registro->status = 0;
+            if ($registro->update()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
+        }
     }
 }

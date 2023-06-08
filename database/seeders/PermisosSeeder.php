@@ -70,7 +70,14 @@ class PermisosSeeder extends Seeder
             'editar-venta',
             'eliminar-venta',
             //para reportes
-            'ver-reporte'
+            'ver-reporte',
+            //para recuperar los registros
+            'recuperar-categoria',
+            'recuperar-producto',
+            'recuperar-kit',
+            'recuperar-empresa',
+            'recuperar-cliente',
+            'recuperar-inventario',
         ];
 
         foreach($permisos as $permiso){

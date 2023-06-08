@@ -1,25 +1,5 @@
 <div>
-
-    <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Empresa</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form wire:submit.prevent="destroyCompany">
-                    <div class="modal-body">
-                        <h6>¿Esta seguro de eliminar?</h6>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Sí,Eliminar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+ 
     <div class="row">
         <div class="col-md-12">
 
@@ -29,19 +9,22 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h4>MIS EMPRESAS
+                    <h4>MIS EMPRESAS&nbsp;&nbsp;
+                        @can('recuperar-empresa')
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalkits"> Restaurar
+                            Eliminados
+                        </button>
+                        @endcan
                         @can('crear-empresa')
                             <a href="{{ url('admin/company/create') }}" class="btn btn-primary float-end">Añadir Empresa</a>
                         @endcan
                     </h4>
                 </div>
                 <div class="card-body">
-                    <div>
-                        <input type="text" class="form-control" id="input-search"
-                            placeholder="Filtrar por nombre...">
-                    </div>
+
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped " style="width: 100%;">
+                        <table class="table table-bordered table-striped " style="width: 100%;" id="mitabla"
+                            name="mitabla">
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>
@@ -52,35 +35,11 @@
                                 </tr>
                             </thead>
                             <Tbody id="tbody-mantenimientos">
-                                @foreach ($companies as $company)
-                                    <tr>
-                                        <td>{{ $company->id }}</td>
-                                        <td>{{ $company->nombre }}</td>
-                                        <td>{{ $company->ruc }}</td>
-                                        <td>{{ $company->telefono }}</td>
-                                        <td>
-                                            @can('editar-empresa')
-                                                <a href="{{ url('admin/company/' . $company->id . '/edit') }}"
-                                                    class="btn btn-success">Editar</a>
-                                            @endcan
 
-                                            <button type="button" class="btn btn-secondary"
-                                                data-id="{{ $company->id }}" data-bs-toggle="modal"
-                                                data-bs-target="#mimodal">Ver</button>
-                                            @can('eliminar-empresa')
-                                                <a href="#" wire:click="deleteCompany({{ $company->id }})"
-                                                    data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                                    class="btn btn-danger">Eliminar</a>
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                @endforeach
                             </Tbody>
                         </table>
                     </div>
-                    <div>
-                        {{ $companies->links() }}
-                    </div>
+
                 </div>
 
 
@@ -119,14 +78,14 @@
                                                 <div class="col-md-4  mb-3" id="div">
                                                     <label for="vertipocuentasoles" class="col-form-label">Tipo
                                                         Cuenta:</label>
-                                                    <input type="text" class="form-control"
-                                                        id="vertipocuentasoles" readonly>
+                                                    <input type="text" class="form-control" id="vertipocuentasoles"
+                                                        readonly>
                                                 </div>
                                                 <div class="col-md-4  mb-3" id="div">
                                                     <label for="vernumerocuentasoles" class="col-form-label">Numero
                                                         Cuenta:</label>
-                                                    <input type="text" class="form-control"
-                                                        id="vernumerocuentasoles" readonly>
+                                                    <input type="text" class="form-control" id="vernumerocuentasoles"
+                                                        readonly>
                                                 </div>
                                                 <div class="col-md-4  mb-3" id="div">
                                                     <label for="verccisoles" class="col-form-label">CCI:</label>
@@ -178,21 +137,135 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade " id="modalkits" tabindex="-1" aria-labelledby="modalkits"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="mimodalLabel">Lista de Empresas Eliminadas</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="table-responsive">
+                                    <table class="table table-row-bordered gy-5 gs-5" style="width: 100%"
+                                        id="mitablarestore" name="mitablarestore">
+                                        <thead class="fw-bold text-primary">
+                                            <tr>
+                                                <th>ID</th> 
+                                                <th>NOMBRE</th>
+                                                <th>RUC</th>
+                                                <th>TELEFONO</th>
+                                                 
+                                                <th>ACCION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 @push('script')
+    <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
-        document.getElementById("input-search").addEventListener("input", onInputChange)
-        const mimodal = document.getElementById('mimodal')
+        $(document).ready(function() {
+            var tabla = "#mitabla";
+            var ruta = "{{ route('empresas.index') }}"; //darle un nombre a la ruta index
+            var columnas = [{
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'nombre',
+                    name: 'nombre'
+                },
+
+                {
+                    data: 'ruc',
+                    name: 'ruc'
+                },
+                {
+                    data: 'telefono',
+                    name: 'telefono'
+                },
+                {
+                    data: 'acciones',
+                    name: 'acciones',
+                    searchable: false,
+                    orderable: false,
+                },
+            ];
+            var btns = 'lfrtip';
+
+            iniciarTablaIndex(tabla, ruta, columnas, btns);
+
+        });
+        //para borrar un registro de la tabla
+        $(document).on('click', '.btnborrar', function(event) {
+            const idregistro = event.target.dataset.idregistro;
+            var urlregistro = "{{ url('admin/company') }}";
+            Swal.fire({
+                title: '¿Esta seguro de Eliminar?',
+                text: "No lo podra revertir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlregistro + '/' + idregistro + '/delete',
+                        success: function(data1) {
+                            if (data1 == "1") {
+                                recargartabla();
+                                $(event.target).closest('tr').remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Registro Eliminado",
+                                });
+                            } else if (data1 == "0") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Eliminado",
+                                });
+                            } else if (data1 == "2") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro No Encontrado",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        //modal para ver la empresa
+        const mimodal = document.getElementById('mimodal');
         mimodal.addEventListener('show.bs.modal', event => {
 
             const button = event.relatedTarget
             const id = button.getAttribute('data-id')
             var urlregistro = "{{ url('admin/company/show') }}";
-            $.get(urlregistro + '/' + id, function(data) { 
+            $.get(urlregistro + '/' + id, function(data) {
                 const modalTitle = mimodal.querySelector('.modal-title')
                 modalTitle.textContent = `Ver Registro ${id}`
 
@@ -241,20 +314,71 @@
             $('#deleteModal').modal('hide');
         });
 
-        function onInputChange() {
-            let inputText = document.getElementById("input-search").value.toString().toLowerCase();
-            /*console.log(inputText);*/
-            let tableBody = document.getElementById("tbody-mantenimientos");
-            let tableRows = tableBody.getElementsByTagName("tr");
-            for (let i = 0; i < tableRows.length; i++) {
-                let textoConsulta = tableRows[i].cells[1].textContent.toString().toLowerCase();
-                if (textoConsulta.indexOf(inputText) === -1) {
-                    tableRows[i].style.visibility = "collapse";
-                } else {
-                    tableRows[i].style.visibility = "";
+        //modal para ver los eliminados
+        var inicializartabla = 0;
+        const modalkits = document.getElementById('modalkits');
+        modalkits.addEventListener('show.bs.modal', event => {
+            var urlinventario = "{{ url('admin/company/showrestore') }}";
+            $.get(urlinventario, function(data) {
+                var btns = 'lfrtip';
+                var tabla = '#mitablarestore';
+                if (inicializartabla > 0) {
+                    $("#mitablarestore").dataTable().fnDestroy(); //eliminar las filas de la tabla  
                 }
+                $('#mitablarestore tbody tr').slice().remove();
+                for (var i = 0; i < data.length; i++) {
+                    filaDetalle = '<tr id="fila' + i +
+                        '"><td>' + data[i].id +
+                        '</td><td>' + data[i].nombre +
+                        '</td><td>' + data[i].ruc +
+                        '</td><td>' + data[i].telefono +
+                        '</td><td><button type="button" class="btn btn-info"  ' +
+                        ' onclick="RestaurarRegistro(' + data[i].id + ')" >Restaurar</button></td>  ' +
+                        '</tr>';
+                    $("#mitablarestore>tbody").append(filaDetalle);
+                }
+                inicializartabladatos(btns, tabla, "");
+                inicializartabla++;
+            });
+        });
 
-            }
+        function RestaurarRegistro(idregistro) {
+            var urlregistro = "{{ url('admin/company/restaurar') }}";
+            Swal.fire({
+                title: '¿Desea Restaurar El Registro?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí,Restaurar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: urlregistro + '/' + idregistro,
+                        success: function(data1) {
+                            if (data1 == "1") {
+                                recargartabla();
+                                $('#modalkits').modal('hide');
+                                Swal.fire({
+                                    icon: "success",
+                                    text: "Registro Restaurado",
+                                });
+                            } else if (data1 == "0") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro NO Restaurado",
+                                });
+                            } else if (data1 == "2") {
+                                Swal.fire({
+                                    icon: "error",
+                                    text: "Registro NO Encontrado",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         }
     </script>
 @endpush

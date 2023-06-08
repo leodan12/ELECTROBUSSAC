@@ -39,7 +39,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMAIL</label>
-                                <input type="email" name="email" readonly value="{{ $user->email }}"
+                                <input type="email" name="email"  value="{{ $user->email }}"
                                     class="form-control borde" required />
                                 @error('email')
                                     <small class="text-danger">{{ $message }}</small>

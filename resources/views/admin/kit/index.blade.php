@@ -10,7 +10,12 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h4>KITS
+                        <h4>KITS&nbsp;&nbsp;
+                            @can('recuperar-kit')
+                            <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalkits"> Restaurar
+                                Eliminados
+                            </button>
+                            @endcan
                             @can('crear-kit')
                                 <a href="{{ url('admin/kits/create') }}" class="btn btn-primary float-end">Añadir Kit</a>
                             @endcan
@@ -129,6 +134,47 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade " id="modalkits" tabindex="-1" aria-labelledby="modalkits"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="mimodalLabel">Lista de Kits Eliminados</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="table-responsive">
+                                        <table class="table table-row-bordered gy-5 gs-5" style="width: 100%"
+                                            id="mitablarestore" name="mitablarestore">
+                                            <thead class="fw-bold text-primary">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>CATEGORIA</th>
+                                                    <th>NOMBRE</th>
+                                                    <th>CODIGO</th>
+                                                    <th>UNIDAD</th>
+                                                    <th>MONEDA</th>
+                                                    <th>PRECIO SIN IGV</th>
+                                                    <th>PRECIO CON IGV</th>
+                                                    <th>ACCION</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,6 +250,7 @@
                             url: urlregistro + '/' + idregistro + '/delete',
                             success: function(data1) {
                                 if (data1 == "1") {
+                                    recargartabla();
                                     $(event.target).closest('tr').remove();
                                     Swal.fire({
                                         icon: "success",
@@ -227,13 +274,14 @@
             });
         </script>
         <script>
+            //para el modal de ver kits
             const mimodal = document.getElementById('mimodal')
             mimodal.addEventListener('show.bs.modal', event => {
 
                 const button = event.relatedTarget
                 const id = button.getAttribute('data-id')
                 var urlregistro = "{{ url('admin/kits/show') }}";
-                $.get(urlregistro + '/' + id, function(data) { 
+                $.get(urlregistro + '/' + id, function(data) {
                     const modalTitle = mimodal.querySelector('.modal-title')
                     modalTitle.textContent = `Ver Kit de Productos ${id}`
 
@@ -289,9 +337,77 @@
                 });
 
             })
-            window.addEventListener('close-modal', event => {
-                $('#deleteModal').modal('hide');
+
+            //modal para ver los eliminados
+            var inicializartabla = 0;
+            const modalkits = document.getElementById('modalkits');
+            modalkits.addEventListener('show.bs.modal', event => {
+                var urlinventario = "{{ url('admin/kits/showrestore') }}";
+                $.get(urlinventario, function(data) {
+                    var btns = 'lfrtip';
+                    var tabla = '#mitablarestore';
+                    if (inicializartabla > 0) {
+                        $("#mitablarestore").dataTable().fnDestroy(); //eliminar las filas de la tabla  
+                    }
+                    $('#mitablarestore tbody tr').slice().remove();
+                    for (var i = 0; i < data.length; i++) {
+                        filaDetalle = '<tr id="fila' + i +
+                            '"><td>' + data[i].id +
+                            '</td><td>' + data[i].categoria +
+                            '</td><td>' + data[i].nombre +
+                            '</td><td>' + data[i].codigo +
+                            '</td><td>' + data[i].unidad +
+                            '</td><td>' + data[i].moneda +
+                            '</td><td>' + data[i].NoIGV +
+                            '</td><td>' + data[i].SiIGV +
+                            '</td><td><button type="button" class="btn btn-info"  ' +
+                            ' onclick="RestaurarRegistro(' + data[i].id + ')" >Restaurar</button></td>  ' +
+                            '</tr>';
+                        $("#mitablarestore>tbody").append(filaDetalle);
+                    }
+                    inicializartabladatos(btns, tabla, "");
+                    inicializartabla++;
+                });
             });
+
+            function RestaurarRegistro(idregistro) {
+                var urlregistro = "{{ url('admin/kits/restaurar') }}";
+                Swal.fire({
+                    title: '¿Desea Restaurar El Registro?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí,Restaurar!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "GET",
+                            url: urlregistro + '/' + idregistro,
+                            success: function(data1) {
+                                if (data1 == "1") {
+                                    recargartabla();
+                                    $('#modalkits').modal('hide');
+                                    Swal.fire({
+                                        icon: "success",
+                                        text: "Registro Restaurado",
+                                    });
+                                } else if (data1 == "0") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro NO Restaurado",
+                                    });
+                                } else if (data1 == "2") {
+                                    Swal.fire({
+                                        icon: "error",
+                                        text: "Registro NO Encontrado",
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
         </script>
     @endpush
 @endsection

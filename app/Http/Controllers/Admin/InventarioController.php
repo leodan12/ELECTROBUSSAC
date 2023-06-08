@@ -24,6 +24,7 @@ class InventarioController extends Controller
         $this->middleware('permission:crear-inventario', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-inventario', ['only' => ['edit', 'update', 'destroydetalleinventario']]);
         $this->middleware('permission:eliminar-inventario', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-inventario', ['only' => ['showrestore','restaurar']]);
     }
     public function index(Request $request)
     {
@@ -99,8 +100,8 @@ class InventarioController extends Controller
     public function edit(int $inventario_id)
     {
         $companies = DB::table('companies as c')->select('id', 'nombre')->get();
-         
-       
+
+
         $products = DB::table('products as p')
             ->join('inventarios as i', 'i.product_id', '=', 'p.id')
             ->select('p.id', 'p.nombre', 'p.status')
@@ -110,7 +111,7 @@ class InventarioController extends Controller
         $detalleinventario = DB::table('detalleinventarios as di')
             ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
-            ->select('di.id as iddetalleinventario', 'c.nombre', 'di.stockempresa','c.id as idcompany')
+            ->select('di.id as iddetalleinventario', 'c.nombre', 'di.stockempresa', 'c.id as idcompany')
             ->where('i.id', '=', $inventario_id)->get();
 
         return view('admin.inventario.edit', compact('products', 'inventario', 'companies', 'detalleinventario'));
@@ -235,6 +236,37 @@ class InventarioController extends Controller
             $invEdit->update();
 
             return 1;
+        }
+    }
+    public function showrestore()
+    {
+        $empresas = DB::table('inventarios as i')
+            ->join('products as p', 'i.product_id', '=', 'p.id')
+            ->join('categories as c', 'p.category_id', '=', 'c.id')
+            ->select(
+                'i.id',
+                'c.nombre as categoria',
+                'p.nombre as producto',
+                'i.stockminimo',
+                'i.stocktotal',
+            )->where('i.status', '=', 1)->get();
+
+
+        return $empresas->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $registro = Inventario::find($idregistro);
+        if ($registro) {
+            $registro->status = 0;
+            if ($registro->update()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
         }
     }
 }

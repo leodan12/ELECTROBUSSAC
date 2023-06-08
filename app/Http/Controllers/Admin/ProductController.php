@@ -20,10 +20,11 @@ class ProductController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-producto|editar-producto|crear-producto|eliminar-producto', ['only' => ['index','show']]);
+        $this->middleware('permission:ver-producto|editar-producto|crear-producto|eliminar-producto', ['only' => ['index', 'show']]);
         $this->middleware('permission:crear-producto', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-producto', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-producto', ['only' => ['destroy']]);
+        $this->middleware('permission:recuperar-producto', ['only' => ['showrestore','restaurar']]);
     }
 
     public function index(Request $request)
@@ -213,5 +214,41 @@ class ProductController extends Controller
             ->where('p.id', '=', $id)->first();
 
         return  $product;
+    }
+
+    public function showrestore()
+    {
+        $productos   = DB::table('products as p')
+            ->join('categories as c', 'p.category_id', '=', 'c.id')
+            ->where('p.status', '=', 1)
+            ->where('p.tipo', '=', 'estandar')
+            ->select(
+                'p.id',
+                'c.nombre as categoria',
+                'p.nombre',
+                'p.codigo',
+                'p.unidad',
+                'p.moneda',
+                'p.NoIGV',
+                'p.SiIGV',
+            )->get();
+
+
+        return $productos->values()->all();
+    }
+
+    public function restaurar($idregistro)
+    {
+        $producto = Product::find($idregistro);
+        if ($producto) {
+            $producto->status = 0;
+            if ($producto->update()) {
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
+        }
     }
 }

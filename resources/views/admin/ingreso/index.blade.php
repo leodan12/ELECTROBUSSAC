@@ -366,6 +366,7 @@
                         url: urlregistro + '/' + idregistro + '/delete',
                         success: function(data1) {
                             if (data1 == "1") {
+                                recargartabla();
                                 $(event.target).closest('tr').remove();
                                 Swal.fire({
                                     icon: "success",

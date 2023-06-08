@@ -192,7 +192,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger"
-                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $item->id }}', '{{ $item->idproducto }}'  )"
+                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $item->id }}', '{{ $item->kitproduct_id }}'  )"
                                                         data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
                                                 </td>
                                             </tr>
