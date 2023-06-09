@@ -47,6 +47,8 @@
                                 <th>EMPRESA</th>
                                 <th>PRODUCTO</th>
                                 <th>CANTIDAD TOTAL</th>
+                                <th>MINIMO</th>
+                                <th>MAXIMO</th>
                                 <th>PRECIO TOTAL</th>
                                 <th>MONEDA</th>
                                 <th>VER REGISTROS</th>
@@ -150,6 +152,8 @@
                     '<td> ' + datos[i].empresa + '</td>' +
                     '<td> ' + datos[i].producto + '</td>' +
                     '<td> ' + datos[i].cantidad + '</td>' +
+                    '<td> ' + datos[i].minimo + '</td>' +
+                    '<td> ' + datos[i].maximo + '</td>' +
                     '<td> ' + datos[i].preciofinal + '</td>' +
                     '<td> ' + datos[i].moneda + '</td>' +
                     '<td> <button class= "btn btn-info" data-empresa="' + datos[i].empresa + '" data-producto="' + datos[i]

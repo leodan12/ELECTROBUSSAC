@@ -168,7 +168,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/cotizacion/vendercotizacion/{id}',  'vendercotizacion');
             Route::get('/cotizacion/generarcotizacionpdf/{id}',  'generarcotizacionpdf');
         });
-        //Ruta de la cotizacion
+        //Ruta de los reportes
         Route::controller(App\Http\Controllers\Admin\ReportesController::class)->group(function () {
             Route::get('/reporte', 'index');
             Route::get('/reporte/obtenerbalance/{idempresa}', 'obtenerbalance');

@@ -44,6 +44,7 @@
 
                                 <th>FECHA</th>
                                 <th>COMPRA O VENTA</th>
+                                <th>FACTURA</th>
                                 <th>EMPRESA</th>
                                 <th>CLIENTE/PROVEEDOR</th>
                                 <th>PRODUCTO</th>
@@ -111,6 +112,7 @@
                 filaDetalle =
                     '<tr><td> ' + datos[i].fecha + '</td>' +
                     '<td> ' + datos[i].compraventa + '</td>' +
+                    '<td> ' + datos[i].factura + '</td>' +
                     '<td> ' + datos[i].empresa + '</td>' +
                     '<td> ' + datos[i].cliente + '</td>' +
                     '<td> ' + datos[i].producto + '</td>' +

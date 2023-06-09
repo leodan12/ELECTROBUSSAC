@@ -11,18 +11,13 @@ use App\Models\Product;
 class ReportesController extends Controller
 {
     function __construct()
-    { 
-        $this->middleware('permission:ver-reporte', 
-        ['only' => ['index','misventas','todasfechas','ventasdelmes','comprasdelmes' 
-        ,'cotizacionesdelmes','obtenerdatosgrafico','obtenerproductosmasv','obtenerproductoscantidad','productosindividuales'
-        ,'productosxkit','sumaproductos','prodseparados','obtenerclientesmasc','clientescantidad'
-        ,'clientescosto','misclientescosto','obtenerbalance','devolverclientes','devolverclientescant'
-        ,'sumarcostoventa','obtenerproductos','obtenercotizaciones','obtenerventas','obteneringresos'
-        ,'numeroproductos','numerocotizaciones','numeroingresos','numeroventas','balancemensual'
-        ,'coninfocompleta','obtenerdatosproductosventa','obtenerdatosproductoscompra','datosproductos','infoproductos'
-        ,'resultadoventas','productosestandar','misproductosvendidos','datosrotacionstock','rotacionstock'
-        ,'detallecompras','sumarresultado','obtenermisventas','detalleventas','misproductoscomprados'
-        ,'obtenermiscompras','productosestandar2']]);
+    {
+        $this->middleware(
+            'permission:ver-reporte',
+            ['only' => [
+                'index', 'misventas', 'todasfechas', 'ventasdelmes', 'comprasdelmes', 'cotizacionesdelmes', 'obtenerdatosgrafico', 'obtenerproductosmasv', 'obtenerproductoscantidad', 'productosindividuales', 'productosxkit', 'sumaproductos', 'prodseparados', 'obtenerclientesmasc', 'clientescantidad', 'clientescosto', 'misclientescosto', 'obtenerbalance', 'devolverclientes', 'devolverclientescant', 'sumarcostoventa', 'obtenerproductos', 'obtenercotizaciones', 'obtenerventas', 'obteneringresos', 'numeroproductos', 'numerocotizaciones', 'numeroingresos', 'numeroventas', 'balancemensual', 'coninfocompleta', 'obtenerdatosproductosventa', 'obtenerdatosproductoscompra', 'datosproductos', 'infoproductos', 'resultadoventas', 'productosestandar', 'misproductosvendidos', 'datosrotacionstock', 'rotacionstock', 'detallecompras', 'sumarresultado', 'obtenermisventas', 'detalleventas', 'misproductoscomprados', 'obtenermiscompras', 'productosestandar2'
+            ]]
+        );
     }
 
     public function index()
@@ -97,6 +92,7 @@ class ReportesController extends Controller
         }
         return $datosventas;
     }
+
     //para compras , ventas y cotizaciones
     public function todasfechas($ventas, $compras, $cotizaciones)
     {
@@ -207,6 +203,7 @@ class ReportesController extends Controller
 
         return $misdatos;
     }
+
     //para los productos mas vendidos
     public function obtenerproductosmasv($empresa, $traer)
     {
@@ -473,7 +470,6 @@ class ReportesController extends Controller
 
         return $resultados;
     }
-
     public function obteneringresos($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -496,7 +492,6 @@ class ReportesController extends Controller
         }
         return   $ingresosmes;
     }
-
     public function obtenerventas($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -518,7 +513,6 @@ class ReportesController extends Controller
         }
         return   $ventasmes;
     }
-
     public function obtenercotizaciones($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -540,7 +534,6 @@ class ReportesController extends Controller
         }
         return   $cotizacionmes;
     }
-
     public function obtenerproductos($idempresa, $stock)
     {
         $productos = 0;
@@ -607,7 +600,6 @@ class ReportesController extends Controller
         }
         return $productos;
     }
-
     public function sumarcostoventa($ingresos, $c)
     {
         $costoventa = 0;
@@ -630,22 +622,21 @@ class ReportesController extends Controller
     }
 
     //para los cuadros de inicio de sesion
-
     public function balancemensual()
     {
         $fecha = date('Y-m-d');
         $dia = date('d');
         $inicio =  date("Y-m-d", strtotime($fecha . "- $dia days"));
 
-        $ventames = $this->numeroventas('-1', '',$inicio);
-        $ventacontado = $this->numeroventas('contado', 'SI',$inicio);
+        $ventames = $this->numeroventas('-1', '', $inicio);
+        $ventacontado = $this->numeroventas('contado', 'SI', $inicio);
         $ventacredito = $ventames - $ventacontado;
-        $ventaxpagar = $this->numeroventas('credito', 'NO','2010-01-01');
+        $ventaxpagar = $this->numeroventas('credito', 'NO', '2010-01-01');
 
-        $ingresomes = $this->numeroingresos('-1', '',$inicio);
-        $ingresocontado = $this->numeroingresos('contado', 'SI',$inicio);
+        $ingresomes = $this->numeroingresos('-1', '', $inicio);
+        $ingresocontado = $this->numeroingresos('contado', 'SI', $inicio);
         $ingresocredito = $ingresomes - $ingresocontado;
-        $ingresoxpagar = $this->numeroingresos('credito', 'NO','2010-01-01');
+        $ingresoxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');
 
         $cotizacionmes = $this->numerocotizaciones('-1', '');
         $cotizacioncontado = $this->numerocotizaciones('contado', '');
@@ -679,11 +670,10 @@ class ReportesController extends Controller
 
         return $datos;
     }
-
-    public function numeroventas($formapago, $pagado,$inicio)
+    public function numeroventas($formapago, $pagado, $inicio)
     {
         $fecha = date('Y-m-d');
-        
+
         $ventas = "";
         if ($formapago != '-1') {
             $ventas = DB::table('ventas as v')
@@ -698,10 +688,10 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
-    public function numeroingresos($formapago, $pagado,$inicio)
+    public function numeroingresos($formapago, $pagado, $inicio)
     {
         $fecha = date('Y-m-d');
-         
+
         $ventas = "";
         if ($formapago != '-1') {
             $ventas = DB::table('ingresos as i')
@@ -741,7 +731,6 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
-
     public function numeroproductos($stock)
     {
         $productos = "";
@@ -821,7 +810,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'di.preciofinal',
                         'i.moneda',
-                        'i.fecha'
+                        'i.fecha',
+                        'i.factura'
                     )
                     ->get();
             } else {
@@ -841,7 +831,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'di.preciofinal',
                         'i.moneda',
-                        'i.fecha'
+                        'i.fecha',
+                        'i.factura'
                     )
                     ->get();
             }
@@ -863,7 +854,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'di.preciofinal',
                         'i.moneda',
-                        'i.fecha'
+                        'i.fecha',
+                        'i.factura'
                     )
                     ->get();
             } else {
@@ -882,7 +874,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'di.preciofinal',
                         'i.moneda',
-                        'i.fecha'
+                        'i.fecha',
+                        'i.factura'
                     )
                     ->get();
             }
@@ -911,7 +904,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'dv.preciofinal',
                         'v.moneda',
-                        'v.fecha'
+                        'v.fecha',
+                        'v.factura'
                     )
                     ->get();
             } else {
@@ -931,7 +925,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'dv.preciofinal',
                         'v.moneda',
-                        'v.fecha'
+                        'v.fecha',
+                        'v.factura'
                     )
                     ->get();
             }
@@ -953,7 +948,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'dv.preciofinal',
                         'v.moneda',
-                        'v.fecha'
+                        'v.fecha',
+                        'v.factura'
                     )
                     ->get();
             } else {
@@ -972,7 +968,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'dv.preciofinal',
                         'v.moneda',
-                        'v.fecha'
+                        'v.fecha',
+                        'v.factura'
                     )
                     ->get();
 
@@ -988,6 +985,7 @@ class ReportesController extends Controller
             $micompra = collect();
             $micompra->put('compraventa', 'INGRESO');
             $micompra->put('empresa', $miscompras[$i]->empresa);
+            $micompra->put('factura', $miscompras[$i]->factura);
             $micompra->put('cliente', $miscompras[$i]->cliente);
             $micompra->put('producto', $miscompras[$i]->producto);
             $micompra->put('cantidad', $miscompras[$i]->cantidad);
@@ -1002,6 +1000,7 @@ class ReportesController extends Controller
             $miventa = collect();
             $miventa->put('compraventa', 'VENTA');
             $miventa->put('empresa', $misventas[$x]->empresa);
+            $miventa->put('factura', $misventas[$x]->factura);
             $miventa->put('cliente', $misventas[$x]->cliente);
             $miventa->put('producto', $misventas[$x]->producto);
             $miventa->put('cantidad', $misventas[$x]->cantidad);
@@ -1021,7 +1020,6 @@ class ReportesController extends Controller
         $productos = Product::all()->where('tipo', '=', 'estandar');
         return view('admin.reporte.rotacionstock', compact('companies', 'productos'));
     }
-
     public function datosrotacionstock($fechainicio, $fechafin, $empresa, $producto)
     {
         $misventas = $this->misproductosvendidos($fechainicio, $fechafin, $empresa, $producto);
@@ -1056,6 +1054,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1079,6 +1078,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1100,6 +1100,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1122,6 +1123,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1144,6 +1146,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1164,6 +1167,7 @@ class ReportesController extends Controller
                         'v.moneda',
                         'v.tasacambio',
                         'dv.preciofinal',
+                        'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1180,14 +1184,14 @@ class ReportesController extends Controller
             if ($misventas[$i]->tipo == 'kit') {
                 $misprod = $this->productosxkit($misventas[$i]->idproducto);
                 for ($x = 0; $x < count($misprod); $x++) {
-                    $costoventa = 0;
-                    $costoventa = round(($misventas[$i]->cantidad * $misprod[$x]->cantidad) * $misprod[$x]->preciounitariomo, 2);
+                    $costoprod = 0;
+                    $costoprod =  $misprod[$x]->preciounitariomo;
                     if ($misventas[$i]->moneda == $misprod[$x]->moneda) {
-                        $costoventa = $costoventa;
+                        $costoprod = $costoprod;
                     } else if ($misventas[$i]->moneda == 'dolares' && $misprod[$x]->moneda = 'soles') {
-                        $costoventa = round($costoventa / $misventas[$i]->tasacambio, 2);
+                        $costoprod = round($costoprod / $misventas[$i]->tasacambio, 2);
                     } else if ($misventas[$i]->moneda == 'soles' && $misprod[$x]->moneda = 'dolares') {
-                        $costoventa = round($costoventa * $misventas[$i]->tasacambio, 2);
+                        $costoprod = round($costoprod * $misventas[$i]->tasacambio, 2);
                     }
                     if ($misprod[$x]->id == $producto) {
                         $venta = collect();
@@ -1196,7 +1200,7 @@ class ReportesController extends Controller
                         $venta->put('cantidad', $misventas[$i]->cantidad * $misprod[$x]->cantidad);
                         $venta->put('moneda', $misventas[$i]->moneda);
                         $venta->put('tasacambio', $misventas[$i]->tasacambio);
-                        $venta->put('preciofinal', $costoventa);
+                        $venta->put('preciofinal', $costoprod);
                         $venta->put('fecha', $misventas[$i]->fecha);
                         $resultado->push($venta);
                     }
@@ -1207,7 +1211,7 @@ class ReportesController extends Controller
                         $venta->put('cantidad', $misventas[$i]->cantidad * $misprod[$x]->cantidad);
                         $venta->put('moneda', $misventas[$i]->moneda);
                         $venta->put('tasacambio', $misventas[$i]->tasacambio);
-                        $venta->put('preciofinal', $costoventa);
+                        $venta->put('preciofinal', $costoprod);
                         $venta->put('fecha', $misventas[$i]->fecha);
                         $resultado->push($venta);
                     }
@@ -1219,7 +1223,7 @@ class ReportesController extends Controller
                 $venta->put('cantidad', $misventas[$i]->cantidad);
                 $venta->put('moneda', $misventas[$i]->moneda);
                 $venta->put('tasacambio', $misventas[$i]->tasacambio);
-                $venta->put('preciofinal', $misventas[$i]->preciofinal);
+                $venta->put('preciofinal', $misventas[$i]->preciounitariomo);
                 $venta->put('fecha', $misventas[$i]->fecha);
                 $resultado->push($venta);
             }
@@ -1239,15 +1243,30 @@ class ReportesController extends Controller
         for ($x = 0; $x < count($misventasunicas); $x++) {
             $sumcant = 0;
             $sumcosto = 0;
+            $minimo = 100000;
+            $maximo = 0;
+            //el $misventas[$i]['preciofinal'] es el precio unirario
             for ($i = 0; $i < count($misventas); $i++) {
                 if (
                     $misventas[$i]['producto'] == $misventasunicas[$x]['producto'] &&
                     $misventas[$i]['empresa'] == $misventasunicas[$x]['empresa']
                 ) {
-                    if ($misventas[$i]['moneda'] == "dolares") {
-                        $sumcosto = $sumcosto + round($misventas[$i]['tasacambio'] * $misventas[$i]['preciofinal'], 2);
+                    if ($misventas[$i]['moneda'] == "soles") {
+                        $sumcosto = $sumcosto + round(($misventas[$i]['cantidad'] * $misventas[$i]['preciofinal']) / $misventas[$i]['tasacambio'], 2);
+                        if ($maximo < round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2)) {
+                            $maximo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2);
+                        }
+                        if ($minimo > round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2)) {
+                            $minimo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2);
+                        }
                     } else {
-                        $sumcosto = $sumcosto + $misventas[$i]['preciofinal'];
+                        $sumcosto = $sumcosto + round($misventas[$i]['cantidad'] * $misventas[$i]['preciofinal'], 2);
+                        if ($maximo < $misventas[$i]['preciofinal']) {
+                            $maximo = $misventas[$i]['preciofinal'];
+                        }
+                        if ($minimo > $misventas[$i]['preciofinal'] ) {
+                            $minimo = $misventas[$i]['preciofinal'];
+                        }
                     }
                     $sumcant = $sumcant + $misventas[$i]['cantidad'];
                 }
@@ -1256,9 +1275,11 @@ class ReportesController extends Controller
             $producto->put('empresa', $misventasunicas[$x]['empresa']);
             $producto->put('compraventa', $compraventa);
             $producto->put('producto', $misventasunicas[$x]['producto']);
-            $producto->put('cantidad', $sumcant);
+            $producto->put('cantidad', $sumcant); 
+            $producto->put('maximo', $maximo);
+            $producto->put('minimo', $minimo);
             $producto->put('preciofinal', $sumcosto);
-            $producto->put('moneda', "soles");
+            $producto->put('moneda', "dolares");
             $producto->put('fecha', $misventasunicas[$x]['fecha']);
             $resultado->push($producto);
         }
@@ -1284,6 +1305,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1308,6 +1330,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1329,6 +1352,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1351,6 +1375,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1373,6 +1398,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1393,6 +1419,7 @@ class ReportesController extends Controller
                         'i.moneda',
                         'i.tasacambio',
                         'di.preciofinal',
+                        'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
                         'p.id as idproducto'
@@ -1403,6 +1430,7 @@ class ReportesController extends Controller
         return $misproductos;
     }
 
+    //otro
     public function detalleventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $misventas = $this->obtenermisventas($fechainicio, $fechafin, $empresa, $producto);
@@ -1503,7 +1531,6 @@ class ReportesController extends Controller
 
         return $resultado;
     }
-
     public function obtenermiscompras($fechainicio, $fechafin, $empresa, $producto)
     {
         $productos = DB::table('ingresos as i')
