@@ -29,7 +29,7 @@ class VentaController extends Controller
             ['only' => ['index', 'show', 'showcreditos', 'pagarfactura', 'generarfacturapdf']]
         );
         $this->middleware('permission:crear-venta', ['only' => ['create', 'store', 'create2', 'facturadisponible']]);
-        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update', 'destroydetalleventa','misdetallesventa']]);
+        $this->middleware('permission:editar-venta', ['only' => ['edit', 'update', 'destroydetalleventa', 'misdetallesventa']]);
         $this->middleware('permission:eliminar-venta', ['only' => ['destroy']]);
         $this->middleware(
             'permission:crear-venta|crear-cotizacion|crear-ingreso|editar-venta|editar-cotizacion|editar-ingreso|ver-venta|ver-ingreso|ver-cotizacion|eliminar-venta|eliminar-ingreso|eliminar-cotizacion',
@@ -96,7 +96,9 @@ class VentaController extends Controller
 
         return view('admin.venta.index', compact('creditosxvencer', 'sinnumero'));
     }
-
+    public function index2(){
+        return redirect('admin/venta')->with('verstock', 'Ver');
+    }
     public function create()
     {
         $companies = Company::all();
@@ -1123,5 +1125,26 @@ class VentaController extends Controller
             ->where('v.id', '=', $venta_id)->get();
 
         return  $detallesventa;
+    }
+
+    public function stocktotalxkit($idkit)
+    {
+
+        $milistaproductos = $this->productosxkit($idkit); 
+        $stockkit = 100000;
+        for ($j = 0; $j < count($milistaproductos); $j++) {
+            $inventario = DB::table('inventarios as i')
+                ->where('i.product_id', '=', $milistaproductos[$j]->id)
+                ->select('i.id', 'i.stocktotal', 'i.product_id')
+                ->first();
+            $stockprod = 0;
+            if ($inventario) {
+                $stockprod = floor($inventario->stocktotal / $milistaproductos[$j]->cantidad);
+            }
+            if ($stockprod < $stockkit) {
+                $stockkit = $stockprod;
+            }
+        }
+        return  $stockkit;
     }
 }

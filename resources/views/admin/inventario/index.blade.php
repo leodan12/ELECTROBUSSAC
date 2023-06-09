@@ -1,29 +1,48 @@
 @extends('layouts.admin')
+@push('css')
+    <script>
+        var mostrar = "NO";
+
+        function mostrarstocks() {
+            mostrar = "SI";
+        }
+    </script>
+@endpush
 @section('content')
     <div>
         <div class="row">
             <div class="col-md-12">
 
                 @if (session('message'))
-                    <div class="alert alert-success">{{ session('message') }}</div>
+                    <div class="alert alert-success">{{ session('message') }} </div>
                 @endif
-
+                @if (session('verstock'))
+                    <script>
+                        mostrarstocks();
+                    </script>
+                @endif
                 <div class="card">
                     <div class="card-header">
-                        <h4>STOCK DE INVENTARIO DE PRODUCTOS:&nbsp;&nbsp;
-                            @can('recuperar-inventario')
-                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalrestore">
-                                    Restaurar
-                                    Eliminados
-                                </button>
-                            @endcan &nbsp; &nbsp;
-                            <a type="button" class="btn btn-success" data-bs-toggle="modal"
-                                data-bs-target="#modalkits">Consultar Stock de Kits</a>
-                            @can('crear-inventario')
-                                <a href="{{ url('admin/inventario/create') }}" class="btn btn-primary float-end">Añadir
-                                    Stocks</a>
-                            @endcan
-                        </h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 id="mititulo">INVENTARIOS:&nbsp;&nbsp;
+                                </h4>
+                            </div>
+                            <div class="col-md-2">
+                                <h4 id="mirestore">
+                                </h4>
+                            </div>
+                            <div class="col-md-4">
+                                @can('crear-inventario')
+                                    <a href="{{ url('admin/inventario/create') }}" class="btn btn-primary float-end"> Añadir
+                                        Stocks</a>
+                                @endcan
+                                <h4> <a type="button" class="btn btn-success float-end" data-bs-toggle="modal"
+                                        data-bs-target="#modalkits" style="margin-right: 10px;">Stock de Kits</a>
+
+                                </h4>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -133,7 +152,7 @@
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="mikitlabel1">Ver Stock del Kit</h1>
+                                    <h1 class="modal-title fs-5" id="mikitlabel1">Stock Total del Kit: </h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                         onclick="cerrartoast()"></button>
                                 </div>
@@ -270,6 +289,46 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade " id="modalsinstock" tabindex="-1" aria-labelledby="modalrestore"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="mimodalLabel">Inventarios Con Stock Minimo Y Sin
+                                        Stock</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="table-responsive">
+                                        <table class="table table-row-bordered gy-5 gs-5" style="width: 100%"
+                                            id="mitablasinstock" name="mitablasinstock">
+                                            <thead class="fw-bold text-primary">
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>CATEGORIA</th>
+                                                    <th>PRODUCTO</th>
+                                                    <th>STOCK MINIMO</th>
+                                                    <th>STOCK TOTAL</th>
+                                                    <th>ACCION</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -278,7 +337,12 @@
     @push('script')
         <script src="{{ asset('admin/midatatable.js') }}"></script>
         <script>
+            var numeroeliminados = 0;
+            var numerosinstock = 0;
             $(document).ready(function() {
+                if (mostrar == "SI") {
+                    $('#modalsinstock').modal('show');
+                }
                 var tabla = "#mitabla";
                 var ruta = "{{ route('inventario.index') }}"; //darle un nombre a la ruta index
                 var columnas = [{
@@ -309,9 +373,11 @@
                     },
                 ];
                 var btns = 'lfrtip';
-
+                numeroeliminados = @json($datoseliminados);
+                mostrarmensaje(numeroeliminados);
+                numerosinstock = @json($productossinstock);
+                mostrarmensajetitulo(numerosinstock);
                 iniciarTablaIndex(tabla, ruta, columnas, btns);
-
             });
             //para borrar un registro de la tabla
             $(document).on('click', '.btnborrar', function(event) {
@@ -332,6 +398,9 @@
                             url: urlregistro + '/' + idregistro + '/delete',
                             success: function(data1) {
                                 if (data1 == "1") {
+                                    $('#modalsinstock').modal('hide');
+                                    numeroeliminados++;
+                                    mostrarmensaje(numeroeliminados);
                                     recargartabla();
                                     $(event.target).closest('tr').remove();
                                     Swal.fire({
@@ -354,8 +423,7 @@
                     }
                 });
             });
-        </script>
-        <script>
+
             var inicializartabla = 0;
             const mimodal = document.getElementById('mimodal');
             mimodal.addEventListener('show.bs.modal', event => {
@@ -389,9 +457,6 @@
                 });
 
             })
-            window.addEventListener('close-modal', event => {
-                $('#deleteModal').modal('hide');
-            });
 
             const modalkits = document.getElementById('modalkits');
             modalkits.addEventListener('show.bs.modal', event => {
@@ -419,12 +484,18 @@
                 const idkit = button.getAttribute('data-id');
                 var urlkit = "{{ url('admin/products/show') }}";
                 $.get(urlkit + '/' + idkit, function(datak) {
+
                     document.getElementById("verKit").value = datak.nombre;
                     document.getElementById("verUnidad").value = datak.unidad;
                     document.getElementById("verMoneda").value = datak.moneda;
                     document.getElementById("verPrecio").value = datak.NoIGV;
                 });
+                var urllistaprod = "{{ url('admin/venta/stocktotalxkit') }}";
+                $.get(urllistaprod + '/' + idkit, function(data) {
+                    const modalTitle = mikit.querySelector('.modal-title');
+                    modalTitle.textContent = `Stock Total del Kit: ${data} Unidades`;
 
+                });
                 var urllistaprod = "{{ url('admin/venta/productosxkit') }}";
                 $.get(urllistaprod + '/' + idkit, function(data) {
                     $('#listaproductoskit tbody tr').slice().remove();
@@ -522,6 +593,8 @@
                             url: urlregistro + '/' + idregistro,
                             success: function(data1) {
                                 if (data1 == "1") {
+                                    numeroeliminados--;
+                                    mostrarmensaje(numeroeliminados);
                                     recargartabla();
                                     $('#modalrestore').modal('hide');
                                     Swal.fire({
@@ -544,6 +617,79 @@
                     }
                 });
             }
+
+            function mostrarmensaje(numeliminados) {
+                var registro = " ";
+                var boton =
+                    ' @can('recuperar-empresa') <button id="btnrestore" class="btn btn-info btn-sm " data-bs-toggle="modal"  data-bs-target="#modalrestore"> Restaurar Eliminados</button> @endcan ';
+                if (numeliminados > 0) {
+                    document.getElementById('mirestore').innerHTML = registro + boton;
+                } else {
+                    document.getElementById('mirestore').innerHTML = registro;
+                }
+            }
+
+            function mostrarmensajetitulo(numsinstock) {
+                var registro = "INVENTARIOS: ";
+                var tienes = "";
+                var stock = " productos en stock minimo";
+                var boton =
+                    ' @can('recuperar-empresa') <button id="btnsinstock" class="btn btn-info btn-sm " data-bs-toggle="modal"  data-bs-target="#modalsinstock"> Ver </button> @endcan ';
+                if (numsinstock > 0) {
+                    tienes = "Tienes ";
+                    document.getElementById('mititulo').innerHTML = registro + tienes + numsinstock + stock + boton;
+                } else {
+                    document.getElementById('mititulo').innerHTML = registro;
+                }
+            }
+            var inicializartablasinstock = 0;
+            const modalsinstock = document.getElementById('modalsinstock');
+            modalsinstock.addEventListener('show.bs.modal', event => {
+                var nrosinstock = 0;
+                var nrostockminimo = 0;
+                var urlinventario = "{{ url('admin/inventario/showsinstock') }}";
+
+                $.get(urlinventario, function(data) {
+                    var miurl = "{{ url('/admin/inventario/') }}";
+                    var btns = 'lfrtip';
+                    var tabla = '#mitablasinstock';
+                    if (inicializartablasinstock > 0) {
+                        $("#mitablasinstock").dataTable().fnDestroy(); //eliminar las filas de la tabla  
+                    }
+                    $('#mitablasinstock tbody tr').slice().remove();
+                    for (var i = 0; i < data.length; i++) {
+                        var colorfondo = '<tr id="fila' + i + '">';
+                        if (data[i].stocktotal <= 0) {
+                            colorfondo = '<tr style="background-color:  #f89f9f" id="fila' + i + '">';
+                            nrosinstock++;
+                        } else {
+                            nrostockminimo++;
+                        }
+                        const modalTitle = modalsinstock.querySelector('.modal-title');
+                        modalTitle.textContent = `Tienes ${nrosinstock} productos sin stock y ${nrostockminimo} con stock minimo`;
+
+                        filaDetalle = colorfondo +
+                            '<td>' + data[i].id +
+                            '</td><td>' + data[i].categoria +
+                            '</td><td>' + data[i].producto +
+                            '</td><td>' + data[i].stockminimo +
+                            '</td><td>' + data[i].stocktotal +
+                            '</td><td>@can('editar-inventario')<a  href="' + miurl + '/' + data[i]
+                            .id +
+                            '/edit" class="btn btn-success">Editar</a> @endcan' +
+                            '<button type="button" class="btn btn-secondary" data-id="' + data[i].id +
+                            '" data-bs-toggle="modal" data-bs-target="#mimodal">Ver</button>' +
+                            ' @can('eliminar-inventario')<button type="button" class="btn btn-danger btnborrar" data-idregistro="' +
+                            data[i].id +
+                            '">Eliminar</button>@endcan ' +
+                            '</td> ' +
+                            '</tr>';
+                        $("#mitablasinstock>tbody").append(filaDetalle);
+                    }
+                    inicializartabladatos(btns, tabla, "");
+                    inicializartablasinstock++;
+                });
+            });
         </script>
     @endpush
 @endsection

@@ -59,8 +59,8 @@ class ProductController extends Controller
         }
 
         return view('admin.products.index',compact('datoseliminados'));
-    }
-
+    } 
+    
     public function create()
     {
         $categories = Category::all()->where('status', '=', 0);

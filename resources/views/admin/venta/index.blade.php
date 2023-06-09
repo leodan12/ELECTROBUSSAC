@@ -1,5 +1,13 @@
 @extends('layouts.admin')
+@push('css')
+    <script>
+        var mostrar = "NO";
 
+        function mostrarstocks() {
+            mostrar = "SI";
+        }
+    </script>
+@endpush
 @section('content')
     <div>
         <div class="row">
@@ -8,7 +16,11 @@
                 @if (session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
                 @endif
-
+                @if (session('verstock'))
+                    <script>
+                        mostrarstocks();
+                    </script>
+                @endif
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -304,6 +316,9 @@
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
         $(document).ready(function() {
+            if (mostrar == "SI") {
+                $('#modalCreditos1').modal('show');
+            }
             var tabla = "#mitabla";
             var ruta = "{{ route('venta.index') }}"; //darle un nombre a la ruta index
             var columnas = [{
@@ -374,6 +389,7 @@
                         url: urlregistro + '/' + idregistro + '/delete',
                         success: function(data1) {
                             if (data1 == "1") {
+                                $('#modalCreditos1').modal('hide');
                                 recargartabla();
                                 $(event.target).closest('tr').remove();
                                 Swal.fire({
@@ -396,8 +412,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         //para el modal ver venta
         var idventa = "";
         var nrocreditos = 0;
@@ -589,8 +604,9 @@
                         '/edit" class="btn btn-success">Editar</a> @endcan' +
                         '<button type="button" class="btn btn-secondary" data-id="' + data[i].id +
                         '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver</button>' +
-                        '@can('eliminar-venta')<form action="' + miurl + '/' + data[i].id +
-                        '/delete" class="d-inline formulario-eliminar"> <button type="submit" class="btn btn-danger formulario-eliminar">Eliminar </button></form>@endcan' +
+                        ' @can('eliminar-venta')<button type="button" class="btn btn-danger btnborrar" data-idregistro="' +
+                        data[i].id +
+                        '">Eliminar</button>@endcan ' +
                         '</td></tr>';
 
                     $("#mitabla1>tbody").append(filaDetalle);
@@ -734,7 +750,7 @@
 
         });
         // fin de los modales 
-        
+
         $('#pagarfactura').click(function() {
             pagarfactura();
         });

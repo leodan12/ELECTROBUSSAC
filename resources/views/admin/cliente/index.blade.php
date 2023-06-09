@@ -235,8 +235,8 @@
             const id = button.getAttribute('data-id')
             var urlregistro = "{{ url('admin/cliente/show') }}";
             $.get(urlregistro + '/' + id, function(data) {
-                const modalTitle = mimodal.querySelector('.modal-title')
-                modalTitle.textContent = `Ver Registro ${id}`
+                const modalTitle = mimodal.querySelector('.modal-title');
+                modalTitle.textContent = `Ver Registro ${id}`;
 
                 document.getElementById("vernombre").value = data.nombre;
                 document.getElementById("verruc").value = data.ruc;

@@ -30,16 +30,7 @@ class LoginController extends Controller
     //protected $redirectTo = RouteServiceProvider::HOME;
 
     protected function authenticated(){
-        if ( Auth::user()->role_as == '1'){
-            $usuario= Auth::user()->name;
-            $mensaje= "Bienvenido usuario ".$usuario;
-            return redirect('admin/dashboard')->with('message',$mensaje);
-        }
-        else if(Auth::user()->role_as == '0'){
-            $usuario= Auth::user()->name;
-            $mensaje= "Bienvenido usuario ".$usuario;
-            return redirect('admin/dashboard')->with('message',$mensaje);
-        }
+         
     }
 
     /**

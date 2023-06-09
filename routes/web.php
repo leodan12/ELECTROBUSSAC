@@ -24,7 +24,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('i
 Route::group(['middleware' => ['auth']], function () {
     Route::prefix('admin')->middleware(['auth'])->group(function () {
 
-        Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index']);
+        Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'inicio']);
 
         //Rutas de las Categorias
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function () {
@@ -63,7 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
         //Rutas de los Productos
         Route::controller(App\Http\Controllers\Admin\ProductController::class)->group(function () {
-            Route::get('/products', 'index')->name('producto.index');;
+            Route::get('/products', 'index')->name('producto.index');
             Route::get('/products/create', 'create');
             Route::post('/products', 'store');
             Route::get('/products/{product}/edit', 'edit');
@@ -98,6 +98,7 @@ Route::group(['middleware' => ['auth']], function () {
         //Ruta del inventario
         Route::controller(App\Http\Controllers\Admin\InventarioController::class)->group(function () {
             Route::get('/inventario', 'index')->name('inventario.index');
+            Route::get('/inventario2', 'index2')->name('inventario2.index');
             Route::get('/inventario/create', 'create');
             Route::post('/inventario', 'store');
             Route::get('/inventario/{inventario_id}/edit', 'edit');
@@ -108,11 +109,13 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/inventario/showkits', 'showkits'); //ver  
             Route::get('/inventario/showrestore', 'showrestore');
             Route::get('/inventario/restaurar/{idregistro}', 'restaurar');
+            Route::get('/inventario/showsinstock', 'showsinstock');
         });
 
         //Ruta de la venta
         Route::controller(App\Http\Controllers\Admin\VentaController::class)->group(function () {
             Route::get('/venta', 'index')->name('venta.index');
+            Route::get('/venta2', 'index2')->name('venta2.index');
             Route::get('/venta/create', 'create');
             Route::post('/venta', 'store');
             Route::get('/venta/{venta_id}/edit', 'edit');
@@ -132,11 +135,13 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/venta/comboempresaclientevi/{id}', 'comboempresaclientevi');
             Route::get('/venta/facturadisponible/{empresa}/{factura}', 'facturadisponible');
             Route::get('/venta/misdetallesventa/{idventa}', 'misdetallesventa'); //ver  
+            Route::get('/venta/stocktotalxkit/{id}', 'stocktotalxkit'); //ver  
         });
 
         //Ruta de ingresos
         Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function () {
             Route::get('/ingreso', 'index')->name('ingreso.index');
+            Route::get('/ingreso2', 'index2')->name('ingreso2.index');
             Route::get('/ingreso/create', 'create');
             Route::post('/ingreso', 'store');
             Route::get('/ingreso/{ingreso_id}/edit', 'edit');

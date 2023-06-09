@@ -85,6 +85,9 @@ class IngresoController extends Controller
 
         return view('admin.ingreso.index', compact('creditosxvencer', 'sinnumero'));
     }
+    public function index2(){
+        return redirect('admin/ingreso')->with('verstock', 'Ver');
+    }
     public function create()
     {
         $companies = Company::all();

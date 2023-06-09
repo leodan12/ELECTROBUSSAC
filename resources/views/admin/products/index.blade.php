@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-
+ 
 @section('content')
     <div>
         <div class="row">
             <div class="col-md-12">
                 @if (session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
-                @endif
+                @endif 
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -180,7 +180,7 @@
 @push('script')
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
-         var numeroeliminados = 0;
+        var numeroeliminados = 0;
         $(document).ready(function() {
             var tabla = "#mitabla";
             var ruta = "{{ route('producto.index') }}"; //darle un nombre a la ruta index
@@ -277,12 +277,12 @@
         const mimodal = document.getElementById('mimodal')
         mimodal.addEventListener('show.bs.modal', event => {
 
-            const button = event.relatedTarget
-            const id = button.getAttribute('data-id')
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
             var urlregistro = "{{ url('admin/products/show') }}";
             $.get(urlregistro + '/' + id, function(data) {
-                const modalTitle = mimodal.querySelector('.modal-title')
-                modalTitle.textContent = `Ver Producto ${id}`
+                const modalTitle = mimodal.querySelector('.modal-title');
+                modalTitle.textContent = `Ver Producto ${id}`;
 
                 document.getElementById("vercategoria").value = data.nombrecategoria;
                 document.getElementById("vernombre").value = data.nombre;

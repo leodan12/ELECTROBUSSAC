@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Inventario;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -21,17 +23,63 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
     public function index()
     {
-        return view('home');
+        $sinstock = $this->productossinstock();
+        $ventasxcobrar = $this->numeroventas('credito', 'NO', '2010-01-01');
+        $ingresosxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');
+        return view('admin.dashboard', compact('sinstock', 'ingresosxpagar', 'ventasxcobrar'));
     }
     public function inicio()
     {
-        return view('admin.dashboard');
+        $sinstock = $this->productossinstock();
+        $ventasxcobrar = $this->numeroventas('credito', 'NO', '2010-01-01');
+        $ingresosxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');
+        return view('admin.dashboard', compact('sinstock', 'ingresosxpagar', 'ventasxcobrar'));
     }
 
-    public function prueba()
+    public function productossinstock()
     {
-        return view('admin.venta.prueba');
+        $numerosinstock = 0;
+        $prod  = DB::table('inventarios as i')
+            ->where('i.status', '=', 0)
+            ->select('i.id', 'i.product_id', 'i.stockminimo', 'i.stocktotal')
+            ->get();
+        for ($i = 0; $i < count($prod); $i++) {
+            $p  = DB::table('inventarios as i')
+                ->where('i.status', '=', 0)
+                ->where('i.product_id', '=', $prod[$i]->product_id)
+                ->select('i.id', 'i.product_id', 'i.stockminimo', 'i.stocktotal')
+                ->first();
+            if ($p->stockminimo >= $prod[$i]->stocktotal) {
+                $numerosinstock++;
+            }
+        }
+        return $numerosinstock;
+    }
+
+    public function numeroventas($formapago, $pagado, $inicio)
+    {
+        $ventas = "";
+
+        $ventas = DB::table('ventas as v')
+            ->where('v.formapago', '=', $formapago)
+            ->where('v.fecha', '>', $inicio)
+            ->where('v.pagada', '=', $pagado)
+            ->count();
+
+        return   $ventas;
+    }
+    public function numeroingresos($formapago, $pagado, $inicio)
+    {
+        $ventas = "";
+        $ventas = DB::table('ingresos as i')
+            ->where('i.formapago', '=', $formapago)
+            ->where('i.fecha', '>', $inicio)
+            ->where('i.pagada', '=', $pagado)
+            ->count();
+
+        return   $ventas;
     }
 }

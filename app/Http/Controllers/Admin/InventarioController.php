@@ -19,15 +19,32 @@ class InventarioController extends Controller
     {
         $this->middleware(
             'permission:ver-inventario|editar-inventario|crear-inventario|eliminar-inventario',
-            ['only' => ['index', 'show', 'showkits']]
+            ['only' => ['index', 'show', 'showkits', 'showsinstock']]
         );
         $this->middleware('permission:crear-inventario', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-inventario', ['only' => ['edit', 'update', 'destroydetalleinventario']]);
         $this->middleware('permission:eliminar-inventario', ['only' => ['destroy']]);
-        $this->middleware('permission:recuperar-inventario', ['only' => ['showrestore','restaurar']]);
+        $this->middleware('permission:recuperar-inventario', ['only' => ['showrestore', 'restaurar']]);
     }
     public function index(Request $request)
     {
+        $datoseliminados = DB::table('inventarios as i')
+            ->where('i.status', '=', 1)
+            ->select('i.id', 'i.stockminimo', 'i.stockmaximo')
+            ->count();
+        $productossinstock = 0;
+        $sinstock = Inventario::all()->where('status', '=', 0);
+        $sinstock2 =  $sinstock->values()->all();
+        for ($i = 0; $i < count($sinstock2); $i++) {
+            for ($z = 0; $z < count($sinstock2); $z++) {
+                if ($sinstock2[$z]->id == $sinstock2[$i]->id) {
+                    if ($sinstock2[$z]->stockminimo >= $sinstock2[$i]->stocktotal) {
+                        $productossinstock++;
+                    }
+                }
+            }
+        }
+
         if ($request->ajax()) {
 
             $inventarios = DB::table('inventarios as i')
@@ -50,7 +67,10 @@ class InventarioController extends Controller
         }
 
 
-        return view('admin.inventario.index');
+        return view('admin.inventario.index', compact('datoseliminados', 'productossinstock'));
+    }
+    public function index2(){
+        return redirect('admin/inventario')->with('verstock', 'Ver');
     }
     public function create()
     {
@@ -268,5 +288,38 @@ class InventarioController extends Controller
         } else {
             return "2";
         }
+    }
+
+    public function showsinstock()
+    {
+        $misinventarios = collect();
+        $inventarios = DB::table('inventarios as i')
+            ->join('products as p', 'i.product_id', '=', 'p.id')
+            ->join('categories as c', 'p.category_id', '=', 'c.id')
+            ->select(
+                'i.id',
+                'c.nombre as categoria',
+                'p.nombre as producto',
+                'i.stockminimo',
+                'i.stocktotal',
+            )->where('i.status', '=', 0)->get();
+
+        for ($i = 0; $i < count($inventarios); $i++) {
+            for ($z = 0; $z < count($inventarios); $z++) {
+                if ($inventarios[$z]->id == $inventarios[$i]->id) {
+                    if ($inventarios[$z]->stockminimo >= $inventarios[$i]->stocktotal) {
+                       $inventario = collect();
+                       $inventario->put('id',$inventarios[$i]->id);
+                       $inventario->put('categoria',$inventarios[$i]->categoria);
+                       $inventario->put('producto',$inventarios[$i]->producto);
+                       $inventario->put('stockminimo',$inventarios[$i]->stockminimo);
+                       $inventario->put('stocktotal',$inventarios[$i]->stocktotal);
+                       $misinventarios->push($inventario);
+                    }
+                }
+            }
+        }
+
+        return $misinventarios;
     }
 }

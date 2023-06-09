@@ -352,7 +352,7 @@
             var resta = fechav.getTime() - fecha.getTime();
             var dias = resta / 1000 / 60 / 60 / 24;
             var cond = "";
-            cond = "La cotizacion es valida por " + dias + " días";
+            cond = "La cotización es válida por " + dias + " días";
             document.getElementById('inputcondicion1').value = cond;
 
         });
@@ -364,7 +364,7 @@
             var resta = fechav.getTime() - fecha.getTime();
             var dias = resta / 1000 / 60 / 60 / 24;
             var cond = "";
-            cond = "La cotizacion es valida por " + dias + " días";
+            cond = "La cotización es válida por " + dias + " días";
             document.getElementById('inputcondicion1').value = cond;
 
         });
@@ -385,17 +385,22 @@
             var forma = $(this).val();
             var condicion1 = "";
             if (forma == "credito") {
+                var dias = document.getElementById('diascredito').value;
                 document.getElementById('divdiascredito').style.display = 'inline';
-                condicion1 = "El pago se realizará a crédito";
+                condicion1 = "El pago se realizará a crédito con un plazo de " + dias + " días";
             } else {
                 document.getElementById('divdiascredito').style.display = 'none';
                 condicion1 = "El pago se realizará al contado";
             }
-
             document.getElementById('inputcondicion2').value = condicion1;
 
         });
-
+        $("#diascredito").change(function() {
+            var dias = document.getElementById('diascredito').value;
+            document.getElementById('divdiascredito').style.display = 'inline';
+            condicion1 = "El pago se realizará a crédito con un plazo de " + dias + " días";
+            document.getElementById('inputcondicion2').value = condicion1;
+        });
         $("#igv").change(function() {
             var igv = $(this).val();
             conigv = igv;
@@ -412,7 +417,8 @@
             $.get(url3 + '/' + company, function(data) {
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
-                    producto_select += '<option id="miproducto'+data[i].id+'" id="productoxempresa' + data[i].id + '" value="' + data[i]
+                    producto_select += '<option id="miproducto' + data[i].id + '" id="productoxempresa' +
+                        data[i].id + '" value="' + data[i]
                         .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +
                         '" data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
@@ -646,7 +652,7 @@
                             coma = '';
                         }
                         milista = milista + '-' + data[i].cantidad + ' ' + data[i].producto + coma;
-                        
+
                     }
                     agregarFilasTabla(LVenta, puntos, milista);
                 });
@@ -673,7 +679,7 @@
                 '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn  btn-danger" onclick="eliminarFila(' + indice+','+LVenta[0] +
+                '</td><td><button type="button" class="btn  btn-danger" onclick="eliminarFila(' + indice + ',' + LVenta[0] +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#detallesVenta>tbody").append(filaDetalle);
 
@@ -776,7 +782,7 @@
             simbolomonedaproducto = "";
         }
 
-        function eliminarFila(ind,idproducto) {
+        function eliminarFila(ind, idproducto) {
             var resta = 0;
             //document.getElementById('preciot' + ind).value();
             resta = $('[id="preciof' + ind + '"]').val();
