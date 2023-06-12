@@ -20,7 +20,7 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label is-required">Nombre</label>
-                                        <input type="text" name="nombre" class="form-control borde" required
+                                        <input type="text" name="nombre" class="form-control borde " required
                                             value="{{ $company->nombre }}" />
                                         @error('nombre')
                                             <small class="text-danger">{{ $message }}</small>
@@ -41,15 +41,15 @@
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Direccion</label>
-                                        <input type="text" name="direccion" class="form-control  borde"
+                                        <input type="text" name="direccion" class="form-control  borde "
                                             value="{{ $company->direccion }}" />
 
                                     </div>
                                     <h5>Datos de la cuenta soles</h5>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Tipo Cuenta(tipo, banco, moneda)</label>
-                                        <input type="text" name="tipocuentasoles" id="tipocuentasoles"
-                                            class="form-control borde" placeholder="Cuenta Soles"
+                                        <input type="text" name="tipocuentasoles" id="tipocuentasoles" placeholder="CTA. CTE. BCP SOLES"
+                                            class="form-control borde " 
                                             value="{{ $company->tipocuentasoles }}" />
                                     </div>
                                     <div class="col-md-4 mb-3">
@@ -66,8 +66,8 @@
                                     <h5>Datos de la cuenta dolares</h5>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Tipo Cuenta(tipo, banco, moneda)</label>
-                                        <input type="text" name="tipocuentadolares" id="tipocuentadolares"
-                                            class="form-control borde" placeholder="Cuenta Dolares"
+                                        <input type="text" name="tipocuentadolares" id="tipocuentadolares" placeholder="CTA. CTE. BCP DOLARES"
+                                            class="form-control borde "  
                                             value="{{ $company->tipocuentadolares }}" />
                                     </div>
                                     <div class="col-md-4 mb-3">

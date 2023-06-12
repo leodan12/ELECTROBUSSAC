@@ -39,7 +39,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label ">NUMERO DE FACTURA</label>
-                                <input type="text" name="factura" id="factura" class="form-control borde"
+                                <input type="text" name="factura" id="factura" class="form-control borde "
                                     value="{{ $ingreso->factura }}" />
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>

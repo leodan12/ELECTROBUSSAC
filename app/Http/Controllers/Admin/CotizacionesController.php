@@ -14,18 +14,21 @@ use App\Http\Requests\CotizacionFormRequest;
 use Illuminate\Support\Facades\DB;
 use PDF;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 class CotizacionesController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:ver-cotizacion|editar-cotizacion|crear-cotizacion|eliminar-cotizacion',
-        ['only' => ['index','show','generarcotizacionpdf','showcondiciones']]);
+        $this->middleware(
+            'permission:ver-cotizacion|editar-cotizacion|crear-cotizacion|eliminar-cotizacion',
+            ['only' => ['index', 'show', 'generarcotizacionpdf', 'showcondiciones']]
+        );
         $this->middleware('permission:crear-cotizacion', ['only' => ['create', 'store']]);
-        $this->middleware('permission:editar-cotizacion', ['only' => ['edit', 'update','destroycondicion','destroydetallecotizacion']]);
+        $this->middleware('permission:editar-cotizacion', ['only' => ['edit', 'update', 'destroycondicion', 'destroydetallecotizacion']]);
         $this->middleware('permission:eliminar-cotizacion', ['only' => ['destroy']]);
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -164,6 +167,7 @@ class CotizacionesController extends Controller
                     $condicioncotizacion->save();
                 }
             }
+            $this->crearhistorial('crear', $cotizacion->id, $company->nombre, $cliente->nombre, 'cotizaciones');
             return redirect('admin/cotizacion')->with('message', 'Cotizacion Agregada Satisfactoriamente');
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Agregar la Cotizacion');
@@ -194,9 +198,19 @@ class CotizacionesController extends Controller
         $detallescotizacion = DB::table('detallecotizacions as dc')
             ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
             ->join('products as p', 'dc.product_id', '=', 'p.id')
-            ->select('dc.observacionproducto', 'p.tipo', 'p.moneda', 'dc.id as iddetallecotizacion', 'dc.cantidad', 
-            'dc.preciounitario', 'dc.preciounitariomo', 'dc.servicio', 'dc.preciofinal', 'p.id as idproducto', 
-            'p.nombre as producto')
+            ->select(
+                'dc.observacionproducto',
+                'p.tipo',
+                'p.moneda',
+                'dc.id as iddetallecotizacion',
+                'dc.cantidad',
+                'dc.preciounitario',
+                'dc.preciounitariomo',
+                'dc.servicio',
+                'dc.preciofinal',
+                'p.id as idproducto',
+                'p.nombre as producto'
+            )
             ->where('c.id', '=', $cotizacion_id)->get();
         //return $detallesventa;
         $detalleskit = DB::table('kits as k')
@@ -282,6 +296,7 @@ class CotizacionesController extends Controller
                     $condicioncotizacion->save();
                 }
             }
+            $this->crearhistorial('editar', $cotizacion->id, $company->nombre, $cliente->nombre, 'cotizaciones');
             return redirect('admin/cotizacion')->with('message', 'Cotizacion Actualizada Satisfactoriamente');
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Actualizar la cotizacion');
@@ -338,8 +353,11 @@ class CotizacionesController extends Controller
     public function destroy(int $cotizacion_id)
     {
         $cotizacion = Cotizacion::find($cotizacion_id);
+        $company = Company::find($cotizacion->company_id);
+        $cliente = Cliente::find($cotizacion->cliente_id);
         if ($cotizacion) {
             if ($cotizacion->delete()) {
+                $this->crearhistorial('eliminar', $cotizacion->id, $company->nombre, $cliente->nombre, 'cotizaciones');
                 return "1";
             } else {
                 return "0";
@@ -351,8 +369,15 @@ class CotizacionesController extends Controller
     public function destroycondicion(int $condicion_id)
     {
         $condicion = Condicion::find($condicion_id);
+        $cotizacion = DB::table('cotizacions as c')
+            ->join('condicions as co', 'co.cotizacion_id', '=', 'c.id')
+            ->where('co.id', '=', $condicion_id)
+            ->select('c.id', 'c.company_id', 'c.cliente_id')->first();
+        $company = Company::find($cotizacion->company_id);
+        $cliente = Cliente::find($cotizacion->cliente_id);
         if ($condicion) {
             if ($condicion->delete()) {
+                $this->crearhistorial('editar', $cotizacion->id, $company->nombre, $cliente->nombre, 'cotizaciones');
                 return 1;
             } else {
                 return 0;
@@ -365,6 +390,13 @@ class CotizacionesController extends Controller
     {
         //buscamos el registro con el id enviado por la URL
         $detallecotizacion = Detallecotizacion::find($id);
+        $cotizacionh = DB::table('cotizacions as c')
+            ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
+            ->where('dc.id', '=', $id)
+            ->select('c.id', 'c.company_id', 'c.cliente_id')->first();
+        $companyh = Company::find($cotizacionh->company_id);
+        $clienteh = Cliente::find($cotizacionh->cliente_id);
+
         if ($detallecotizacion) {
             $cotizacion = DB::table('detallecotizacions as dc')
                 ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
@@ -379,6 +411,7 @@ class CotizacionesController extends Controller
                 $editcotizacion->costoventasinigv = $costof - $detalle;
                 $editcotizacion->costoventaconigv = round(($costof - $detalle) * 1.18, 2);
                 $editcotizacion->update();
+                $this->crearhistorial('editar', $cotizacionh->id, $companyh->nombre, $clienteh->nombre, 'cotizaciones');
                 return 1;
             } else {
                 return 0;

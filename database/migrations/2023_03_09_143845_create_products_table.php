@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('codigo')->nullable();
             $table->string('unidad');
-            $table->string('und')->nullable();
+            // $table->string('und')->nullable();
             $table->string('tipo');
             $table->integer('unico')->nullable();
             $table->string('moneda');

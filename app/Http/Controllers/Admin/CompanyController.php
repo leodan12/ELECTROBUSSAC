@@ -15,6 +15,7 @@ use App\Models\Ingreso;
 use App\Models\Venta;
 use App\Models\Detalleinventario;
 use App\Models\Cotizacion;
+use App\Traits\HistorialTrait;
 
 class CompanyController extends Controller
 {
@@ -24,13 +25,13 @@ class CompanyController extends Controller
         $this->middleware('permission:crear-empresa', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-empresa', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-empresa', ['only' => ['destroy']]);
-        $this->middleware('permission:recuperar-empresa', ['only' => ['showrestore','restaurar']]);
+        $this->middleware('permission:recuperar-empresa', ['only' => ['showrestore', 'restaurar']]);
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         $datoseliminados = DB::table('companies as c')
-            ->where('c.status', '=', 1) 
+            ->where('c.status', '=', 1)
             ->select('c.id')
             ->count();
 
@@ -52,7 +53,7 @@ class CompanyController extends Controller
                 ->make(true);
         }
 
-        return view('admin.company.index',compact('datoseliminados'));
+        return view('admin.company.index', compact('datoseliminados'));
     }
 
     public function create()
@@ -90,6 +91,7 @@ class CompanyController extends Controller
             }
         }
         $company->save();
+        $this->crearhistorial('crear', $company->id, $company->nombre, null, 'empresas');
         return redirect('admin/company')->with('message', 'Compañia Agregada Satisfactoriamente');
     }
 
@@ -129,7 +131,7 @@ class CompanyController extends Controller
             }
         }
         $company->update();
-
+        $this->crearhistorial('editar', $company->id, $company->nombre, null, 'empresas');
         return redirect('admin/company')->with('message', 'Compañia Actualizado Satisfactoriamente');
     }
 
@@ -170,6 +172,7 @@ class CompanyController extends Controller
                     if (File::exists($path)) {
                         File::delete($path);
                     }
+                    $this->crearhistorial('eliminar', $company->id, $company->nombre, null, 'empresas');
                     return "1";
                 } else {
                     return "0";
@@ -177,6 +180,7 @@ class CompanyController extends Controller
             } else {
                 $company->status = 1;
                 if ($company->update()) {
+                    $this->crearhistorial('eliminar', $company->id, $company->nombre, null, 'empresas');
                     return "1";
                 } else {
                     return "0";
@@ -207,6 +211,7 @@ class CompanyController extends Controller
         if ($registro) {
             $registro->status = 0;
             if ($registro->update()) {
+                $this->crearhistorial('restaurar', $registro->id, $registro->nombre, null, 'empresas');
                 return "1";
             } else {
                 return "0";

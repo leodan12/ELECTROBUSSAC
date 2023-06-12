@@ -19,6 +19,7 @@ use App\Http\Requests\VentaFormRequest;
 use Illuminate\Support\Collection;
 use PDF;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 class VentaController extends Controller
 {
@@ -39,7 +40,7 @@ class VentaController extends Controller
             ]]
         );
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         $fechahoy = date('Y-m-d');
@@ -96,7 +97,8 @@ class VentaController extends Controller
 
         return view('admin.venta.index', compact('creditosxvencer', 'sinnumero'));
     }
-    public function index2(){
+    public function index2()
+    {
         return redirect('admin/venta')->with('verstock', 'Ver');
     }
     public function create()
@@ -232,9 +234,11 @@ class VentaController extends Controller
 
                 $empresa = DB::table('companies as c')
                     ->where('c.ruc', '=', $cliente->ruc)
+                    ->select('c.id', 'c.ruc', 'c.nombre')
                     ->first();
                 $client = DB::table('clientes as c')
                     ->where('c.ruc', '=', $company->ruc)
+                    ->select('c.id', 'c.ruc', 'c.nombre')
                     ->first();
                 $ingreso = new Ingreso;
                 $ingreso->company_id = $empresa->id;
@@ -256,6 +260,7 @@ class VentaController extends Controller
 
                 //guardamos la venta y los detalles
                 if ($ingreso->save()) {
+                    $this->crearhistorial('crear', $venta->id, $empresa->nombre, $client->nombre, 'ingresos');
                     $product = $request->Lproduct;
                     $observacionproducto = $request->Lobservacionproducto;
                     $cantidad = $request->Lcantidad;
@@ -389,7 +394,7 @@ class VentaController extends Controller
                 }
             }
             //termino de registrar la venta
-
+            $this->crearhistorial('crear', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
             return redirect('admin/venta')->with('message', 'Venta Agregada Satisfactoriamente');
         }
         return redirect('admin/venta')->with('message', 'No se Pudo Agregar la Venta');
@@ -640,10 +645,12 @@ class VentaController extends Controller
                         }
                     }
                 }
-                return redirect('admin/venta')->with('message', 'Venta Actualizada Satisfactoriamente');
+                //return redirect('admin/venta')->with('message', 'Venta Actualizada Satisfactoriamente');
             }
-
+            $this->crearhistorial('editar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
             return redirect('admin/venta')->with('message', 'Venta Actualizada Satisfactoriamente');
+        } else {
+            return redirect('admin/venta')->with('message', 'Venta NO Actualizada');
         }
     }
 
@@ -769,6 +776,11 @@ class VentaController extends Controller
                 }
             }
             if ($venta->delete()) {
+                $company = Company::find($venta->company_id);
+                $cliente = Cliente::find($venta->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('eliminar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
+                }
                 return "1";
             } else {
                 return "0";
@@ -840,7 +852,12 @@ class VentaController extends Controller
                         }
                     }
                 }
-                return 1;
+                $company = Company::find($venta->company_id);
+                $cliente = Cliente::find($venta->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('eliminar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
+                }
+                return "1";
             } else {
                 return 0;
             }
@@ -856,7 +873,12 @@ class VentaController extends Controller
         if ($venta) {
             $venta->pagada = "SI";
             if ($venta->update()) {
-                return 1;
+                $company = Company::find($venta->company_id);
+                $cliente = Cliente::find($venta->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('eliminar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
+                }
+                return "1";
             } else {
                 return 0;
             }
@@ -1130,7 +1152,7 @@ class VentaController extends Controller
     public function stocktotalxkit($idkit)
     {
 
-        $milistaproductos = $this->productosxkit($idkit); 
+        $milistaproductos = $this->productosxkit($idkit);
         $stockkit = 100000;
         for ($j = 0; $j < count($milistaproductos); $j++) {
             $inventario = DB::table('inventarios as i')

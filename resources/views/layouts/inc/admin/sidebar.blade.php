@@ -151,6 +151,15 @@
                 </a>
             </li>
         @endif
+        @if (auth()->user()->can('ver-historial') ||
+                auth()->user()->can('eliminar-historial'))
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url('admin/historial') }}">
+                    <i class="mdi mdi-timetable menu-icon"></i>
+                    <span class="menu-title">HISTORIAL DE CAMBIOS</span>
+                </a>
+            </li>
+        @endif
 
 
     </ul>

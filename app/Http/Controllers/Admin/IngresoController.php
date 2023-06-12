@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\IngresoFormRequest;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 class IngresoController extends Controller
 {
@@ -27,6 +28,7 @@ class IngresoController extends Controller
         $this->middleware('permission:editar-ingreso', ['only' => ['edit', 'update', 'destroydetalleingreso']]);
         $this->middleware('permission:eliminar-ingreso', ['only' => ['destroy']]);
     }
+    use HistorialTrait;
     public function index(Request $request)
     {
 
@@ -85,7 +87,8 @@ class IngresoController extends Controller
 
         return view('admin.ingreso.index', compact('creditosxvencer', 'sinnumero'));
     }
-    public function index2(){
+    public function index2()
+    {
         return redirect('admin/ingreso')->with('verstock', 'Ver');
     }
     public function create()
@@ -258,6 +261,7 @@ class IngresoController extends Controller
                     }
                 }
             }
+            $this->crearhistorial('crear', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
             return redirect('admin/ingreso')->with('message', 'Ingreso Agregado Satisfactoriamente');
         }
         return redirect('admin/ingreso')->with('message', 'No se Pudo Agregar el Ingreso');
@@ -423,6 +427,7 @@ class IngresoController extends Controller
                         //fin del guardar detalle
                     }
                 }
+                $this->crearhistorial('editar', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
                 return redirect('admin/ingreso')->with('message', 'Ingreso Actualizado Satisfactoriamente');
             }
 
@@ -433,7 +438,7 @@ class IngresoController extends Controller
     {
         //$companies = Company::all();
         $clientes = Cliente::all();
-        $products = Product::all()->where('status','=',0);
+        $products = Product::all()->where('status', '=', 0);
         $companies = DB::table('companies as c')
             ->join('ingresos as i', 'i.company_id', '=', 'c.id')
             ->select('c.id', 'c.nombre', 'c.ruc')
@@ -445,9 +450,19 @@ class IngresoController extends Controller
         $detallesingreso = DB::table('detalleingresos as di')
             ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
             ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select('di.observacionproducto', 'p.tipo', 'p.moneda', 'di.id as iddetalleingreso', 'di.cantidad', 
-            'di.preciounitario', 'di.preciounitariomo', 'di.servicio', 'di.preciofinal', 'p.id as idproducto', 
-            'p.nombre as producto')
+            ->select(
+                'di.observacionproducto',
+                'p.tipo',
+                'p.moneda',
+                'di.id as iddetalleingreso',
+                'di.cantidad',
+                'di.preciounitario',
+                'di.preciounitariomo',
+                'di.servicio',
+                'di.preciofinal',
+                'p.id as idproducto',
+                'p.nombre as producto'
+            )
             ->where('i.id', '=', $ingreso_id)->get();
         //return $detallesventa;
         $detalleskit = DB::table('kits as k')
@@ -501,7 +516,7 @@ class IngresoController extends Controller
         $ingreso = Ingreso::find($ingreso_id);
         if ($ingreso) {
             $detallesingreso = DB::table('detalleingresos as di')
-                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id') 
+                ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
                 ->join('products as p', 'di.product_id', '=', 'p.id')
                 ->select('di.cantidad', 'di.product_id', 'p.tipo', 'p.id')
                 ->where('i.id', '=', $ingreso_id)->get();
@@ -550,6 +565,11 @@ class IngresoController extends Controller
                 }
             }
             if ($ingreso->delete()) {
+                $company = Company::find($ingreso->company_id);
+                $cliente = Cliente::find($ingreso->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('eliminar', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
+                }
                 return "1";
             } else {
                 return "0";
@@ -593,6 +613,11 @@ class IngresoController extends Controller
         if ($ingreso) {
             $ingreso->pagada = "SI";
             if ($ingreso->update()) {
+                $company = Company::find($ingreso->company_id);
+                $cliente = Cliente::find($ingreso->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('editar', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
+                }
                 return 1;
             } else {
                 return 0;
@@ -664,6 +689,11 @@ class IngresoController extends Controller
                             }
                         }
                     }
+                }
+                $company = Company::find($ingreso->company_id);
+                $cliente = Cliente::find($ingreso->cliente_id);
+                if ($cliente && $company) {
+                    $this->crearhistorial('editar', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
                 }
                 return 1;
             } else {

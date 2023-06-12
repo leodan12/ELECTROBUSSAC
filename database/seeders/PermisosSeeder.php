@@ -78,6 +78,9 @@ class PermisosSeeder extends Seeder
             'recuperar-empresa',
             'recuperar-cliente',
             'recuperar-inventario',
+            //para  HISTORIAL
+            'ver-historial', 
+            'eliminar-historial',
         ];
 
         foreach($permisos as $permiso){

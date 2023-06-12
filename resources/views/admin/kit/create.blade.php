@@ -38,14 +38,14 @@
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" class="form-control borde" required />
+                                <input type="text" name="nombre" class="form-control borde " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CÓDIGO</label>
-                                <input type="text" name="codigo" class="form-control borde" />
+                                <input type="text" name="codigo" class="form-control borde " />
 
                             </div>
 

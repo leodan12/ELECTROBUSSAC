@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
+use App\Traits\HistorialTrait;
 
 class RolController extends Controller
 {
@@ -17,7 +18,7 @@ class RolController extends Controller
         $this->middleware('permission:editar-rol', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-rol', ['only' => ['destroy']]);
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         $roles = Role::paginate(10);
@@ -38,7 +39,7 @@ class RolController extends Controller
         $role = Role::create(['name' => $request->input('name')]);
 
         $role->syncPermissions($request->input('permission'));
-
+        $this->crearhistorial('crear', $role->id, $role->name, null, 'roles');
         return redirect()->route('rol.index');
     }
 
@@ -51,7 +52,7 @@ class RolController extends Controller
             ->where('rhp.role_id', '=', $id)
             //->pluck('rhp.permission_id', 'rhp.permission_id')
             ->select('rhp.permission_id')
-            ->get(); 
+            ->get();
         //return $rolePermission ;
         return view('admin.roles.edit', compact('role', 'permisos', 'rolePermission'));
     }
@@ -64,11 +65,14 @@ class RolController extends Controller
         $role->name = $request->input('name');
         $role->save();
         $role->syncPermissions($request->input('permission'));
+        $this->crearhistorial('editar', $role->id, $role->name, null, 'roles');
         return redirect()->route('rol.index');
     }
     public function destroy($id)
     {
-        DB::table('roles')->where('id', '=', $id)->delete();
+        $role = Role::find($id);  
+        $role->delete();
+        $this->crearhistorial('eliminar', $role->id, $role->name, null, 'roles');
         return redirect()->route('rol.index');
     }
 }

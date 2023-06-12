@@ -12,6 +12,7 @@ use App\Models\Inventario;
 use App\Models\Cotizacion;
 use App\Models\Venta;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 
 class ClienteController extends Controller
@@ -22,13 +23,15 @@ class ClienteController extends Controller
         $this->middleware('permission:crear-cliente', ['only' => ['create', 'store']]);
         $this->middleware('permission:editar-cliente', ['only' => ['edit', 'update']]);
         $this->middleware('permission:eliminar-cliente', ['only' => ['destroy']]);
-        $this->middleware('permission:recuperar-cliente', ['only' => ['showrestore','restaurar']]);
+        $this->middleware('permission:recuperar-cliente', ['only' => ['showrestore', 'restaurar']]);
     }
+
+    use HistorialTrait;
 
     public function index(Request $request)
     {
         $datoseliminados = DB::table('clientes as c')
-            ->where('c.status', '=', 1) 
+            ->where('c.status', '=', 1)
             ->select('c.id')
             ->count();
 
@@ -52,7 +55,7 @@ class ClienteController extends Controller
                 ->make(true);
         }
 
-        return view('admin.cliente.index',compact('datoseliminados'));
+        return view('admin.cliente.index', compact('datoseliminados'));
     }
 
     public function create()
@@ -72,7 +75,7 @@ class ClienteController extends Controller
         $cliente->email = $request->email;
         $cliente->status = '0';
         $cliente->save();
-
+        $this->crearhistorial('crear', $cliente->id, $cliente->nombre, null, 'clientes');
         return redirect('admin/cliente')->with('message', 'Cliente Agregado Satisfactoriamente');
     }
 
@@ -94,7 +97,7 @@ class ClienteController extends Controller
         $cliente->email = $request->email;
         $cliente->status =  '0';
         $cliente->update();
-
+        $this->crearhistorial('editar', $cliente->id, $cliente->nombre, null, 'clientes');
         return redirect('admin/cliente')->with('message', 'Cliente Actualizado Satisfactoriamente');
     }
 
@@ -116,7 +119,7 @@ class ClienteController extends Controller
             $cotizacion = Cotizacion::all()->where('cliente_id', '=', $cliente_id);
             if (count($venta) == 0 && count($ingreso) == 0   && count($cotizacion) == 0) {
                 if ($cliente->delete()) {
-
+                    $this->crearhistorial('eliminar', $cliente->id, $cliente->nombre, null, 'clientes');
                     return "1";
                 } else {
                     return "0";
@@ -124,7 +127,7 @@ class ClienteController extends Controller
             } else {
                 $cliente->status = 1;
                 if ($cliente->update()) {
-
+                    $this->crearhistorial('eliminar', $cliente->id, $cliente->nombre, null, 'clientes');
                     return "1";
                 } else {
                     return "0";
@@ -158,6 +161,7 @@ class ClienteController extends Controller
         if ($registro) {
             $registro->status = 0;
             if ($registro->update()) {
+                $this->crearhistorial('restaurar', $registro->id, $registro->nombre, null, 'clientes');
                 return "1";
             } else {
                 return "0";

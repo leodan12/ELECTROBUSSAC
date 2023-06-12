@@ -42,7 +42,7 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
                                 <input type="text" name="nombre" value="{{ $product->nombre }}"
-                                    class="form-control borde" required />
+                                    class="form-control borde " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -50,7 +50,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label ">CÓDIGO</label>
                                 <input type="text" name="codigo" value="{{ $product->codigo }}"
-                                    class="form-control borde" />
+                                    class="form-control borde " />
 
                             </div>
                             <div class="col-md-4 mb-3">

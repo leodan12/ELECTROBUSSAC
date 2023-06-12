@@ -19,9 +19,10 @@ use Illuminate\Support\Facades\Route;
 //Auth::routes();
 Auth::routes(["register" => false]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'inicio'])->name('inicio');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
-Route::group(['middleware' => ['auth']], function () {
+Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->middleware(['auth'])->group(function () {
 
         Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'inicio']);
@@ -192,6 +193,13 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('/rol/{cliente}/edit', 'edit');
             Route::put('/rol/{cliente}', 'update');
             Route::get('/rol/{product_id}/delete', 'destroy');
+        });
+
+         //rutas de los historiales
+         Route::controller(App\Http\Controllers\Admin\HistorialController::class)->group(function () {
+            Route::get('/historial', 'index')->name('historial.index'); 
+            Route::get('/historial/{historial_id}/delete', 'destroy');
+            Route::get('/historial/limpiartabla', 'limpiartabla');
         });
     });
 });

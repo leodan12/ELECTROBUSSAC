@@ -29,8 +29,8 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="name" class="form-control borde" required />
+                                <label class="form-label is-required ">NOMBRE</label>
+                                <input type="text" name="name" class="form-control borde " required />
                                 @error('name')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -49,7 +49,7 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label is-required">Seleccionar Rol</label>
                                 <select name="roles" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccione Rol</option>
@@ -57,7 +57,14 @@
                                         <option value="{{ $rol->id }}">{{ $rol->name }}</option>
                                     @endforeach
                                 </select>
-
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">Seleccionar Estado</label>
+                                <select name="status" class="form-select borde" required>
+                                    <option value="" selected disabled>Seleccione Rol</option>
+                                    <option value="1" selected>Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
                             </div>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end">Guardar</button>

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductFormRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 class DetallekitController extends Controller
 {
@@ -25,7 +26,7 @@ class DetallekitController extends Controller
         $this->middleware('permission:eliminar-kit', ['only' => ['destroy']]);
         $this->middleware('permission:recuperar-kit', ['only' => ['showrestore', 'restaurar']]);
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         $datoseliminados = DB::table('products as c')
@@ -58,7 +59,7 @@ class DetallekitController extends Controller
                 ->make(true);
         }
 
-        return view('admin.kit.index',compact('datoseliminados'));
+        return view('admin.kit.index', compact('datoseliminados'));
     }
 
     public function create()
@@ -78,7 +79,7 @@ class DetallekitController extends Controller
         $producto->nombre = $request->nombre;
         $producto->codigo = $request->codigo;
         $producto->unidad = "unidad";
-        $producto->und = "unidad";
+        // $producto->und = "unidad";
         $producto->tipo = "kit";
         $producto->unico = 0;
         $producto->maximo = $request->NoIGV;
@@ -108,6 +109,7 @@ class DetallekitController extends Controller
                     $Detallekit->save();
                 }
             }
+            $this->crearhistorial('crear', $producto->id, $producto->nombre, null, 'kits');
             return redirect('admin/kits')->with('message', 'Kit de Productos Agregado Satisfactoriamente');
         } else {
             return redirect('admin/kits')->with('message', 'No se pudo agregar el kit');
@@ -152,7 +154,7 @@ class DetallekitController extends Controller
         $producto->nombre = $request->nombre;
         $producto->codigo = $request->codigo;
         $producto->unidad = "unidad";
-        $producto->und = "unidad";
+        // $producto->und = "unidad";
         $producto->tipo = "kit";
         $producto->unico = 0;
         $producto->maximo = $request->NoIGV;
@@ -182,6 +184,7 @@ class DetallekitController extends Controller
                     $Detallekit->save();
                 }
             }
+            $this->crearhistorial('editar', $producto->id, $producto->nombre, null, 'kits');
             return redirect('admin/kits')->with('message', 'Kit de Productos Actualizado Satisfactoriamente');
         } else {
             return redirect('admin/kits')->with('message', 'No se pudo agregar el kit');
@@ -237,6 +240,7 @@ class DetallekitController extends Controller
 
             if (count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
                 if ($product->delete()) {
+                    $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'kits');
                     return "1";
                 } else {
                     return "0";
@@ -244,6 +248,7 @@ class DetallekitController extends Controller
             } else {
                 $product->status = 1;
                 if ($product->update()) {
+                    $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'kits');
                     return "1";
                 } else {
                     return "0";
@@ -258,6 +263,10 @@ class DetallekitController extends Controller
     {
         //buscamos el registro con el id enviado por la URL
         $detallekit = Kit::find($id);
+        $productoh = DB::table('products as p')
+            ->join('kits as k', 'k.product_id', '=', 'p.id')
+            ->where('k.id', '=', $id)
+            ->select('p.id', 'p.nombre')->first();
         if ($detallekit) {
             $kit = DB::table('kits as dc')
                 ->join('products as p', 'dc.product_id', '=', 'p.id')
@@ -272,6 +281,7 @@ class DetallekitController extends Controller
                 $editprod->NoIGV = $costof - $detalle;
                 $editprod->SiIGV = round(($costof - $detalle) * 1.18, 2);
                 $editprod->update();
+                $this->crearhistorial('editar', $productoh->id, $productoh->nombre, null, 'kits');
                 return 1;
             } else {
                 return 0;
@@ -308,6 +318,7 @@ class DetallekitController extends Controller
         if ($registro) {
             $registro->status = 0;
             if ($registro->update()) {
+                $this->crearhistorial('restaurar', $registro->id, $registro->nombre, null, 'kits');
                 return "1";
             } else {
                 return "0";

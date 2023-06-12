@@ -38,24 +38,24 @@
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" class="form-control borde" required />
+                                <input type="text" name="nombre" class="form-control borde " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CÓDIGO</label>
-                                <input type="text" name="codigo" class="form-control borde" />
+                                <input type="text" name="codigo" class="form-control borde " />
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">UNIDAD</label>
-                                <input type="text" name="unidad" class="form-control borde" required />
+                                <input type="text" name="unidad" class="form-control borde " required />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            {{-- <div class="col-md-4 mb-3">
                                 <label class="form-label">UND</label>
-                                <input type="text" name="und" class="form-control borde" />
-                            </div>
+                                <input type="text" name="und" class="form-control borde " />
+                            </div> --}}
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">Tipo de Moneda</label>
                                 <select name="moneda" id="moneda" class="form-select" required>

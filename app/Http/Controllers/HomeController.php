@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Inventario;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -29,7 +30,8 @@ class HomeController extends Controller
         $sinstock = $this->productossinstock();
         $ventasxcobrar = $this->numeroventas('credito', 'NO', '2010-01-01');
         $ingresosxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');
-        return view('admin.dashboard', compact('sinstock', 'ingresosxpagar', 'ventasxcobrar'));
+        $usuario = Auth::user()->name;
+        return view('admin.dashboard', compact('sinstock', 'ingresosxpagar', 'ventasxcobrar'))->with('message','Bienvenido usuario '.$usuario);
     }
     public function inicio()
     {

@@ -41,7 +41,7 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
                                 <input type="text" name="nombre" value="{{ $product->nombre }}"
-                                    class="form-control borde" required />
+                                    class="form-control borde " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -49,19 +49,19 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label ">CÓDIGO</label>
                                 <input type="text" name="codigo" value="{{ $product->codigo }}"
-                                    class="form-control borde" />
+                                    class="form-control borde " />
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">UNIDAD</label>
                                 <input type="text" name="unidad" value="{{ $product->unidad }}"
-                                    class="form-control borde" required />
+                                    class="form-control borde " required />
                             </div>
-                            <div class="col-md-4 mb-3">
+                            {{-- <div class="col-md-4 mb-3">
                                 <label class="form-label ">UND</label>
                                 <input type="text" name="und" value="{{ $product->und }}"
-                                    class="form-control borde" />
-                            </div>
+                                    class="form-control borde " />
+                            </div> --}}
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>
                                 <select name="moneda" class="form-select borde" required>

@@ -39,8 +39,8 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMAIL</label>
-                                <input type="email" name="email"  value="{{ $user->email }}"
-                                    class="form-control borde" required />
+                                <input type="email" name="email" value="{{ $user->email }}" class="form-control borde"
+                                    required />
                                 @error('email')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -52,17 +52,34 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label is-required">Rol</label>
                                 <select name="roles" class="form-select">
                                     <option value="" disabled selected>Seleccione un Rol</option>
                                     @foreach ($roles as $rol)
-                                        @if ($rol->id == $userRole->role_id)
-                                            <option value="{{ $rol->id }}" selected>{{ $rol->name }}</option>
+                                        @if ($userRole)
+                                            @if ($rol->id == $userRole->role_id)
+                                                <option value="{{ $rol->id }}" selected>{{ $rol->name }}</option>
+                                            @else
+                                                <option value="{{ $rol->id }}">{{ $rol->name }}</option>
+                                            @endif
                                         @else
                                             <option value="{{ $rol->id }}">{{ $rol->name }}</option>
                                         @endif
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">Seleccionar Estado</label>
+                                <select name="status" class="form-select borde" required>
+                                    <option value="" selected disabled>Seleccione Rol</option>
+                                    @if ($user->status == '1')
+                                        <option value="1" selected>Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    @else
+                                        <option value="1">Activo</option>
+                                        <option value="0" selected>Inactivo</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-12 mb-3">

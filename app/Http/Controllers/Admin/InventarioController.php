@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InventarioFormRequest;
 use App\Http\Requests\DetalleInventarioFormRequest;
 use Yajra\DataTables\DataTables;
+use App\Traits\HistorialTrait;
 
 class InventarioController extends Controller
 {
@@ -26,6 +27,7 @@ class InventarioController extends Controller
         $this->middleware('permission:eliminar-inventario', ['only' => ['destroy']]);
         $this->middleware('permission:recuperar-inventario', ['only' => ['showrestore', 'restaurar']]);
     }
+    use HistorialTrait;
     public function index(Request $request)
     {
         $datoseliminados = DB::table('inventarios as i')
@@ -69,7 +71,8 @@ class InventarioController extends Controller
 
         return view('admin.inventario.index', compact('datoseliminados', 'productossinstock'));
     }
-    public function index2(){
+    public function index2()
+    {
         return redirect('admin/inventario')->with('verstock', 'Ver');
     }
     public function create()
@@ -113,8 +116,13 @@ class InventarioController extends Controller
                     $Detalleinventario->status = 0;
                     $Detalleinventario->save();
                 }
+                $this->crearhistorial('crear', $inventario->id, $product->nombre, null, 'inventarios');
                 return redirect('admin/inventario')->with('message', 'Stok Agregado Satisfactoriamente');
+            } else {
+                return redirect('admin/inventario')->with('message', 'Stok NO Agregado');
             }
+        } else {
+            return redirect('admin/inventario')->with('message', 'Stok NO Agregado');
         }
     }
     public function edit(int $inventario_id)
@@ -143,6 +151,10 @@ class InventarioController extends Controller
         $inventario->stockminimo = $request->stockminimo;
         $inventario->stocktotal = $request->stocktotal;
         $inventario->status = '0';
+        $producth =  DB::table('products as p')
+            ->join('inventarios as i', 'i.product_id', '=', 'p.id')
+            ->select('p.id', 'p.nombre')
+            ->where('i.id', '=', $inventario_id)->first();
         if ($inventario->update()) {
             $empresa = $request->Lempresa;
             $stockempresa = $request->Lstockempresa;
@@ -157,7 +169,10 @@ class InventarioController extends Controller
                     $Detalleinventario->save();
                 }
             }
+            $this->crearhistorial('editar', $inventario->id, $producth->nombre, null, 'inventarios');
             return redirect('admin/inventario')->with('message', 'Stock Actualizado Satisfactoriamente');
+        } else {
+            return redirect('admin/inventario')->with('message', 'Stock NO Actualizado');
         }
     }
     public function show($id)
@@ -216,10 +231,15 @@ class InventarioController extends Controller
     public function destroy(int $inventario_id)
     {
         $inventario = Inventario::find($inventario_id);
+        $producth =  DB::table('products as p')
+            ->join('inventarios as i', 'i.product_id', '=', 'p.id')
+            ->select('p.id', 'p.nombre')
+            ->where('i.id', '=', $inventario_id)->first();
         if ($inventario) {
             $detalle = Detalleinventario::all()->where('inventario_id', '=', $inventario_id);
             if (count($detalle) == 0) {
                 if ($inventario->delete()) {
+                    $this->crearhistorial('eliminar', $inventario->id, $producth->nombre, null, 'inventarios');
                     return "1";
                 } else {
                     return "0";
@@ -227,6 +247,7 @@ class InventarioController extends Controller
             } else {
                 $inventario->status = 1;
                 if ($inventario->update()) {
+                    $this->crearhistorial('eliminar', $inventario->id, $producth->nombre, null, 'inventarios');
                     return "1";
                 } else {
                     return "0";
@@ -240,6 +261,14 @@ class InventarioController extends Controller
     {
         //buscamos el registro con el id enviado por la URL
         $detalleinventario = Detalleinventario::find($id);
+        $inventarioh =  DB::table('inventarios as i')
+            ->join('detalleinventarios as di', 'di.inventario_id', '=', 'i.id')
+            ->select('i.id')
+            ->where('di.id', '=', $id)->first();
+        $producth =  DB::table('products as p')
+            ->join('inventarios as i', 'i.product_id', '=', 'p.id')
+            ->select('p.id', 'p.nombre')
+            ->where('i.id', '=', $inventarioh->id)->first();
         if ($detalleinventario) {
             $inv = DB::table('detalleinventarios as di')
                 ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
@@ -254,7 +283,7 @@ class InventarioController extends Controller
             $invEdit = Inventario::findOrFail($idinv);
             $invEdit->stocktotal = $stockt - $stocke;
             $invEdit->update();
-
+            $this->crearhistorial('editar', $inventarioh->id, $producth->nombre, null, 'inventarios');
             return 1;
         }
     }
@@ -277,10 +306,16 @@ class InventarioController extends Controller
 
     public function restaurar($idregistro)
     {
+        $producth =  DB::table('products as p')
+            ->join('inventarios as i', 'i.product_id', '=', 'p.id')
+            ->select('p.id', 'p.nombre')
+            ->where('i.id', '=', $idregistro)->first();
+
         $registro = Inventario::find($idregistro);
         if ($registro) {
             $registro->status = 0;
             if ($registro->update()) {
+                $this->crearhistorial('restaurar', $registro->id, $producth->nombre, null, 'inventarios');
                 return "1";
             } else {
                 return "0";
@@ -308,13 +343,13 @@ class InventarioController extends Controller
             for ($z = 0; $z < count($inventarios); $z++) {
                 if ($inventarios[$z]->id == $inventarios[$i]->id) {
                     if ($inventarios[$z]->stockminimo >= $inventarios[$i]->stocktotal) {
-                       $inventario = collect();
-                       $inventario->put('id',$inventarios[$i]->id);
-                       $inventario->put('categoria',$inventarios[$i]->categoria);
-                       $inventario->put('producto',$inventarios[$i]->producto);
-                       $inventario->put('stockminimo',$inventarios[$i]->stockminimo);
-                       $inventario->put('stocktotal',$inventarios[$i]->stocktotal);
-                       $misinventarios->push($inventario);
+                        $inventario = collect();
+                        $inventario->put('id', $inventarios[$i]->id);
+                        $inventario->put('categoria', $inventarios[$i]->categoria);
+                        $inventario->put('producto', $inventarios[$i]->producto);
+                        $inventario->put('stockminimo', $inventarios[$i]->stockminimo);
+                        $inventario->put('stocktotal', $inventarios[$i]->stocktotal);
+                        $misinventarios->push($inventario);
                     }
                 }
             }

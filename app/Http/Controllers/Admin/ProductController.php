@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
-
+use App\Traits\HistorialTrait;
 
 class ProductController extends Controller
 {
@@ -26,7 +26,7 @@ class ProductController extends Controller
         $this->middleware('permission:eliminar-producto', ['only' => ['destroy']]);
         $this->middleware('permission:recuperar-producto', ['only' => ['showrestore', 'restaurar']]);
     }
-
+    use HistorialTrait;
     public function index(Request $request)
     {
         $datoseliminados = DB::table('products as c')
@@ -58,9 +58,9 @@ class ProductController extends Controller
                 ->make(true);
         }
 
-        return view('admin.products.index',compact('datoseliminados'));
-    } 
-    
+        return view('admin.products.index', compact('datoseliminados'));
+    }
+
     public function create()
     {
         $categories = Category::all()->where('status', '=', 0);
@@ -78,7 +78,7 @@ class ProductController extends Controller
         $product->nombre = $validatedData['nombre'];
         $product->codigo = $request->codigo;
         $product->unidad = $validatedData['unidad'];
-        $product->und = $request->und;
+        // $product->und = $request->und;
         $product->tipo = "estandar";
         $product->unico = 0;
         $product->maximo = $validatedData['NoIGV'];
@@ -95,15 +95,17 @@ class ProductController extends Controller
                 $product->precio3 = $request->precio3;
             }
         }
+        
         $product->save();
-
         $inventario = new Inventario;
         $inventario->product_id = $product->id;
         $inventario->stockminimo = 5;
         $inventario->stocktotal = 0;
         $inventario->status = 0;
-        $inventario->save();
 
+        $inventario->save();
+        $this->crearhistorial('crear', $inventario->id, $product->nombre, null, 'inventarios');
+        $this->crearhistorial('crear', $product->id, $product->nombre, null, 'productos');
         return redirect('admin/products')->with('message', 'Producto Agregado Satisfactoriamente');
     }
 
@@ -131,7 +133,7 @@ class ProductController extends Controller
             $product->nombre = $validatedData['nombre'];
             $product->codigo = $request->codigo;
             $product->unidad = $validatedData['unidad'];
-            $product->und = $request->und;
+            // $product->und = $request->und;
             $product->tipo = "estandar";
             $product->unico = 0;
             $product->maximo = $validatedData['maximo'];
@@ -156,6 +158,7 @@ class ProductController extends Controller
                 $product->precio3 =  null;
             }
             $product->update();
+            $this->crearhistorial('editar', $product->id, $product->nombre, null, 'productos');
             return redirect('/admin/products')->with('message', 'Producto Actualizado Satisfactoriamente');
         } else {
             return redirect('admin/products')->with('message', 'No se encontro el ID del Producto');
@@ -179,6 +182,7 @@ class ProductController extends Controller
 
             if (count($inventario) == 0 && count($ingreso) == 0 && count($venta) == 0  && count($cotizacion) == 0) {
                 if ($product->delete()) {
+                    $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'productos');
                     return "1";
                 } else {
                     return "0";
@@ -186,6 +190,7 @@ class ProductController extends Controller
             } else {
                 $product->status = 1;
                 if ($product->update()) {
+                    $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'productos');
                     return "1";
                 } else {
                     return "0";
@@ -248,6 +253,7 @@ class ProductController extends Controller
         if ($producto) {
             $producto->status = 0;
             if ($producto->update()) {
+                $this->crearhistorial('restaurar', $producto->id, $producto->nombre, null, 'productos');
                 return "1";
             } else {
                 return "0";

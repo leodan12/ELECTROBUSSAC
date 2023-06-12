@@ -30,7 +30,7 @@
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label is-required">Nombre</label>
-                                        <input type="text" name="nombre" class="form-control borde" required />
+                                        <input type="text" name="nombre" class="form-control borde " required />
                                         @error('nombre')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
@@ -56,7 +56,7 @@
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Tipo Cuenta(tipo, banco, moneda)</label>
                                         <input type="text" name="tipocuentasoles" id="tipocuentasoles"
-                                            class="form-control borde" placeholder="Cuenta Soles" />
+                                            class="form-control borde " placeholder="CTA. CTE. BCP SOLES" />
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Numero de Cuenta(S/.)</label>
@@ -72,7 +72,7 @@
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Tipo Cuenta(tipo, banco, moneda)</label>
                                         <input type="text" name="tipocuentadolares" id="tipocuentadolares"
-                                            class="form-control borde" placeholder="Cuenta Dolares" />
+                                            class="form-control borde " placeholder="CTA. CTE. BCP DOLARES" />
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label class="form-label">Numero de Cuenta($)</label>
