@@ -23,8 +23,8 @@ class VentaSeeder extends Seeder
             'tasacambio' => 3.8,
             'company_id' => 1,
             'cliente_id' => 2,
-            'fecha' => "2023-05-05",
-            'fechav' => "2023-05-19",
+            'fecha' => "2023-06-05",
+            'fechav' => "2023-06-19",
             'pagada' => "NO",
         ]); 
         Venta::create([
@@ -36,8 +36,8 @@ class VentaSeeder extends Seeder
             'tasacambio' => 3.71,
             'company_id' => 3,
             'cliente_id' => 4,
-            'fecha' => "2023-05-02",
-            'fechav' => "2023-05-13",
+            'fecha' => "2023-06-02",
+            'fechav' => "2023-06-13",
            'pagada' => "NO",
         ]); 
         

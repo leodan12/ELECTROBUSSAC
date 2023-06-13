@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered table-striped" style="width:100%;" id="mitabla" name="mitabla">
+                        <table class="table table-bordered table-striped" id="mitabla" name="mitabla">
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>

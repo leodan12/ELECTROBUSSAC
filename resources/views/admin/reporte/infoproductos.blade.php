@@ -48,6 +48,7 @@
                                 <th>EMPRESA</th>
                                 <th>CLIENTE/PROVEEDOR</th>
                                 <th>PRODUCTO</th>
+                                <th>TIPO</th>
                                 <th>CANTIDAD</th>
                                 <th>PRECIO UNITARIO</th>
                                 <th>PRECIO FINAL</th>
@@ -116,6 +117,7 @@
                     '<td> ' + datos[i].empresa + '</td>' +
                     '<td> ' + datos[i].cliente + '</td>' +
                     '<td> ' + datos[i].producto + '</td>' +
+                    '<td> ' + datos[i].tipo + '</td>' +
                     '<td> ' + datos[i].cantidad + '</td>' +
                     '<td> ' + datos[i].preciounitariomo + '</td>' +
                     '<td> ' + datos[i].preciofinal + '</td>' +

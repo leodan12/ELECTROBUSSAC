@@ -73,7 +73,7 @@ class ReportesController extends Controller
         );
     }
 
-    //obtener los datos para el grafico
+    //obtener los datos para el reporte grafico
     public function misventas($fechas, $ventas)
     {
         $datosventas = [];
@@ -434,7 +434,7 @@ class ReportesController extends Controller
         return $misdatos;
     }
 
-    //para los 4 cuadros del index de reportes
+    //-----------------------para los 4 cuadros del index de reportes
     public function obtenerbalance($idempresa)
     {
         $ingresomes = $this->obteneringresos($idempresa, date('d'));
@@ -621,7 +621,7 @@ class ReportesController extends Controller
         return  round($costoventa, 2);
     }
 
-    //para los cuadros de inicio de sesion
+    //------------------------para los cuadros de inicio de sesion
     public function balancemensual()
     {
         $fecha = date('Y-m-d');
@@ -769,7 +769,7 @@ class ReportesController extends Controller
         return   $productos;
     }
 
-    //para traer datos de los productos por empresa o producto y fechas
+    //----------para traer datos de las ventas y compras de los productos por empresa o producto y fechas-------------------------
 
     public function infoproductos()
     {
@@ -782,12 +782,17 @@ class ReportesController extends Controller
         $miscompras = $this->obtenerdatosproductoscompra($fechainicio, $fechafin, $empresa, $producto);
         $misventas = $this->obtenerdatosproductosventa($fechainicio, $fechafin, $empresa, $producto);
 
+        $kitsventas = $this->todoskits($fechainicio, $fechafin, $empresa, "venta");
+        $kitscompras = $this->todoskits($fechainicio, $fechafin, $empresa, "compra");
+
+        $productokits = $this->todosestandarkit($kitsventas, $kitscompras, $producto);
+
         $datos = $this->coninfocompleta($miscompras, $misventas);
 
+        $unidos = $datos->concat($productokits);
 
-        return $datos;
+        return $unidos;
     }
-
     public function obtenerdatosproductoscompra($fechainicio, $fechafin, $empresa, $producto)
     {
         $compras = "";
@@ -811,7 +816,8 @@ class ReportesController extends Controller
                         'di.preciofinal',
                         'i.moneda',
                         'i.fecha',
-                        'i.factura'
+                        'i.factura',
+                        'p.tipo'
                     )
                     ->get();
             } else {
@@ -832,7 +838,8 @@ class ReportesController extends Controller
                         'di.preciofinal',
                         'i.moneda',
                         'i.fecha',
-                        'i.factura'
+                        'i.factura',
+                        'p.tipo'
                     )
                     ->get();
             }
@@ -855,7 +862,8 @@ class ReportesController extends Controller
                         'di.preciofinal',
                         'i.moneda',
                         'i.fecha',
-                        'i.factura'
+                        'i.factura',
+                        'p.tipo'
                     )
                     ->get();
             } else {
@@ -875,7 +883,8 @@ class ReportesController extends Controller
                         'di.preciofinal',
                         'i.moneda',
                         'i.fecha',
-                        'i.factura'
+                        'i.factura',
+                        'p.tipo'
                     )
                     ->get();
             }
@@ -905,7 +914,8 @@ class ReportesController extends Controller
                         'dv.preciofinal',
                         'v.moneda',
                         'v.fecha',
-                        'v.factura'
+                        'v.factura',
+                        'p.tipo'
                     )
                     ->get();
             } else {
@@ -926,7 +936,8 @@ class ReportesController extends Controller
                         'dv.preciofinal',
                         'v.moneda',
                         'v.fecha',
-                        'v.factura'
+                        'v.factura',
+                        'p.tipo'
                     )
                     ->get();
             }
@@ -949,7 +960,8 @@ class ReportesController extends Controller
                         'dv.preciofinal',
                         'v.moneda',
                         'v.fecha',
-                        'v.factura'
+                        'v.factura',
+                        'p.tipo'
                     )
                     ->get();
             } else {
@@ -969,7 +981,8 @@ class ReportesController extends Controller
                         'dv.preciofinal',
                         'v.moneda',
                         'v.fecha',
-                        'v.factura'
+                        'v.factura',
+                        'p.tipo'
                     )
                     ->get();
 
@@ -993,6 +1006,7 @@ class ReportesController extends Controller
             $micompra->put('preciofinal', $miscompras[$i]->preciofinal);
             $micompra->put('moneda', $miscompras[$i]->moneda);
             $micompra->put('fecha', $miscompras[$i]->fecha);
+            $micompra->put('tipo', $miscompras[$i]->tipo);
 
             $todoslosdatos->push($micompra);
         }
@@ -1008,12 +1022,214 @@ class ReportesController extends Controller
             $miventa->put('preciofinal', $misventas[$x]->preciofinal);
             $miventa->put('moneda', $misventas[$x]->moneda);
             $miventa->put('fecha', $misventas[$x]->fecha);
-
+            $miventa->put('tipo', $misventas[$x]->tipo);
             $todoslosdatos->push($miventa);
         }
         return $todoslosdatos;
     }
-    //para obtener la rotacion del inventario
+    public function todoskits($fechainicio, $fechafin, $empresa, $compraventa)
+    {
+        $registros = "";
+        if ($compraventa == "compra") {
+            if ($empresa != "-1") {
+                $registros = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('p.tipo', '=', 'kit')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha',
+                        'i.factura',
+                        'p.id as idproducto',
+                        'i.tasacambio'
+                    )
+                    ->get();
+            } else {
+                $registros = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->join('products as p', 'di.product_id', '=', 'p.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('p.tipo', '=', 'kit')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'di.cantidad',
+                        'di.preciounitariomo',
+                        'di.preciofinal',
+                        'i.moneda',
+                        'i.fecha',
+                        'i.factura',
+                        'p.id as idproducto',
+                        'i.tasacambio'
+                    )
+                    ->get();
+            }
+        } else if ($compraventa == "venta") {
+            if ($empresa != "-1") {
+                $registros = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('p.tipo', '=', 'kit')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha',
+                        'v.factura',
+                        'p.id as idproducto',
+                        'v.tasacambio'
+                    )
+                    ->get();
+            } else {
+                $registros = DB::table('ventas as v')
+                    ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->join('products as p', 'dv.product_id', '=', 'p.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('p.tipo', '=', 'kit')
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'p.nombre as producto',
+                        'dv.cantidad',
+                        'dv.preciounitariomo',
+                        'dv.preciofinal',
+                        'v.moneda',
+                        'v.fecha',
+                        'v.factura',
+                        'p.id as idproducto',
+                        'v.tasacambio'
+                    )
+                    ->get();
+            }
+        }
+        return $registros;
+    }
+    public function todosestandarkit($compras, $ventas, $idproducto)
+    {
+        $resultados = collect();
+
+        for ($i = 0; $i < count($compras); $i++) {
+            $prodkit = $this->productosxkit($compras[$i]->idproducto);
+
+            $mikit = DB::table('products as p')
+                ->where('p.id', '=', $compras[$i]->idproducto)
+                ->select(
+                    'p.nombre as producto',
+                    'p.id',
+                    'p.moneda',
+                    'p.tasacambio',
+                    'p.NoIGV',
+                )
+                ->first();
+
+            for ($k = 0; $k < count($prodkit); $k++) {
+                if ($prodkit[$k]->id == $idproducto) {
+                    $preciounit = 0;
+                    $preciofinal = 0;
+                    if ($compras[$i]->moneda == $prodkit[$k]->moneda) {
+                        $preciounit = $prodkit[$k]->preciounitariomo;
+                        $preciofinal = round($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $compras[$i]->cantidad, 2);
+                    } else
+                    if ($compras[$i]->moneda == "soles" && $prodkit[$k]->moneda == "dolares") {
+                        $preciounit = round($prodkit[$k]->preciounitariomo * $mikit->tasacambio, 2);
+                        $preciofinal = round($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $compras[$i]->cantidad * $mikit->tasacambio, 2);
+                    } else if ($compras[$i]->moneda == "dolares" && $prodkit[$k]->moneda == "soles") {
+                        $preciounit = round($prodkit[$k]->preciounitariomo / $mikit->tasacambio, 2);
+                        $preciofinal = round(($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $compras[$i]->cantidad) / $mikit->tasacambio, 2);
+                    }
+                    $prod = collect();
+                    $prod->put('compraventa', 'INGRESO');
+                    $prod->put('empresa', $compras[$i]->empresa);
+                    $prod->put('factura', $compras[$i]->factura);
+                    $prod->put('cliente', $compras[$i]->cliente);
+                    $prod->put('producto', $prodkit[$k]->producto);
+                    $prod->put('cantidad', $prodkit[$k]->cantidad * $compras[$i]->cantidad);
+                    $prod->put('preciounitariomo', $preciounit);
+                    $prod->put('preciofinal', $preciofinal);
+                    $prod->put('moneda', $compras[$i]->moneda);
+                    $prod->put('fecha', $compras[$i]->fecha);
+                    $prod->put('tipo', "kit");
+                    $resultados->push($prod);
+                }
+            }
+        }
+
+        for ($i = 0; $i < count($ventas); $i++) {
+            $prodkit = $this->productosxkit($ventas[$i]->idproducto);
+
+            $mikit = DB::table('products as p')
+                ->where('p.id', '=', $ventas[$i]->idproducto)
+                ->select(
+                    'p.nombre as producto',
+                    'p.id',
+                    'p.moneda',
+                    'p.tasacambio',
+                    'p.NoIGV',
+                )
+                ->first();
+
+            for ($k = 0; $k < count($prodkit); $k++) {
+                if ($prodkit[$k]->id == $idproducto) {
+                    $preciounit = 0;
+                    $preciofinal = 0;
+                    if ($ventas[$i]->moneda == $prodkit[$k]->moneda) {
+                        $preciounit = $prodkit[$k]->preciounitariomo;
+                        $preciofinal = round($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $ventas[$i]->cantidad, 2);
+                    } else
+                    if ($ventas[$i]->moneda == "soles" && $prodkit[$k]->moneda == "dolares") {
+                        $preciounit = round($prodkit[$k]->preciounitariomo * $mikit->tasacambio, 2);
+                        $preciofinal = round($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $ventas[$i]->cantidad * $mikit->tasacambio, 2);
+                    } else if ($ventas[$i]->moneda == "dolares" && $prodkit[$k]->moneda == "soles") {
+                        $preciounit = round($prodkit[$k]->preciounitariomo / $mikit->tasacambio, 2);
+                        $preciofinal = round(($prodkit[$k]->preciounitariomo * $prodkit[$k]->cantidad * $ventas[$i]->cantidad) / $mikit->tasacambio, 2);
+                    }
+                    $prod = collect();
+                    $prod->put('compraventa', 'VENTA');
+                    $prod->put('empresa', $ventas[$i]->empresa);
+                    $prod->put('factura', $ventas[$i]->factura);
+                    $prod->put('cliente', $ventas[$i]->cliente);
+                    $prod->put('producto', $prodkit[$k]->producto);
+                    $prod->put('cantidad', $prodkit[$k]->cantidad * $ventas[$i]->cantidad);
+                    $prod->put('preciounitariomo', $preciounit);
+                    $prod->put('preciofinal', $preciofinal);
+                    $prod->put('moneda', $ventas[$i]->moneda);
+                    $prod->put('fecha', $ventas[$i]->fecha);
+                    $prod->put('tipo', "kit");
+                    $resultados->push($prod);
+                }
+            }
+        }
+
+        return $resultados;
+    }
+    //------------------------------para obtener la rotacion del inventario--------------------------------------------
     public function rotacionstock()
     {
         $companies = Company::all();
@@ -1253,18 +1469,18 @@ class ReportesController extends Controller
                 ) {
                     if ($misventas[$i]['moneda'] == "soles") {
                         $sumcosto = $sumcosto + round(($misventas[$i]['cantidad'] * $misventas[$i]['preciofinal']) / $misventas[$i]['tasacambio'], 2);
-                        if ($maximo < round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2)) {
-                            $maximo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2);
+                        if ($maximo < round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'], 2)) {
+                            $maximo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'], 2);
                         }
-                        if ($minimo > round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2)) {
-                            $minimo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'],2);
+                        if ($minimo > round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'], 2)) {
+                            $minimo = round($misventas[$i]['preciofinal'] / $misventas[$i]['tasacambio'], 2);
                         }
                     } else {
                         $sumcosto = $sumcosto + round($misventas[$i]['cantidad'] * $misventas[$i]['preciofinal'], 2);
                         if ($maximo < $misventas[$i]['preciofinal']) {
                             $maximo = $misventas[$i]['preciofinal'];
                         }
-                        if ($minimo > $misventas[$i]['preciofinal'] ) {
+                        if ($minimo > $misventas[$i]['preciofinal']) {
                             $minimo = $misventas[$i]['preciofinal'];
                         }
                     }
@@ -1275,7 +1491,7 @@ class ReportesController extends Controller
             $producto->put('empresa', $misventasunicas[$x]['empresa']);
             $producto->put('compraventa', $compraventa);
             $producto->put('producto', $misventasunicas[$x]['producto']);
-            $producto->put('cantidad', $sumcant); 
+            $producto->put('cantidad', $sumcant);
             $producto->put('maximo', $maximo);
             $producto->put('minimo', $minimo);
             $producto->put('preciofinal', $sumcosto);
@@ -1430,7 +1646,7 @@ class ReportesController extends Controller
         return $misproductos;
     }
 
-    //otro
+    //otros
     public function detalleventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $misventas = $this->obtenermisventas($fechainicio, $fechafin, $empresa, $producto);
