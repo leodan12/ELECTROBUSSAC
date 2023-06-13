@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -29,8 +30,9 @@ class LoginController extends Controller
      */
     //protected $redirectTo = RouteServiceProvider::HOME;
 
-    protected function authenticated(){
-         
+    protected function authenticated(Request $request, $user){
+        //agregamos esto para permitir solo una sesion por usuario
+        Auth::logoutOtherDevices(\request('password'));
     }
 
     /**
@@ -38,8 +40,9 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
+    public function __construct(Request $request)
+    {  
+        $this->middleware('guest')->except('logout');  
+         
     }
 }

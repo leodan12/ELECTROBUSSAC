@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CheckBaned
 {
@@ -25,6 +26,8 @@ class CheckBaned
 
             return redirect()->route('login')->with('error', 'Este Usuario esta Suspendido');
         }
+
+
         return $next($request);
     }
 }

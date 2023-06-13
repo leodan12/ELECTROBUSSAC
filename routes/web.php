@@ -22,7 +22,7 @@ Auth::routes(["register" => false]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::prefix('admin')->middleware(['auth'])->group(function () {
 
         Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'inicio']);
