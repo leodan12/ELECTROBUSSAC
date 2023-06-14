@@ -1,6 +1,23 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    {{-- librerias para el datatables server side --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+        href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/r-2.4.1/datatables.min.css"
+        rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('admin/vendors/mdi/css/materialdesignicons.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('admin/vendors/base/vendor.bundle.base.css') }}">
+         
+
+</head>
+
+<body>
     <div>
         <div class="row">
             <div class="col-md-12">
@@ -24,7 +41,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered table-striped"  id="mitabla" name="mitabla">
+                        <table class="table table-bordered table-striped" id="mitabla" name="mitabla">
                             <thead class="fw-bold text-primary">
                                 <tr>
                                     <th>ID</th>
@@ -45,9 +62,19 @@
                 </div>
             </div>
         </div>
-    </div> 
-@endsection
-@push('script')
+    </div>
+
+    <script src="{{ asset('admin/vendors/base/vendor.bundle.base.js') }}"></script>
+
+    <script src="{{ asset('admin/js/off-canvas.js') }}"></script>
+    <script src="{{ asset('admin/js/hoverable-collapse.js') }}"></script>
+    <script src="{{ asset('admin/js/template.js') }}"></script>
+    {{-- librerias para el datatables serverside --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+    <script
+        src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/r-2.4.1/datatables.min.js">
+    </script>
     <script src="{{ asset('admin/midatatable.js') }}"></script>
     <script>
         $(document).ready(function() {
@@ -180,4 +207,7 @@
             });
         }
     </script>
-@endpush
+
+</body>
+
+</html>

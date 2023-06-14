@@ -10823,7 +10823,7 @@ textarea.form-control-lg {
   padding-left: 0.5rem;
   font-size: 0.875rem;
   border-radius: 0.2rem;
-}
+}  
 
 .form-select-lg {
   padding-top: 0.5rem;
@@ -22184,7 +22184,9 @@ dl li {
 
 .dataTables_wrapper .dataTables_length select {
   margin-left: .25rem;
-  margin-right: .25rem;
+  margin-right: .25rem; 
+  background-image: none;
+  color: black;
 }
 
 .dataTables_wrapper .dataTable {
@@ -22202,40 +22204,7 @@ dl li {
   padding: 1.7rem 0.9375rem;
   white-space: nowrap;
 }
-
-.dataTables_wrapper .dataTable thead .sorting:before, .dataTables_wrapper .dataTable thead .sorting:after,
-.dataTables_wrapper .dataTable thead .sorting_asc:before,
-.dataTables_wrapper .dataTable thead .sorting_asc:after,
-.dataTables_wrapper .dataTable thead .sorting_desc:before,
-.dataTables_wrapper .dataTable thead .sorting_desc:after,
-.dataTables_wrapper .dataTable thead .sorting_asc_disabled:before,
-.dataTables_wrapper .dataTable thead .sorting_asc_disabled:after,
-.dataTables_wrapper .dataTable thead .sorting_desc_disabled:before,
-.dataTables_wrapper .dataTable thead .sorting_desc_disabled:after {
-  line-height: 2.5;
-  font-family: Material Design Icons;
-  font-size: .65rem;
-}
-
-.dataTables_wrapper .dataTable thead .sorting:before,
-.dataTables_wrapper .dataTable thead .sorting_asc:before,
-.dataTables_wrapper .dataTable thead .sorting_desc:before,
-.dataTables_wrapper .dataTable thead .sorting_asc_disabled:before,
-.dataTables_wrapper .dataTable thead .sorting_desc_disabled:before {
-  content: "\F05D";
-  right: 2.4em;
-  bottom: 1.5rem;
-}
-
-.dataTables_wrapper .dataTable thead .sorting:after,
-.dataTables_wrapper .dataTable thead .sorting_asc:after,
-.dataTables_wrapper .dataTable thead .sorting_desc:after,
-.dataTables_wrapper .dataTable thead .sorting_asc_disabled:after,
-.dataTables_wrapper .dataTable thead .sorting_desc_disabled:after {
-  content: "\F045";
-  right: 2em;
-  bottom: 1.1rem;
-}
+ 
 
 .dataTables_wrapper .dataTable tbody tr td {
   border: 1px solid rgba(151, 151, 151, 0.18);

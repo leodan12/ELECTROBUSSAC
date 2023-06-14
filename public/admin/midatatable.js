@@ -7,7 +7,7 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
         ajax: ruta,
         dataType: 'json',
         type: "POST",
-        columns: columnas,
+        columns: columnas, 
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
