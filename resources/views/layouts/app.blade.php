@@ -19,7 +19,7 @@
     @livewireStyles
 
 </head>
-<body style="background-image: url('/admin/images/auth/lockscreen-bg.jpg')">
+<body style="background-image: url('/admin/images/auth/lockscreen-bg.jpg'); background-image-width:100%; ">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm" >
             <div class="container">

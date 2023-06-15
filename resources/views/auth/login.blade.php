@@ -2,11 +2,15 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Inicio de Sesión') }}</div>
+        <div class="row  " style="display: flex; align-items: center; justify-content: center; min-height: 70vh;">
+            <div class="col-lg-6">
 
+                <div class="card" style="border-radius: 20px; ">
+                    <div class="card-header" style="display: flex; align-items: center; justify-content: center;">
+                        <b>
+                            <h4> {{ __('INICIO DE SESIÓN') }} </h4>
+                        </b>
+                    </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
@@ -62,10 +66,10 @@
                             </div>
                         </div> --}}
 
-                            <div class="row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Ingresar') }}
+                            <div class="row mb-0  ">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" class="btn btn-outline-primary"> <b>
+                                            {{ __('Ingresar') }} </b>
                                     </button>
 
                                     {{-- @if (Route::has('password.request'))
@@ -77,7 +81,9 @@
                             </div>
                         </form>
                     </div>
+
                 </div>
+
             </div>
         </div>
     </div>

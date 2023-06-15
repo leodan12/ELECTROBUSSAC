@@ -974,10 +974,10 @@ class VentaController extends Controller
                 $mikit->put('moneda', $kits[$i]->moneda);
                 $mikit->put('tipo', $kits[$i]->tipo);
                 $mikit->put('stockempresa', $stockmin);
-                $mikit->put('cantidad2', null);
-                $mikit->put('precio2', null);
-                $mikit->put('cantidad3', null);
-                $mikit->put('precio3', null);
+                $mikit->put('cantidad2', $kits[$i]->cantidad2);
+                $mikit->put('precio2', $kits[$i]->precio2);
+                $mikit->put('cantidad3', $kits[$i]->cantidad3);
+                $mikit->put('precio3', $kits[$i]->precio3);
                 $miskits->push($mikit);
             }
         }

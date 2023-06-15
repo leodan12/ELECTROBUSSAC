@@ -328,6 +328,12 @@
         var stockmaximo = 0;
         var condformapago = 0;
         var idcondformapago = -1;
+        var micantidad2 = null;
+        var miprecio2 = null;
+        var micantidad3 = null;
+        var miprecio3 = null;
+        var miprecio = 0;
+        var mipreciounit = "";
         var hoy = new Date();
         var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy
             .getDate()).padStart(2, '0');
@@ -381,6 +387,7 @@
 
         });
 
+
         $("#formapago").change(function() {
             var forma = $(this).val();
             var condicion1 = "";
@@ -419,8 +426,10 @@
                 for (var i = 0; i < data.length; i++) {
                     producto_select += '<option id="miproducto' + data[i].id + '" id="productoxempresa' +
                         data[i].id + '" value="' + data[i]
-                        .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +
-                        '" data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                        .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +  
+                        '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
+                        '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
+                        '"data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
@@ -480,10 +489,19 @@
                 $moneda = $(this).data("moneda");
                 $stock = $(this).data("stock");
                 $tipo = $(this).data("tipo");
+
+                $cantidad2 = $(this).data("cantidad2");
+                $precio2 = $(this).data("precio2");
+                $cantidad3 = $(this).data("cantidad3");
+                $precio3 = $(this).data("precio3");
+
                 monedaproducto = $moneda;
                 idproducto = miproduct;
                 tipoproducto = $tipo;
                 stockmaximo = $stock;
+
+                micantidad2 = $cantidad2;
+                micantidad3 = $cantidad3;
                 //alert(stocke);
                 //mostramos la notificacion
                 if ($tipo == "kit") {
@@ -518,18 +536,27 @@
                     if (monedaproducto == "dolares" && monedafactura == "dolares") {
                         simbolomonedaproducto = "$";
                         preciototalI = ($price).toFixed(2);
+                        miprecio = $price;
+                        miprecio2 = $precio2;
+                        miprecio3 = $precio3;
                         document.getElementById('preciounitario').value = ($price).toFixed(2);
                         document.getElementById('preciounitariomo').value = ($price).toFixed(2);
                         document.getElementById('preciofinal').value = ($price).toFixed(2);
                     } else if (monedaproducto == "soles" && monedafactura == "soles") {
                         preciototalI = ($price).toFixed(2);
                         simbolomonedaproducto = "S/.";
+                        miprecio = $price;
+                        miprecio2 = $precio2;
+                        miprecio3 = $precio3;
                         document.getElementById('preciounitario').value = ($price).toFixed(2);
                         document.getElementById('preciounitariomo').value = ($price).toFixed(2);
                         document.getElementById('preciofinal').value = ($price).toFixed(2);
                     } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                         preciototalI = ($price * mitasacambio1).toFixed(2);
                         simbolomonedaproducto = "$";
+                        miprecio = ($price * mitasacambio1).toFixed(2);
+                        miprecio2 = ($precio2 * mitasacambio1).toFixed(2);
+                        miprecio3 = ($precio3 * mitasacambio1).toFixed(2);
                         document.getElementById('preciounitario').value = ($price).toFixed(2);
                         document.getElementById('preciounitariomo').value = ($price * mitasacambio1)
                             .toFixed(2);
@@ -537,6 +564,9 @@
                     } else if (monedaproducto == "soles" && monedafactura == "dolares") {
                         preciototalI = ($price / mitasacambio1).toFixed(2);
                         simbolomonedaproducto = "S/.";
+                        miprecio = ($price / mitasacambio1).toFixed(2);
+                        miprecio2 = ($precio2 / mitasacambio1).toFixed(2);
+                        miprecio3 = ($precio3 / mitasacambio1).toFixed(2);
                         document.getElementById('preciounitario').value = ($price).toFixed(2);
                         document.getElementById('preciounitariomo').value = ($price / mitasacambio1)
                             .toFixed(2);
@@ -567,6 +597,7 @@
                     document.getElementById('preciounitariomo').value = "";
                 }
                 //alert(nameprod);
+                mipreciounit = document.getElementById('labelpreciounitario').innerHTML;
             });
         });
 
@@ -583,6 +614,30 @@
             LCondiciones.push(condicion);
             agregarCondicion(LCondiciones);
         });
+
+        document.getElementById("cantidad").onchange = function() {
+            var xcantidad = document.getElementById("cantidad").value;
+            if (micantidad2 != null) {
+                if (xcantidad >= micantidad2) {
+                    document.getElementById("preciounitariomo").value = miprecio2;
+                    document.getElementById('labelpreciounitario').innerHTML = mipreciounit + '(x' + micantidad2 + ')';
+                    if (micantidad3 != null) {
+                        if (xcantidad >= micantidad3) {
+                            document.getElementById("preciounitariomo").value = miprecio3;
+                            document.getElementById('labelpreciounitario').innerHTML = mipreciounit + '(x' +
+                                micantidad3 + ')';
+                        }
+                    }
+                } else {
+                    document.getElementById("preciounitariomo").value = miprecio;
+                    document.getElementById('labelpreciounitario').innerHTML = mipreciounit;
+                }
+            } else {
+                document.getElementById("preciounitariomo").value = miprecio;
+                document.getElementById('labelpreciounitario').innerHTML = mipreciounit;
+            }
+            preciofinal();
+        };
 
         function agregarCondicion(LCondiciones) {
             filaDetalle = '<tr id="filacondicion' + indicecondicion +

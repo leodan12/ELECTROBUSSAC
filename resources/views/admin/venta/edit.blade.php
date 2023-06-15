@@ -355,8 +355,7 @@
         idcompany = @json($venta->company_id);
         idcliente = @json($venta->cliente_id);
         var idventa = @json($venta->id);
-        var mipreciounit = "";
-        //alert(estadoguardar);
+        var mipreciounit = ""; 
         var funcion1 = "inicio";
         botonguardar(funcion1);
         var costoventa = $('[id="costoventa"]').val();
@@ -370,13 +369,11 @@
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (idcliente == data[i].id) {
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
-                            .nombre +
-                            '" selected>' + data[i].nombre + '</option>';
+                        producto_select += '<option value="' + data[i].id + '" data-name="' +
+                            data[i].nombre + '" selected>' + data[i].nombre + '</option>';
                     } else {
-                        producto_select += '<option value="' + data[i].id + '" data-name="' + data[i]
-                            .nombre +
-                            '" >' + data[i].nombre + '</option>';
+                        producto_select += '<option value="' + data[i].id + '" data-name="' +
+                            data[i].nombre + '" >' + data[i].nombre + '</option>';
                     }
 
                 }
@@ -738,7 +735,7 @@
             ventatotal = (parseFloat(ventatotal) + parseFloat(preciototalI)).toFixed(2);
             limpiarinputs();
             document.getElementById('costoventa').value = ventatotal;
-            document.getElementById('productoxempresa' + LVenta[0]).disabled = true; 
+            document.getElementById('productoxempresa' + LVenta[0]).disabled = true;
             detallesagregados.push(LVenta[0]);
             var funcion = "agregar";
             botonguardar(funcion);
@@ -838,7 +835,7 @@
             $('.toast').toast('hide');
         }
 
-        
+
         function llenarselectproducto() {
 
             var url3 = "{{ url('admin/venta/productosxempresa') }}";
