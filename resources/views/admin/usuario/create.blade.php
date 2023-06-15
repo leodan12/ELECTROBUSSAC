@@ -62,8 +62,8 @@
                                 <label class="form-label is-required">Seleccionar Estado</label>
                                 <select name="status" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccione Rol</option>
-                                    <option value="1" selected>Activo</option>
-                                    <option value="0">Inactivo</option>
+                                    <option value="activo" selected>Activo</option>
+                                    <option value="inactivo">Inactivo</option>
                                 </select>
                             </div>
                             <div class="col-md-12 mb-3">

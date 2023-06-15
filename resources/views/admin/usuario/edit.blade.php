@@ -74,11 +74,11 @@
                                 <select name="status" class="form-select borde" required>
                                     <option value="" selected disabled>Seleccione Rol</option>
                                     @if ($user->status == '1')
-                                        <option value="1" selected>Activo</option>
-                                        <option value="0">Inactivo</option>
+                                        <option value="activo" selected>Activo</option>
+                                        <option value="inactivo">Inactivo</option>
                                     @else
-                                        <option value="1">Activo</option>
-                                        <option value="0" selected>Inactivo</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo" selected>Inactivo</option>
                                     @endif
                                 </select>
                             </div>

@@ -1,13 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <style rel="stylesheet">
-        #scroll {
-            overflow: scroll;
-            height: 600px;
-        }
-    </style>
-@endpush
+
 @section('content')
     <div>
         <div class="row">
@@ -26,14 +18,11 @@
                         </h4>
                     </div>
                     <div class="card-body">
-                        <div>
-                            <input type="text" class="form-control" id="input-search"
-                                placeholder="Filtrar por nombre del rol...">
-                        </div>
+                       
                         <div id="scroll" class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap" id="mitabla"
-                                name="mitabla">
-                                <thead>
+                            <table class="table table-bordered table-striped nowrap" id="mitabla" 
+                                name="mitabla"style="width: 100%;">
+                                <thead class="fw-bold text-primary">
                                     <tr>
                                         <th>ID</th>
                                         <th>NOMBRE DEL ROL</th>
@@ -41,29 +30,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-mantenimientos">
-                                    @foreach ($roles as $rol)
-                                        <tr>
-                                            <td>{{ $rol->id }}</td>
-                                            <td>{{ $rol->name }}</td>
-
-                                            <td>
-                                                @can('editar-rol')
-                                                    <a href="{{ url('admin/rol/' . $rol->id . '/edit') }}"
-                                                        class="btn btn-success">
-                                                        Editar
-                                                    </a>
-                                                @endcan
-                                                @can('eliminar-rol')
-                                                    <form action="{{ url('admin/rol/' . $rol->id . '/delete') }}"
-                                                        class="d-inline formulario-eliminar">
-                                                        <button type="submit" class="btn btn-danger formulario-eliminar">
-                                                            Eliminar
-                                                        </button>
-                                                    </form>
-                                                @endcan
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                   
                                 </tbody>
                             </table>
                         </div>
@@ -76,23 +43,74 @@
     </div>
 @endsection
 @push('script')
-    <script>
-        document.getElementById("input-search").addEventListener("input", onInputChange);
+<script src="{{ asset('admin/midatatable.js') }}"></script>
+<script>
+    var numeroeliminados = 0;
+    $(document).ready(function() {
 
-        function onInputChange() {
-            let inputText = document.getElementById("input-search").value.toString().toLowerCase();
-            /*console.log(inputText);*/
-            let tableBody = document.getElementById("tbody-mantenimientos");
-            let tableRows = tableBody.getElementsByTagName("tr");
-            for (let i = 0; i < tableRows.length; i++) {
-                let textoConsulta = tableRows[i].cells[1].textContent.toString().toLowerCase();
-                if (textoConsulta.indexOf(inputText) === -1) {
-                    tableRows[i].style.visibility = "collapse";
-                } else {
-                    tableRows[i].style.visibility = "";
-                }
+        var tabla = "#mitabla";
+        var ruta = "{{ route('rol.index') }}"; //darle un nombre a la ruta index
+        var columnas = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'acciones',
+                name: 'acciones',
+                searchable: false,
+                orderable: false,
+            },
+        ];
+        
+        var btns = 'lfrtip';
+        iniciarTablaIndex(tabla, ruta, columnas, btns);
 
+    });
+    //para borrar un registro de la tabla
+    $(document).on('click', '.btnborrar', function(event) {
+        const idregistro = event.target.dataset.idregistro;
+        var urlregistro = "{{ url('admin/rol') }}";
+        Swal.fire({
+            title: '¿Esta seguro de Eliminar?',
+            text: "No lo podra revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí,Eliminar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    url: urlregistro + '/' + idregistro + '/delete',
+                    success: function(data1) {
+                        if (data1 == "1") {
+                            recargartabla();
+                            $(event.target).closest('tr').remove(); 
+                            Swal.fire({
+                                icon: "success",
+                                text: "Registro Eliminado",
+                            });
+                        } else if (data1 == "0") {
+                            Swal.fire({
+                                icon: "error",
+                                text: "Registro No Eliminado",
+                            });
+                        } else if (data1 == "2") {
+                            Swal.fire({
+                                icon: "error",
+                                text: "Registro No Encontrado",
+                            });
+                        }
+                    }
+                });
             }
-        }
-    </script>
+        });
+    });
+
+</script> 
 @endpush

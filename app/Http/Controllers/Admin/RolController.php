@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\Traits\HistorialTrait;
+use Yajra\DataTables\DataTables;
 
 class RolController extends Controller
 {
@@ -21,9 +22,22 @@ class RolController extends Controller
     use HistorialTrait;
     public function index(Request $request)
     {
-        $roles = Role::paginate(10);
+        if ($request->ajax()) {
 
-        return view('admin.roles.index', compact('roles'));
+            $roles = DB::table('roles as r')
+                ->select(
+                    'r.id',
+                    'r.name',
+                );
+            return DataTables::of($roles)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($roles) {
+                    return view('admin.roles.botones', compact('roles'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+        return view('admin.roles.index');
     }
 
     public function create()
@@ -70,9 +84,16 @@ class RolController extends Controller
     }
     public function destroy($id)
     {
-        $role = Role::find($id);  
-        $role->delete();
-        $this->crearhistorial('eliminar', $role->id, $role->name, null, 'roles');
-        return redirect()->route('rol.index');
+        $role = Role::find($id);
+        if ($role) {
+            if ($role->delete()) {
+                $this->crearhistorial('eliminar', $role->id, $role->name, null, 'roles');
+                return "1";
+            } else {
+                return "0";
+            }
+        } else {
+            return "2";
+        }
     }
 }

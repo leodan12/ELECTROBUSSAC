@@ -17,7 +17,7 @@ class CheckBaned
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && (auth()->user()->status == 0)) {
+        if (auth()->check() && (auth()->user()->status == "inactivo")) {
             Auth::logout();
 
             $request->session()->invalidate();
