@@ -34,7 +34,7 @@
                                     <th>TABLA</th>
                                     <th>ID DEL REGISTRO</th>
                                     <th>NOMBRE / EMPRESA</th>
-                                    <th>CLIENTE</th>
+                                    <th>CLIENTE / PROVEEDOR</th>
                                     <th>ACCIONES</th>
                                 </tr>
                             </thead>

@@ -1014,12 +1014,12 @@ class VentaController extends Controller
 
     public function generarfacturapdf($id)
     {
-
+        $vent = Venta::find($id);
+        $empresa = Company::find($vent->company_id);
+        $cliente = Cliente::find($vent->cliente_id);
         $venta = DB::table('ventas as v')
             ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
             ->join('products as p', 'dv.product_id', '=', 'p.id')
-            ->join('companies as c', 'v.company_id', '=', 'c.id')
-            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
             ->select(
                 'v.id as idventa',
                 'v.fecha',
@@ -1033,21 +1033,31 @@ class VentaController extends Controller
                 'v.moneda as monedaventa',
                 'p.moneda as monedaproducto',
                 'v.formapago',
+                'v.factura',
                 'v.costoventa',
                 'v.tasacambio',
                 'v.costoventa',
-                'c.nombre as company',
-                'c.ruc as ruccompany',
-                'c.direccion as direccioncompany',
-                'c.telefono as telefonocompany',
-                'cl.nombre as cliente',
-                'cl.ruc as ruccliente',
-                'cl.direccion as direccioncliente',
-                'cl.telefono as telefonocliente'
+                'p.tipo',
+                'dv.id as iddetalle'
+            )
+            ->where('v.id', '=', $id)->get();
+        $detallekit = DB::table('ventas as v')
+            ->join('detalleventas as dv', 'dv.venta_id', '=', 'v.id')
+            ->join('products as p', 'dv.product_id', '=', 'p.id')
+            ->join('kits as k', 'k.product_id', '=', 'p.id')
+            ->join('products as pk', 'k.kitproduct_id', '=', 'pk.id')
+            ->select(
+                'v.id as idventa',
+                'k.cantidad',
+                'pk.nombre',
+                'dv.id as iddetalle'
             )
             ->where('v.id', '=', $id)->get();
         //return $venta;
-        $pdf = PDF::loadView('admin.venta.facturapdf', ["venta" => $venta]);
+        $pdf = PDF::loadView(
+            'admin.venta.facturapdf',
+            ["venta" => $venta, "empresa" => $empresa, "cliente" => $cliente, "detallekit" => $detallekit]
+        );
         return $pdf->stream('venta.pdf');
     }
 

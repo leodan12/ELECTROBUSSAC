@@ -79,6 +79,33 @@
                                 <input type="number" name="SiIGV" id="SiIGV" value="{{ $product->SiIGV }}"
                                     min="0" step="0.01" readonly class="form-control borde" required />
                             </div>
+                            <div class="col-md-4 mb-3">
+                                <input class="form-check-input" type="checkbox" value="" id="precioxmayor"
+                                    @if ($product->cantidad2 != null) checked @endif>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    ¿Agregar Precio por Mayor?
+                                </label>
+                            </div>
+                            <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
+                                <label class="form-label ">CANTIDAD 2</label>
+                                <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
+                                    class="form-control borde" value="{{ $product->cantidad2 }}" />
+                            </div>
+                            <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
+                                <label class="form-label">PRECIO SIN IGV 2</label>
+                                <input type="number" name="precio2" id="precio2" min="0" step="0.01"
+                                    class="form-control borde" value="{{ $product->precio2 }}" />
+                            </div>
+                            <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
+                                <label class="form-label ">CANTIDAD 3</label>
+                                <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
+                                    class="form-control borde" value="{{ $product->cantidad3 }}" />
+                            </div>
+                            <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
+                                <label class="form-label">PRECIO SIN IGV 3</label>
+                                <input type="number" name="precio3" id="precio3" min="0" step="0.01"
+                                    class="form-control borde" value="{{ $product->precio3 }}" />
+                            </div>
                             <hr>
                             <h4>Agregar Detalle de la Compra</h4>
                             <div class="col-md-6 mb-3">
@@ -230,6 +257,10 @@
         var simbolomonedaproducto = "";
         var simbolomonedafactura = "";
         var indicex = 0;
+        var micantidad2 = @json($product->cantidad2);
+        var micantidad3 = @json($product->cantidad3);
+        var miprecio2 = @json($product->precio2);
+        var miprecio3 = @json($product->precio3);
         estadoguardar = @json($nrodetalles);
         var funcion1 = "inicio";
         botonguardar(funcion1);
@@ -237,8 +268,12 @@
         ventatotal = costoventa;
 
         $(document).ready(function() {
+            miprecioxmayor();
             document.getElementById("NoIGV").onchange = function() {
                 IGVtotal();
+            };
+            document.getElementById("precioxmayor").onchange = function() {
+                miprecioxmayor();
             };
             $('.select2').select2();
         });
@@ -259,7 +294,28 @@
             }
         }
 
-
+        function miprecioxmayor() {
+            if ($('#precioxmayor').prop('checked')) {
+                document.getElementById('dcantidad2').style.display = 'inline';
+                document.getElementById('dcantidad3').style.display = 'inline';
+                document.getElementById('dprecio2').style.display = 'inline';
+                document.getElementById('dprecio3').style.display = 'inline';
+                document.getElementById('cantidad2').value = micantidad2;
+                document.getElementById('cantidad3').value = micantidad3;
+                document.getElementById('precio2').value = miprecio2;
+                document.getElementById('precio3').value = miprecio3;
+            } else {
+                document.getElementById('dcantidad2').style.display = 'none';
+                document.getElementById('dcantidad3').style.display = 'none';
+                document.getElementById('dprecio2').style.display = 'none';
+                document.getElementById('dprecio3').style.display = 'none';
+                document.getElementById('cantidad2').value = "";
+                document.getElementById('cantidad3').value = "";
+                document.getElementById('precio2').value = "";
+                document.getElementById('precio3').value = "";
+            }
+        }
+        
         function IGVtotal() {
             preciototal = 0;
             var cantidad = $('[name="NoIGV"]').val();
@@ -388,7 +444,7 @@
                 '</td><td><input  type="hidden" name="Lpreciofinal[]" id="preciof' + indice + '" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + 0 + ',' +
-                0 + ',' + product  + ')" data-id="0">ELIMINAR</button></td></tr>';
+                0 + ',' + product + ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesKit>tbody").append(filaDetalle);
 

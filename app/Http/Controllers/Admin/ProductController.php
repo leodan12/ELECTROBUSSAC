@@ -212,7 +212,7 @@ class ProductController extends Controller
                 'p.nombre',
                 'p.codigo',
                 'p.unidad',
-                'p.und',
+                //'p.und',
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',

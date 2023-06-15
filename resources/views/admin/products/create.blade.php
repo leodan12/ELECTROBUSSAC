@@ -78,7 +78,8 @@
                                     class="form-control borde" required />
                             </div>
                             <div class="col-md-4 mb-3">
-                                <input class="form-check-input" type="checkbox" value="" name="precioxmayor" id="precioxmayor">
+                                <input class="form-check-input" type="checkbox" value="" name="precioxmayor"
+                                    id="precioxmayor">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Agregar Precio por Mayor
                                 </label>
@@ -87,22 +88,22 @@
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
-                                    class="form-control borde"   />
+                                    class="form-control borde" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
-                                    class="form-control borde"   />
+                                    class="form-control borde" />
                             </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
-                                    class="form-control borde"   />
+                                    class="form-control borde" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
-                                    class="form-control borde"   />
+                                    class="form-control borde" />
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -119,7 +120,7 @@
 
 @push('script')
     <script type="text/javascript">
-     var micantidad2 =  "";
+        var micantidad2 = "";
         var micantidad3 = "";
         var miprecio2 = "";
         var miprecio3 = "";
@@ -134,16 +135,16 @@
                 miprecioxmayor();
             };
             $("#cantidad2").change(function() {
-                micantidad2= document.getElementById('cantidad2').value; 
+                micantidad2 = document.getElementById('cantidad2').value;
             });
             $("#cantidad3").change(function() {
-                micantidad3= document.getElementById('cantidad3').value; 
+                micantidad3 = document.getElementById('cantidad3').value;
             });
             $("#precio2").change(function() {
-                miprecio2= document.getElementById('precio2').value; 
+                miprecio2 = document.getElementById('precio2').value;
             });
             $("#precio3").change(function() {
-                miprecio3= document.getElementById('precio3').value; 
+                miprecio3 = document.getElementById('precio3').value;
             });
 
         });

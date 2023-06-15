@@ -112,7 +112,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/inventario/restaurar/{idregistro}', 'restaurar');
             Route::get('/inventario/showsinstock', 'showsinstock');
         });
-
         //Ruta de la venta
         Route::controller(App\Http\Controllers\Admin\VentaController::class)->group(function () {
             Route::get('/venta', 'index')->name('venta.index');
@@ -138,7 +137,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/venta/misdetallesventa/{idventa}', 'misdetallesventa'); //ver  
             Route::get('/venta/stocktotalxkit/{id}', 'stocktotalxkit'); //ver  
         });
-
         //Ruta de ingresos
         Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function () {
             Route::get('/ingreso', 'index')->name('ingreso.index');
@@ -153,7 +151,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/ingreso/showcreditos', 'showcreditos'); //ver   creditos
             Route::get('/ingreso/pagarfactura/{id}',  'pagarfactura');
         });
-
         //Ruta de la cotizacion
         Route::controller(App\Http\Controllers\Admin\CotizacionesController::class)->group(function () {
             Route::get('/cotizacion', 'index')->name('cotizacion.index');
@@ -194,10 +191,9 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::put('/rol/{cliente}', 'update');
             Route::get('/rol/{product_id}/delete', 'destroy');
         });
-
-         //rutas de los historiales
-         Route::controller(App\Http\Controllers\Admin\HistorialController::class)->group(function () {
-            Route::get('/historial', 'index')->name('historial.index'); 
+        //rutas de los historiales
+        Route::controller(App\Http\Controllers\Admin\HistorialController::class)->group(function () {
+            Route::get('/historial', 'index')->name('historial.index');
             Route::get('/historial/{historial_id}/delete', 'destroy');
             Route::get('/historial/limpiartabla', 'limpiartabla');
         });

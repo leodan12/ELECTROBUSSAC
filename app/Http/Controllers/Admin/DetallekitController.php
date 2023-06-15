@@ -89,6 +89,14 @@ class DetallekitController extends Controller
         $producto->NoIGV = $request->NoIGV;
         $producto->SiIGV = $request->SiIGV;
         $producto->status =  '0';
+        if ($request->cantidad2 != null && $request->precio2 != null) {
+            $producto->cantidad2 = $request->cantidad2;
+            $producto->precio2 = $request->precio2;
+            if ($request->cantidad3 != null && $request->precio3 != null) {
+                $producto->cantidad3 = $request->cantidad3;
+                $producto->precio3 = $request->precio3;
+            }
+        }
 
         if ($producto->save()) {
             $product = $request->Lproduct;
@@ -164,7 +172,21 @@ class DetallekitController extends Controller
         $producto->NoIGV = $request->NoIGV;
         $producto->SiIGV = $request->SiIGV;
         $producto->status =  '0';
-
+        if ($request->cantidad2 != null && $request->precio2 != null) {
+            $producto->cantidad2 = $request->cantidad2;
+            $producto->precio2 = $request->precio2;
+            if ($request->cantidad3 != null && $request->precio3 != null) {
+                $producto->cantidad3 = $request->cantidad3;
+                $producto->precio3 = $request->precio3;
+            }
+        } else {
+            $producto->cantidad2 = null;
+            $producto->precio2 =  null;
+        }
+        if ($request->cantidad3 == null || $request->precio3 == null) {
+            $producto->cantidad3 = null;
+            $producto->precio3 =  null;
+        }
         if ($producto->update()) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
@@ -205,7 +227,7 @@ class DetallekitController extends Controller
                 'p.nombre',
                 'p.codigo',
                 'p.unidad',
-                'p.und',
+                //'p.und',
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',
@@ -215,7 +237,7 @@ class DetallekitController extends Controller
                 'pk.minimo as kitproductminimo',
                 'pk.codigo as kitproductcodigo',
                 'pk.unidad as kitproductunidad',
-                'pk.und as kitproductund',
+                //'pk.und as kitproductund',
                 'pk.moneda as kitproductmoneda',
                 'pk.NoIGV as kitproductnoigv',
                 'pk.SiIGV as kitproductsiigv',
