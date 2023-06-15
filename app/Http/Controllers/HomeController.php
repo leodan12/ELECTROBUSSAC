@@ -26,15 +26,17 @@ class HomeController extends Controller
      */
 
     public function index()
-    {
-        $sinstock = $this->productossinstock();
-        $ventasxcobrar = $this->numeroventas('credito', 'NO', '2010-01-01');
-        $ingresosxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');
+    { 
         $usuario = Auth::user()->name;
-        return view('admin.dashboard', compact('sinstock', 'ingresosxpagar', 'ventasxcobrar'))->with('message','Bienvenido usuario '.$usuario);
+        return redirect('admin/dashboard'); 
+    }
+    public function home()
+    { 
+        $usuario = Auth::user()->name;
+        return redirect('admin/dashboard')->with('message','Bienvenido usuario '.$usuario); 
     }
     public function inicio()
-    {
+    {  
         $sinstock = $this->productossinstock();
         $ventasxcobrar = $this->numeroventas('credito', 'NO', '2010-01-01');
         $ingresosxpagar = $this->numeroingresos('credito', 'NO', '2010-01-01');

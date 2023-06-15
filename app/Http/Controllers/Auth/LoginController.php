@@ -33,6 +33,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user){
         //agregamos esto para permitir solo una sesion por usuario
         Auth::logoutOtherDevices(\request('password'));
+        return redirect(RouteServiceProvider::HOME);
     }
 
     /**

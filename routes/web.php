@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(["register" => false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'home'])->name('home');
 
 Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::prefix('admin')->middleware(['auth'])->group(function () {
