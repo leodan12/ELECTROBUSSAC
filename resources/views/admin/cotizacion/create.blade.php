@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -27,7 +25,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FECHA</label>
-                                <input type="date" name="fecha" id="fecha" class="form-control borde" required />
+                                <input type="date" name="fecha" id="fecha" class="form-control " required />
                                 @error('fecha')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -35,14 +33,14 @@
 
                             <div class="col-md-4 mb-3">
                                 <label id="labelfechav" class="form-label  is-required">FECHA DE VALIDÉZ</label>
-                                <input type="date" name="fechav" id="fechav" class="form-control borde" />
+                                <input type="date" name="fechav" id="fechav" class="form-control " />
                                 @error('fechav')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">MONEDA</label>
-                                <select name="moneda" id="moneda" class="form-select borde" required>
+                                <select name="moneda" id="moneda" class="form-select " required>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     <option value="dolares" data-moneda="dolares">Dolares Americanos</option>
                                     <option value="soles" data-moneda="soles">Soles</option>
@@ -54,11 +52,11 @@
                             <div class="col-md-4 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01"
-                                    class="form-control borde" min="1" />
+                                    class="form-control " min="1" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
-                                <select name="formapago" id="formapago" class="form-select borde" required>
+                                <select name="formapago" id="formapago" class="form-select " required>
                                     <option value="" disabled>Seleccion una opción</option>
                                     <option value="credito" data-formapago="credito">Credito</option>
                                     <option value="contado" data-formapago="contado" selected>Contado</option>
@@ -70,7 +68,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">INCLUIR IGV</label>
-                                <select name="igv" id="igv" class="form-select borde" required>
+                                <select name="igv" id="igv" class="form-select " required>
                                     <option value="" disabled>Seleccion una opción</option>
                                     <option value="SI" data-formapago="SI" selected>SI</option>
                                     <option value="NO" data-formapago="NO">NO</option>
@@ -81,7 +79,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2  borde" name="company_id" id="company_id" required
+                                <select class="form-select select2  " name="company_id" id="company_id" required
                                     disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
@@ -92,7 +90,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2  borde" name="cliente_id" id="cliente_id" required
+                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required
                                     disabled>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                 </select>
@@ -103,7 +101,7 @@
                                         IGV</label>
                                     <span class="input-group-text" id="spancostoventasinigv"></span>
                                     <input type="number" name="costoventasinigv" id="costoventasinigv" min="0.1"
-                                        step="0.01" class="form-control borde required" required readonly />
+                                        step="0.01" class="form-control  required" required readonly />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -111,29 +109,29 @@
                                     <label class="form-label input-group">PRECIO DE LA COTIZACIÓN CON IGV</label>
                                     <span class="input-group-text" id="spancostoventaconigv"></span>
                                     <input type="number" name="costoventaconigv" id="costoventaconigv" min="0.1"
-                                        step="0.01" class="form-control borde required" required readonly />
+                                        step="0.01" class="form-control  required" required readonly />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PERSONA QUE SOLICITÓ LA COTIZACIÓN</label>
                                     <input type="text" name="persona" id="persona"
-                                        class="form-control borde required" placeholder="Ejemplo: Sr. Jose Sanchez" />
+                                        class="form-control  required" placeholder="Ejemplo: Sr. Jose Sanchez" />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3" id="divdiascredito">
                                 <label class="form-label is-required">DIAS DE CREDITO PARA LA COMPRA</label>
                                 <input type="number" name="diascredito" id="diascredito" step="1"
-                                    class="form-control borde" min="1" value="15" />
+                                    class="form-control " min="1" value="15" />
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label">OBSERVACION</label>
-                                <input type="text" name="observacion" id="observacion" class="form-control borde" />
+                                <input type="text" name="observacion" id="observacion" class="form-control " />
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-lg-12">
                                     <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
-                                    <nav class="borde" style="border-radius: 5px; ">
+                                    <nav class="" style="border-radius: 5px; ">
                                         <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
 
                                             <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab"
@@ -155,7 +153,7 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label" name="labelproducto"
                                                         id="labelproducto">PRODUCTO</label>
-                                                    <select class="form-select select2 borde" name="product"
+                                                    <select class="form-select select2 " name="product"
                                                         id="product" disabled>
                                                         <option value="" selected disabled>Seleccione una opción
                                                         </option>
@@ -165,7 +163,7 @@
                                                     <label class="form-label" name="labelcantidad"
                                                         id="labelcantidad">CANTIDAD</label>
                                                     <input type="number" name="cantidad" id="cantidad" min="1"
-                                                        step="1" class="form-control borde" />
+                                                        step="1" class="form-control " />
                                                 </div>
                                                 <div class="col-md-4 mb-3">
                                                     <div class="input-group">
@@ -175,7 +173,7 @@
                                                         <span class="input-group-text" id="spanpreciounitarioref"></span>
                                                         <input type="number" name="preciounitario" min="0"
                                                             step="0.01" id="preciounitario" readonly
-                                                            class="form-control borde" />
+                                                            class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
@@ -185,7 +183,7 @@
                                                         <span class="input-group-text" id="spanpreciounitario"></span>
                                                         <input type="number" name="preciounitariomo" min="0"
                                                             step="0.01" id="preciounitariomo"
-                                                            class="form-control borde" />
+                                                            class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
@@ -194,7 +192,7 @@
                                                             name="labelservicio">SERVICIO ADICIONAL:</label>
                                                         <span class="input-group-text" id="spanservicio"></span>
                                                         <input type="number" name="servicio" min="0"
-                                                            step="0.01" id="servicio"class="form-control borde" />
+                                                            step="0.01" id="servicio"class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
@@ -204,14 +202,14 @@
                                                         <span class="input-group-text" id="spanpreciototal"></span>
                                                         <input type="number" name="preciofinal" min="0"
                                                             step="0.01" id="preciofinal" readonly
-                                                            class="form-control borde" />
+                                                            class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8 mb-3">
                                                     <label class="form-label "
                                                         id="labelobservacionproducto">OBSERVACION:</label>
                                                     <input type="text" name="observacionproducto"
-                                                        id="observacionproducto" class="form-control borde gui-input" />
+                                                        id="observacionproducto" class="form-control  gui-input" />
                                                 </div>
                                                 <button type="button" class="btn btn-info" id="addDetalleBatch"> Agregar
                                                     Producto a la Cotización</button>
@@ -244,7 +242,7 @@
                                                 <div class="col-md-10 mb-3">
                                                     <label class="form-label " id="labelcondicion">CONDICION:</label>
                                                     <input type="text" name="condicion" id="condicion"
-                                                        class="form-control borde gui-input" />
+                                                        class="form-control  gui-input" />
                                                 </div>
                                                 <div class="col-md-2 mb-3">
                                                     <label class="form-label " style="color: white">.</label>
@@ -642,7 +640,7 @@
         function agregarCondicion(LCondiciones) {
             filaDetalle = '<tr id="filacondicion' + indicecondicion +
                 '"><td><input  id="inputcondicion' + indicecondicion +
-                '"  type="text" class="form-control borde" name="Lcondicion[]" value="' + LCondiciones[0] +
+                '"  type="text" class="form-control " name="Lcondicion[]" value="' + LCondiciones[0] +
                 '"required  >' +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarCondicion(' +
                 indicecondicion + ')" data-id="0">ELIMINAR</button></td></tr>';

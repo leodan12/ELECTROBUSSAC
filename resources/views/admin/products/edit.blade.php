@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -29,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">CATEGORIA</label>
-                                <select name="category_id" class="form-select select2 borde" required>
+                                <select name="category_id" class="form-select select2 " required>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
@@ -41,7 +39,7 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
                                 <input type="text" name="nombre" value="{{ $product->nombre }}"
-                                    class="form-control borde " required />
+                                    class="form-control  " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -49,22 +47,22 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label ">CÓDIGO</label>
                                 <input type="text" name="codigo" value="{{ $product->codigo }}"
-                                    class="form-control borde " />
+                                    class="form-control  " />
 
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">UNIDAD</label>
                                 <input type="text" name="unidad" value="{{ $product->unidad }}"
-                                    class="form-control borde " required />
+                                    class="form-control  " required />
                             </div>
                             {{-- <div class="col-md-4 mb-3">
                                 <label class="form-label ">UND</label>
                                 <input type="text" name="und" value="{{ $product->und }}"
-                                    class="form-control borde " />
+                                    class="form-control  " />
                             </div> --}}
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>
-                                <select name="moneda" class="form-select borde" required>
+                                <select name="moneda" class="form-select " required>
                                     <option value="" disabled>Seleccione Tipo de Moneda</option>
                                     <option value="dolares" {{ $product->moneda == 'dolares' ? 'selected' : '' }}>Dolares
                                         Americanos</option>
@@ -75,12 +73,12 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO SIN IGV</label>
                                 <input type="number" name="NoIGV" id="cantidad" value="{{ $product->NoIGV }}"
-                                    min="0" step="0.01" class="form-control borde" required />
+                                    min="0" step="0.01" class="form-control " required />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO CON IGV</label>
                                 <input type="number" name="SiIGV" id="SiIGV" value="{{ $product->SiIGV }}"
-                                    min="0" step="0.01" readonly class="form-control borde" required />
+                                    min="0" step="0.01" readonly class="form-control " required />
                             </div>
 
                             <div class="col-md-4 mb-3">
@@ -93,32 +91,32 @@
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
-                                    class="form-control borde" value="{{ $product->cantidad2 }}" />
+                                    class="form-control " value="{{ $product->cantidad2 }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
-                                    class="form-control borde" value="{{ $product->precio2 }}" />
+                                    class="form-control " value="{{ $product->precio2 }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
-                                    class="form-control borde" value="{{ $product->cantidad3 }}" />
+                                    class="form-control " value="{{ $product->cantidad3 }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
-                                    class="form-control borde" value="{{ $product->precio3 }}" />
+                                    class="form-control " value="{{ $product->precio3 }}" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">PRECIO MÍNIMO</label>
                                 <input type="number" name="minimo" id="minimo" value="{{ $product->minimo }}"
-                                    min="0" step="0.01" class="form-control borde" required />
+                                    min="0" step="0.01" class="form-control " required />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">PRECIO MÁXIMO</label>
                                 <input type="number" name="maximo" id="maximo" value="{{ $product->maximo }}"
-                                    min="0" step="0.01" class="form-control borde" required />
+                                    min="0" step="0.01" class="form-control " required />
                             </div>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end">Actualizar</button>

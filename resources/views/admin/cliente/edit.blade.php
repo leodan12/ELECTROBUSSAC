@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -19,7 +17,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">Nombre</label>
                                 <input type="text" name="nombre" value="{{ $cliente->nombre }}"
-                                    class="form-control  borde" required />
+                                    class="form-control  " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -27,7 +25,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">RUC o DNI</label>
                                 <input type="number" name="ruc" id="ruc" value="{{ $cliente->ruc }}"
-                                    class="form-control borde" required />
+                                    class="form-control " required />
                                 @error('ruc')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -35,19 +33,19 @@
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Direccion</label>
                                 <input type="text" name="direccion" value="{{ $cliente->direccion }}"
-                                    class="form-control borde" />
+                                    class="form-control " />
 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Telefono</label>
                                 <input type="text" name="telefono" value="{{ $cliente->telefono }}"
-                                    class="form-control borde" />
+                                    class="form-control " />
 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" value="{{ $cliente->email }}"
-                                    class="form-control borde" />
+                                    class="form-control " />
 
                             </div>
                             <div class="col-md-12 mb-3">

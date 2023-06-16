@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -31,7 +29,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="name" value="{{ $user->name }}" class="form-control borde"
+                                <input type="text" name="name" value="{{ $user->name }}" class="form-control "
                                     required />
                                 @error('name')
                                     <small class="text-danger">{{ $message }}</small>
@@ -39,7 +37,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMAIL</label>
-                                <input type="email" name="email" value="{{ $user->email }}" class="form-control borde"
+                                <input type="email" name="email" value="{{ $user->email }}" class="form-control "
                                     required />
                                 @error('email')
                                     <small class="text-danger">{{ $message }}</small>
@@ -47,7 +45,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CONTRASEÑA</label>
-                                <input type="password" name="password" class="form-control borde" />
+                                <input type="password" name="password" class="form-control " />
                                 @error('password')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -71,7 +69,7 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label is-required">Seleccionar Estado</label>
-                                <select name="status" class="form-select borde" required>
+                                <select name="status" class="form-select " required>
                                     <option value="" selected disabled>Seleccione Rol</option>
                                     @if ($user->status == '1')
                                         <option value="activo" selected>Activo</option>

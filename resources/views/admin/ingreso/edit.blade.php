@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -31,7 +29,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FECHA</label>
-                                <input type="date" name="fecha" id="fecha" class="form-control borde" required
+                                <input type="date" name="fecha" id="fecha" class="form-control " required
                                     value="{{ $ingreso->fecha }}" />
                                 @error('fecha')
                                     <small class="text-danger">{{ $message }}</small>
@@ -39,7 +37,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label ">NUMERO DE FACTURA</label>
-                                <input type="text" name="factura" id="factura" class="form-control borde "
+                                <input type="text" name="factura" id="factura" class="form-control  "
                                     value="{{ $ingreso->factura }}" />
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
@@ -47,7 +45,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
-                                <select name="formapago" id="formapago" class="form-select borde" required>
+                                <select name="formapago" id="formapago" class="form-select " required>
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     @if ($ingreso->formapago == 'credito')
                                         <option value="credito" data-formapago="credito" selected>Credito</option>
@@ -62,7 +60,7 @@
                             <div class="col-md-6 mb-3">
                                 @if ($ingreso->formapago == 'contado')
                                     <label id="labelfechav" class="form-label">FECHA DE VENCIMIENTO</label>
-                                    <input type="date" name="fechav" id="fechav" class="form-control borde" readonly
+                                    <input type="date" name="fechav" id="fechav" class="form-control " readonly
                                         value="{{ $ingreso->fechav }}" />
                                     @error('fechav')
                                         <small class="text-danger">{{ $message }}</small>
@@ -70,7 +68,7 @@
                                 @endif
                                 @if ($ingreso->formapago == 'credito')
                                     <label id="labelfechav" class="form-label is-required">FECHA DE VENCIMIENTO</label>
-                                    <input type="date" name="fechav" id="fechav" class="form-control borde"
+                                    <input type="date" name="fechav" id="fechav" class="form-control "
                                         value="{{ $ingreso->fechav }}" />
                                     @error('fechav')
                                         <small class="text-danger">{{ $message }}</small>
@@ -79,7 +77,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">MONEDA</label>
-                                <select name="moneda" id="moneda" class="form-select borde" required>
+                                <select name="moneda" id="moneda" class="form-select " required>
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     @if ($ingreso->moneda == 'soles')
                                         <option value="soles" data-moneda="soles" selected>Soles</option>
@@ -94,11 +92,11 @@
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01" readonly
-                                    class="form-control borde" value="{{ $ingreso->tasacambio }}" />
+                                    class="form-control " value="{{ $ingreso->tasacambio }}" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2 borde" name="company_id" required>
+                                <select class="form-select select2 " name="company_id" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}"
@@ -109,7 +107,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">PROVEEDOR</label>
-                                <select class="form-select select2 borde" name="cliente_id" id="cliente_id" required>
+                                <select class="form-select select2 " name="cliente_id" id="cliente_id" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
 
                                 </select>
@@ -123,13 +121,13 @@
                                         <span class="input-group-text" id="spancostoventa">S/.</span>
                                     @endif
                                     <input type="number" name="costoventa" id="costoventa" min="0.1"
-                                        step="0.01" class="form-control borde required" required readonly
+                                        step="0.01" class="form-control  required" required readonly
                                         value="{{ $ingreso->costoventa }}" />
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FACTURA PAGADA</label>
-                                <select name="pagada" id="pagada" class="form-select borde" required>
+                                <select name="pagada" id="pagada" class="form-select " required>
                                     <option value="" disabled>Seleccion una opción</option>
                                     @if ($ingreso->pagada == 'NO')
                                         <option value="NO" selected>NO</option>
@@ -141,7 +139,7 @@
                             </div>
                             <div class="col-md-12 mb-5">
                                 <label class="form-label">OBSERVACION</label>
-                                <input type="text" name="observacion" id="observacion" class="form-control borde"
+                                <input type="text" name="observacion" id="observacion" class="form-control "
                                     value="{{ $ingreso->observacion }}" />
                                 @error('observacion')
                                     <small class="text-danger">{{ $message }}</small>
@@ -151,7 +149,7 @@
                             <h4>Agregar Detalle del Ingreso</h4>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label " id="labelproducto">PRODUCTO</label>
-                                <select class="form-select select2 borde" name="product" id="product">
+                                <select class="form-select select2 " name="product" id="product">
                                     <option selected disabled value="">Seleccione una opción</option>
                                     @foreach ($products as $product)
                                         @php $contp=0;    @endphp
@@ -178,7 +176,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">CANTIDAD</label>
                                 <input type="number" name="cantidad" id="cantidad" min="1" step="1"
-                                    class="form-control borde" />
+                                    class="form-control " />
                                 @error('cantidad')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -189,7 +187,7 @@
                                         (REFERENCIAL)</label>
                                     <span class="input-group-text" id="spanpreciounitarioref"></span>
                                     <input type="number" name="preciounitario" min="0.1" step="0.01"
-                                        id="preciounitario" readonly class="form-control borde" />
+                                        id="preciounitario" readonly class="form-control " />
                                     @error('preciounitario')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -200,7 +198,7 @@
                                     <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
                                     <span class="input-group-text" id="spanpreciounitario"></span>
                                     <input type="number" name="preciounitariomo" min="0.1" step="0.01"
-                                        id="preciounitariomo" class="form-control borde" />
+                                        id="preciounitariomo" class="form-control " />
                                     @error('preciounitariomo')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -211,7 +209,7 @@
                                     <label class="form-label input-group" id="labelservicio">SERVICIO ADICIONAL</label>
                                     <span class="input-group-text" id="spanservicio"></span>
                                     <input type="number" name="servicio" min="0.1" step="0.01"
-                                        id="servicio"class="form-control borde" />
+                                        id="servicio"class="form-control " />
                                     @error('servicio')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -223,7 +221,7 @@
                                         PRODUCTO:</label>
                                     <span class="input-group-text" id="spanpreciototal"></span>
                                     <input type="number" name="preciofinal" min="0.1" step="0.01"
-                                        id="preciofinal" readonly class="form-control borde" />
+                                        id="preciofinal" readonly class="form-control " />
                                     @error('preciofinal')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
@@ -232,7 +230,7 @@
                             <div class="col-md-8 mb-3">
                                 <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
                                 <input type="text" name="observacionproducto" id="observacionproducto"
-                                    class="form-control borde gui-input" />
+                                    class="form-control  gui-input" />
                             </div>
                             @php $ind=0 ; @endphp
                             @php $indice=count($detallesingreso) ; @endphp

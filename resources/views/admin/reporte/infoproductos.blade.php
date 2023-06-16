@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">EMPRESA</label>
-                    <select class="form-select  borde" name="company_id" id="company_id" required>
+                    <select class="form-select  " name="company_id" id="company_id" required>
                         <option value="-1" selected>TODAS</option>
                         @foreach ($companies as $company)
                             <option value="{{ $company->id }}" data-miempresa="{{ $company->nombre }}">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">PRODUCTO</label>
-                    <select class="form-select select2 borde" name="producto" id="producto">
+                    <select class="form-select select2 " name="producto" id="producto">
                         <option value="-1" selected>TODOS</option>
                         @foreach ($productos as $item)
                             <option value="{{ $item->id }}" data-miproducto="{{ $item->nombre }}">{{ $item->nombre }}
@@ -28,11 +28,11 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">FECHA INICIO</label>
-                    <input type="date" class="form-control borde" id="fechainicio" name="fechainicio" />
+                    <input type="date" class="form-control " id="fechainicio" name="fechainicio" />
                 </div>
                 <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
                     <label class="form-label is-required">FECHA FIN</label>
-                    <input type="date" class="form-control borde" id="fechafin" name="fechafin" />
+                    <input type="date" class="form-control " id="fechafin" name="fechafin" />
                 </div>
 
             </div>

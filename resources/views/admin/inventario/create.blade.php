@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -27,7 +25,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label is-required">PRODUCTO</label>
-                                <select class="form-select select2 borde" name="product_id" required>
+                                <select class="form-select select2 " name="product_id" required>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}">{{ $product->nombre }}</option>
@@ -36,7 +34,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">STOCK MINIMO</label>
-                                <input type="number" name="stockminimo" id="stockminimo" class="form-control borde"
+                                <input type="number" name="stockminimo" id="stockminimo" class="form-control "
                                     required />
                                 @error('stockminimo')
                                     <small class="text-danger">{{ $message }}</small>
@@ -44,7 +42,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">STOCK TOTAL</label>
-                                <input type="number" name="stocktotal" id="stocktotal" readonly class="form-control borde"
+                                <input type="number" name="stocktotal" id="stocktotal" readonly class="form-control "
                                     required />
 
                             </div> 
@@ -52,7 +50,7 @@
                             <h5>Agregar Detalle de Inventario</h5>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">EMPRESA</label>
-                                <select class="form-select select2 borde" name="empresa" id="empresa">
+                                <select class="form-select select2 " name="empresa" id="empresa">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option id="micompany{{$company->id}}" value="{{ $company->id }}" data-name="{{ $company->nombre }}">
@@ -63,7 +61,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">STOCK POR EMPRESA</label>
                                 <input type="number" name="stockempresa" step="1" min="0" id="stockempresa"
-                                    class="form-control borde" />
+                                    class="form-control " />
                                 @error('stockempresa')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

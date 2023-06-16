@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">EMPRESA</label>
-                    <select class="form-select  borde" name="company_id" id="company_id" required>
+                    <select class="form-select " name="company_id" id="company_id" required>
                         <option value="-1" selected>TODAS</option>
                         @foreach ($companies as $company)
                             <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -210,7 +210,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">Reporte Grafico Sobre:</label>
-                    <select class="form-select borde" name="reporte" id="reporte">
+                    <select class="form-select " name="reporte" id="reporte">
                         <option value="ccv" selected>Compras, Ventas Y Cotizaciones del Mes(Soles):</option>
                         <option value="pmv">Productos Mas Vendidos:</option>
                         <option value="cmc">Clientes Con Mas Compras:</option>
@@ -218,7 +218,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label is-required">Tipo de grafico</label>
-                    <select class="form-select borde" name="tipo_grafico" id="tipo_grafico">
+                    <select class="form-select " name="tipo_grafico" id="tipo_grafico">
                         <option value="line" selected>Lineas</option>
                         <option value="bar">Barras</option>
                         <option value="polarArea">Area Polar</option>
@@ -228,14 +228,14 @@
                 </div>
                 <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
                     <label class="form-label is-required">Por Cantidad o Costo(S/.):</label>
-                    <select class="form-select borde" name="repcantidad" id="repcantidad">
+                    <select class="form-select " name="repcantidad" id="repcantidad">
                         <option value="cantidad" selected>Cantidad</option>
                         <option value="costo">Costo</option>
                     </select>
                 </div>
                 <div class="col-md-6 mb-3" id="divnumero" name="divnumero">
                     <label class="form-label is-required">Numero de Resultados:</label>
-                    <input type="number" class="form-control borde" id="numero" name="numero" value="20"
+                    <input type="number" class="form-control " id="numero" name="numero" value="20"
                         min="1" step="1" />
                 </div>
             </div>

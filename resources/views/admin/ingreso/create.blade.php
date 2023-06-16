@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -27,21 +25,21 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FECHA</label>
-                                <input type="date" name="fecha" id="fecha" class="form-control borde" required />
+                                <input type="date" name="fecha" id="fecha" class="form-control " required />
                                 @error('fecha')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label ">NUMERO DE FACTURA</label>
-                                <input type="text" name="factura" id="factura" class="form-control borde " />
+                                <input type="text" name="factura" id="factura" class="form-control  " />
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
-                                <select name="formapago" id="formapago" class="form-select borde" required>
+                                <select name="formapago" id="formapago" class="form-select " required>
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     <option value="credito" data-formapago="credito">Credito</option>
                                     <option value="contado" data-formapago="contado">Contado</option>
@@ -52,14 +50,14 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label id="labelfechav" class="form-label">FECHA DE VENCIMIENTO</label>
-                                <input type="date" name="fechav" id="fechav" class="form-control borde" readonly />
+                                <input type="date" name="fechav" id="fechav" class="form-control " readonly />
                                 @error('fechav')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">MONEDA</label>
-                                <select name="moneda" id="moneda" class="form-select borde" required>
+                                <select name="moneda" id="moneda" class="form-select " required>
                                     <option value="" selected disabled>Seleccion una opción</option>
                                     <option value="dolares" data-moneda="dolares">Dolares Americanos</option>
                                     <option value="soles" data-moneda="soles">Soles</option>
@@ -71,11 +69,11 @@
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" step="0.01" value="3.71"
-                                    min="1" class="form-control borde" required />
+                                    min="1" class="form-control " required />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2  borde" name="company_id" id="company_id" required>
+                                <select class="form-select select2  " name="company_id" id="company_id" required>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -84,7 +82,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">PROVEEDOR</label>
-                                <select class="form-select select2  borde" name="cliente_id" id="cliente_id" required
+                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required
                                     disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
 
@@ -95,17 +93,17 @@
                                     <label class="form-label input-group is-required">PRECIO DE LA VENTA </label>
                                     <span class="input-group-text" id="spancostoventa"></span>
                                     <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
-                                        class="form-control borde required" required readonly />
+                                        class="form-control  required" required readonly />
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FACTURA PAGADA</label>
-                                <input type="text" name="pagada" id="pagada" class="form-control borde " required
+                                <input type="text" name="pagada" id="pagada" class="form-control  " required
                                     readonly />
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">OBSERVACION</label>
-                                <input type="text" name="observacion" id="observacion" class="form-control borde" />
+                                <input type="text" name="observacion" id="observacion" class="form-control " />
                                 @error('observacion')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -114,7 +112,7 @@
                             <h4>Agregar Detalle de la Compra</h4>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" name="labelproducto" id="labelproducto">PRODUCTO</label>
-                                <select class="form-select select2 borde" name="product" id="product" disabled>
+                                <select class="form-select select2 " name="product" id="product" disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $product)
                                         <option id="miproducto{{ $product->id }}" value="{{ $product->id }}" data-name="{{ $product->nombre }}"
@@ -127,7 +125,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" id="labelcantidad">CANTIDAD</label>
                                 <input type="number" name="cantidad" id="cantidad" min="1" step="1"
-                                    class="form-control borde" />
+                                    class="form-control " />
                                 @error('cantidad')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -138,7 +136,7 @@
                                         (REFERENCIAL):</label>
                                     <span class="input-group-text" id="spanpreciounitarioref"></span>
                                     <input type="number" name="preciounitario" min="0" step="0.01"
-                                        id="preciounitario" readonly class="form-control borde" />
+                                        id="preciounitario" readonly class="form-control " />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -147,7 +145,7 @@
                                         UNITARIO:</label>
                                     <span class="input-group-text" id="spanpreciounitario"></span>
                                     <input type="number" name="preciounitariomo" min="0" step="0.01"
-                                        id="preciounitariomo" class="form-control borde" />
+                                        id="preciounitariomo" class="form-control " />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -156,7 +154,7 @@
                                         name="labelservicio">SERVICIO ADICIONAL:</label>
                                     <span class="input-group-text" id="spanservicio"></span>
                                     <input type="number" name="servicio" min="0" step="0.01"
-                                        id="servicio"class="form-control borde" />
+                                        id="servicio"class="form-control " />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -165,13 +163,13 @@
                                         PRODUCTO:</label>
                                     <span class="input-group-text" id="spanpreciototal"></span>
                                     <input type="number" name="preciofinal" min="0" step="0.01"
-                                        id="preciofinal" readonly class="form-control borde" />
+                                        id="preciofinal" readonly class="form-control " />
                                 </div>
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
                                 <input type="text" name="observacionproducto" id="observacionproducto"
-                                    class="form-control borde gui-input" />
+                                    class="form-control  gui-input" />
                             </div>
                             <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i>
                                 Agregar Producto a la Venta</button>

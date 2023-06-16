@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -30,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label is-required">PRODUCTO</label>
-                                <select class="form-select select2 borde" name="product_id" required>
+                                <select class="form-select select2 " name="product_id" required>
                                     <option value="" disabled>Seleccione una opción</option>
                                     @foreach ($products as $product)
                                         <option value="{{ $product->id }}"
@@ -42,7 +40,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">STOCK MINIMO</label>
                                 <input type="number" name="stockminimo" value="{{ $inventario->stockminimo }}"
-                                    class="form-control borde" required />
+                                    class="form-control " required />
                                 @error('stockminimo')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -57,7 +55,7 @@
                             <h5>Agregar Detalle de Inventario</h5>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">EMPRESA</label>
-                                <select class="form-select select2 borde" name="empresa" id="empresa">
+                                <select class="form-select select2 " name="empresa" id="empresa">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         @php $conte=0; @endphp
@@ -80,7 +78,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">STOCK POR EMPRESA</label>
-                                <input type="number" name="stockempresa" id="stockempresa" class="form-control borde" />
+                                <input type="number" name="stockempresa" id="stockempresa" class="form-control " />
                                 @error('stockempresa')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

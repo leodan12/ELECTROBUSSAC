@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -30,7 +28,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="name" class="form-control borde" required />
+                                <input type="text" name="name" class="form-control " required />
                                 @error('name')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

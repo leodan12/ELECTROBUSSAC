@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -28,31 +26,31 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">Nombre</label>
-                                <input type="text" name="nombre" class="form-control borde" required />
+                                <input type="text" name="nombre" class="form-control " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">RUC o DNI</label>
-                                <input type="number" name="ruc" id="ruc" class="form-control borde" required />
+                                <input type="number" name="ruc" id="ruc" class="form-control " required />
                                 @error('ruc')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Direccion</label>
-                                <input type="text" name="direccion" class="form-control borde" />
+                                <input type="text" name="direccion" class="form-control " />
 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Telefono</label>
-                                <input type="text" name="telefono" class="form-control borde" />
+                                <input type="text" name="telefono" class="form-control " />
 
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control borde" />
+                                <input type="email" name="email" class="form-control " />
 
                             </div>
                             <div class="col-md-12 mb-3">

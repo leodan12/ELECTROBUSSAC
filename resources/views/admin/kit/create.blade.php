@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+ 
 @section('content')
 
     <div class="row">
@@ -38,21 +36,21 @@
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" class="form-control borde " required />
+                                <input type="text" name="nombre" class="form-control  " required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CÓDIGO</label>
-                                <input type="text" name="codigo" class="form-control borde " />
+                                <input type="text" name="codigo" class="form-control  " />
 
                             </div>
 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TASA CAMBIO</label>
                                 <input type="number" value="3.71" name="tasacambio" min="0" step="0.01"
-                                    class="form-control borde" />
+                                    class="form-control " />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">Tipo de Moneda</label>
@@ -70,7 +68,7 @@
                                     <label class="form-label input-group is-required">PRECIO SIN IGV </label>
                                     <span class="input-group-text" id="spanNoIGV"></span>
                                     <input type="number" name="NoIGV" id="NoIGV" min="0.1" step="0.01"
-                                        class="form-control borde " required />
+                                        class="form-control  " required />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -78,7 +76,7 @@
                                     <label class="form-label input-group is-required">PRECIO CON IGV </label>
                                     <span class="input-group-text" id="spanSiIGV"></span>
                                     <input type="number" name="SiIGV" id="SiIGV" min="0.1" step="0.01"
-                                        class="form-control borde " required readonly />
+                                        class="form-control  " required readonly />
                                 </div>
                             </div>
 
@@ -93,28 +91,28 @@
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
-                                    class="form-control borde" />
+                                    class="form-control " />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
-                                    class="form-control borde" />
+                                    class="form-control " />
                             </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
-                                    class="form-control borde" />
+                                    class="form-control " />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
-                                    class="form-control borde" />
+                                    class="form-control " />
                             </div>
                             <hr>
                             <h4>Agregar Detalle de la Compra</h4>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">PRODUCTO</label>
-                                <select class="form-select select2 borde" name="product" id="product" disabled>
+                                <select class="form-select select2 " name="product" id="product" disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $product)
                                         <option id="miproducto{{ $product->id }}" value="{{ $product->id }}"
@@ -128,7 +126,7 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" id="labelcantidad">CANTIDAD</label>
                                 <input type="number" name="cantidad" id="cantidad" min="1" step="1"
-                                    class="form-control borde" />
+                                    class="form-control " />
                                 @error('cantidad')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -139,7 +137,7 @@
                                         (REFERENCIAL):</label>
                                     <span class="input-group-text" id="spanpreciounitarioref"></span>
                                     <input type="number" name="preciounitario" min="0" step="0.01"
-                                        id="preciounitario" readonly class="form-control borde" />
+                                        id="preciounitario" readonly class="form-control " />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -148,7 +146,7 @@
                                         UNITARIO:</label>
                                     <span class="input-group-text" id="spanpreciounitario"></span>
                                     <input type="number" name="preciounitariomo" min="0" step="0.01"
-                                        id="preciounitariomo" class="form-control borde" />
+                                        id="preciounitariomo" class="form-control " />
                                 </div>
                             </div>
 
@@ -158,7 +156,7 @@
                                         PRODUCTO:</label>
                                     <span class="input-group-text" id="spanpreciototal"></span>
                                     <input type="number" name="preciofinal" min="0" step="0.01"
-                                        id="preciofinal" readonly class="form-control borde" />
+                                        id="preciofinal" readonly class="form-control " />
                                 </div>
                             </div>
 
