@@ -33,9 +33,8 @@
             justify-content: center;
         }
     </style>
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
     
-    <script src="{{ asset('admin/chartjs.min.js') }}"></script>
+    <script src="{{ asset('admin/jsusados/chartjs.min.js') }}"></script>
 @endpush
 @section('content')
     <div class="row">

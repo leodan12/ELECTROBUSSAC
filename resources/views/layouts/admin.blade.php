@@ -21,11 +21,12 @@
     <!-- endinject -->
 
     {{-- librerias para el datatables server side --}}
+    <link rel="stylesheet" href="{{ asset('admin/jsusados/datatables.min.css') }}">
     {{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"
         rel="stylesheet" /> --}}
-    <link
+    {{-- <link
         href="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/r-2.4.1/datatables.min.css"
-        rel="stylesheet" />
+        rel="stylesheet" /> --}}
 
 
 
@@ -59,14 +60,16 @@
 
 
     {{-- librerias para el datatables serverside --}}
+    <script src="{{ asset('admin/jsusados/datatables.min.js') }}"></script>
+
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
      --}}
-    <script
+    {{-- <script
         src="https://cdn.datatables.net/v/bs5/jq-3.6.0/jszip-2.5.0/dt-1.13.4/b-2.3.6/b-colvis-2.3.6/b-html5-2.3.6/r-2.4.1/datatables.min.js">
-    </script>
+    </script> --}}
 
     <!-- js para la alerta-->
-    <script src="{{ asset('admin/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('admin/jsusados/sweetalert.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('admin/css/select2.min.css') }}" />
     <script src="{{ asset('admin/js/select2.min.js') }}"></script> 
 

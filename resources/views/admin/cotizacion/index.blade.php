@@ -210,7 +210,7 @@
     </div>
 @endsection
 @push('script')
-    <script src="{{ asset('admin/midatatable.js') }}"></script>
+    <script src="{{ asset('admin/jsusados/midatatable.js') }}"></script>
     <script>
         $(document).ready(function() {
             var tabla = "#mitabla";

@@ -7,7 +7,7 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
         ajax: ruta,
         dataType: 'json',
         type: "POST",
-        columns: columnas, 
+        columns: columnas,
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",
@@ -53,7 +53,7 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
     });
 }
 
-function recargartabla(){
+function recargartabla() {
     mitabla.ajax.reload(null, false);
 }
 
@@ -88,6 +88,7 @@ function inicializartabla1(inicializart) {
             },
             "order": [[0, "desc"]],
             "pageLength": 5,
+            "aLengthMenu": [[5, 10, 25, 50], [5, 10, 25, 50]],
             scrollX: true,
         });
     }

@@ -49,7 +49,7 @@
 @endsection
 @push('script')
     
-     <script src="{{ asset('admin/midatatable.js') }}"></script>
+     <script src="{{ asset('admin/jsusados/midatatable.js') }}"></script>
      <script>
          var numeroeliminados = 0;
          $(document).ready(function() {

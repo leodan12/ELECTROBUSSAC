@@ -855,7 +855,7 @@ class VentaController extends Controller
                 $company = Company::find($venta->company_id);
                 $cliente = Cliente::find($venta->cliente_id);
                 if ($cliente && $company) {
-                    $this->crearhistorial('eliminar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
+                    $this->crearhistorial('editar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
                 }
                 return "1";
             } else {
@@ -876,7 +876,7 @@ class VentaController extends Controller
                 $company = Company::find($venta->company_id);
                 $cliente = Cliente::find($venta->cliente_id);
                 if ($cliente && $company) {
-                    $this->crearhistorial('eliminar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
+                    $this->crearhistorial('editar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
                 }
                 return "1";
             } else {

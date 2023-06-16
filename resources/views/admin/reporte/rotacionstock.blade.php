@@ -104,7 +104,7 @@
 
 
 @push('script')
-    <script src="{{ asset('admin/midatatable.js') }}"></script>
+    <script src="{{ asset('admin/jsusados/midatatable.js') }}"></script>
     <script type="text/javascript">
         var contini = 0;
         var contini2 = 0;
