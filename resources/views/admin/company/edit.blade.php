@@ -95,7 +95,7 @@
                                     </div>
                                     <div class="col-md-12 mb-3">
                                         <label class="form-label">Telefono</label>
-                                        <input type="number" name="telefono" class="form-control  "
+                                        <input type="text" name="telefono" class="form-control  "
                                             value="{{ $company->telefono }}" />
 
                                     </div>

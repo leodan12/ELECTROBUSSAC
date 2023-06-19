@@ -30,50 +30,66 @@
                                     data-show-subtext="true" data-live-search="true">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->nombre }}</option>
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->nombre }}</option>
                                     @endforeach
                                 </select>
+                                @error('category_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" id="nombre" class="form-control   " required />
+                                <input type="text" name="nombre" id="nombre" class="form-control " required
+                                    value="{{ old('nombre') }}" />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CÓDIGO</label>
-                                <input type="text" name="codigo" class="form-control  " />
-
+                                <input type="text" name="codigo" class="form-control " value="{{ old('codigo') }}" />
+                                @error('codigo')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">UNIDAD</label>
-                                <input type="text" name="unidad" class="form-control  " required />
+                                <input type="text" name="unidad" class="form-control " value="{{ old('unidad') }}"
+                                    required />
+                                @error('unidad')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
-                            {{-- <div class="col-md-4 mb-3">
-                                <label class="form-label">UND</label>
-                                <input type="text" name="und" class="form-control  " />
-                            </div> --}}
+
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">Tipo de Moneda</label>
                                 <select name="moneda" id="moneda" class="form-select" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
-                                    <option value="dolares">Dolares Americanos</option>
-                                    <option value="soles">Soles</option>
+                                    <option value="dolares" {{ old('moneda') == 'dolares' ? 'selected' : '' }}>Dolares
+                                        Americanos</option>
+                                    <option value="soles" {{ old('moneda') == 'soles' ? 'selected' : '' }}>Soles</option>
                                 </select>
-                                @error('tipo')
+                                @error('moneda')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO SIN IGV</label>
                                 <input type="number" name="NoIGV" id="cantidad" min="0" step="0.01"
-                                    class="form-control " required />
+                                    class="form-control " required value="{{ old('NoIGV') }}" />
+                                @error('NoIGV')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO CON IGV</label>
                                 <input type="number" name="SiIGV" id="SiIGV" min="0" step="0.01" readonly
-                                    class="form-control " required />
+                                    class="form-control " required value="{{ old('SiIGV') }}" />
+                                @error('SiIGV')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <input class="form-check-input" type="checkbox" value="" name="precioxmayor"
@@ -86,22 +102,22 @@
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('cantidad2') }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('precio2') }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('cantidad3') }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('precio3') }}" />
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -145,12 +161,7 @@
             $("#precio3").change(function() {
                 miprecio3 = document.getElementById('precio3').value;
             });
-            //document.getElementsByClassName("select2")[0].style.backgroundColor = "green";
-            // var cat = document.getElementById("category_id").style.backgroundColor = "green";
-            // var moneda = document.getElementById("moneda") ;
-            // moneda.style.setProperty("line-height", 2); 
-            // var c = document.getElementById("category_id") ;
-            // c.style.setProperty("line-height", 2); 
+
 
         });
 

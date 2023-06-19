@@ -11,7 +11,7 @@ use App\Models\Detalleingreso;
 use App\Models\Detalleventa;
 use App\Models\Detallecotizacion;
 use Illuminate\Http\Request;
-use App\Http\Requests\ProductFormRequest;
+use App\Http\Requests\KitFormRequest;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
@@ -71,23 +71,24 @@ class DetallekitController extends Controller
         return view('admin.kit.create', compact('categories', 'products'));
     }
 
-    public function store(Request $request)
+    public function store(KitFormRequest $request)
     {
+        $validatedData = $request->validated();
 
         $producto = new Product;
-        $producto->category_id = $request->category_id;
-        $producto->nombre = $request->nombre;
-        $producto->codigo = $request->codigo;
+        $producto->category_id = $validatedData['category_id'];
+        $producto->nombre = $validatedData['nombre'];
+        $producto->codigo = $validatedData['codigo'];
         $producto->unidad = "unidad";
         // $producto->und = "unidad";
         $producto->tipo = "kit";
         $producto->unico = 0;
-        $producto->maximo = $request->NoIGV;
-        $producto->minimo = $request->NoIGV;
-        $producto->moneda = $request->moneda;
-        $producto->tasacambio = $request->tasacambio;
-        $producto->NoIGV = $request->NoIGV;
-        $producto->SiIGV = $request->SiIGV;
+        $producto->maximo = $validatedData['NoIGV'];
+        $producto->minimo = $validatedData['NoIGV'];
+        $producto->moneda = $validatedData['moneda'];
+        $producto->NoIGV = $validatedData['NoIGV'];
+        $producto->SiIGV = $validatedData['SiIGV'];
+        $producto->tasacambio = $request->tasacambio; 
         $producto->status =  '0';
         if ($request->cantidad2 != null && $request->precio2 != null) {
             $producto->cantidad2 = $request->cantidad2;

@@ -76,7 +76,7 @@ class ProductController extends Controller
         $product = new Product;
         $product->category_id = $validatedData['category_id'];
         $product->nombre = $validatedData['nombre'];
-        $product->codigo = $request->codigo;
+        $product->codigo = $validatedData['codigo'];
         $product->unidad = $validatedData['unidad'];
         // $product->und = $request->und;
         $product->tipo = "estandar";

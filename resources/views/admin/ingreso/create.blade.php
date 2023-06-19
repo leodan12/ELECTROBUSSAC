@@ -1,5 +1,5 @@
 @extends('layouts.admin')
- 
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -82,8 +82,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">PROVEEDOR</label>
-                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required
-                                    disabled>
+                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
 
                                 </select>
@@ -115,9 +114,10 @@
                                 <select class="form-select select2 " name="product" id="product" disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($products as $product)
-                                        <option id="miproducto{{ $product->id }}" value="{{ $product->id }}" data-name="{{ $product->nombre }}"
-                                            data-moneda="{{ $product->moneda }}" data-tipo="{{ $product->tipo }}"
-                                            {{-- data-stock="{{ $product->stockempresa }}" --}} data-price="{{ $product->NoIGV }}">
+                                        <option id="miproducto{{ $product->id }}" value="{{ $product->id }}"
+                                            data-name="{{ $product->nombre }}" data-moneda="{{ $product->moneda }}"
+                                            data-tipo="{{ $product->tipo }}" {{-- data-stock="{{ $product->stockempresa }}" --}}
+                                            data-price="{{ $product->NoIGV }}">
                                             {{ $product->nombre }}</option>
                                     @endforeach
                                 </select>
@@ -244,6 +244,7 @@
         var indicex = 0;
         var tipoproducto = "";
         var idproducto = 0;
+        var misproductos = @json($products);
 
         $(document).ready(function() {
             $('.toast').toast();
@@ -253,7 +254,7 @@
                 var company = $(this).val();
                 $('#cliente_id').removeAttr('disabled');
                 var miurl = "{{ url('admin/venta/comboempresacliente') }}";
-                $.get(miurl +'/'+ company, function(data) {
+                $.get(miurl + '/' + company, function(data) {
                     var producto_select =
                         '<option value="" disabled selected>Seleccione una opcion</option>'
                     for (var i = 0; i < data.length; i++) {
@@ -359,7 +360,7 @@
                             }
                             milista = milista + '-' + data[i].cantidad + ' ' + data[i].producto +
                                 coma;
-                           
+
                         }
                         agregarFilasTabla(LVenta, puntos, milista);
                     });
@@ -522,10 +523,11 @@
                     } else {
                         monedaantigua = monedafactura;
                         monedafactura = $mimoneda;
-                        var indice3 = indicex;
+                        var indice3 = indice;
                         for (var i = 0; i < indice3; i++) {
                             eliminarTabla(i);
                         }
+                        habilitaroptionsproductos();
                     }
                 });
                 limpiarinputs();
@@ -550,7 +552,7 @@
                 '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] + '"required>' +
                 simbolomonedafactura + LVenta[5] +
                 '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' +
-                indice+','+LVenta[0] + ')" data-id="0">ELIMINAR</button></td></tr>';
+                indice + ',' + LVenta[0] + ')" data-id="0">ELIMINAR</button></td></tr>';
 
             $("#detallesVenta>tbody").append(filaDetalle);
 
@@ -565,7 +567,7 @@
             botonguardar(funcion);
         }
 
-        function eliminarFila(ind,idproducto) {
+        function eliminarFila(ind, idproducto) {
             var resta = 0;
             //document.getElementById('preciot' + ind).value();
             resta = $('[id="preciof' + ind + '"]').val();
@@ -574,6 +576,7 @@
 
             $('#fila' + ind).remove();
             indice--;
+            indicex--;
             // damos el valor
             document.getElementById('costoventa').value = (ventatotal.toFixed(2));
             //alert(resta);
@@ -604,6 +607,11 @@
             return false;
         }
 
+        function habilitaroptionsproductos() {
+            for (var i = 0; i < misproductos.length; i++) {
+                document.getElementById('miproducto' + misproductos[i].id).disabled = false;
+            }
+        }
 
         function botonguardar(funcion) {
 

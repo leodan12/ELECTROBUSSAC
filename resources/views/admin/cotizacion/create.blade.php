@@ -1,5 +1,5 @@
 @extends('layouts.admin')
- 
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -51,8 +51,8 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.01"
-                                    class="form-control " min="1" />
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.01" class="form-control "
+                                    min="1" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
@@ -79,8 +79,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2  " name="company_id" id="company_id" required
-                                    disabled>
+                                <select class="form-select select2  " name="company_id" id="company_id" required disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -90,8 +89,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required
-                                    disabled>
+                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required disabled>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                 </select>
                             </div>
@@ -115,8 +113,8 @@
                             <div class="col-md-4 mb-3">
                                 <div class="input-group">
                                     <label class="form-label input-group">PERSONA QUE SOLICITÓ LA COTIZACIÓN</label>
-                                    <input type="text" name="persona" id="persona"
-                                        class="form-control  required" placeholder="Ejemplo: Sr. Jose Sanchez" />
+                                    <input type="text" name="persona" id="persona" class="form-control  required"
+                                        placeholder="Ejemplo: Sr. Jose Sanchez" />
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3" id="divdiascredito">
@@ -153,8 +151,8 @@
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label" name="labelproducto"
                                                         id="labelproducto">PRODUCTO</label>
-                                                    <select class="form-select select2 " name="product"
-                                                        id="product" disabled>
+                                                    <select class="form-select select2 " name="product" id="product"
+                                                        disabled>
                                                         <option value="" selected disabled>Seleccione una opción
                                                         </option>
                                                     </select>
@@ -182,8 +180,7 @@
                                                             id="labelpreciounitario">PRECIO UNITARIO</label>
                                                         <span class="input-group-text" id="spanpreciounitario"></span>
                                                         <input type="number" name="preciounitariomo" min="0"
-                                                            step="0.01" id="preciounitariomo"
-                                                            class="form-control " />
+                                                            step="0.01" id="preciounitariomo" class="form-control " />
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4 mb-3">
@@ -318,7 +315,7 @@
         var monedaantigua = 0;
         var simbolomonedaproducto = "";
         var simbolomonedafactura = "";
-        var indicex = 0;
+        var indicehp = 0;
         var conigv = "SI";
         var indicecondicion = 0;
         var tipoproducto = "";
@@ -332,6 +329,7 @@
         var miprecio3 = null;
         var miprecio = 0;
         var mipreciounit = "";
+        var misproductos;
         var hoy = new Date();
         var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy
             .getDate()).padStart(2, '0');
@@ -418,19 +416,21 @@
         $("#company_id").change(function() {
             var company = $(this).val();
             $('#product').removeAttr('disabled');
+            $('#product').select2("destroy");
             var url3 = "{{ url('admin/venta/productosxempresa') }}";
             $.get(url3 + '/' + company, function(data) {
+                misproductos = data; 
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
-                    producto_select += '<option id="miproducto' + data[i].id + '" id="productoxempresa' +
-                        data[i].id + '" value="' + data[i]
-                        .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +  
+                    producto_select += '<option id="miproducto' + data[i].id + '" value="' + data[i]
+                        .id + '" data-tipo="' + data[i].tipo + '" data-name="' + data[i].nombre +
                         '"data-stock="' + data[i].stockempresa + '" data-moneda="' + data[i].moneda +
                         '"data-cantidad2="' + data[i].cantidad2 + '" data-precio2="' + data[i].precio2 +
                         '"data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
+                habilitaroptionsproductos();
             });
             $('#cliente_id').removeAttr('disabled');
             var url4 = "{{ url('admin/venta/comboempresacliente') }}";
@@ -443,12 +443,13 @@
                 $("#cliente_id").html(producto_select);
             });
             if (indice > 0) {
-                var indice2 = indicex;
+                var indice2 = indice;
                 for (var i = 0; i < indice2; i++) {
-                    eliminarFila(i);
+                    eliminarTabla(i);
                 }
             }
             limpiarinputs();
+            $('#product').select2({});
         });
         $("#moneda").change(function() {
             $('#company_id').removeAttr('disabled');
@@ -468,10 +469,15 @@
                 } else {
                     monedaantigua = monedafactura;
                     monedafactura = $mimoneda;
-                    var indice3 = indicex;
+                    var indice3 = indice;
                     for (var i = 0; i < indice3; i++) {
                         eliminarTabla(i);
                     }
+                    if (indicehp > 0) {
+                        habilitaroptionsproductos();
+                    }
+                    indicehp++;
+
                 }
             });
             limpiarinputs();
@@ -737,7 +743,6 @@
             $("#detallesVenta>tbody").append(filaDetalle);
 
             indice++;
-            indicex++;
             //alert(indice); 
             ventatotal = parseFloat(ventatotal) + parseFloat(preciototalI);
             limpiarinputs();
@@ -896,6 +901,12 @@
                 $("#btnguardar").prop("disabled", true);
             } else if (estadoguardar > 0) {
                 $("#btnguardar").prop("disabled", false);
+            }
+        }
+
+        function habilitaroptionsproductos() {
+            for (var i = 0; i < misproductos.length; i++) { 
+                document.getElementById('miproducto' + misproductos[i].id).disabled = false;
             }
         }
     </script>

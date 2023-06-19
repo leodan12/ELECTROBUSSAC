@@ -1,5 +1,5 @@
 @extends('layouts.admin')
- 
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -25,7 +25,7 @@
                         <h4>AÑADIR VENTA &nbsp;&nbsp;&nbsp;
                             <label>¿REGISTRAR TAMBIEN INGRESO?</label>
                             {{-- <input class="form-check-input" type="checkbox" name="ingreso" id="ingreso" /> --}}
-                            <select name="ingreso" id="ingreso"  style="border-radius: 5px">
+                            <select name="ingreso" id="ingreso" style="border-radius: 5px">
                                 <option value="NO" selected>NO</option>
                                 <option value="SI">SI</option>
                             </select>
@@ -87,13 +87,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.01"
-                                    class="form-control " min="1" />
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.01" class="form-control "
+                                    min="1" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2  " name="company_id" id="company_id" required
-                                    disabled>
+                                <select class="form-select select2  " name="company_id" id="company_id" required disabled>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}">{{ $company->nombre }}</option>
@@ -102,8 +101,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">CLIENTE</label>
-                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required
-                                    disabled>
+                                <select class="form-select select2  " name="cliente_id" id="cliente_id" required disabled>
                                     <option value="" selected disabled>Seleccione una opción</option>
                                 </select>
                             </div>
@@ -111,8 +109,8 @@
                                 <div class="input-group">
                                     <label class="form-label input-group is-required">PRECIO DE LA VENTA </label>
                                     <span class="input-group-text" id="spancostoventa"></span>
-                                    <input type="number" name="costoventa" id="costoventa" min="0.1"
-                                        step="0.01" class="form-control  required" required readonly />
+                                    <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
+                                        class="form-control  required" required readonly />
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -267,7 +265,9 @@
         var micantidad3 = null;
         var miprecio3 = null;
         var miprecio = 0;
+        var indicehp = 0;
         var mipreciounit = "";
+        var misproductos;
         document.getElementById("validacionfactura").style.display = 'none';
         $(document).ready(function() {
             $('.toast').toast();
@@ -369,8 +369,10 @@
             verificarfactura(company, factura);
 
             $('#product').removeAttr('disabled');
+            $('#product').select2("destroy");
             var urlvent = "{{ url('admin/venta/productosxempresa') }}";
             $.get(urlvent + '/' + company, function(data) {
+                misproductos = data;
                 var producto_select = '<option value="" disabled selected>Seleccione una opción</option>'
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].stockempresa == null) {
@@ -384,16 +386,18 @@
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
                 $("#product").html(producto_select);
+                habilitaroptionsproductos();
             });
 
             clientesxempresa(company);
             if (indice > 0) {
                 var indice2 = indicex;
                 for (var i = 0; i < indice2; i++) {
-                    eliminarFila(i);
+                    eliminarTabla(i);
                 }
             }
             limpiarinputs();
+            $('#product').select2({});
         });
 
         function clientesxempresa(idempresa) {
@@ -643,7 +647,7 @@
                 '"required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
                 '"required>' + simbolomonedafactura + LVenta[5] +
-                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice+','+ LVenta[0]+
+                '</td><td><button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + LVenta[0] +
                 ')" data-id="0">ELIMINAR</button></td></tr>';
             $("#detallesVenta>tbody").append(filaDetalle);
             $('.toast').toast('hide');
@@ -700,11 +704,15 @@
                         eliminarTabla(i);
                     }
                 }
+                if (indicehp > 0) {
+                    habilitaroptionsproductos();
+                }
+                indicehp++;
             });
             limpiarinputs();
         });
 
-        function eliminarFila(ind,idproducto) {
+        function eliminarFila(ind, idproducto) {
             var resta = 0;
             resta = $('[id="preciof' + ind + '"]').val();
             ventatotal = (ventatotal - resta).toFixed(2);
@@ -780,6 +788,12 @@
             monedaproducto = "";
             simbolomonedaproducto = "";
             $('.toast').toast('hide');
+        }
+
+        function habilitaroptionsproductos() {
+            for (var i = 0; i < misproductos.length; i++) { 
+                document.getElementById('productoxempresa' + misproductos[i].id).disabled = false;
+            }
         }
     </script>
 @endpush

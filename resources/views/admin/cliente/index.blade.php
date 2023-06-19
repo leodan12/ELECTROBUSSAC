@@ -30,8 +30,8 @@
                     <div class="card-body">
 
                         <table class="table table-bordered table-striped display " id="mitabla" name="mitabla"
-                            style="width: 100%">
-                            <thead class="fw-bold text-primary">
+                           >
+                            <thead class="fw-bold text-primary" >
                                 <tr>
                                     <th>ID</th>
                                     <th>NOMBRE</th>
@@ -106,7 +106,7 @@
                                 <div class="modal-body">
 
                                     <div class="table-responsive">
-                                        <table class="table table-row-bordered gy-5 gs-5" style="width: 100%"
+                                        <table class="table table-row-bordered gy-5 gs-5" 
                                             id="mitablarestore" name="mitablarestore">
                                             <thead class="fw-bold text-primary">
                                                 <tr>

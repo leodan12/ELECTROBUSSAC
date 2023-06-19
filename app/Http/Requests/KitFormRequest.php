@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductFormRequest extends FormRequest
+class KitFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -37,11 +37,7 @@ class ProductFormRequest extends FormRequest
             'codigo' => [ 
                 'nullable',
                 Rule::unique('products')->ignore($this->route('product')),
-            ], 
-            'unidad' => [
-                'required',
-                'string'
-            ],
+            ],  
             'moneda' => [
                 'required',
                 'string'
@@ -72,12 +68,11 @@ class ProductFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'nombre.required' => 'Agrega el Nombre del Producto.',
-            'unidad.required' => 'Agrega la Unidad del Producto.',
-            'moneda.required' => 'Agrega el Tipo de Moneda del Producto.',
-            'NoIGV.required' => 'Agregar el Precio Sin IGV del Producto.',
-            'SiIGV.required' => 'Agregar el Precio Con IGV del Producto.',
-            'nombre.unique' => 'El Nombre del Producto ya ha sido registrada.',  
+            'nombre.required' => 'Agrega el Nombre del Kit.', 
+            'moneda.required' => 'Agrega el Tipo de Moneda del Kit.',
+            'NoIGV.required' => 'Agregar el Precio Sin IGV del Kit.',
+            'SiIGV.required' => 'Agregar el Precio Con IGV del Kit.',
+            'nombre.unique' => 'El Nombre del Kit ya ha sido registrada.',  
             'NoIGV.min' => 'El Precio minimo sin IGV  debe ser mayor a 0.',  
             'SiIGV.min' => 'El Precio minimo con IGV debe ser mayor a 0.',  
             'codigo.unique' => 'El Codigo ya esta registrado.',  

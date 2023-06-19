@@ -24,9 +24,18 @@ class CategoryFormRequest extends FormRequest
         return [
             'nombre' => [
                 'required',
-                'string'
+                'string',
+                'unique:categories'
             ],
 
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'nombre.required' => 'Agrega el Nombre de la categoria.', 
+            'nombre.unique' => 'El Nombre de la categoria ya se ha registrado.',  
+            'nombre.string' => 'El nombre debe de ser un string.', 
         ];
     }
 }

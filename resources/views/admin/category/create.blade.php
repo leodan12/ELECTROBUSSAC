@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label is-required">Nombre</label>
-                                <input type="text" name="nombre" class="form-control " required />
+                                <input type="text" name="nombre" class="form-control " required value="{{ old('nombre') }}" />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror

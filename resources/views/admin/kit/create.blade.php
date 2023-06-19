@@ -1,5 +1,5 @@
 @extends('layouts.admin')
- 
+
 @section('content')
 
     <div class="row">
@@ -30,36 +30,42 @@
                                     data-show-subtext="true" data-live-search="true">
                                     <option value="" selected disabled>Seleccione una opción</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->nombre }}</option>
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->nombre }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" class="form-control  " required />
+                                <input type="text" name="nombre" class="form-control  " required
+                                    value="{{ old('nombre') }}" />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">CÓDIGO</label>
-                                <input type="text" name="codigo" class="form-control  " />
-
+                                <input type="text" name="codigo" class="form-control  " value="{{ old('codigo') }}" />
+                                @error('codigo')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
-
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TASA CAMBIO</label>
                                 <input type="number" value="3.71" name="tasacambio" min="0" step="0.01"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('tasacambio') }}" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">Tipo de Moneda</label>
                                 <select name="moneda" id="moneda" class="form-select" required>
                                     <option value="" selected disabled>Seleccion una opción</option>
-                                    <option value="dolares" data-moneda="dolares">Dolares Americanos</option>
-                                    <option value="soles" data-moneda="soles">Soles</option>
+                                    <option value="dolares" {{ old('moneda') == 'dolares' ? 'selected' : '' }}
+                                        data-moneda="dolares">Dolares Americanos</option>
+                                    <option value="soles" {{ old('moneda') == 'soles' ? 'selected' : '' }}
+                                        data-moneda="soles">Soles</option>
                                 </select>
-                                @error('tipo')
+                                @error('moneda')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
@@ -68,7 +74,10 @@
                                     <label class="form-label input-group is-required">PRECIO SIN IGV </label>
                                     <span class="input-group-text" id="spanNoIGV"></span>
                                     <input type="number" name="NoIGV" id="NoIGV" min="0.1" step="0.01"
-                                        class="form-control  " required />
+                                        class="form-control  " required value="{{ old('NoIGV') }}" />
+                                    @error('NoIGV')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -76,7 +85,10 @@
                                     <label class="form-label input-group is-required">PRECIO CON IGV </label>
                                     <span class="input-group-text" id="spanSiIGV"></span>
                                     <input type="number" name="SiIGV" id="SiIGV" min="0.1" step="0.01"
-                                        class="form-control  " required readonly />
+                                        class="form-control  " required readonly value="{{ old('SiIGV') }}" />
+                                    @error('SiIGV')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                             </div>
 
@@ -91,22 +103,22 @@
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('cantidad2') }}"/>
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('precio2') }}"/>
                             </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('cantidad3') }}"/>
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
-                                    class="form-control " />
+                                    class="form-control " value="{{ old('precio3') }}"/>
                             </div>
                             <hr>
                             <h4>Agregar Detalle de la Compra</h4>
@@ -181,8 +193,7 @@
                                 </table>
                             </div>
                             <hr>
-
-
+                            
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end" name="btnguardar"
                                     id="btnguardar" disabled>Guardar</button>
@@ -214,6 +225,7 @@
         var micantidad3 = "";
         var miprecio2 = "";
         var miprecio3 = "";
+        var misproductos = @json($products);
 
         $(document).ready(function() {
             miprecioxmayor();
@@ -255,7 +267,12 @@
             }
         }
 
-
+        function habilitaroptionsproductos(){
+            for(var i=0; i< misproductos.length ; i++){
+                document.getElementById('miproducto' + misproductos[i].id).disabled = false;
+            }
+        }
+        
         function IGVtotal() {
             preciototal = 0;
             var cantidad = $('[name="NoIGV"]').val();
@@ -302,14 +319,15 @@
 
                 if (monedaantigua = 0) {
                     monedafactura = $mimoneda;
-                    monedaantigua = 1;
+                    monedaantigua = 1; 
                 } else {
                     monedaantigua = monedafactura;
                     monedafactura = $mimoneda;
-                    var indice3 = indicex;
+                    var indice3 = indice;
                     for (var i = 0; i < indice3; i++) {
                         eliminarTabla(i);
                     }
+                        habilitaroptionsproductos();
                 }
             });
             limpiarinputs();

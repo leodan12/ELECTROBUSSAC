@@ -76,7 +76,7 @@
                                                     </div>
                                                     <div class="col-md-6  mb-3" id="divtelefono">
                                                         <label for="vertelefono" class="col-form-label">TELEFONO:</label>
-                                                        <input type="number" class="form-control" id="vertelefono"
+                                                        <input type="text" class="form-control" id="vertelefono"
                                                             readonly>
                                                     </div>
                                                     <div class="col-md-6  mb-3" id="divemail">
