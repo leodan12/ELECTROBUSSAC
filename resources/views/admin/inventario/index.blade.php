@@ -373,11 +373,19 @@
                     },
                 ];
                 var btns = 'lfrtip';
-                numeroeliminados = @json($datoseliminados);
-                mostrarmensaje(numeroeliminados);
-                numerosinstock = @json($productossinstock);
-                mostrarmensajetitulo(numerosinstock);
                 iniciarTablaIndex(tabla, ruta, columnas, btns);
+
+                var nroeliminados = "{{ url('admin/inventario/nroeliminados') }}";
+                $.get(nroeliminados, function(data) {
+                    numeroeliminados = data;
+                    mostrarmensaje(numeroeliminados);
+                });
+                var nroeliminados = "{{ url('admin/inventario/numerosinstock') }}";
+                $.get(nroeliminados, function(data) {
+                    numerosinstock = data;
+                    mostrarmensajetitulo(numerosinstock);
+                });
+
             });
             //para borrar un registro de la tabla
             $(document).on('click', '.btnborrar', function(event) {
@@ -666,7 +674,8 @@
                             nrostockminimo++;
                         }
                         const modalTitle = modalsinstock.querySelector('.modal-title');
-                        modalTitle.textContent = `Tienes ${nrosinstock} productos sin stock y ${nrostockminimo} con stock minimo`;
+                        modalTitle.textContent =
+                            `Tienes ${nrosinstock} productos sin stock y ${nrostockminimo} con stock minimo`;
 
                         filaDetalle = colorfondo +
                             '<td>' + data[i].id +

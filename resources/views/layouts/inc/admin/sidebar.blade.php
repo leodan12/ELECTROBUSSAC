@@ -1,4 +1,4 @@
-<nav class="sidebar sidebar-offcanvas" id="sidebar"  >
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link" href="{{ url('admin/dashboard') }}">
@@ -110,24 +110,24 @@
             </div>
         </li>
         @if (auth()->user()->can('ver-reporte'))
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
-                aria-controls="ui-basic">
-                <i class="mdi mdi-chart-bar menu-icon"></i>
-                <span class="menu-title">REPORTES</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic1">
-                <ul class="flex-column sub-menu" style="list-style: none;">
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
-                                class="mdi mdi-chart-line menu-icon"></i>GRAFICOS</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
-                                class="mdi mdi-file-excel menu-icon"></i>DATOS VENTAS</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
-                                class="mdi mdi-timetable menu-icon"></i>ROTACION STOCK</a></li>
-                </ul>
-            </div>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
+                    aria-controls="ui-basic">
+                    <i class="mdi mdi-chart-bar menu-icon"></i>
+                    <span class="menu-title">REPORTES</span>
+                    <i class="menu-arrow"></i>
+                </a>
+                <div class="collapse" id="ui-basic1">
+                    <ul class="flex-column sub-menu" style="list-style: none;">
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
+                                    class="mdi mdi-chart-line menu-icon"></i>GRAFICOS</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
+                                    class="mdi mdi-file-excel menu-icon"></i>DATOS VENTAS</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
+                                    class="mdi mdi-timetable menu-icon"></i>ROTACION STOCK</a></li>
+                    </ul>
+                </div>
+            </li>
         @endif
         @if (auth()->user()->can('ver-usuario') ||
                 auth()->user()->can('crear-usuario') ||
@@ -160,7 +160,11 @@
                 </a>
             </li>
         @endif
-
+        @if (auth()->user()->can('ver-venta') ||
+                auth()->user()->can('eliminar-venta'))
+            <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ventasantiguas') }}"><i
+                        class="mdi mdi-av-timer menu-icon"></i>VENTAS ANTIGUAS</a></li>
+        @endif
 
     </ul>
 </nav>

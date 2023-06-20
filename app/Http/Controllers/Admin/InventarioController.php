@@ -30,22 +30,6 @@ class InventarioController extends Controller
     use HistorialTrait;
     public function index(Request $request)
     {
-        $datoseliminados = DB::table('inventarios as i')
-            ->where('i.status', '=', 1)
-            ->select('i.id', 'i.stockminimo', 'i.stockmaximo')
-            ->count();
-        $productossinstock = 0;
-        $sinstock = Inventario::all()->where('status', '=', 0);
-        $sinstock2 =  $sinstock->values()->all();
-        for ($i = 0; $i < count($sinstock2); $i++) {
-            for ($z = 0; $z < count($sinstock2); $z++) {
-                if ($sinstock2[$z]->id == $sinstock2[$i]->id) {
-                    if ($sinstock2[$z]->stockminimo >= $sinstock2[$i]->stocktotal) {
-                        $productossinstock++;
-                    }
-                }
-            }
-        }
 
         if ($request->ajax()) {
 
@@ -68,12 +52,35 @@ class InventarioController extends Controller
                 ->make(true);
         }
 
-
-        return view('admin.inventario.index', compact('datoseliminados', 'productossinstock'));
+        return view('admin.inventario.index');
     }
     public function index2()
     {
         return redirect('admin/inventario')->with('verstock', 'Ver');
+    }
+    public function nroeliminados()
+    {
+        $datoseliminados = DB::table('inventarios as i')
+            ->where('i.status', '=', 1)
+            ->select('i.id', 'i.stockminimo', 'i.stockmaximo')
+            ->count();
+        return $datoseliminados;
+    }
+    public function numerosinstock()
+    {
+        $productossinstock = 0;
+        $sinstock = Inventario::all()->where('status', '=', 0);
+        $sinstock2 =  $sinstock->values()->all();
+        for ($i = 0; $i < count($sinstock2); $i++) {
+            for ($z = 0; $z < count($sinstock2); $z++) {
+                if ($sinstock2[$z]->id == $sinstock2[$i]->id) {
+                    if ($sinstock2[$z]->stockminimo >= $sinstock2[$i]->stocktotal) {
+                        $productossinstock++;
+                    }
+                }
+            }
+        }
+        return $productossinstock;
     }
     public function create()
     {

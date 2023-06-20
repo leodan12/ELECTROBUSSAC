@@ -111,6 +111,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/inventario/showrestore', 'showrestore');
             Route::get('/inventario/restaurar/{idregistro}', 'restaurar');
             Route::get('/inventario/showsinstock', 'showsinstock');
+            Route::get('/inventario/nroeliminados', 'nroeliminados');
+            Route::get('/inventario/numerosinstock', 'numerosinstock');
         });
         //Ruta de la venta
         Route::controller(App\Http\Controllers\Admin\VentaController::class)->group(function () {
@@ -196,6 +198,13 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/historial', 'index')->name('historial.index');
             Route::get('/historial/{historial_id}/delete', 'destroy');
             Route::get('/historial/limpiartabla', 'limpiartabla');
+        });
+         //Ruta de las ventas antiguas
+         Route::controller(App\Http\Controllers\Admin\VentasantiguasController::class)->group(function () {
+            Route::get('/ventasantiguas', 'index')->name('ventasantiguas.index'); 
+            Route::get('ventasantiguas/{venta_id}/delete', 'destroy');
+            Route::get('/ventasantiguas/show/{id}', 'show'); //ver  
+            
         });
     });
 });
