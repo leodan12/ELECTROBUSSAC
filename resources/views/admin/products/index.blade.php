@@ -75,11 +75,7 @@
                                             <div class="col-sm-4   mb-3">
                                                 <label for="verunidad" class="col-form-label">UNIDAD:</label>
                                                 <input type="text" class="form-control" id="verunidad" readonly>
-                                            </div>
-                                            <div class="col-sm-4   mb-3">
-                                                <label for="verund" class="col-form-label">UND:</label>
-                                                <input type="text" class="form-control" id="verund" readonly>
-                                            </div>
+                                            </div> 
                                             <div class="col-sm-4   mb-3">
                                                 <label for="vermoneda" class="col-form-label">TIPO DE MONEDA:</label>
                                                 <input type="text" class="form-control" id="vermoneda" readonly>
@@ -287,8 +283,7 @@
                 document.getElementById("vercategoria").value = data.nombrecategoria;
                 document.getElementById("vernombre").value = data.nombre;
                 document.getElementById("vercodigo").value = data.codigo;
-                document.getElementById("verunidad").value = data.unidad;
-                document.getElementById("verund").value = data.und;
+                document.getElementById("verunidad").value = data.unidad; 
                 document.getElementById("vermoneda").value = data.moneda;
                 document.getElementById("vernoigv").value = data.NoIGV;
                 document.getElementById("versiigv").value = data.SiIGV;

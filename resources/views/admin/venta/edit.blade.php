@@ -684,28 +684,28 @@
                         }
                         milista = milista + '-' + data[i].cantidad + ' ' + data[i].producto + coma;
                         //agregar la resta para cadaa stock individual 
-                        modificarStock(data[i].id, data[i].cantidad, "restar");
+                        //modificarStock(data[i].id, data[i].cantidad, "restar");
                     }
-                    modificarStock(LVenta[0], LVenta[2], "restar");
+                   // modificarStock(LVenta[0], LVenta[2], "restar");
                     agregarFilasTabla(LVenta, puntos, milista);
                 });
             } else {
-                modificarStock(LVenta[0], LVenta[2], "restar");
+               // modificarStock(LVenta[0], LVenta[2], "restar");
                 agregarFilasTabla(LVenta, puntos, milista);
             }
         }
 
-        function modificarStock(idproducto, cantidad, operacion) {
-            //restar stock individual    
-            var product1 = document.getElementById('productoxempresa' + idproducto);
-            var stock = product1.dataset.stock;
-            if (operacion == "sumar") {
-                product1.setAttribute('data-stock', (stock + cantidad));
-            } else if (operacion == "restar") {
-                product1.setAttribute('data-stock', (stock - cantidad));
-            }
+        // function modificarStock(idproducto, cantidad, operacion) {
+        //     //restar stock individual    
+        //     var product1 = document.getElementById('productoxempresa' + idproducto);
+        //     var stock = product1.dataset.stock;
+        //     if (operacion == "sumar") {
+        //         product1.setAttribute('data-stock', (stock + cantidad));
+        //     } else if (operacion == "restar") {
+        //         product1.setAttribute('data-stock', (stock - cantidad));
+        //     }
 
-        }
+        //}
 
         function agregarFilasTabla(LVenta, puntos, milista) {
             filaDetalle = '<tr id="fila' + indice +

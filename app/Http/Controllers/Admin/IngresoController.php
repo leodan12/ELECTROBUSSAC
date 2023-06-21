@@ -634,7 +634,8 @@ class IngresoController extends Controller
             $midetalle = $detalleingreso;
             $ingreso = DB::table('detalleingresos as di')
                 ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-                ->select('di.cantidad', 'i.costoventa', 'di.preciofinal', 'i.id', 'di.product_id as idproducto', 'i.company_id as idempresa')
+                ->select('di.cantidad', 'i.costoventa', 'di.preciofinal', 'i.id', 'di.product_id as idproducto'
+                , 'i.company_id as idempresa' , 'i.cliente_id as idcliente')
                 ->where('di.id', '=', $id)->first();
             if ($detalleingreso->delete()) {
                 $costof = $ingreso->costoventa;
@@ -690,8 +691,8 @@ class IngresoController extends Controller
                         }
                     }
                 }
-                $company = Company::find($ingreso->company_id);
-                $cliente = Cliente::find($ingreso->cliente_id);
+                $company = Company::find($ingreso->idempresa);
+                $cliente = Cliente::find($ingreso->idcliente);
                 if ($cliente && $company) {
                     $this->crearhistorial('editar', $ingreso->id, $company->nombre, $cliente->nombre, 'ingresos');
                 }

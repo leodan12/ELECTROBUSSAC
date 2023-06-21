@@ -428,7 +428,7 @@
                 document.getElementById("verEmpresa").value = midata[0].company;
                 document.getElementById("verCliente").value = midata[0].cliente;
                 document.getElementById("verPagada").value = midata[0].pagada;
-                document.getElementById("verPrecioventa").value = (midata[0].costoventa).toFixed(2);
+                document.getElementById("verPrecioventa").value = (midata[0].costoventa);
                 if (midata[0].moneda == "dolares") {
                     document.getElementById('spancostoventa').innerHTML = "$";
                 } else if (midata[0].moneda == "soles") {

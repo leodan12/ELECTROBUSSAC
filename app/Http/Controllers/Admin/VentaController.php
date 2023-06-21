@@ -797,7 +797,8 @@ class VentaController extends Controller
             $midetalle = $detalleventa;
             $venta = DB::table('detalleventas as dv')
                 ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
-                ->select('dv.cantidad', 'v.costoventa', 'dv.preciofinal', 'v.id', 'v.company_id as idempresa', 'dv.product_id as idproducto')
+                ->select('dv.cantidad', 'v.costoventa', 'dv.preciofinal', 'v.id', 'v.company_id as idempresa',
+                 'dv.product_id as idproducto', 'v.cliente_id as idcliente')
                 ->where('dv.id', '=', $id)->first();
             if ($detalleventa->delete()) {
                 $costof = $venta->costoventa;
@@ -852,8 +853,8 @@ class VentaController extends Controller
                         }
                     }
                 }
-                $company = Company::find($venta->company_id);
-                $cliente = Cliente::find($venta->cliente_id);
+                $company = Company::find($venta->idempresa);
+                $cliente = Cliente::find($venta->idcliente);
                 if ($cliente && $company) {
                     $this->crearhistorial('editar', $venta->id, $company->nombre, $cliente->nombre, 'ventas');
                 }
