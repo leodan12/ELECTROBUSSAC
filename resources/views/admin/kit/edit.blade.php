@@ -54,7 +54,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" value="{{ $product->tasacambio }}"
-                                    min="0" step="0.01" class="form-control " required readonly />
+                                    min="0" step="0.001" class="form-control " required readonly />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>

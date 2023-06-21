@@ -38,7 +38,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <h5>Tienes {{ $sinnumero }} compras sin numero de factura</h5>
+                                <h5 id="ingresosinnumero"></h5>
                             </div>
                         </div>
 
@@ -309,10 +309,15 @@
 @push('script')
     <script src="{{ asset('admin/jsusados/midatatable.js') }}"></script>
     <script>
+        var idventa = "";
+        var inicializartabla = 0;
+        var numerocreditos = 0;
+
         $(document).ready(function() {
             if (mostrar == "SI") {
                 $('#modalCreditos1').modal('show');
             }
+
             var tabla = "#mitabla";
             var ruta = "{{ route('ingreso.index') }}"; //darle un nombre a la ruta index
             var columnas = [{
@@ -360,8 +365,17 @@
                 },
             ];
             var btns = 'lfrtip';
-
             iniciarTablaIndex(tabla, ruta, columnas, btns);
+
+            var nroeliminados = "{{ url('admin/ingreso/sinnumero') }}";
+            $.get(nroeliminados, function(data) { 
+                mostrarmensajesinfactura(data);
+            });
+
+            var sinstock = "{{ url('admin/ingreso/creditosxvencer') }}";
+            $.get(sinstock, function(data) { 
+                mostrarmensaje(data);
+            });
 
         });
         //para borrar un registro de la tabla
@@ -407,9 +421,7 @@
             });
         });
 
-        var idventa = "";
-        var inicializartabla = 0;
-        var numerocreditos = 0;
+
         //para el modal de ver venta
         const mimodal = document.getElementById('mimodal')
         mimodal.addEventListener('show.bs.modal', event => {
@@ -794,12 +806,6 @@
 
         }
 
-        $(document).ready(function() {
-            numerocreditos = @json($creditosxvencer);
-            mostrarmensaje(numerocreditos);
-
-        });
-
         function mostrarmensaje(numCred) {
             var registro = "REGISTRO DE INGRESOS: ";
             var tienes = "Tienes ";
@@ -828,6 +834,17 @@
                 document.getElementById('modalCreditos1Label1').innerHTML = tienes + nrovencidos + vencidos;
             }
 
+        }
+
+        function mostrarmensajesinfactura(nrofacturas){ 
+            var tienes = "Tienes ";
+            var pago = " Ingresos sin numero de factura.";
+            
+            if (nrofacturas > 0) {
+                document.getElementById('ingresosinnumero').innerHTML =  tienes + nrofacturas + pago  ;
+            } else {
+                document.getElementById('ingresosinnumero').innerHTML = "";
+            }
         }
     </script>
 @endpush

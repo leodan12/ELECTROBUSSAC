@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.01" readonly
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.001" readonly
                                     class="form-control " value="{{ $ingreso->tasacambio }}" />
                             </div>
                             <div class="col-md-6 mb-3">

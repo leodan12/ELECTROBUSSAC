@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TASA CAMBIO</label>
-                                <input type="number" value="3.71" name="tasacambio" min="0" step="0.01"
+                                <input type="number" value="3.71" name="tasacambio" min="0" step="0.001"
                                     class="form-control " value="{{ old('tasacambio') }}" />
                             </div>
                             <div class="col-md-4 mb-3">

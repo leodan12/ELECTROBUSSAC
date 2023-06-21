@@ -39,7 +39,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <h5>Tienes {{ $sinnumero }} ventas sin numero de factura</h5>
+                                <h5 id="sinnumerofactura"></h5>
                             </div>
                         </div>
 
@@ -367,7 +367,16 @@
             ];
             var btns = 'lfrtip';
 
-            iniciarTablaIndex(tabla, ruta, columnas, btns);
+            iniciarTablaIndex(tabla, ruta, columnas, btns); 
+            var nroeliminados = "{{ url('admin/venta/sinnumero') }}";
+            $.get(nroeliminados, function(data) { 
+                mostrarmensajesinfactura(data);
+            });
+            var sinstock = "{{ url('admin/venta/creditosxvencer') }}";
+            $.get(sinstock, function(data) { 
+                mostrarmensaje(data);
+            });
+
 
         });
         //para borrar un registro de la tabla
@@ -764,13 +773,11 @@
         $('#generarfactura1').click(function() {
             generarfactura(idventa);
         });
-
         function generarfactura($id) {
             if ($id != -1) {
                 window.open('/admin/venta/generarfacturapdf/' + $id);
             }
         }
-
         function pagarfactura() {
             var urlventa = "{{ url('/admin/venta/pagarfactura') }}";
             Swal.fire({
@@ -813,14 +820,6 @@
 
             });
         }
-        $(document).ready(function() {
-            numerocreditos = @json($creditosxvencer);
-            mostrarmensaje(numerocreditos);
-
-        });
-
-
-
         function mostrarmensaje(numCred) {
             var registro = "REGISTRO DE VENTAS: ";
             var tienes = "Tienes ";
@@ -834,7 +833,6 @@
             }
 
         }
-
         function mostrarmensajemodal(nroxvencer, nrovencidos) {
             var xvencer = " Creditos por Vencer";
             var vencidos = " Creditos Vencidos";
@@ -850,5 +848,16 @@
             }
 
         }
+        function mostrarmensajesinfactura(nrofacturas){ 
+            var tienes = "Tienes ";
+            var pago = " Compras sin numero de factura.";
+            
+            if (nrofacturas > 0) {
+                document.getElementById('sinnumerofactura').innerHTML =  tienes + nrofacturas + pago  ;
+            } else {
+                document.getElementById('sinnumerofactura').innerHTML = "";
+            }
+        }
+
     </script>
 @endpush

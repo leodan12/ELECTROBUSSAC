@@ -31,35 +31,6 @@ class IngresoController extends Controller
     use HistorialTrait;
     public function index(Request $request)
     {
-
-        $fechahoy = date('Y-m-d');
-        $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
-
-        $creditosxvencer = DB::table('ingresos as i')
-            ->join('companies as e', 'i.company_id', '=', 'e.id')
-            ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
-            ->where('i.fechav', '!=', null)
-            ->where('i.fechav', '<=', $fechalimite)
-            ->where('i.pagada', '=', 'NO')
-            ->select(
-                'i.id',
-                'i.fecha',
-                'e.nombre as nombreempresa',
-                'cl.nombre as nombrecliente',
-                'i.moneda',
-                'i.costoventa',
-                'i.pagada',
-                'i.fechav',
-                'i.factura',
-                'i.formapago'
-            )
-            ->count();
-
-        $sinnumero = DB::table('ingresos as i')
-            ->where('i.factura', '=', null)
-            ->select('i.id')
-            ->count();
-
         if ($request->ajax()) {
 
             $ingresos = DB::table('ingresos as i')
@@ -85,11 +56,46 @@ class IngresoController extends Controller
                 ->make(true);
         }
 
-        return view('admin.ingreso.index', compact('creditosxvencer', 'sinnumero'));
+        return view('admin.ingreso.index');
     }
     public function index2()
     {
         return redirect('admin/ingreso')->with('verstock', 'Ver');
+    }
+
+    public function sinnumero()
+    {
+        $sinnumero = DB::table('ingresos as i')
+            ->where('i.factura', '=', null)
+            ->select('i.id')
+            ->count();
+        return $sinnumero;
+    }
+    public function creditosxvencer()
+    {
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
+
+        $creditosxvencer = DB::table('ingresos as i')
+            ->join('companies as e', 'i.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+            ->where('i.fechav', '!=', null)
+            ->where('i.fechav', '<=', $fechalimite)
+            ->where('i.pagada', '=', 'NO')
+            ->select(
+                'i.id',
+                'i.fecha',
+                'e.nombre as nombreempresa',
+                'cl.nombre as nombrecliente',
+                'i.moneda',
+                'i.costoventa',
+                'i.pagada',
+                'i.fechav',
+                'i.factura',
+                'i.formapago'
+            )
+            ->count();
+        return $creditosxvencer;
     }
     public function create()
     {
@@ -634,8 +640,15 @@ class IngresoController extends Controller
             $midetalle = $detalleingreso;
             $ingreso = DB::table('detalleingresos as di')
                 ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-                ->select('di.cantidad', 'i.costoventa', 'di.preciofinal', 'i.id', 'di.product_id as idproducto'
-                , 'i.company_id as idempresa' , 'i.cliente_id as idcliente')
+                ->select(
+                    'di.cantidad',
+                    'i.costoventa',
+                    'di.preciofinal',
+                    'i.id',
+                    'di.product_id as idproducto',
+                    'i.company_id as idempresa',
+                    'i.cliente_id as idcliente'
+                )
                 ->where('di.id', '=', $id)->first();
             if ($detalleingreso->delete()) {
                 $costof = $ingreso->costoventa;

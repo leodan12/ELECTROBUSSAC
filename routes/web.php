@@ -138,6 +138,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/venta/facturadisponible/{empresa}/{factura}', 'facturadisponible');
             Route::get('/venta/misdetallesventa/{idventa}', 'misdetallesventa'); //ver  
             Route::get('/venta/stocktotalxkit/{id}', 'stocktotalxkit'); //ver  
+            Route::get('/venta/sinnumero', 'sinnumero');
+            Route::get('/venta/creditosxvencer', 'creditosxvencer');
         });
         //Ruta de ingresos
         Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function () {
@@ -152,6 +154,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/ingreso/show/{id}', 'show'); //ver  
             Route::get('/ingreso/showcreditos', 'showcreditos'); //ver   creditos
             Route::get('/ingreso/pagarfactura/{id}',  'pagarfactura');
+            Route::get('/ingreso/sinnumero', 'sinnumero');
+            Route::get('/ingreso/creditosxvencer', 'creditosxvencer');
         });
         //Ruta de la cotizacion
         Route::controller(App\Http\Controllers\Admin\CotizacionesController::class)->group(function () {

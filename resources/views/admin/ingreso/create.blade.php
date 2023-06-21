@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.01" value="3.71"
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.001" value="3.71"
                                     min="1" class="form-control " required />
                             </div>
                             <div class="col-md-6 mb-3">

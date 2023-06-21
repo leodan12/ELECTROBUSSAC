@@ -43,33 +43,7 @@ class VentaController extends Controller
     use HistorialTrait;
     public function index(Request $request)
     {
-        $fechahoy = date('Y-m-d');
-        $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
-
-        $creditosxvencer = DB::table('ventas as v')
-            ->join('companies as e', 'v.company_id', '=', 'e.id')
-            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
-            ->where('v.fechav', '!=', null)
-            ->where('v.fechav', '<=', $fechalimite)
-            ->where('v.pagada', '=', 'NO')
-            ->select(
-                'v.id',
-                'v.fecha',
-                'e.nombre as nombreempresa',
-                'cl.nombre as nombrecliente',
-                'v.moneda',
-                'v.costoventa',
-                'v.pagada',
-                'v.fechav',
-                'v.factura',
-                'v.formapago'
-            )
-            ->count();
-        $sinnumero = DB::table('ventas as v')
-            ->where('v.factura', '=', null)
-            ->select('v.id')
-            ->count();
-
+ 
         if ($request->ajax()) {
 
             $ventas = DB::table('ventas as v')
@@ -95,12 +69,46 @@ class VentaController extends Controller
                 ->make(true);
         }
 
-        return view('admin.venta.index', compact('creditosxvencer', 'sinnumero'));
+        return view('admin.venta.index');
     }
     public function index2()
     {
         return redirect('admin/venta')->with('verstock', 'Ver');
     }
+    public function creditosxvencer()
+    {
+        $fechahoy = date('Y-m-d');
+        $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
+
+        $creditosxvencer = DB::table('ventas as v')
+            ->join('companies as e', 'v.company_id', '=', 'e.id')
+            ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+            ->where('v.fechav', '!=', null)
+            ->where('v.fechav', '<=', $fechalimite)
+            ->where('v.pagada', '=', 'NO')
+            ->select(
+                'v.id',
+                'v.fecha',
+                'e.nombre as nombreempresa',
+                'cl.nombre as nombrecliente',
+                'v.moneda',
+                'v.costoventa',
+                'v.pagada',
+                'v.fechav',
+                'v.factura',
+                'v.formapago'
+            )
+            ->count();
+        return $creditosxvencer;
+    }
+    public function sinnumero(){
+        $sinnumero = DB::table('ventas as v')
+            ->where('v.factura', '=', null)
+            ->select('v.id')
+            ->count();
+        return $sinnumero;
+    }
+
     public function create()
     {
         $companies = Company::all();
@@ -108,7 +116,6 @@ class VentaController extends Controller
         $products = Product::all();
         return view('admin.venta.create', compact('companies', 'products', 'clientes'));
     }
-
     public function store(VentaFormRequest $request)
     {
 
@@ -797,8 +804,15 @@ class VentaController extends Controller
             $midetalle = $detalleventa;
             $venta = DB::table('detalleventas as dv')
                 ->join('ventas as v', 'dv.venta_id', '=', 'v.id')
-                ->select('dv.cantidad', 'v.costoventa', 'dv.preciofinal', 'v.id', 'v.company_id as idempresa',
-                 'dv.product_id as idproducto', 'v.cliente_id as idcliente')
+                ->select(
+                    'dv.cantidad',
+                    'v.costoventa',
+                    'dv.preciofinal',
+                    'v.id',
+                    'v.company_id as idempresa',
+                    'dv.product_id as idproducto',
+                    'v.cliente_id as idcliente'
+                )
                 ->where('dv.id', '=', $id)->first();
             if ($detalleventa->delete()) {
                 $costof = $venta->costoventa;
