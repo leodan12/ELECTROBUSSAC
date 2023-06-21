@@ -252,7 +252,7 @@
             @if ($ingresosxpagar > 0)
                 <div class="row">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert" style="background-color: #FF0000; color:white;">
+                        <div class="alert alert-danger" role="alert"  >
                             <h2 class="alert-heading"><svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"
                                     class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
                                     role="img" aria-label="Warning:">
@@ -274,7 +274,7 @@
             @if ($ventasxcobrar > 0)
                 <div class="row">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert" style="background-color: #FF0000; color:white;">
+                        <div class="alert alert-danger" role="alert"  >
                             <h2 class="alert-heading"><svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"
                                     class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
                                     role="img" aria-label="Warning:">

@@ -3,7 +3,7 @@
       <div class="navbar-brand-wrapper d-flex justify-content-center">
         <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">  
           <a class="navbar-brand brand-logo" href="{{url ('admin/dashboard') }}">
-             <h2>ELECTROBUS</h2>
+             <h2>GRUPO EMP.</h2>
           </a>
           <a class="navbar-brand brand-logo-mini" href="{{url ('admin/dashboard') }}"> <i class="mdi mdi-home menu-icon"></i>  </a>
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
