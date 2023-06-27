@@ -54,12 +54,7 @@
                                 <label class="form-label is-required">UNIDAD</label>
                                 <input type="text" name="unidad" value="{{ $product->unidad }}"
                                     class="form-control  " required />
-                            </div>
-                            {{-- <div class="col-md-4 mb-3">
-                                <label class="form-label ">UND</label>
-                                <input type="text" name="und" value="{{ $product->und }}"
-                                    class="form-control  " />
-                            </div> --}}
+                            </div> 
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>
                                 <select name="moneda" class="form-select " required>
@@ -97,7 +92,8 @@
                                 <label class="form-label">PRECIO SIN IGV 2</label>
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
                                     class="form-control " value="{{ $product->precio2 }}" />
-                            </div>
+                            </div> 
+                            <div class="col-md-4 mb-3" id="saltodelinea1"> </div> 
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
@@ -107,17 +103,26 @@
                                 <label class="form-label">PRECIO SIN IGV 3</label>
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
                                     class="form-control " value="{{ $product->precio3 }}" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label is-required">PRECIO MÍNIMO</label>
+                            </div> 
+                            <div class="col-md-4 mb-3" id="saltodelinea2"> </div> 
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">PRECIO MÍNIMO</label>
                                 <input type="number" name="minimo" id="minimo" value="{{ $product->minimo }}"
-                                    min="0" step="0.01" class="form-control " required />
+                                    min="0" step="0.01" class="form-control "   />
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label is-required">PRECIO MÁXIMO</label>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">PRECIO MÁXIMO</label>
                                 <input type="number" name="maximo" id="maximo" value="{{ $product->maximo }}"
-                                    min="0" step="0.01" class="form-control " required />
+                                    min="0" step="0.01" class="form-control "   />
                             </div>
+                            <div class="col-md-4 mb-3" id="saltodelinea3"> </div> 
+                            @can('ver-preciofob')
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">PRECIO FOB</label>
+                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.01"
+                                        class="form-control "  value="{{ $product->preciofob }}"/>
+                                </div>
+                            @endcan
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end">Actualizar</button>
                             </div>
@@ -157,6 +162,8 @@
                 document.getElementById('cantidad3').value = micantidad3;
                 document.getElementById('precio2').value = miprecio2;
                 document.getElementById('precio3').value = miprecio3;
+                document.getElementById('saltodelinea1').style.display = 'inline';
+                document.getElementById('saltodelinea2').style.display = 'inline';
             } else {
                 document.getElementById('dcantidad2').style.display = 'none';
                 document.getElementById('dcantidad3').style.display = 'none';
@@ -166,6 +173,8 @@
                 document.getElementById('cantidad3').value = "";
                 document.getElementById('precio2').value = "";
                 document.getElementById('precio3').value = "";
+                document.getElementById('saltodelinea1').style.display = 'none';
+                document.getElementById('saltodelinea2').style.display = 'none';
             }
         }
 

@@ -334,11 +334,7 @@
                     alert("Ingrese un servicio");
                     return;
                 }
-                if (!observacionproducto) {
-                    alert("ingrese una observacion(Nro Serie):");
-                    $("#observacionproducto").focus();
-                    return;
-                }
+                
                 var milista = '<br>';
                 var puntos = '';
 

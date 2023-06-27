@@ -58,6 +58,10 @@ class InventarioController extends Controller
     {
         return redirect('admin/inventario')->with('verstock', 'Ver');
     }
+    public function index3()
+    {
+        return redirect('admin/inventario');
+    }
     public function nroeliminados()
     {
         $datoseliminados = DB::table('inventarios as i')

@@ -69,6 +69,11 @@ class PermisosSeeder extends Seeder
             'crear-venta',
             'editar-venta',
             'eliminar-venta',
+            //para  lista de precios
+            'ver-lista-precios',
+            'crear-lista-precios',
+            'editar-lista-precios',
+            'eliminar-lista-precios',
             //para reportes
             'ver-reporte',
             //para recuperar los registros
@@ -81,6 +86,8 @@ class PermisosSeeder extends Seeder
             //para  HISTORIAL
             'ver-historial', 
             'eliminar-historial',
+            //para  PRECIO FOB
+            'ver-preciofob',  
         ];
 
         foreach($permisos as $permiso){

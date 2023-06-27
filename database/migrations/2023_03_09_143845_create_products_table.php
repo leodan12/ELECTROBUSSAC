@@ -30,6 +30,7 @@ return new class extends Migration
             $table->double('precio2')->nullable();
             $table->integer('cantidad3')->nullable();
             $table->double('precio3')->nullable();
+            $table->double('preciofob')->nullable();
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
             $table->foreign('category_id')->references('id')->on('categories');//->onDelete('cascade');
             $table->timestamps();

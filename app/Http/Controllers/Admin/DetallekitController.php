@@ -90,6 +90,7 @@ class DetallekitController extends Controller
         $producto->SiIGV = $validatedData['SiIGV'];
         $producto->tasacambio = $request->tasacambio; 
         $producto->status =  '0';
+        $producto->preciofob = $request->preciofob;
         if ($request->cantidad2 != null && $request->precio2 != null) {
             $producto->cantidad2 = $request->cantidad2;
             $producto->precio2 = $request->precio2;
@@ -173,6 +174,7 @@ class DetallekitController extends Controller
         $producto->NoIGV = $request->NoIGV;
         $producto->SiIGV = $request->SiIGV;
         $producto->status =  '0';
+        $producto->preciofob = $request->preciofob;
         if ($request->cantidad2 != null && $request->precio2 != null) {
             $producto->cantidad2 = $request->cantidad2;
             $producto->precio2 = $request->precio2;
@@ -228,7 +230,7 @@ class DetallekitController extends Controller
                 'p.nombre',
                 'p.codigo',
                 'p.unidad',
-                //'p.und',
+                'p.preciofob',
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',

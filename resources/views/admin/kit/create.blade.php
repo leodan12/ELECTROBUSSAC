@@ -99,7 +99,6 @@
                                     Agregar Precio por Mayor
                                 </label>
                             </div>
-
                             <div class="col-md-4 mb-3" id="dcantidad2" name="dcantidad2">
                                 <label class="form-label ">CANTIDAD 2</label>
                                 <input type="number" name="cantidad2" id="cantidad2" min="1" step="1"
@@ -110,6 +109,7 @@
                                 <input type="number" name="precio2" id="precio2" min="0" step="0.01"
                                     class="form-control " value="{{ old('precio2') }}"/>
                             </div>
+                            <div class="col-md-4 mb-3" id="saltodelinea1"> </div> 
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
@@ -120,6 +120,14 @@
                                 <input type="number" name="precio3" id="precio3" min="0" step="0.01"
                                     class="form-control " value="{{ old('precio3') }}"/>
                             </div>
+                            <div class="col-md-4 mb-3" id="saltodelinea"> </div>
+                            @can('ver-preciofob')
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">PRECIO FOB</label>
+                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.01"
+                                        class="form-control " value="{{ old('preciofob') }}" />
+                                </div>
+                            @endcan
                             <hr>
                             <h4>Agregar Detalle de la Compra</h4>
                             <div class="col-md-6 mb-3">
@@ -292,7 +300,9 @@
                 document.getElementById('cantidad2').value = micantidad2;
                 document.getElementById('cantidad3').value = micantidad3;
                 document.getElementById('precio2').value = miprecio2;
-                document.getElementById('precio3').value = miprecio3;
+                document.getElementById('precio3').value = miprecio3; 
+                document.getElementById('saltodelinea').style.display = 'inline';
+                document.getElementById('saltodelinea1').style.display = 'inline';
             } else {
                 document.getElementById('dcantidad2').style.display = 'none';
                 document.getElementById('dcantidad3').style.display = 'none';
@@ -302,6 +312,8 @@
                 document.getElementById('cantidad3').value = "";
                 document.getElementById('precio2').value = "";
                 document.getElementById('precio3').value = "";
+                document.getElementById('saltodelinea').style.display = 'none';
+                document.getElementById('saltodelinea1').style.display = 'none';
             }
         }
 

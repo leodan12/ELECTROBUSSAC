@@ -87,6 +87,7 @@ class ProductController extends Controller
         $product->NoIGV = $validatedData['NoIGV'];
         $product->SiIGV = $validatedData['SiIGV'];
         $product->status =  '0';
+        $product->preciofob =  $request->preciofob;
         if ($request->cantidad2 != null && $request->precio2 != null) {
             $product->cantidad2 = $request->cantidad2;
             $product->precio2 = $request->precio2;
@@ -142,6 +143,7 @@ class ProductController extends Controller
             $product->NoIGV = $validatedData['NoIGV'];
             $product->SiIGV = $validatedData['SiIGV'];
             $product->status =  '0';
+            $product->preciofob =  $request->preciofob;
             if ($request->cantidad2 != null && $request->precio2 != null) {
                 $product->cantidad2 = $request->cantidad2;
                 $product->precio2 = $request->precio2;
@@ -212,7 +214,7 @@ class ProductController extends Controller
                 'p.nombre',
                 'p.codigo',
                 'p.unidad',
-                //'p.und',
+                'p.preciofob',
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',

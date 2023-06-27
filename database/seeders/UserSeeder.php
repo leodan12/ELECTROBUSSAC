@@ -44,7 +44,9 @@ class UserSeeder extends Seeder
             'ver-inventario', 'crear-inventario', 'editar-inventario', 'eliminar-inventario',
             'ver-cotizacion', 'crear-cotizacion', 'editar-cotizacion', 'eliminar-cotizacion',
             'ver-ingreso', 'crear-ingreso', 'editar-ingreso', 'eliminar-ingreso',
-            'ver-venta', 'crear-venta', 'editar-venta', 'eliminar-venta','ver-reporte'
+            'ver-venta', 'crear-venta', 'editar-venta', 'eliminar-venta', 'ver-reporte', 'ver-lista-precios',
+            'crear-lista-precios', 'editar-lista-precios', 'eliminar-lista-precios', 'recuperar-categoria',
+            'recuperar-producto',   'recuperar-kit', 'recuperar-empresa', 'recuperar-cliente', 'recuperar-inventario'
         ];
 
         $roluser->syncPermissions($permisosuser);

@@ -6,92 +6,105 @@
                 <span class="menu-title">INICIO</span>
             </a>
         </li>
-        @if (auth()->user()->can('ver-categoria') ||
-                auth()->user()->can('crear-categoria') ||
-                auth()->user()->can('editar-categoria') ||
-                auth()->user()->can('eliminar-categoria'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/category') }}">
-                    <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
-                    <span class="menu-title">CATEGORIAS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-producto') ||
-                auth()->user()->can('crear-producto') ||
-                auth()->user()->can('editar-producto') ||
-                auth()->user()->can('eliminar-producto'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/products') }}">
-                    <i class="mdi mdi-book menu-icon"></i>
-                    <span class="menu-title">PRODUCTOS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-kit') ||
-                auth()->user()->can('crear-kit') ||
-                auth()->user()->can('editar-kit') ||
-                auth()->user()->can('eliminar-kit'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/kits') }}">
-                    <i class="mdi mdi-google-circles-communities menu-icon"></i>
-                    <span class="menu-title">KITS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-empresa') ||
-                auth()->user()->can('crear-empresa') ||
-                auth()->user()->can('editar-empresa') ||
-                auth()->user()->can('eliminar-empresa'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/company') }}">
-                    <i class="mdi mdi-store menu-icon"></i>
-                    <span class="menu-title">MIS EMPRESAS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-cliente') ||
-                auth()->user()->can('crear-cliente') ||
-                auth()->user()->can('editar-cliente') ||
-                auth()->user()->can('eliminar-cliente'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/cliente') }}">
-                    <i class="mdi mdi-hospital-building menu-icon"></i>
-                    <span class="menu-title">CLIENTES/PROVEEDORES</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-inventario') ||
-                auth()->user()->can('crear-inventario') ||
-                auth()->user()->can('editar-cliente') ||
-                auth()->user()->can('eliminar-inventario'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/inventario') }}">
-                    <i class="mdi mdi-playlist-check menu-icon"></i>
-                    <span class="menu-title">INVENTARIO</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-cotizacion') ||
-                auth()->user()->can('crear-cotizacion') ||
-                auth()->user()->can('editar-cotizacion') ||
-                auth()->user()->can('eliminar-cotizacion'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/cotizacion') }}">
-                    <i class="mdi mdi-currency-usd menu-icon"></i>
-                    <span class="menu-title">COTIZACION</span>
-                </a>
-            </li>
-        @endif
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                aria-controls="ui-basic">
+            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#products" aria-expanded="false"
+                aria-controls="products">
+                <i class="mdi mdi-shape-plus menu-icon"></i>
+                <span class="menu-title">PRODUCTOS</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="products">
+                <ul class="flex-column sub-menu" style="list-style: none;">
+                    @if (auth()->user()->can('ver-categoria') ||
+                            auth()->user()->can('crear-categoria') ||
+                            auth()->user()->can('editar-categoria') ||
+                            auth()->user()->can('eliminar-categoria'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/category') }}">
+                                <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
+                                <span class="menu-title">CATEGORIAS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-producto') ||
+                            auth()->user()->can('crear-producto') ||
+                            auth()->user()->can('editar-producto') ||
+                            auth()->user()->can('eliminar-producto'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/products') }}">
+                                <i class="mdi mdi-book menu-icon"></i>
+                                <span class="menu-title">PRODUCTOS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-kit') ||
+                            auth()->user()->can('crear-kit') ||
+                            auth()->user()->can('editar-kit') ||
+                            auth()->user()->can('eliminar-kit'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/kits') }}">
+                                <i class="mdi mdi-google-circles-communities menu-icon"></i>
+                                <span class="menu-title">KITS</span>
+                            </a>
+                        </li>
+                    @endif 
+                    @if (auth()->user()->can('ver-inventario') ||
+                            auth()->user()->can('crear-inventario') ||
+                            auth()->user()->can('editar-cliente') ||
+                            auth()->user()->can('eliminar-inventario'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('inv') }}">
+                                <i class="mdi mdi-playlist-check menu-icon"></i>
+                                <span class="menu-title">INVENTARIO</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#companies" aria-expanded="false"
+                aria-controls="companies">
+                <i class="mdi mdi-home-modern menu-icon"></i>
+                <span class="menu-title">COMPAÑIAS</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="companies">
+                <ul class="flex-column sub-menu" style="list-style: none;">
+                    @if (auth()->user()->can('ver-empresa') ||
+                            auth()->user()->can('crear-empresa') ||
+                            auth()->user()->can('editar-empresa') ||
+                            auth()->user()->can('eliminar-empresa'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/company') }}">
+                                <i class="mdi mdi-store menu-icon"></i>
+                                <span class="menu-title">MIS EMPRESAS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-cliente') ||
+                            auth()->user()->can('crear-cliente') ||
+                            auth()->user()->can('editar-cliente') ||
+                            auth()->user()->can('eliminar-cliente'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/cliente') }}">
+                                <i class="mdi mdi-hospital-building menu-icon"></i>
+                                <span class="menu-title">CLIENTES/PROVEEDORES</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ventas" aria-expanded="false"
+                aria-controls="ventas">
                 <i class="mdi mdi-cart menu-icon"></i>
                 <span class="menu-title">FACTURACION</span>
                 <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="  flex-column sub-menu" style="list-style: none;">
+            <div class="collapse" id="ventas">
+                <ul class="flex-column sub-menu" style="list-style: none;">
                     @if (auth()->user()->can('ver-ingreso') ||
                             auth()->user()->can('crear-ingreso') ||
                             auth()->user()->can('editar-ingreso') ||
@@ -106,13 +119,29 @@
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
                                     class="mdi mdi-clipboard-arrow-up menu-icon"></i>SALIDA</a></li>
                     @endif
+                    @if (auth()->user()->can('ver-cotizacion') ||
+                            auth()->user()->can('crear-cotizacion') ||
+                            auth()->user()->can('editar-cotizacion') ||
+                            auth()->user()->can('eliminar-cotizacion'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/cotizacion') }}">
+                                <i class="mdi mdi-currency-usd menu-icon"></i>
+                                <span class="menu-title">COTIZACION</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-venta') ||
+                            auth()->user()->can('eliminar-venta'))
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ventasantiguas') }}"><i
+                                    class="mdi mdi-av-timer menu-icon"></i>VENTAS ANTIGUAS</a></li>
+                    @endif
                 </ul>
             </div>
         </li>
         @if (auth()->user()->can('ver-reporte'))
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic1" aria-expanded="false"
-                    aria-controls="ui-basic">
+                    aria-controls="ui-basic1">
                     <i class="mdi mdi-chart-bar menu-icon"></i>
                     <span class="menu-title">REPORTES</span>
                     <i class="menu-arrow"></i>
@@ -129,42 +158,50 @@
                 </div>
             </li>
         @endif
-        @if (auth()->user()->can('ver-usuario') ||
-                auth()->user()->can('crear-usuario') ||
-                auth()->user()->can('editar-usuario') ||
-                auth()->user()->can('eliminar-usuario'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/users') }}">
-                    <i class="mdi mdi-account-multiple menu-icon"></i>
-                    <span class="menu-title">USUARIOS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-rol') ||
-                auth()->user()->can('crear-rol') ||
-                auth()->user()->can('editar-rol') ||
-                auth()->user()->can('eliminar-rol'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/rol') }}">
-                    <i class="mdi mdi-account-settings menu-icon"></i>
-                    <span class="menu-title">ROLES</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-historial') ||
-                auth()->user()->can('eliminar-historial'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url('admin/historial') }}">
-                    <i class="mdi mdi-timetable menu-icon"></i>
-                    <span class="menu-title">HISTORIAL DE CAMBIOS</span>
-                </a>
-            </li>
-        @endif
-        @if (auth()->user()->can('ver-venta') ||
-                auth()->user()->can('eliminar-venta'))
-            <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ventasantiguas') }}"><i
-                        class="mdi mdi-av-timer menu-icon"></i>VENTAS ANTIGUAS</a></li>
-        @endif
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#auth" aria-expanded="false"
+                aria-controls="auth">
+                <i class="mdi mdi-security menu-icon"></i>
+                <span class="menu-title">SEGURIDAD</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+                <ul class="flex-column sub-menu" style="list-style: none;">
+                    @if (auth()->user()->can('ver-usuario') ||
+                            auth()->user()->can('crear-usuario') ||
+                            auth()->user()->can('editar-usuario') ||
+                            auth()->user()->can('eliminar-usuario'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/users') }}">
+                                <i class="mdi mdi-account-multiple menu-icon"></i>
+                                <span class="menu-title">USUARIOS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-rol') ||
+                            auth()->user()->can('crear-rol') ||
+                            auth()->user()->can('editar-rol') ||
+                            auth()->user()->can('eliminar-rol'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/rol') }}">
+                                <i class="mdi mdi-account-settings menu-icon"></i>
+                                <span class="menu-title">ROLES</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-historial') ||
+                            auth()->user()->can('eliminar-historial'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/historial') }}">
+                                <i class="mdi mdi-timetable menu-icon"></i>
+                                <span class="menu-title">HISTORIAL DE CAMBIOS</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+        </li>
+
 
     </ul>
 </nav>

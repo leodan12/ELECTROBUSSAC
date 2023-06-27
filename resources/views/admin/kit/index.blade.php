@@ -108,6 +108,12 @@
                                                     <input type="number" class="form-control" id="vermaximo" readonly>
                                                 </div>
                                             </div>
+                                            @can('ver-preciofob')
+                                                <div class="col-sm-3 mb-3" id="dpreciofob">
+                                                    <label for="verpreciofob" class="col-form-label">PRECIO FOB:</label>
+                                                    <input type="number" class="form-control" id="verpreciofob" readonly>
+                                                </div>
+                                            @endcan
                                             <div class="col-sm-3   mb-3">
                                                 <label for="vercodigo" class="col-form-label">CÓDIGO:</label>
                                                 <input type="text" class="form-control" id="vercodigo" readonly>
@@ -300,6 +306,10 @@
                     document.getElementById("versiigv").value = data[0].SiIGV;
                     document.getElementById("verminimo").value = data[0].minimo;
                     document.getElementById("vermaximo").value = data[0].maximo;
+                    var preciofob = document.getElementById("verpreciofob");
+                    if (preciofob) {
+                        preciofob.value = data[0].preciofob;
+                    }
 
                     var monedafactura = data[0].moneda;
                     if (monedafactura == "dolares") {

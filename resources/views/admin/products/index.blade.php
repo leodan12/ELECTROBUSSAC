@@ -1,12 +1,12 @@
 @extends('layouts.admin')
- 
+
 @section('content')
     <div>
         <div class="row">
             <div class="col-md-12">
                 @if (session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
-                @endif 
+                @endif
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -75,7 +75,7 @@
                                             <div class="col-sm-4   mb-3">
                                                 <label for="verunidad" class="col-form-label">UNIDAD:</label>
                                                 <input type="text" class="form-control" id="verunidad" readonly>
-                                            </div> 
+                                            </div>
                                             <div class="col-sm-4   mb-3">
                                                 <label for="vermoneda" class="col-form-label">TIPO DE MONEDA:</label>
                                                 <input type="text" class="form-control" id="vermoneda" readonly>
@@ -113,7 +113,12 @@
                                                 <label for="vermaximo" class="col-form-label">PRECIO 3:</label>
                                                 <input type="number" class="form-control" id="verprecio3" readonly>
                                             </div>
-
+                                            @can('ver-preciofob')
+                                                <div class="col-sm-4 mb-3" id="dpreciofob">
+                                                    <label for="verpreciofob" class="col-form-label">PRECIO FOB:</label>
+                                                    <input type="number" class="form-control" id="verpreciofob" readonly>
+                                                </div>
+                                            @endcan
                                         </div>
                                     </form>
                                 </div>
@@ -283,7 +288,7 @@
                 document.getElementById("vercategoria").value = data.nombrecategoria;
                 document.getElementById("vernombre").value = data.nombre;
                 document.getElementById("vercodigo").value = data.codigo;
-                document.getElementById("verunidad").value = data.unidad; 
+                document.getElementById("verunidad").value = data.unidad;
                 document.getElementById("vermoneda").value = data.moneda;
                 document.getElementById("vernoigv").value = data.NoIGV;
                 document.getElementById("versiigv").value = data.SiIGV;
@@ -293,6 +298,10 @@
                 document.getElementById("vercantidad3").value = data.cantidad3;
                 document.getElementById("verprecio2").value = data.precio2;
                 document.getElementById("verprecio3").value = data.precio3;
+                var preciofob = document.getElementById("verpreciofob");
+                if (preciofob) {
+                    preciofob.value = data.preciofob;
+                }
 
                 if (data.cantidad2 != null) {
                     document.getElementById("dcantidad2").style.display = 'inline';

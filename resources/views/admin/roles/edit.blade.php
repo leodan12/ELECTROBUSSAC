@@ -43,7 +43,7 @@
                                         <label class="form-label is-required">Permisos del rol</label>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row"  >
                                     @foreach ($permisos as $permiso)
                                         <div class="col-3">
                                             @php  $contp =0; @endphp
@@ -58,15 +58,12 @@
                                                 <input type="checkbox" class="form-check-input" name="permission[]"
                                                     value="{{ $permiso->id }}" >
                                             @endif
-                                            <label class="form-check-label" for="flexCheckDefault">
+                                            <label class="form-check-label" >
                                                 {{ $permiso->name }}
                                             </label>
                                         </div>
                                     @endforeach
-                                </div>
-
-
-
+                                </div> 
                             </div>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" class="btn btn-primary text-white float-end">Guardar</button>

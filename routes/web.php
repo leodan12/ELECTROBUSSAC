@@ -100,6 +100,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::controller(App\Http\Controllers\Admin\InventarioController::class)->group(function () {
             Route::get('/inventario', 'index')->name('inventario.index');
             Route::get('/inventario2', 'index2')->name('inventario2.index');
+            Route::get('/invent', 'index3')->name('inv'); 
             Route::get('/inventario/create', 'create');
             Route::post('/inventario', 'store');
             Route::get('/inventario/{inventario_id}/edit', 'edit');
