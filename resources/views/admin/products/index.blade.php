@@ -328,9 +328,7 @@
             });
 
         })
-        window.addEventListener('close-modal', event => {
-            $('#deleteModal').modal('hide');
-        });
+        
 
         //modal para ver los eliminados
         var inicializartabla = 0;

@@ -10,15 +10,15 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
+    {   //migracion para la tabla de lista de precios
         Schema::create('listaprecios', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('cliente_id');
             $table->unsignedBigInteger('product_id');
             $table->string('moneda');
             $table->double('preciounitariomo');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('client_id')->references('id')->on('clientes')->onDelete('cascade');
+            $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('cascade');
             $table->timestamps();
         });
     }

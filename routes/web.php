@@ -100,7 +100,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::controller(App\Http\Controllers\Admin\InventarioController::class)->group(function () {
             Route::get('/inventario', 'index')->name('inventario.index');
             Route::get('/inventario2', 'index2')->name('inventario2.index');
-            Route::get('/invent', 'index3')->name('inv'); 
+            Route::get('/inventorystock', 'index3'); 
             Route::get('/inventario/create', 'create');
             Route::post('/inventario', 'store');
             Route::get('/inventario/{inventario_id}/edit', 'edit');
@@ -141,6 +141,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/venta/stocktotalxkit/{id}', 'stocktotalxkit'); //ver  
             Route::get('/venta/sinnumero', 'sinnumero');
             Route::get('/venta/creditosxvencer', 'creditosxvencer');
+            Route::get('/venta/precioespecial/{idcliente}/{idproducto}', 'precioespecial');
         });
         //Ruta de ingresos
         Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function () {
@@ -210,6 +211,17 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('ventasantiguas/{venta_id}/delete', 'destroy');
             Route::get('/ventasantiguas/show/{id}', 'show'); //ver  
             
+        });
+        //Rutas de lA Lista de precios
+        Route::controller(App\Http\Controllers\Admin\ListaprecioController::class)->group(function () {
+            Route::get('/listaprecios', 'index')->name('listaprecio.index');
+            Route::get('/listaprecios/create', 'create');
+            Route::post('/listaprecios', 'store');
+            Route::get('/listaprecios/clientesxproducto/{id}', 'clientesxproducto'); 
+            Route::get('/listaprecios/{product}/edit', 'edit');
+            Route::put('/listaprecios/{product}', 'update');
+            Route::get('/listaprecios/{product_id}/delete', 'destroy');
+            Route::get('/listaprecios/show/{id}', 'show'); //ver   
         });
     });
 });

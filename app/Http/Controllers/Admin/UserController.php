@@ -102,8 +102,6 @@ class UserController extends Controller
         ]);
         $input = $request->all();
 
-
-
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;

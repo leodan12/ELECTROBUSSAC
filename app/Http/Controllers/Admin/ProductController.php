@@ -96,7 +96,7 @@ class ProductController extends Controller
                 $product->precio3 = $request->precio3;
             }
         }
-        
+
         $product->save();
         $inventario = new Inventario;
         $inventario->product_id = $product->id;

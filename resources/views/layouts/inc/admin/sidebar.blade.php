@@ -48,14 +48,25 @@
                             </a>
                         </li>
                     @endif 
-                    @if (auth()->user()->can('ver-inventario') ||
+                   @if (auth()->user()->can('ver-inventario') ||
                             auth()->user()->can('crear-inventario') ||
-                            auth()->user()->can('editar-cliente') ||
+                            auth()->user()->can('editar-inventario') ||
                             auth()->user()->can('eliminar-inventario'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('inv') }}">
+                            <a class="nav-link" href="{{ url('admin/inventorystock') }}">
                                 <i class="mdi mdi-playlist-check menu-icon"></i>
                                 <span class="menu-title">INVENTARIO</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-lista-precios') ||
+                            auth()->user()->can('crear-lista-precios') ||
+                            auth()->user()->can('editar-lista-precios') ||
+                            auth()->user()->can('eliminar-lista-precios'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/listaprecios') }}">
+                                <i class="mdi mdi-playlist-play menu-icon"></i>
+                                <span class="menu-title">LISTA PRECIOS</span>
                             </a>
                         </li>
                     @endif

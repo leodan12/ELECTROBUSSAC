@@ -58,9 +58,30 @@ class InventarioController extends Controller
     {
         return redirect('admin/inventario')->with('verstock', 'Ver');
     }
-    public function index3()
-    {
-        return redirect('admin/inventario');
+    public function index3(Request $request)
+    { 
+        if ($request->ajax()) {
+
+            $inventarios = DB::table('inventarios as i')
+                ->join('products as p', 'i.product_id', '=', 'p.id')
+                ->join('categories as c', 'p.category_id', '=', 'c.id')
+                ->select(
+                    'i.id',
+                    'c.nombre as categoria',
+                    'p.nombre as producto',
+                    'i.stockminimo',
+                    'i.stocktotal',
+                )->where('i.status', '=', 0);
+            return DataTables::of($inventarios)
+                ->addColumn('acciones', 'Acciones')
+                ->editColumn('acciones', function ($inventarios) {
+                    return view('admin.inventario.botones', compact('inventarios'));
+                })
+                ->rawColumns(['acciones'])
+                ->make(true);
+        }
+
+        return view('admin.inventario.index');
     }
     public function nroeliminados()
     {

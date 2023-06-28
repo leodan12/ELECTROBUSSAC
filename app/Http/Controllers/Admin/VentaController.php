@@ -1194,4 +1194,17 @@ class VentaController extends Controller
         }
         return  $stockkit;
     }
+
+    public function precioespecial($idcliente, $idproducto)
+    {
+        $precio = DB::table('listaprecios as lp')
+        ->where('cliente_id','=',$idcliente)
+        ->where('product_id','=',$idproducto)->first();
+        if($precio){
+            return $precio;
+        }else {
+            return  'x'; 
+        }
+    }
+
 }
