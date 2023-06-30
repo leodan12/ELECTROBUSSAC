@@ -528,6 +528,8 @@
                         });
                         if (precioespecial != -1 && precioespecial < $price) {
                             preciomo = precioespecial;
+                        } else {
+                            preciomo = $price;
                         }
 
                         //alert(stocke);
@@ -571,10 +573,8 @@
                                 preciomo = preciomo;
                                 document.getElementById('preciounitario').value = ($price).toFixed(
                                     2);
-                                document.getElementById('preciounitariomo').value = (preciomo)
-                                    .toFixed(2);
-                                document.getElementById('preciofinal').value = (preciomo).toFixed(
-                                    2);
+                                document.getElementById('preciounitariomo').value = preciomo;
+                                document.getElementById('preciofinal').value = preciomo;
                             } else if (monedaproducto == "soles" && monedafactura == "soles") {
                                 preciototalI = ($price).toFixed(2);
                                 simbolomonedaproducto = "S/.";
@@ -584,10 +584,8 @@
                                 preciomo = preciomo;
                                 document.getElementById('preciounitario').value = ($price).toFixed(
                                     2);
-                                document.getElementById('preciounitariomo').value = (preciomo)
-                                    .toFixed(2);
-                                document.getElementById('preciofinal').value = (preciomo).toFixed(
-                                    2);
+                                document.getElementById('preciounitariomo').value = preciomo;
+                                document.getElementById('preciofinal').value = preciomo;
                             } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                                 preciototalI = ($price * mitasacambio1).toFixed(2);
                                 simbolomonedaproducto = "$";
@@ -616,8 +614,9 @@
                             var mipreciounitariot = "PRECIO UNITARIO: " + monedafactura;
                             if (precioespecial != -1 && precioespecial < $price) {
                                 mipreciounitariot += "(precio especial)";
-                            } 
-                            document.getElementById('labelpreciounitario').innerHTML = mipreciounitariot;
+                            }
+                            document.getElementById('labelpreciounitario').innerHTML =
+                                mipreciounitariot;
                             document.getElementById('labelservicio').innerHTML =
                                 "SERVICIO ADICIONAL: " + monedafactura;
                             document.getElementById('labelpreciototal').innerHTML =
@@ -665,7 +664,7 @@
                     }
                 });
             });
- 
+
         });
 
         //funcion para agregar una fila
@@ -872,7 +871,7 @@
             simbolomonedaproducto = "";
             $('.toast').toast('hide');
         }
- 
+
         function llenarselectproducto() {
 
             var url3 = "{{ url('admin/venta/productosxempresa') }}";

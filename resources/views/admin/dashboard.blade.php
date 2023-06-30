@@ -44,10 +44,8 @@
                             <h2 class="alert alert-success">{{ session('message') }}</h2>
                         @endif
                     </div>
-
                 </div>
-
-            </div>
+            </div> 
             <div class="row">
                 <div class="col-sm-3">
                     <div class="card ingresos borde">
@@ -229,7 +227,7 @@
             @if ($sinstock > 0)
                 <div class="row">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert"  >
+                        <div class="alert alert-danger" role="alert">
 
                             <h2 class="alert-heading"><svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"
                                     class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
@@ -252,7 +250,7 @@
             @if ($ingresosxpagar > 0)
                 <div class="row">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert"  >
+                        <div class="alert alert-danger" role="alert">
                             <h2 class="alert-heading"><svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"
                                     class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
                                     role="img" aria-label="Warning:">
@@ -274,7 +272,7 @@
             @if ($ventasxcobrar > 0)
                 <div class="row">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert"  >
+                        <div class="alert alert-danger" role="alert">
                             <h2 class="alert-heading"><svg xmlns="http://www.w3.org/2000/svg" style="width: 40px;"
                                     class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16"
                                     role="img" aria-label="Warning:">
@@ -296,7 +294,6 @@
         </div>
     </div>
 @endsection
-
 
 @push('script')
     <script type="text/javascript">
@@ -322,9 +319,7 @@
                 document.getElementById('verProductostock').innerHTML = (data.productostock);
                 document.getElementById('verProductominimo').innerHTML = (data.productominimo);
                 document.getElementById('verProductosin').innerHTML = (data.productosin);
-
             });
-
         });
     </script>
 @endpush

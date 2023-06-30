@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-12  ">
@@ -134,7 +132,7 @@
 
             var urldatosproductos = "{{ url('admin/reporte/datosrotacionstock') }}";
             $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
-                llenartabla(data);
+                llenartabla(data); 
             });
         }
 
@@ -156,8 +154,8 @@
                     '<td> ' + datos[i].maximo + '</td>' +
                     '<td> ' + datos[i].preciofinal + '</td>' +
                     '<td> ' + datos[i].moneda + '</td>' +
-                    '<td> <button class= "btn btn-info" data-empresa="' + datos[i].empresa + '" data-producto="' + datos[i]
-                    .producto + '" data-compraventa="' + datos[i].compraventa +
+                    '<td> <button class= "btn btn-info" data-empresa="' + datos[i].idempresa + '" data-producto="' + datos[i]
+                    .idproducto + '" data-compraventa="' + datos[i].compraventa +
                     '" data-bs-target="#modalVer2" data-bs-toggle="modal">Ver </button>   ' +
                     '</td>' +
                     '</tr>';
@@ -260,8 +258,7 @@
                     '<td> ' + datos[i].moneda + '</td>' +
                     '</tr>';
                 $("#mitablaresultados>tbody").append(filaDetalle);
-            }
-
+            } 
             inicializartabladatos(btns, tabla, datos[0].compraventa + '_' + datos[0].empresa + '_' + datos[0].producto +
                 '_' + fechainicio + '_' + fechafin);
             contini2++;

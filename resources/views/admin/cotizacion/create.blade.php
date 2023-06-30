@@ -517,6 +517,8 @@
                     });
                     if (precioespecial != -1 && parseFloat(precioespecial, 10) < parseFloat($price, 10)) {
                         preciomo = precioespecial;
+                    }else {
+                        preciomo = $price;
                     }
                     //mostramos la notificacion
                     if ($tipo == "kit") {

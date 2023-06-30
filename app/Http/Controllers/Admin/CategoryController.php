@@ -72,7 +72,6 @@ class CategoryController extends Controller
     public function update(CategoryFormRequest $request, $category)
     {
         $validatedData = $request->validated();
-
         $category = Category::findOrFail($category);
 
         $category->nombre = $validatedData['nombre'];
@@ -112,7 +111,6 @@ class CategoryController extends Controller
     {
         $categorias =  Category::all()
             ->where('status', '=', 1);
-
 
         return $categorias->values()->all();
     }

@@ -433,10 +433,10 @@
                         '" data-cantidad3="' + data[i].cantidad3 + '" data-precio3="' + data[i].precio3 +
                         '" data-price="' + data[i].NoIGV + '">' + data[i].nombre + '</option>';
                 }
-                $("#product").html(producto_select); 
+                $("#product").html(producto_select);
                 habilitaroptionsproductos();
             });
- 
+
             clientesxempresa(company);
             if (indice > 0) {
                 var indice2 = indicex;
@@ -579,13 +579,14 @@
                         success: function(data) {
                             if (data != 'x') {
                                 precioespecial = data.preciounitariomo;
-                            }
+                            }  
                         }
                     });
                     if (precioespecial != -1 && parseFloat(precioespecial, 10) < parseFloat($price, 10)) {
                         preciomo = precioespecial;
+                    } else {
+                        preciomo = $price;
                     }
-
                     //mostramos la notificacion
                     if ($tipo == "kit") {
                         var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -628,8 +629,8 @@
                             miprecio3 = $precio3;
                             preciomo = preciomo;
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
-                            document.getElementById('preciounitariomo').value = (preciomo).toFixed(2);
-                            document.getElementById('preciofinal').value = (preciomo).toFixed(2);
+                            document.getElementById('preciounitariomo').value = preciomo;
+                            document.getElementById('preciofinal').value = preciomo;
                         } else if (monedaproducto == "soles" && monedafactura == "soles") {
                             preciototalI = ($price).toFixed(2);
                             simbolomonedaproducto = "S/.";
@@ -638,8 +639,8 @@
                             miprecio3 = $precio3;
                             preciomo = preciomo;
                             document.getElementById('preciounitario').value = ($price).toFixed(2);
-                            document.getElementById('preciounitariomo').value = (preciomo).toFixed(2);
-                            document.getElementById('preciofinal').value = (preciomo).toFixed(2);
+                            document.getElementById('preciounitariomo').value = preciomo;
+                            document.getElementById('preciofinal').value = preciomo;
                         } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                             preciototalI = ($price * mitasacambio1).toFixed(2);
                             simbolomonedaproducto = "$";

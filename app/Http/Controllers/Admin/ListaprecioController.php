@@ -82,8 +82,7 @@ class ListaprecioController extends Controller
             ->select('c.id', 'c.nombre', 'c.ruc') 
             ->where('lp.product_id', '=', $id) 
             ->get(); 
-
-        
+ 
         return $listaclientes;
     }
 
@@ -129,9 +128,9 @@ class ListaprecioController extends Controller
                 'lp.preciounitariomo'
             )
             ->where('lp.id', '=', $id)->first();
-
         return  $product;
     }
+    
     public function destroy(int $idlista)
     {
         $listaprecio = Listaprecio::find($idlista);

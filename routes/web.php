@@ -100,7 +100,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::controller(App\Http\Controllers\Admin\InventarioController::class)->group(function () {
             Route::get('/inventario', 'index')->name('inventario.index');
             Route::get('/inventario2', 'index2')->name('inventario2.index');
-            Route::get('/inventorystock', 'index3'); 
+            Route::get('/inventorystock', 'index3');
             Route::get('/inventario/create', 'create');
             Route::post('/inventario', 'store');
             Route::get('/inventario/{inventario_id}/edit', 'edit');
@@ -185,6 +185,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
             Route::get('/reporte/tabladatos', 'infoproductos');
             Route::get('/reporte/datosproductos/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datosproductos');
+            
             Route::get('/reporte/rotacionstock', 'rotacionstock');
             Route::get('/reporte/datosrotacionstock/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datosrotacionstock');
             Route::get('/reporte/detallecompras/{fechainicio}/{fechafin}/{empresa}/{producto}', 'detallecompras');
@@ -205,19 +206,19 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/historial/{historial_id}/delete', 'destroy');
             Route::get('/historial/limpiartabla', 'limpiartabla');
         });
-         //Ruta de las ventas antiguas
-         Route::controller(App\Http\Controllers\Admin\VentasantiguasController::class)->group(function () {
-            Route::get('/ventasantiguas', 'index')->name('ventasantiguas.index'); 
+        //Ruta de las ventas antiguas
+        Route::controller(App\Http\Controllers\Admin\VentasantiguasController::class)->group(function () {
+            Route::get('/ventasantiguas', 'index')->name('ventasantiguas.index');
             Route::get('ventasantiguas/{venta_id}/delete', 'destroy');
             Route::get('/ventasantiguas/show/{id}', 'show'); //ver  
-            
+
         });
         //Rutas de lA Lista de precios
         Route::controller(App\Http\Controllers\Admin\ListaprecioController::class)->group(function () {
             Route::get('/listaprecios', 'index')->name('listaprecio.index');
             Route::get('/listaprecios/create', 'create');
             Route::post('/listaprecios', 'store');
-            Route::get('/listaprecios/clientesxproducto/{id}', 'clientesxproducto'); 
+            Route::get('/listaprecios/clientesxproducto/{id}', 'clientesxproducto');
             Route::get('/listaprecios/{product}/edit', 'edit');
             Route::put('/listaprecios/{product}', 'update');
             Route::get('/listaprecios/{product_id}/delete', 'destroy');

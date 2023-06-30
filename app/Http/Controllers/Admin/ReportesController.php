@@ -788,9 +788,9 @@ class ReportesController extends Controller
         $productokits = $this->todosestandarkit($kitscompras, $kitsventas, $producto);
 
         $datos = $this->coninfocompleta($miscompras, $misventas);
-         
+
         $unidos = $datos->concat($productokits);
-         
+
         $unidosensoles = $this->ventasycomprasensoles($unidos);
 
         return $unidosensoles;
@@ -1315,7 +1315,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $miskits = DB::table('ventas as v')
@@ -1339,7 +1340,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $misproductos = $productos->concat($miskits);
@@ -1361,7 +1363,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
             }
@@ -1384,7 +1387,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $miskits = DB::table('ventas as v')
@@ -1407,7 +1411,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $misproductos = $productos->concat($miskits);
@@ -1428,7 +1433,8 @@ class ReportesController extends Controller
                         'dv.preciounitariomo',
                         'v.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
             }
@@ -1460,6 +1466,8 @@ class ReportesController extends Controller
                         $venta->put('tasacambio', $misventas[$i]->tasacambio);
                         $venta->put('preciofinal', $costoprod);
                         $venta->put('fecha', $misventas[$i]->fecha);
+                        $venta->put('idempresa', $misventas[$i]->idempresa);
+                        $venta->put('idproducto', $misventas[$i]->idproducto);
                         $resultado->push($venta);
                     }
                     if ($producto == "-1") {
@@ -1471,6 +1479,8 @@ class ReportesController extends Controller
                         $venta->put('tasacambio', $misventas[$i]->tasacambio);
                         $venta->put('preciofinal', $costoprod);
                         $venta->put('fecha', $misventas[$i]->fecha);
+                        $venta->put('idempresa', $misventas[$i]->idempresa);
+                        $venta->put('idproducto', $misventas[$i]->idproducto);
                         $resultado->push($venta);
                     }
                 }
@@ -1483,6 +1493,8 @@ class ReportesController extends Controller
                 $venta->put('tasacambio', $misventas[$i]->tasacambio);
                 $venta->put('preciofinal', $misventas[$i]->preciounitariomo);
                 $venta->put('fecha', $misventas[$i]->fecha);
+                $venta->put('idempresa', $misventas[$i]->idempresa);
+                $venta->put('idproducto', $misventas[$i]->idproducto);
                 $resultado->push($venta);
             }
         }
@@ -1539,6 +1551,8 @@ class ReportesController extends Controller
             $producto->put('preciofinal', $sumcosto);
             $producto->put('moneda', "dolares");
             $producto->put('fecha', $misventasunicas[$x]['fecha']);
+            $producto->put('idempresa', $misventasunicas[$x]['idempresa']);
+            $producto->put('idproducto', $misventasunicas[$x]['idproducto']);
             $resultado->push($producto);
         }
         return $resultado;
@@ -1566,7 +1580,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
 
@@ -1591,7 +1606,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $misproductos = $productos->concat($miskits);
@@ -1613,7 +1629,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
             }
@@ -1636,7 +1653,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $miskits = DB::table('ingresos as i')
@@ -1659,7 +1677,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
                 $misproductos = $productos->concat($miskits);
@@ -1680,7 +1699,8 @@ class ReportesController extends Controller
                         'di.preciounitariomo',
                         'i.fecha',
                         'p.tipo',
-                        'p.id as idproducto'
+                        'p.id as idproducto',
+                        'e.id as idempresa'
                     )
                     ->get();
             }
@@ -1691,12 +1711,13 @@ class ReportesController extends Controller
     //otros
     public function detalleventas($fechainicio, $fechafin, $empresa, $producto)
     {
-        $misventas = $this->obtenermisventas($fechainicio, $fechafin, $empresa, $producto);
+        $misventas = $this->obtenermisventas($fechainicio, $fechafin,  $empresa, $producto);
         $misventasestandar = $this->productosestandar2($misventas, $producto);
         $resultado  = $this->sumarresultado($misventasestandar, 'venta');
 
         return $resultado;
     }
+    
     public function obtenermisventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $productos = DB::table('ventas as v')
@@ -1706,8 +1727,8 @@ class ReportesController extends Controller
             ->join('products as p', 'dv.product_id', '=', 'p.id')
             ->where('v.fecha', '<=', $fechafin)
             ->where('v.fecha', '>=', $fechainicio)
-            ->where('e.nombre', '=', $empresa)
-            ->where('p.nombre', '=', $producto)
+            ->where('e.id', '=', $empresa)
+            ->where('p.id', '=', $producto)
             ->select(
                 'e.nombre as empresa',
                 'p.nombre as producto',

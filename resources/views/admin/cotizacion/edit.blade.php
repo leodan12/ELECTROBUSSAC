@@ -514,6 +514,8 @@
                     });
                     if (precioespecial != -1 && precioespecial < $price) {
                         preciomo = precioespecial;
+                    } else {
+                        preciomo = $price;
                     }
 
                     monedafactura = $('[name="moneda"]').val();

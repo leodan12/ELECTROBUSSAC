@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-@push('css')
-    <link href="{{ asset('admin/required.css') }}" rel="stylesheet" type="text/css" />
-@endpush
+
 @section('content')
     <div class="row">
         <div class="col-md-12  ">

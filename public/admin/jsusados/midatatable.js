@@ -1,6 +1,14 @@
-
 var mitabla;
 function iniciarTablaIndex(tabla, ruta, columnas, btns) {
+    //para agregar un input de busqueda en cada columna
+    $(tabla + ' thead th').each(function () {
+        var title = $(this).text();
+        if (title != "ACCIONES") {
+            $(this).html(title + ' <br>  <input style="width:100%;"   type="text"/>');
+        }
+    });
+
+    //se inicia la tabla como datatables 
     mitabla = $(tabla).DataTable({
         processing: true,
         serverSide: true,
@@ -51,12 +59,23 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
             }
         }],
     });
+
+    //para hacer la busqueda al cambiar el valor de un input de una columna
+    mitabla.columns().every(function () {
+        var table = this;
+        $('input', this.header()).on('keyup change', function () {
+            if (table.search() !== this.value) { 
+                    table.search(this.value).draw(); 
+            }
+        });
+    });
 }
 
+//para recargar la tabla despues de hacer un cambio
 function recargartabla() {
     mitabla.ajax.reload(null, false);
 }
-
+//iniciar la tabla 2
 function inicializartabla1(inicializart) {
     if (inicializart == 0) {
         $('#mitabla1').DataTable({
@@ -93,7 +112,7 @@ function inicializartabla1(inicializart) {
         });
     }
 }
-
+//iniciar la tabla de reportes con botones
 function inicializartabladatos(btns, tabla, titulo) {
     $(tabla).DataTable({
         "language": {
