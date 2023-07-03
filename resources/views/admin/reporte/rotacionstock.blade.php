@@ -36,7 +36,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <table class="table table-bordered table-striped" style="width: 100%" id="mitablaprod"
+                    <table class="table table-bordered table-striped" id="mitablaprod"
                         name="mitablaprod">
                         <thead class="fw-bold text-primary">
                             <tr>

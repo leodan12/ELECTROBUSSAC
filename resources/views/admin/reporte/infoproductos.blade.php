@@ -33,6 +33,11 @@
                     <input type="date" class="form-control " id="fechafin" name="fechafin" />
                 </div>
 
+                <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
+                    <button type="button" class="btn btn-warning" onclick="traertodos();">Traer todos los registros
+                    </button>
+                </div>
+
             </div>
             <div class="row">
                 <div class="col">
@@ -86,6 +91,31 @@
             traerdatos();
 
         });
+
+        function traertodos() {
+            Swal.fire({
+                title: "Obteniendo Datos...", 
+                imageUrl: '{{ asset('admin/images/loading2.gif') }}',
+                imageWidth: "150px",
+                imageHeight: "150px",  
+                showConfirmButton:false,
+                allowOutsideClick: false,
+
+            });
+            traertodosdatos();
+            
+        }
+        function traertodosdatos(){
+            var empresa = document.getElementById("company_id").value;
+            var producto = document.getElementById("producto").value;
+            var fechainicio = "01-01-2000"; //document.getElementById("fechainicio").value;
+            var fechafin = "31-12-2099"; //document.getElementById("fechafin").value;
+            var urldatosproductos = "{{ url('admin/reporte/datosproductos') }}";
+            $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
+                llenartabla(data);
+                Swal.close({});
+            });
+        }
 
         function traerdatos() {
             var fechainicio = document.getElementById("fechainicio").value;

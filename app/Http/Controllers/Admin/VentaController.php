@@ -138,7 +138,6 @@ class VentaController extends Controller
         }
 
         $venta = new Venta;
-
         $venta->company_id = $company->id;
         $venta->cliente_id = $cliente->id;
         $venta->fecha = $fecha;
@@ -158,6 +157,18 @@ class VentaController extends Controller
         if ($formapago == 'credito') {
             $venta->fechav = $fechav;
         }
+        //datos del pago
+        $venta->nrooc = $request->nrooc;
+        $venta->guiaremision = $request->guiaremision;
+        $venta->fechapago = $request->fechapago;
+        $venta->constanciaretencion = $request->constanciaretencion;
+        $venta->acuenta1 = $request->acuenta1;
+        $venta->acuenta2 = $request->acuenta2;
+        $venta->acuenta3 = $request->acuenta3;
+        $venta->saldo = $request->saldo;
+        $venta->retencion = $request->retencion;
+        $venta->montopagado = $request->montopagado;
+        
         //guardamos la venta y los detalles
         if ($venta->save()) {
 
@@ -583,6 +594,18 @@ class VentaController extends Controller
         } elseif ($formapago == 'contado') {
             $venta->fechav = null;
         }
+        //datos del pago
+        $venta->nrooc = $request->nrooc;
+        $venta->guiaremision = $request->guiaremision;
+        $venta->fechapago = $request->fechapago;
+        $venta->constanciaretencion = $request->constanciaretencion;
+        $venta->acuenta1 = $request->acuenta1;
+        $venta->acuenta2 = $request->acuenta2;
+        $venta->acuenta3 = $request->acuenta3;
+        $venta->saldo = $request->saldo;
+        $venta->retencion = $request->retencion;
+        $venta->montopagado = $request->montopagado;
+        
         //guardamos la venta y los detalles
         if ($venta->update()) {
             $product = $request->Lproduct;
@@ -691,7 +714,17 @@ class VentaController extends Controller
                 'dv.servicio',
                 'dv.preciofinal',
                 'dv.observacionproducto',
-                'v.pagada'
+                'v.pagada',
+                'v.nrooc',
+                'v.guiaremision',
+                'v.fechapago',
+                'v.constanciaretencion',
+                'v.acuenta1',
+                'v.acuenta2',
+                'v.acuenta3',
+                'v.saldo',
+                'v.retencion',
+                'v.montopagado'
 
             )
             ->where('v.id', '=', $id)->get();

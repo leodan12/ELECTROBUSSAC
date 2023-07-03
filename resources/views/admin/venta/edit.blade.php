@@ -36,10 +36,23 @@
                                 @enderror
                             </div>
 
-                            <div class="col-md-6 mb-3">
+                            {{-- <div class="col-md-6 mb-3">
                                 <label class="form-label  ">NUMERO DE FACTURA</label>
                                 <input type="text" name="factura" id="factura" class="form-control  "
                                     value="{{ $venta->factura }}" />
+                                @error('factura')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div> --}}
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" id="labelfactura" name="labelfactura">NUMERO DE FACTURA</label>
+                                <input type="text" name="factura" id="factura" class="form-control"
+                                    value="{{ $venta->factura }}" />
+                                <div class="invalid-feedback" name="validacionfactura" id="validacionfactura"
+                                    style="color: red;">
+                                    ¡Numero de Factura ya Registrado!
+                                </div>
                                 @error('factura')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -100,7 +113,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">EMPRESA</label>
-                                <select class="form-select select2 " name="company_id" required>
+                                <select class="form-select select2 " name="company_id" id="company_id" required>
                                     <option value="" disabled selected>Seleccione una opción</option>
                                     @foreach ($companies as $company)
                                         <option value="{{ $company->id }}"
@@ -126,8 +139,8 @@
                                     @elseif($venta->moneda == 'soles')
                                         <span class="input-group-text" id="spancostoventa">S/.</span>
                                     @endif
-                                    <input type="number" name="costoventa" id="costoventa" min="0.1" step="0.01"
-                                        class="form-control  required" required readonly
+                                    <input type="number" name="costoventa" id="costoventa" min="0.1"
+                                        step="0.01" class="form-control  required" required readonly
                                         value="{{ $venta->costoventa }}" />
                                 </div>
                             </div>
@@ -152,140 +165,295 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <hr>
-                            <h4>Agregar Detalle de la Venta</h4>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label " id="labelproducto">PRODUCTO</label>
-                                <select class="form-select select2  " name="product" id="product">
-                                    <option selected disabled value="">Seleccione una opción</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
-                                <input type="number" name="cantidad" id="cantidad" min="1"
-                                    step="1"class="form-control " />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciounitarioref">PRECIO UNITARIO
-                                        (REFERENCIAL):</label>
-                                    <span class="input-group-text" id="spanpreciounitarioref"></span>
-                                    <input type="number" name="preciounitario" min="0" step="0.01"
-                                        id="preciounitario" readonly class="form-control " />
+
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12">
+                                    <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                    <nav class="" style="border-radius: 5px; ">
+                                        <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+
+                                            <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab"
+                                                data-bs-target="#nav-detalles" type="button" role="tab"
+                                                aria-controls="nav-detalles" aria-selected="false">DETALLES</button>
+                                            <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab"
+                                                data-bs-target="#nav-condiciones" type="button" role="tab"
+                                                aria-controls="nav-condiciones" aria-selected="false">¿AGREGAR DATOS DE
+                                                PAGO?</button>
+                                        </div>
+                                    </nav>
+                                    <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel"
+                                            aria-labelledby="nav-detalles-tab" tabindex="0">
+                                            <br>
+                                            <div class="row">
+                                                <h4>Agregar Detalle de la Venta</h4>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label " id="labelproducto">PRODUCTO</label>
+                                                    <select class="form-select select2  " name="product" id="product">
+                                                        <option selected disabled value="">Seleccione una opción
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" name="labelcantidad"
+                                                        id="labelcantidad">CANTIDAD</label>
+                                                    <input type="number" name="cantidad" id="cantidad" min="1"
+                                                        step="1"class="form-control " />
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelpreciounitarioref">PRECIO UNITARIO
+                                                            (REFERENCIAL):</label>
+                                                        <span class="input-group-text" id="spanpreciounitarioref"></span>
+                                                        <input type="number" name="preciounitario" min="0"
+                                                            step="0.01" id="preciounitario" readonly
+                                                            class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelpreciounitario">PRECIO UNITARIO</label>
+                                                        <span class="input-group-text" id="spanpreciounitario"></span>
+                                                        <input type="number" name="preciounitariomo" min="0"
+                                                            step="0.01" id="preciounitariomo" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelservicio"
+                                                            name="labelservicio">SERVICIO ADICIONAL:</label>
+                                                        <span class="input-group-text" id="spanservicio"></span>
+                                                        <input type="number" name="servicio" min="0"
+                                                            step="0.01" id="servicio"class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelpreciototal">PRECIO
+                                                            TOTAL POR
+                                                            PRODUCTO</label>
+                                                        <span class="input-group-text" id="spanpreciototal"></span>
+                                                        <input type="number" name="preciofinal" min="0"
+                                                            step="0.01" id="preciofinal" readonly
+                                                            class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 mb-3">
+                                                    <label class="form-label "
+                                                        id="labelobservacionproducto">OBSERVACION:</label>
+                                                    <input type="text" name="observacionproducto"
+                                                        id="observacionproducto" class="form-control  gui-input" />
+                                                </div>
+                                                @php $ind=0 ; @endphp
+                                                @php $indice=count($detallesventa) ; @endphp
+                                                <button type="button" class="btn btn-info" id="addDetalleBatch"
+                                                    onclick="agregarFila('{{ $indice }}')"><i
+                                                        class="fa fa-plus"></i> Agregar Producto
+                                                    a la Venta</button>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
+                                                        <thead class="fw-bold text-primary" name="mitabla"
+                                                            id="mitabla">
+                                                            <tr>
+                                                                <th>PRODUCTO</th>
+                                                                <th>OBSERVACION</th>
+                                                                <th>CANTIDAD</th>
+                                                                <th>PRECIO UNITARIO(REFERENCIAL)</th>
+                                                                <th>PRECIO UNITARIO</th>
+                                                                <th>SERVICIO ADICIONAL</th>
+                                                                <th>PRECIO FINAL DEL PRODUCTO</th>
+                                                                <th>ELIMINAR</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @php $datobd="db" ;  @endphp
+                                                            @foreach ($detallesventa as $detalle)
+                                                                @php $ind++;    @endphp
+                                                                <tr id="fila{{ $ind }}">
+                                                                    <td> <b> {{ $detalle->producto }} </b>
+                                                                        @if ($detalle->tipo == 'kit')
+                                                                            : <br>
+                                                                            @foreach ($detalleskit as $kit)
+                                                                                @if ($detalle->idproducto == $kit->product_id)
+                                                                                    -{{ $kit->cantidad }}
+                                                                                    {{ $kit->producto }} <br>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </td>
+                                                                    <td> {{ $detalle->observacionproducto }}</td>
+                                                                    <td> {{ $detalle->cantidad }}</td>
+                                                                    <td>
+                                                                        @if ($detalle->moneda == 'soles')
+                                                                            S/.
+                                                                        @elseif($detalle->moneda == 'dolares')
+                                                                            $
+                                                                        @endif
+                                                                        {{ $detalle->preciounitario }}
+                                                                    </td>
+                                                                    <td>
+                                                                        @if ($venta->moneda == 'soles')
+                                                                            S/.
+                                                                        @elseif($venta->moneda == 'dolares')
+                                                                            $
+                                                                        @endif
+                                                                        {{ $detalle->preciounitariomo }}
+                                                                    </td>
+                                                                    <td>
+                                                                        @if ($venta->moneda == 'soles')
+                                                                            S/.
+                                                                        @elseif($venta->moneda == 'dolares')
+                                                                            $
+                                                                        @endif
+                                                                        {{ $detalle->servicio }}
+                                                                    </td>
+                                                                    <td><input type="hidden"
+                                                                            id="preciof{{ $ind }}"
+                                                                            value="{{ $detalle->preciofinal }}" />
+                                                                        @if ($venta->moneda == 'soles')
+                                                                            S/.
+                                                                        @elseif($venta->moneda == 'dolares')
+                                                                            $
+                                                                        @endif
+                                                                        {{ $detalle->preciofinal }}
+                                                                    </td>
+                                                                    <td>
+
+                                                                        <button type="button" class="btn btn-danger"
+                                                                            onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetalleventa }}', '{{ $detalle->idproducto }}'  )"
+                                                                            data-id="0"><i
+                                                                                class="bi bi-trash-fill"></i>ELIMINAR</button>
+
+                                                                    </td>
+
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel"
+                                            aria-labelledby="nav-condiciones-tab" tabindex="0">
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">NRO OC</label>
+                                                    <input type="text" name="nrooc" id="nrooc"
+                                                        class="form-control" value="{{ $venta->nrooc }}" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">GUIA DE REMISION</label>
+                                                    <input type="text" name="guiaremision" id="guiaremision"
+                                                        class="form-control" value="{{ $venta->guiaremision }}" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">FECHA DE PAGO</label>
+                                                    <input type="date" name="fechapago" id="fechapago"
+                                                        class="form-control" value="{{ $venta->fechapago }}" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">CONSTANCIA RETENCION</label>
+                                                    <input type="text" name="constanciaretencion"
+                                                        id="constanciaretencion" class="form-control"
+                                                        value="{{ $venta->constanciaretencion }}" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta">A CUENTA
+                                                            1</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spancuenta1">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spancuenta1">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="acuenta1" min="0"
+                                                            step="0.01" id="acuenta1" class="form-control"
+                                                            value="{{ $venta->acuenta1 }}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta2">A CUENTA
+                                                            2</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spancuenta2">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spancuenta2">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="acuenta2" min="0"
+                                                            step="0.01" id="acuenta2" class="form-control "
+                                                            value="{{ $venta->acuenta2 }}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta3">A CUENTA
+                                                            3</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spancuenta3">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spancuenta3">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="acuenta3" min="0"
+                                                            step="0.01" id="acuenta3" class="form-control "
+                                                            value="{{ $venta->acuenta3 }}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelsaldo">SALDO</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spansaldo">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spansaldo">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="saldo" min="0"
+                                                            step="0.01" id="saldo" class="form-control "
+                                                            value="{{ $venta->saldo }}" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelretencion">DETRACCION/RETENCION</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spanretencion">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spanretencion">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="retencion" min="0"
+                                                            step="0.01" id="retencion" class="form-control "
+                                                            value="{{ $venta->retencion }}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelmontopagado">MONTO
+                                                            PAGADO</label>
+                                                        @if ($venta->moneda == 'dolares')
+                                                            <span class="input-group-text" id="spanmontopagado">$</span>
+                                                        @elseif($venta->moneda == 'soles')
+                                                            <span class="input-group-text" id="spanmontopagado">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="montopagado" min="0"
+                                                            step="0.01" id="montopagado" class="form-control "
+                                                            value="{{ $venta->montopagado }}" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
-                                    <span class="input-group-text" id="spanpreciounitario"></span>
-                                    <input type="number" name="preciounitariomo" min="0" step="0.01"
-                                        id="preciounitariomo" class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelservicio"
-                                        name="labelservicio">SERVICIO ADICIONAL:</label>
-                                    <span class="input-group-text" id="spanservicio"></span>
-                                    <input type="number" name="servicio" min="0" step="0.01"
-                                        id="servicio"class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR
-                                        PRODUCTO</label>
-                                    <span class="input-group-text" id="spanpreciototal"></span>
-                                    <input type="number" name="preciofinal" min="0" step="0.01"
-                                        id="preciofinal" readonly class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-8 mb-3">
-                                <label class="form-label " id="labelobservacionproducto">OBSERVACION:</label>
-                                <input type="text" name="observacionproducto" id="observacionproducto"
-                                    class="form-control  gui-input" />
-                            </div>
-                            @php $ind=0 ; @endphp
-                            @php $indice=count($detallesventa) ; @endphp
-                            <button type="button" class="btn btn-info" id="addDetalleBatch"
-                                onclick="agregarFila('{{ $indice }}')"><i class="fa fa-plus"></i> Agregar Producto
-                                a la Venta</button>
 
-                            <div class="table-responsive">
-                                <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
-                                    <thead class="fw-bold text-primary" name="mitabla" id="mitabla">
-                                        <tr>
-                                            <th>PRODUCTO</th>
-                                            <th>OBSERVACION</th>
-                                            <th>CANTIDAD</th>
-                                            <th>PRECIO UNITARIO(REFERENCIAL)</th>
-                                            <th>PRECIO UNITARIO</th>
-                                            <th>SERVICIO ADICIONAL</th>
-                                            <th>PRECIO FINAL DEL PRODUCTO</th>
-                                            <th>ELIMINAR</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php $datobd="db" ;  @endphp
-                                        @foreach ($detallesventa as $detalle)
-                                            @php $ind++;    @endphp
-                                            <tr id="fila{{ $ind }}">
-                                                <td> <b> {{ $detalle->producto }} </b>
-                                                    @if ($detalle->tipo == 'kit')
-                                                        : <br>
-                                                        @foreach ($detalleskit as $kit)
-                                                            @if ($detalle->idproducto == $kit->product_id)
-                                                                -{{ $kit->cantidad }} {{ $kit->producto }} <br>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                </td>
-                                                <td> {{ $detalle->observacionproducto }}</td>
-                                                <td> {{ $detalle->cantidad }}</td>
-                                                <td>
-                                                    @if ($detalle->moneda == 'soles')
-                                                        S/.
-                                                    @elseif($detalle->moneda == 'dolares')
-                                                        $
-                                                    @endif {{ $detalle->preciounitario }}
-                                                </td>
-                                                <td>
-                                                    @if ($venta->moneda == 'soles')
-                                                        S/.
-                                                    @elseif($venta->moneda == 'dolares')
-                                                        $
-                                                    @endif {{ $detalle->preciounitariomo }}
-                                                </td>
-                                                <td>
-                                                    @if ($venta->moneda == 'soles')
-                                                        S/.
-                                                    @elseif($venta->moneda == 'dolares')
-                                                        $
-                                                    @endif {{ $detalle->servicio }}
-                                                </td>
-                                                <td><input type="hidden" id="preciof{{ $ind }}"
-                                                        value="{{ $detalle->preciofinal }}" />
-                                                    @if ($venta->moneda == 'soles')
-                                                        S/.
-                                                    @elseif($venta->moneda == 'dolares')
-                                                        $
-                                                    @endif {{ $detalle->preciofinal }}
-                                                </td>
-                                                <td>
 
-                                                    <button type="button" class="btn btn-danger"
-                                                        onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetalleventa }}', '{{ $detalle->idproducto }}'  )"
-                                                        data-id="0"><i class="bi bi-trash-fill"></i>ELIMINAR</button>
-
-                                                </td>
-
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <hr>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" id="btnguardar" name="btnguardar"
                                     class="btn btn-primary text-white float-end">Actualizar</button>
@@ -346,6 +514,7 @@
         var micantidad3 = null;
         var miprecio3 = null;
         var miprecio = 0;
+        var facturadisponible = "";
         estadoguardar = @json($detalles);
         idcompany = @json($venta->company_id);
         idcliente = @json($venta->cliente_id);
@@ -359,6 +528,7 @@
         var misdetalles = @json($detallesventa);
         var precioespecial = -1;
         var preciomo = 0;
+        document.getElementById("validacionfactura").style.display = 'none';
 
         $(document).ready(function() {
             $('.toast').toast();
@@ -666,6 +836,33 @@
             });
 
         });
+
+        factura.oninput = function() {
+            var mifactura = document.getElementById("factura");
+            var empresa = document.getElementById("company_id").value;
+            verificarfactura(empresa, mifactura.value);
+        };
+
+        function verificarfactura(empresa, factura) {
+            var xfactura = document.getElementById("factura");
+            var validacion = document.getElementById("validacionfactura");
+            if (empresa && factura) {
+                var urlvent = "{{ url('admin/venta/facturadisponible') }}";
+                $.get(urlvent + '/' + empresa + '/' + factura, function(data) {
+                    enviar = document.getElementById('btnguardar');
+                    facturadisponible = data;
+                    if (data == "SI") {
+                        xfactura.style.borderColor = "green";
+                        enviar.disabled = false;
+                        validacion.style.display = 'none';
+                    } else {
+                        xfactura.style.borderColor = "red";
+                        enviar.disabled = true;
+                        validacion.style.display = 'inline';
+                    }
+                });
+            }
+        }
 
         //funcion para agregar una fila
         var indice = 0;

@@ -139,7 +139,6 @@
                                     </nav>
                                     <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
                                     <div class="tab-content" id="nav-tabContent">
-
                                         <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel"
                                             aria-labelledby="nav-detalles-tab" tabindex="0">
                                             <br>

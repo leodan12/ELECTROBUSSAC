@@ -9,307 +9,519 @@
     </script>
 @endpush
 @section('content')
-    <div>
-        <div class="row">
-            <div class="col-md-12">
-
-                @if (session('message'))
-                    <div class="alert alert-success">{{ session('message') }}</div>
-                @endif
-                @if (session('verstock'))
-                    <script>
-                        mostrarstocks();
-                    </script>
-                @endif
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col">
-                                <h4 id="mititulo">REGISTRO DE VENTAS:
-                                </h4>
-                            </div>
-                            <div class="col">
-                                <h4>
-                                    @can('crear-venta')
-                                        <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir
-                                            venta</a>
-                                    @endcan
-                                </h4>
-                            </div>
+    <div class="row">
+        <div class="col-md-12">
+            @if (session('message'))
+                <div class="alert alert-success">{{ session('message') }}</div>
+            @endif
+            @if (session('verstock'))
+                <script>
+                    mostrarstocks();
+                </script>
+            @endif
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h4 id="mititulo">REGISTRO DE VENTAS:
+                            </h4>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <h5 id="sinnumerofactura"></h5>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped " id="mitabla" name="mitabla">
-                                <thead class="fw-bold text-primary">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>FACTURA</th>
-                                        <th>FECHA</th>
-                                        <th>CLIENTE</th>
-                                        <th>EMPRESA</th>
-                                        <th>MONEDA</th>
-                                        <th>FORMA PAGO</th>
-                                        <th>COSTO VENTA </th>
-                                        <th>PAGADA </th>
-                                        <th>ACCIONES</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tbody-mantenimientos">
-
-                                </tbody>
-                            </table>
-
+                        <div class="col">
+                            <h4>
+                                @can('crear-venta')
+                                    <a href="{{ url('admin/venta/create') }}" class="btn btn-primary float-end">Añadir
+                                        venta</a>
+                                @endcan
+                            </h4>
                         </div>
                     </div>
-                    {{-- modal paera ver la venta --}}
-                    <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="mimodalLabel">Ver Venta</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="row">
-                                            <div class="col-md-4   mb-3">
-                                                <label for="verFecha" class="col-form-label">FECHA:</label>
-                                                <input type="text" class="form-control " id="verFecha" readonly>
+                    <div class="row">
+                        <div class="col">
+                            <h5 id="sinnumerofactura"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped " id="mitabla" name="mitabla">
+                            <thead class="fw-bold text-primary">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>FACTURA</th>
+                                    <th>FECHA</th>
+                                    <th>CLIENTE</th>
+                                    <th>EMPRESA</th>
+                                    <th>MONEDA</th>
+                                    <th>FORMA PAGO</th>
+                                    <th>COSTO VENTA </th>
+                                    <th>PAGADA </th>
+                                    <th>ACCIONES</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-mantenimientos">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{-- modal paera ver la venta --}}
+                <div class="modal fade " id="mimodal" tabindex="-1" aria-labelledby="mimodal" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="mimodalLabel">Ver Venta</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-4   mb-3">
+                                            <label for="verFecha" class="col-form-label">FECHA:</label>
+                                            <input type="text" class="form-control " id="verFecha" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verFactura" class="col-form-label">NUMERO FACTURA:</label>
+                                            <input type="text" class="form-control" id="verFactura" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verFormapago" class="col-form-label">FORMA PAGO:</label>
+                                            <input type="text" class="form-control" id="verFormapago" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3 " id="divfechav">
+                                            <label for="verFechav" class="col-form-label">FECHA VENCIMIENTO:</label>
+                                            <input type="text" class="form-control" id="verFechav" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verMoneda" class="col-form-label">MONEDA:</label>
+                                            <input type="text" class="form-control " id="verMoneda" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3" id="divtasacambio">
+                                            <label for="verTipocambio" class="col-form-label">TIPO DE CAMBIO:</label>
+                                            <input type="text" class="form-control " id="verTipocambio" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verEmpresa" class="col-form-label">EMPRESA:</label>
+                                            <input type="text" class="form-control " id="verEmpresa" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verCliente" class="col-form-label">CLIENTE:</label>
+                                            <input type="text" class="form-control " id="verCliente" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <div class="input-group">
+                                                <label for="verPrecioventa" class="col-form-label input-group">PRECIO
+                                                    VENTA:</label>
+                                                <span class="input-group-text" id="spancostoventa"></span>
+                                                <input type="text" class="form-control " id="verPrecioventa" readonly>
                                             </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verFactura" class="col-form-label">NUMERO FACTURA:</label>
-                                                <input type="text" class="form-control" id="verFactura" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3" id="divobservacion">
+                                            <label for="verObservacion" class="col-form-label">OBSERVACION:</label>
+                                            <input type="text" class="form-control " id="verObservacion" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verPagada" class="col-form-label">FACTURA PAGADA:</label>
+                                            <input type="text" class="form-control " id="verPagada" readonly>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-12">
+                                        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                        <nav class="" style="border-radius: 5px; ">
+                                            <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+
+                                                <button class="nav-link active" id="nav-detalles-tab"
+                                                    data-bs-toggle="tab" data-bs-target="#nav-detalles" type="button"
+                                                    role="tab" aria-controls="nav-detalles"
+                                                    aria-selected="false">DETALLES</button>
+                                                <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#nav-condiciones" type="button" role="tab"
+                                                    aria-controls="nav-condiciones" aria-selected="false"> DATOS DE
+                                                    PAGO</button>
                                             </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verFormapago" class="col-form-label">FORMA PAGO:</label>
-                                                <input type="text" class="form-control" id="verFormapago" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3 " id="divfechav">
-                                                <label for="verFechav" class="col-form-label">FECHA VENCIMIENTO:</label>
-                                                <input type="text" class="form-control" id="verFechav" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verMoneda" class="col-form-label">MONEDA:</label>
-                                                <input type="text" class="form-control " id="verMoneda" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3" id="divtasacambio">
-                                                <label for="verTipocambio" class="col-form-label">TIPO DE CAMBIO:</label>
-                                                <input type="text" class="form-control " id="verTipocambio" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verEmpresa" class="col-form-label">EMPRESA:</label>
-                                                <input type="text" class="form-control " id="verEmpresa" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verCliente" class="col-form-label">CLIENTE:</label>
-                                                <input type="text" class="form-control " id="verCliente" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <div class="input-group">
-                                                    <label for="verPrecioventa" class="col-form-label input-group">PRECIO
-                                                        VENTA:</label>
-                                                    <span class="input-group-text" id="spancostoventa"></span>
-                                                    <input type="text" class="form-control " id="verPrecioventa"
-                                                        readonly>
+                                        </nav>
+                                        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel"
+                                                aria-labelledby="nav-detalles-tab" tabindex="0">
+                                                <br>
+                                                <div class="table-responsive">
+                                                    <table class="table table-row-bordered gy-5 gs-5" id="detallesventa">
+                                                        <thead class="fw-bold text-primary">
+                                                            <tr>
+                                                                <th>Producto</th>
+                                                                <th>Observacion</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Precio Unitario(referencial)</th>
+                                                                <th>precio Unitario</th>
+                                                                <th>Servicio Adicional</th>
+                                                                <th>Costo Productos</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr></tr>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                            <div class=" col-md-4   mb-3" id="divobservacion">
-                                                <label for="verObservacion" class="col-form-label">OBSERVACION:</label>
-                                                <input type="text" class="form-control " id="verObservacion" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verPagada" class="col-form-label">FACTURA PAGADA:</label>
-                                                <input type="text" class="form-control " id="verPagada" readonly>
+                                            <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel"
+                                                aria-labelledby="nav-condiciones-tab" tabindex="0">
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label">NRO OC</label>
+                                                        <input type="text" name="0nrooc" id="0nrooc"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">GUIA DE REMISION</label>
+                                                        <input type="text" name="0guiaremision" id="0guiaremision"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">FECHA DE PAGO</label>
+                                                        <input type="date" name="0fechapago" id="0fechapago"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">CONSTANCIA
+                                                            RETENCION</label>
+                                                        <input type="text" name="0constanciaretencion"
+                                                            id="0constanciaretencion" class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="0labelacuenta">A
+                                                                CUENTA 1</label>
+                                                            <span class="input-group-text" id="0spanacuenta1"></span>
+                                                            <input type="number" name="0acuenta1" min="0"
+                                                                step="0.01" id="0acuenta1" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="0labelacuenta2">A
+                                                                CUENTA 2</label>
+                                                            <span class="input-group-text" id="0spanacuenta2"></span>
+                                                            <input type="number" name="0acuenta2" min="0"
+                                                                step="0.01" id="0acuenta2" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="labelacuenta3">A
+                                                                CUENTA 3</label>
+                                                            <span class="input-group-text" id="0spanacuenta3"></span>
+                                                            <input type="number" name="0acuenta3" min="0"
+                                                                step="0.01" id="0acuenta3" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelsaldo">SALDO</label>
+                                                            <span class="input-group-text" id="0spansaldo"></span>
+                                                            <input type="number" name="0saldo" min="0"
+                                                                step="0.01" id="0saldo" class="form-control " />
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelretencion">DETRACCION/RETENCION</label>
+                                                            <span class="input-group-text" id="0spanretencion"></span>
+                                                            <input type="number" name="0retencion" min="0"
+                                                                step="0.01" id="0retencion" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelmontopagado">MONTO
+                                                                PAGADO</label>
+                                                            <span class="input-group-text" id="0spanmontopagado"></span>
+                                                            <input type="number" name="0montopagado" min="0"
+                                                                step="0.01" id="0montopagado" class="form-control " />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                             </div>
 
                                         </div>
-                                    </form>
-                                    <div class="table-responsive">
-                                        <table class="table table-row-bordered gy-5 gs-5" id="detallesventa">
-                                            <thead class="fw-bold text-primary">
-                                                <tr>
-                                                    <th>Producto</th>
-                                                    <th>Observacion</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Precio Unitario(referencial)</th>
-                                                    <th>precio Unitario</th>
-                                                    <th>Servicio Adicional</th>
-                                                    <th>Costo Productos</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr></tr>
-                                            </tbody>
-                                        </table>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" id="generarfactura"> Generar Pdf de la
-                                        Factura </button>
-                                    @can('editar-venta')
-                                        <button type="button" class="btn btn-warning" id="pagarfactura">Pagar
-                                            Factura</button>
-                                    @endcan
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                </div> 
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="generarfactura"> Generar Pdf de la
+                                    Factura </button>
+                                @can('editar-venta')
+                                    <button type="button" class="btn btn-warning" id="pagarfactura">Pagar
+                                        Factura</button>
+                                @endcan
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- mis modales para ver los creditos vencidos --}}
-                    <div class="modal fade" id="modalCreditos1" aria-hidden="true" aria-labelledby="modalCreditos1Label"
-                        tabindex="-1">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modalCreditos1Label1"> </h1>
+                {{-- mis modales para ver los creditos vencidos --}}
+                <div class="modal fade" id="modalCreditos1" aria-hidden="true" aria-labelledby="modalCreditos1Label"
+                    tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalCreditos1Label1"> </h1>
 
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
 
-                                    <table class="table table-bordered table-striped " id="mitabla1" name="mitabla1">
-                                        <thead class="fw-bold text-primary">
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>FECHA</th>
-                                                <th>FECHA VENC</th>
-                                                <th>CLIENTE</th>
-                                                <th>EMPRESA</th>
-                                                <th>MONEDA</th>
-                                                <th>FORMA PAGO</th>
-                                                <th>COSTO VENTA </th>
-                                                <th>ACCIONES</th>
-                                            </tr>
-                                        </thead>
-                                        <Tbody id="tbody-mantenimientos">
-                                            <tr></tr>
+                                <table class="table table-bordered table-striped " id="mitabla1" name="mitabla1">
+                                    <thead class="fw-bold text-primary">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>FECHA</th>
+                                            <th>FECHA VENC</th>
+                                            <th>CLIENTE</th>
+                                            <th>EMPRESA</th>
+                                            <th>MONEDA</th>
+                                            <th>FORMA PAGO</th>
+                                            <th>COSTO VENTA </th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                    <Tbody id="tbody-mantenimientos">
+                                        <tr></tr>
 
-                                        </Tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
+                                    </Tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
 
-                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {{-- modal para ver los datosde los creditos x vencer --}}
-                    <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos2Label2"
-                        tabindex="-1">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modalCreditos2Label2">Ver Venta a Credito</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form>
-                                        <div class="row">
-                                            <div class="col-md-4   mb-3">
-                                                <label for="verFecha1" class="col-form-label">FECHA:</label>
-                                                <input type="text" class="form-control " id="verFecha1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verFactura1" class="col-form-label">NUMERO FACTURA:</label>
-                                                <input type="text" class="form-control" id="verFactura1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verFormapago1" class="col-form-label">FORMA PAGO:</label>
-                                                <input type="text" class="form-control" id="verFormapago1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3 " id="divfechav1">
-                                                <label for="verFechav1" class="col-form-label">FECHA VENCIMIENTO:</label>
-                                                <input type="text" class="form-control" id="verFechav1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verMoneda1" class="col-form-label">MONEDA:</label>
-                                                <input type="text" class="form-control " id="verMoneda1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3" id="divtasacambio">
-                                                <label for="verTipocambio1" class="col-form-label">TIPO DE CAMBIO:</label>
-                                                <input type="text" class="form-control " id="verTipocambio1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verEmpresa1" class="col-form-label">EMPRESA:</label>
-                                                <input type="text" class="form-control " id="verEmpresa1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verCliente1" class="col-form-label">CLIENTE:</label>
-                                                <input type="text" class="form-control " id="verCliente1" readonly>
-                                            </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <div class="input-group">
-                                                    <label for="verPrecioventa1" class="col-form-label input-group">PRECIO
-                                                        VENTA:</label>
-                                                    <span class="input-group-text" id="spancostoventa1"></span>
-                                                    <input type="text" class="form-control " id="verPrecioventa1"
-                                                        readonly>
-                                                </div>
-                                            </div>
-                                            <div class=" col-md-4   mb-3" id="divobservacion1">
-                                                <label for="verObservacion1" class="col-form-label">OBSERVACION:</label>
-                                                <input type="text" class="form-control " id="verObservacion1"
+                {{-- modal para ver los datosde los creditos x vencer --}}
+                <div class="modal fade" id="modalVer2" aria-hidden="true" aria-labelledby="modalCreditos2Label2"
+                    tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="modalCreditos2Label2">Ver Venta a Credito</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-md-4   mb-3">
+                                            <label for="verFecha1" class="col-form-label">FECHA:</label>
+                                            <input type="text" class="form-control " id="verFecha1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verFactura1" class="col-form-label">NUMERO FACTURA:</label>
+                                            <input type="text" class="form-control" id="verFactura1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verFormapago1" class="col-form-label">FORMA PAGO:</label>
+                                            <input type="text" class="form-control" id="verFormapago1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3 " id="divfechav1">
+                                            <label for="verFechav1" class="col-form-label">FECHA VENCIMIENTO:</label>
+                                            <input type="text" class="form-control" id="verFechav1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verMoneda1" class="col-form-label">MONEDA:</label>
+                                            <input type="text" class="form-control " id="verMoneda1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3" id="divtasacambio">
+                                            <label for="verTipocambio1" class="col-form-label">TIPO DE CAMBIO:</label>
+                                            <input type="text" class="form-control " id="verTipocambio1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verEmpresa1" class="col-form-label">EMPRESA:</label>
+                                            <input type="text" class="form-control " id="verEmpresa1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verCliente1" class="col-form-label">CLIENTE:</label>
+                                            <input type="text" class="form-control " id="verCliente1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <div class="input-group">
+                                                <label for="verPrecioventa1" class="col-form-label input-group">PRECIO
+                                                    VENTA:</label>
+                                                <span class="input-group-text" id="spancostoventa1"></span>
+                                                <input type="text" class="form-control " id="verPrecioventa1"
                                                     readonly>
                                             </div>
-                                            <div class=" col-md-4   mb-3">
-                                                <label for="verPagada1" class="col-form-label">FACTURA PAGADA:</label>
-                                                <input type="text" class="form-control " id="verPagada1" readonly>
-                                            </div>
-
                                         </div>
-                                    </form>
-                                    <div class="table-responsive">
-                                        <table class="table table-row-bordered gy-5 gs-5" id="detallesventa1">
-                                            <thead class="fw-bold text-primary">
-                                                <tr>
-                                                    <th>Producto</th>
-                                                    <th>Observacion</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Precio Unitario(referencial)</th>
-                                                    <th>precio Unitario</th>
-                                                    <th>Servicio Adicional</th>
-                                                    <th>Costo Productos</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr></tr>
-                                            </tbody>
-                                        </table>
+                                        <div class=" col-md-4   mb-3" id="divobservacion1">
+                                            <label for="verObservacion1" class="col-form-label">OBSERVACION:</label>
+                                            <input type="text" class="form-control " id="verObservacion1" readonly>
+                                        </div>
+                                        <div class=" col-md-4   mb-3">
+                                            <label for="verPagada1" class="col-form-label">FACTURA PAGADA:</label>
+                                            <input type="text" class="form-control " id="verPagada1" readonly>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-12">
+                                        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                        <nav class="" style="border-radius: 5px; ">
+                                            <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+
+                                                <button class="nav-link active" id="nav-detalles1-tab"
+                                                    data-bs-toggle="tab" data-bs-target="#nav-detalles1" type="button"
+                                                    role="tab" aria-controls="nav-detalles1"
+                                                    aria-selected="false">DETALLES</button>
+                                                <button class="nav-link " id="nav-condiciones1-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#nav-condiciones1" type="button" role="tab"
+                                                    aria-controls="nav-condiciones1" aria-selected="false"> DATOS DE
+                                                    PAGO</button>
+                                            </div>
+                                        </nav>
+                                        <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                        <div class="tab-content" id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="nav-detalles1" role="tabpanel"
+                                                aria-labelledby="nav-detalles1-tab" tabindex="0">
+                                                <br>
+                                                <div class="table-responsive">
+                                                    <table class="table table-row-bordered gy-5 gs-5" id="detallesventa1">
+                                                        <thead class="fw-bold text-primary">
+                                                            <tr>
+                                                                <th>Producto</th>
+                                                                <th>Observacion</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Precio Unitario(referencial)</th>
+                                                                <th>precio Unitario</th>
+                                                                <th>Servicio Adicional</th>
+                                                                <th>Costo Productos</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade  " id="nav-condiciones1" role="tabpanel"
+                                                aria-labelledby="nav-condiciones1-tab" tabindex="0">
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label">NRO OC</label>
+                                                        <input type="text" name="1nrooc" id="1nrooc"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">GUIA DE REMISION</label>
+                                                        <input type="text" name="1guiaremision" id="1guiaremision"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">FECHA DE PAGO</label>
+                                                        <input type="date" name="1fechapago" id="1fechapago"
+                                                            class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <label class="form-label input-group">CONSTANCIA
+                                                            RETENCION</label>
+                                                        <input type="text" name="1constanciaretencion"
+                                                            id="1constanciaretencion" class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="1labelacuenta">A
+                                                                CUENTA
+                                                                1</label>
+                                                            <span class="input-group-text" id="1spanacuenta1"></span>
+                                                            <input type="number" name="1acuenta1" min="0"
+                                                                step="0.01" id="1acuenta1" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="1labelacuenta2">A
+                                                                CUENTA
+                                                                2</label>
+                                                            <span class="input-group-text" id="1spanacuenta2"></span>
+                                                            <input type="number" name="1acuenta2" min="0"
+                                                                step="0.01" id="1acuenta2" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group" id="labelacuenta3">A
+                                                                CUENTA
+                                                                3</label>
+                                                            <span class="input-group-text" id="1spanacuenta3"></span>
+                                                            <input type="number" name="1acuenta3" min="0"
+                                                                step="0.01" id="1acuenta3" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelsaldo">SALDO</label>
+                                                            <span class="input-group-text" id="1spansaldo"></span>
+                                                            <input type="number" name="1saldo" min="0"
+                                                                step="0.01" id="1saldo" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelretencion">DETRACCION/RETENCION</label>
+                                                            <span class="input-group-text" id="1spanretencion"></span>
+                                                            <input type="number" name="1retencion" min="0"
+                                                                step="0.01" id="1retencion" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <div class="input-group">
+                                                            <label class="form-label input-group"
+                                                                id="labelmontopagado">MONTO
+                                                                PAGADO</label>
+                                                            <span class="input-group-text" id="1spanmontopagado"></span>
+                                                            <input type="number" name="1montopagado" min="0"
+                                                                step="0.01" id="1montopagado" class="form-control " />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-success" id="generarfactura1"> Generar Pdf de
-                                        la Factura </button>
-                                    @can('editar-venta')
-                                        <button type="button" class="btn btn-warning" id="pagarfactura1">Pagar
-                                            Factura</button>
-                                    @endcan
-                                    <button class="btn btn-primary" data-bs-target="#modalCreditos1"
-                                        data-bs-toggle="modal">Volver</button>
-                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="generarfactura1"> Generar Pdf de
+                                    la Factura </button>
+                                @can('editar-venta')
+                                    <button type="button" class="btn btn-warning" id="pagarfactura1">Pagar
+                                        Factura</button>
+                                @endcan
+                                <button class="btn btn-primary" data-bs-target="#modalCreditos1"
+                                    data-bs-toggle="modal">Volver</button>
                             </div>
                         </div>
                     </div>
-                    {{-- fin del modal --}}
-
                 </div>
+                {{-- fin del modal --}}
+
             </div>
         </div>
-    </div>
     </div>
 @endsection
 @push('script')
@@ -367,17 +579,15 @@
             ];
             var btns = 'lfrtip';
 
-            iniciarTablaIndex(tabla, ruta, columnas, btns); 
+            iniciarTablaIndex(tabla, ruta, columnas, btns);
             var nroeliminados = "{{ url('admin/venta/sinnumero') }}";
-            $.get(nroeliminados, function(data) { 
+            $.get(nroeliminados, function(data) {
                 mostrarmensajesinfactura(data);
             });
             var sinstock = "{{ url('admin/venta/creditosxvencer') }}";
-            $.get(sinstock, function(data) { 
+            $.get(sinstock, function(data) {
                 mostrarmensaje(data);
             });
-
-
         });
         //para borrar un registro de la tabla
         $(document).on('click', '.btnborrar', function(event) {
@@ -431,6 +641,7 @@
         var inicializartabla = 0;
 
         var numerocreditos = 0;
+        //modal para ver una venta
         const mimodal = document.getElementById('mimodal');
         mimodal.addEventListener('show.bs.modal', event => {
             const button = event.relatedTarget;
@@ -449,10 +660,34 @@
                 document.getElementById("verCliente").value = midata[0].cliente
                 document.getElementById("verPagada").value = midata[0].pagada;
                 document.getElementById("verPrecioventa").value = midata[0].costoventa;
+
+                document.getElementById("0nrooc").value = midata[0].nrooc;
+                document.getElementById("0guiaremision").value = midata[0].guiaremision;
+                document.getElementById("0fechapago").value = midata[0].fechapago;
+                document.getElementById("0constanciaretencion").value = midata[0].constanciaretencion;
+                document.getElementById("0acuenta1").value = midata[0].acuenta1;
+                document.getElementById("0acuenta2").value = midata[0].acuenta2;
+                document.getElementById("0acuenta3").value = midata[0].acuenta3;
+                document.getElementById("0saldo").value = midata[0].saldo;
+                document.getElementById("0retencion").value = midata[0].retencion;
+                document.getElementById("0montopagado").value = midata[0].montopagado;
+
                 if (midata[0].moneda == "dolares") {
                     document.getElementById('spancostoventa').innerHTML = "$";
+                    document.getElementById('0spanacuenta1').innerHTML = "$";
+                    document.getElementById('0spanacuenta2').innerHTML = "$";
+                    document.getElementById('0spanacuenta3').innerHTML = "$";
+                    document.getElementById('0spansaldo').innerHTML = "$";
+                    document.getElementById('0spanretencion').innerHTML = "$";
+                    document.getElementById('0spanmontopagado').innerHTML = "$";
                 } else if (midata[0].moneda == "soles") {
                     document.getElementById('spancostoventa').innerHTML = "S/.";
+                    document.getElementById('0spanacuenta1').innerHTML = "S/.";
+                    document.getElementById('0spanacuenta2').innerHTML = "S/.";
+                    document.getElementById('0spanacuenta3').innerHTML = "S/.";
+                    document.getElementById('0spansaldo').innerHTML = "S/.";
+                    document.getElementById('0spanretencion').innerHTML = "S/.";
+                    document.getElementById('0spanmontopagado').innerHTML = "S/.";
                 }
 
                 if (midata[0].fechav == null) {
@@ -462,7 +697,6 @@
                     document.getElementById("verFechav").value = midata[0].fechav;
                 }
                 document.getElementById("verTipocambio").value = midata[0].tasacambio;
-
                 if (midata[0].pagada == "NO") {
                     var btnventa = document.getElementById('pagarfactura')
                     if (btnventa) {
@@ -482,13 +716,11 @@
                     document.getElementById("verObservacion").value = midata[0].observacion;
                 }
 
-
                 var monedafactura = midata[0].moneda;
                 var simbolomonedaproducto = "";
                 var simbolomonedafactura = "";
 
                 //comprobar la iteracion del midata porque se pasa un numero y genera error
-
                 if (monedafactura == "dolares") {
                     simbolomonedafactura = "$";
                 } else if (monedafactura == "soles") {
@@ -645,10 +877,34 @@
                 document.getElementById("verCliente1").value = midata[0].cliente
                 document.getElementById("verPagada1").value = midata[0].pagada;
                 document.getElementById("verPrecioventa1").value = midata[0].costoventa;
+
+                document.getElementById("1nrooc").value = midata[0].nrooc;
+                document.getElementById("1guiaremision").value = midata[0].guiaremision;
+                document.getElementById("1fechapago").value = midata[0].fechapago;
+                document.getElementById("1constanciaretencion").value = midata[0].constanciaretencion;
+                document.getElementById("1acuenta1").value = midata[0].acuenta1;
+                document.getElementById("1acuenta2").value = midata[0].acuenta2;
+                document.getElementById("1acuenta3").value = midata[0].acuenta3;
+                document.getElementById("1saldo").value = midata[0].saldo;
+                document.getElementById("1retencion").value = midata[0].retencion;
+                document.getElementById("1montopagado").value = midata[0].montopagado;
+
                 if (midata[0].moneda == "dolares") {
                     document.getElementById('spancostoventa1').innerHTML = "$";
+                    document.getElementById('1spanacuenta1').innerHTML = "$";
+                    document.getElementById('1spanacuenta2').innerHTML = "$";
+                    document.getElementById('1spanacuenta3').innerHTML = "$";
+                    document.getElementById('1spansaldo').innerHTML = "$";
+                    document.getElementById('1spanretencion').innerHTML = "$";
+                    document.getElementById('1spanmontopagado').innerHTML = "$";
                 } else if (midata[0].moneda == "soles") {
                     document.getElementById('spancostoventa1').innerHTML = "S/.";
+                    document.getElementById('1spanacuenta1').innerHTML = "S/.";
+                    document.getElementById('1spanacuenta2').innerHTML = "S/.";
+                    document.getElementById('1spanacuenta3').innerHTML = "S/.";
+                    document.getElementById('1spansaldo').innerHTML = "S/.";
+                    document.getElementById('1spanretencion').innerHTML = "S/.";
+                    document.getElementById('1spanmontopagado').innerHTML = "S/.";
                 }
 
                 if (midata[0].fechav == null) {
@@ -699,13 +955,9 @@
                     } else if (monedaproducto == "soles") {
                         simbolomonedaproducto = "S/.";
                     }
-
-
-
                     if (midata[ite].tipo == 'kit') {
 
                         var urlventa = "{{ url('admin/venta/productosxkit') }}";
-
                         $.ajax({
                             type: "GET",
                             url: urlventa + '/' + midata[ite].idproducto,
@@ -735,11 +987,9 @@
                                     .preciofinal +
                                     '</td></tr>';
                                 $("#detallesventa1>tbody").append(filaDetalle);
-
                                 milista = '<br>';
                             }
                         });
-
                     } else
                     if (midata[ite].tipo == 'estandar') {
                         filaDetalle = '<tr id="fila' + ite +
@@ -773,11 +1023,13 @@
         $('#generarfactura1').click(function() {
             generarfactura(idventa);
         });
+
         function generarfactura($id) {
             if ($id != -1) {
                 window.open('/admin/venta/generarfacturapdf/' + $id);
             }
         }
+
         function pagarfactura() {
             var urlventa = "{{ url('/admin/venta/pagarfactura') }}";
             Swal.fire({
@@ -820,6 +1072,7 @@
 
             });
         }
+
         function mostrarmensaje(numCred) {
             var registro = "REGISTRO DE VENTAS: ";
             var tienes = "Tienes ";
@@ -833,6 +1086,7 @@
             }
 
         }
+
         function mostrarmensajemodal(nroxvencer, nrovencidos) {
             var xvencer = " Creditos por Vencer";
             var vencidos = " Creditos Vencidos";
@@ -848,16 +1102,16 @@
             }
 
         }
-        function mostrarmensajesinfactura(nrofacturas){ 
+
+        function mostrarmensajesinfactura(nrofacturas) {
             var tienes = "Tienes ";
             var pago = " Compras sin numero de factura.";
-            
+
             if (nrofacturas > 0) {
-                document.getElementById('sinnumerofactura').innerHTML =  tienes + nrofacturas + pago  ;
+                document.getElementById('sinnumerofactura').innerHTML = tienes + nrofacturas + pago;
             } else {
                 document.getElementById('sinnumerofactura').innerHTML = "";
             }
         }
-
     </script>
 @endpush

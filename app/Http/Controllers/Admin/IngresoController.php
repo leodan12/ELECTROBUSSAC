@@ -144,6 +144,16 @@ class IngresoController extends Controller
 
         $ingreso->tasacambio = $tasacambio;
 
+        //datos del pago
+        $ingreso->nrooc = $request->nrooc;
+        $ingreso->guiaremision = $request->guiaremision;
+        $ingreso->fechapago = $request->fechapago;
+        $ingreso->acuenta1 = $request->acuenta1;
+        $ingreso->acuenta2 = $request->acuenta2;
+        $ingreso->acuenta3 = $request->acuenta3;
+        $ingreso->saldo = $request->saldo;
+        $ingreso->montopagado = $request->montopagado;
+
         //guardamos la venta y los detalles
         if ($ingreso->save()) {
             $product = $request->Lproduct;
@@ -272,6 +282,90 @@ class IngresoController extends Controller
         }
         return redirect('admin/ingreso')->with('message', 'No se Pudo Agregar el Ingreso');
     }
+    public function edit(int $ingreso_id)
+    {
+        //$companies = Company::all();
+        $clientes = Cliente::all();
+        $products = Product::all()->where('status', '=', 0);
+        $companies = DB::table('companies as c')
+            ->join('ingresos as i', 'i.company_id', '=', 'c.id')
+            ->select('c.id', 'c.nombre', 'c.ruc')
+            ->where('i.id', '=', $ingreso_id)
+            ->get();
+
+
+        $ingreso = Ingreso::findOrFail($ingreso_id);
+        $detallesingreso = DB::table('detalleingresos as di')
+            ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
+            ->join('products as p', 'di.product_id', '=', 'p.id')
+            ->select(
+                'di.observacionproducto',
+                'p.tipo',
+                'p.moneda',
+                'di.id as iddetalleingreso',
+                'di.cantidad',
+                'di.preciounitario',
+                'di.preciounitariomo',
+                'di.servicio',
+                'di.preciofinal',
+                'p.id as idproducto',
+                'p.nombre as producto'
+            )
+            ->where('i.id', '=', $ingreso_id)->get();
+        //return $detallesventa;
+        $detalleskit = DB::table('kits as k')
+            ->join('products as p', 'k.kitproduct_id', '=', 'p.id')
+            ->join('products as pv', 'k.product_id', '=', 'pv.id')
+            ->join('detalleingresos as di', 'di.product_id', '=', 'pv.id')
+            ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
+            ->select('k.cantidad', 'p.nombre as producto', 'k.product_id')
+            ->where('i.id', '=', $ingreso_id)->get();
+
+        return view('admin.ingreso.edit', compact('products', 'ingreso', 'companies', 'clientes', 'detalleskit', 'detallesingreso'));
+    }
+    public function show($id)
+    {
+        $ingreso = DB::table('ingresos as i')
+            ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
+            ->join('companies as c', 'i.company_id', '=', 'c.id')
+            ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+            ->join('products as p', 'di.product_id', '=', 'p.id')
+            ->select(
+                'i.fecha',
+                'i.factura',
+                'i.formapago',
+                'i.moneda',
+                'i.costoventa',
+                'i.fechav',
+                'i.tasacambio',
+                'i.observacion',
+                'i.moneda',
+                'c.nombre as company',
+                'cl.nombre as cliente',
+                'p.nombre as producto',
+                'di.cantidad',
+                'di.preciounitario',
+                'di.preciounitariomo',
+                'di.servicio',
+                'di.preciofinal',
+                'di.observacionproducto',
+                'p.moneda as monedaproducto',
+                'i.pagada',
+                'p.tipo',
+                'p.id as idproducto',
+                'i.nrooc',
+                'i.guiaremision',
+                'i.fechapago',
+                'i.acuenta1',
+                'i.acuenta2',
+                'i.acuenta3',
+                'i.saldo',
+                'i.montopagado',
+            )
+            ->where('i.id', '=', $id)->get();
+
+        return  $ingreso;
+    }
     public function update(IngresoFormRequest $request, int $ingreso_id)
     {
         $validatedData = $request->validated();
@@ -309,6 +403,16 @@ class IngresoController extends Controller
             $ingreso->fechav = null;
         }
         $ingreso->tasacambio = $tasacambio;
+
+        //datos del pago
+        $ingreso->nrooc = $request->nrooc;
+        $ingreso->guiaremision = $request->guiaremision;
+        $ingreso->fechapago = $request->fechapago;
+        $ingreso->acuenta1 = $request->acuenta1;
+        $ingreso->acuenta2 = $request->acuenta2;
+        $ingreso->acuenta3 = $request->acuenta3;
+        $ingreso->saldo = $request->saldo;
+        $ingreso->montopagado = $request->montopagado;
 
         //guardamos la venta y los detalles
         if ($ingreso->update()) {
@@ -439,83 +543,6 @@ class IngresoController extends Controller
 
             return redirect('admin/ingreso')->with('message', 'Ingreso Actualizado Satisfactoriamente');
         }
-    }
-    public function edit(int $ingreso_id)
-    {
-        //$companies = Company::all();
-        $clientes = Cliente::all();
-        $products = Product::all()->where('status', '=', 0);
-        $companies = DB::table('companies as c')
-            ->join('ingresos as i', 'i.company_id', '=', 'c.id')
-            ->select('c.id', 'c.nombre', 'c.ruc')
-            ->where('i.id', '=', $ingreso_id)
-            ->get();
-
-
-        $ingreso = Ingreso::findOrFail($ingreso_id);
-        $detallesingreso = DB::table('detalleingresos as di')
-            ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-            ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select(
-                'di.observacionproducto',
-                'p.tipo',
-                'p.moneda',
-                'di.id as iddetalleingreso',
-                'di.cantidad',
-                'di.preciounitario',
-                'di.preciounitariomo',
-                'di.servicio',
-                'di.preciofinal',
-                'p.id as idproducto',
-                'p.nombre as producto'
-            )
-            ->where('i.id', '=', $ingreso_id)->get();
-        //return $detallesventa;
-        $detalleskit = DB::table('kits as k')
-            ->join('products as p', 'k.kitproduct_id', '=', 'p.id')
-            ->join('products as pv', 'k.product_id', '=', 'pv.id')
-            ->join('detalleingresos as di', 'di.product_id', '=', 'pv.id')
-            ->join('ingresos as i', 'di.ingreso_id', '=', 'i.id')
-            ->select('k.cantidad', 'p.nombre as producto', 'k.product_id')
-            ->where('i.id', '=', $ingreso_id)->get();
-
-        return view('admin.ingreso.edit', compact('products', 'ingreso', 'companies', 'clientes', 'detalleskit', 'detallesingreso'));
-    }
-    public function show($id)
-    {
-        $ingreso = DB::table('ingresos as i')
-            ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
-            ->join('companies as c', 'i.company_id', '=', 'c.id')
-            ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
-            ->join('products as p', 'di.product_id', '=', 'p.id')
-            ->select(
-                'i.fecha',
-                'i.factura',
-                'i.formapago',
-                'i.moneda',
-                'i.costoventa',
-                'i.fechav',
-                'i.tasacambio',
-                'i.observacion',
-                'i.moneda',
-                'c.nombre as company',
-                'cl.nombre as cliente',
-                'p.nombre as producto',
-                'di.cantidad',
-                'di.preciounitario',
-                'di.preciounitariomo',
-                'di.servicio',
-                'di.preciofinal',
-                'di.observacionproducto',
-                'p.moneda as monedaproducto',
-                'i.pagada',
-                'p.tipo',
-                'p.id as idproducto',
-
-            )
-            ->where('i.id', '=', $id)->get();
-
-        return  $ingreso;
     }
     public function destroy(int $ingreso_id)
     {

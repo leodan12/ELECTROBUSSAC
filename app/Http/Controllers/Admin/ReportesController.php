@@ -775,6 +775,11 @@ class ReportesController extends Controller
     {
         $companies = Company::all();
         $productos = Product::all();
+
+
+        
+
+
         return view('admin.reporte.infoproductos', compact('companies', 'productos'));
     }
     public function datosproductos($fechainicio, $fechafin, $empresa, $producto)

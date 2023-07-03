@@ -17,7 +17,6 @@
                 <div class="alert alert-danger">{{ session('message') }}</div>
             @endif
 
-
             <div class="card">
                 <form action="{{ url('admin/venta') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -43,7 +42,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label" id="labelfactura" name="labelfactura">NUMERO DE FACTURA</label>
                                 <input type="text" name="factura" id="factura" class="form-control  " />
@@ -55,7 +53,6 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label is-required">FORMA DE PAGO</label>
                                 <select name="formapago" id="formapago" class="form-select " required>
@@ -125,81 +122,199 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <hr>
-                            <h4>Agregar Detalle de la Venta</h4>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" id="labelproducto" name="labelproducto">PRODUCTO</label>
-                                <select class="form-select select2 " name="product" id="product" disabled>
-                                    <option value="" selected disabled>Seleccione una opción</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label" name="labelcantidad" id="labelcantidad">CANTIDAD</label>
-                                <input type="number" name="cantidad" id="cantidad" min="1" step="1"
-                                    class="form-control " />
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciounitarioref">PRECIO UNITARIO
-                                        (REFERENCIAL):</label>
-                                    <span class="input-group-text" id="spanpreciounitarioref"></span>
-                                    <input type="number" name="preciounitario" min="0" step="0.01"
-                                        id="preciounitario" readonly class="form-control " />
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12">
+                                    <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                    <nav class="" style="border-radius: 5px; ">
+                                        <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+
+                                            <button class="nav-link active" id="nav-detalles-tab" data-bs-toggle="tab"
+                                                data-bs-target="#nav-detalles" type="button" role="tab"
+                                                aria-controls="nav-detalles" aria-selected="false">DETALLES</button>
+                                            <button class="nav-link " id="nav-condiciones-tab" data-bs-toggle="tab"
+                                                data-bs-target="#nav-condiciones" type="button" role="tab"
+                                                aria-controls="nav-condiciones" aria-selected="false">¿AGREGAR DATOS DE
+                                                PAGO?</button>
+                                        </div>
+                                    </nav>
+                                    <hr style="border: 0; height: 0; box-shadow: 0 2px 5px 2px rgb(0, 89, 255);">
+                                    <div class="tab-content" id="nav-tabContent">
+                                        <div class="tab-pane fade show active" id="nav-detalles" role="tabpanel"
+                                            aria-labelledby="nav-detalles-tab" tabindex="0">
+                                            <br>
+                                            <div class="row">
+                                                <h4>Agregar Detalle de la Venta</h4>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" id="labelproducto"
+                                                        name="labelproducto">PRODUCTO</label>
+                                                    <select class="form-select select2 " name="product" id="product"
+                                                        disabled>
+                                                        <option value="" selected disabled>Seleccione una opción
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label" name="labelcantidad"
+                                                        id="labelcantidad">CANTIDAD</label>
+                                                    <input type="number" name="cantidad" id="cantidad" min="1"
+                                                        step="1" class="form-control " />
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelpreciounitarioref">PRECIO UNITARIO
+                                                            (REFERENCIAL):</label>
+                                                        <span class="input-group-text" id="spanpreciounitarioref"></span>
+                                                        <input type="number" name="preciounitario" min="0"
+                                                            step="0.01" id="preciounitario" readonly
+                                                            class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelpreciounitario">PRECIO UNITARIO</label>
+                                                        <span class="input-group-text" id="spanpreciounitario"></span>
+                                                        <input type="number" name="preciounitariomo" min="0"
+                                                            step="0.01" id="preciounitariomo" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelservicio"
+                                                            name="labelservicio">SERVICIO ADICIONAL:</label>
+                                                        <span class="input-group-text" id="spanservicio"></span>
+                                                        <input type="number" name="servicio" min="0"
+                                                            step="0.01" id="servicio"class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelpreciototal">PRECIO
+                                                            TOTAL POR
+                                                            PRODUCTO</label>
+                                                        <span class="input-group-text" id="spanpreciototal"></span>
+                                                        <input type="number" name="preciofinal" min="0"
+                                                            step="0.01" id="preciofinal" readonly
+                                                            class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 mb-3">
+                                                    <label class="form-label "
+                                                        id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
+                                                    <input type="text" name="observacionproducto"
+                                                        id="observacionproducto" class="form-control  gui-input" />
+                                                    <input type="hidden" name="idcotizacion" value="-1" required>
+                                                </div>
+                                                <button type="button" class="btn btn-info" id="addDetalleBatch"><i
+                                                        class="fa fa-plus"></i>
+                                                    Agregar Producto a la Venta</button>
+                                                <div class="table-responsive">
+                                                    <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
+                                                        <thead class="fw-bold text-primary">
+                                                            <tr>
+                                                                <th>PRODUCTO</th>
+                                                                <th>OBSERVACION</th>
+                                                                <th>CANTIDAD</th>
+                                                                <th>PRECIO UNITARIO(REFERENCIAL)</th>
+                                                                <th>PRECIO UNITARIO</th>
+                                                                <th>SERVICIO ADICIONAL</th>
+                                                                <th>PRECIO FINAL DEL PRODUCTO</th>
+                                                                <th>ELIMINAR</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel"
+                                            aria-labelledby="nav-condiciones-tab" tabindex="0">
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">NRO OC</label>
+                                                    <input type="text" name="nrooc" id="nrooc"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">GUIA DE REMISION</label>
+                                                    <input type="text" name="guiaremision" id="guiaremision"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">FECHA DE PAGO</label>
+                                                    <input type="date" name="fechapago" id="fechapago"
+                                                        class="form-control" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label input-group">CONSTANCIA RETENCION</label>
+                                                    <input type="text" name="constanciaretencion"
+                                                        id="constanciaretencion" class="form-control" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta">A CUENTA
+                                                            1</label>
+                                                        <span class="input-group-text" id="spanacuenta1"></span>
+                                                        <input type="number" name="acuenta1" min="0"
+                                                            step="0.01" id="acuenta1" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta2">A CUENTA
+                                                            2</label>
+                                                        <span class="input-group-text" id="spanacuenta2"></span>
+                                                        <input type="number" name="acuenta2" min="0"
+                                                            step="0.01" id="acuenta2" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelacuenta3">A CUENTA
+                                                            3</label>
+                                                        <span class="input-group-text" id="spanacuenta3"></span>
+                                                        <input type="number" name="acuenta3" min="0"
+                                                            step="0.01" id="acuenta3" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelsaldo">SALDO</label>
+                                                        <span class="input-group-text" id="spansaldo"></span>
+                                                        <input type="number" name="saldo" min="0"
+                                                            step="0.01" id="saldo" class="form-control " />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group"
+                                                            id="labelretencion">DETRACCION/RETENCION</label>
+                                                        <span class="input-group-text" id="spanretencion"></span>
+                                                        <input type="number" name="retencion" min="0"
+                                                            step="0.01" id="retencion" class="form-control " />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="form-label input-group" id="labelmontopagado">MONTO
+                                                            PAGADO</label>
+                                                        <span class="input-group-text" id="spanmontopagado"></span>
+                                                        <input type="number" name="montopagado" min="0"
+                                                            step="0.01" id="montopagado" class="form-control " />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciounitario">PRECIO UNITARIO</label>
-                                    <span class="input-group-text" id="spanpreciounitario"></span>
-                                    <input type="number" name="preciounitariomo" min="0" step="0.01"
-                                        id="preciounitariomo" class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelservicio"
-                                        name="labelservicio">SERVICIO ADICIONAL:</label>
-                                    <span class="input-group-text" id="spanservicio"></span>
-                                    <input type="number" name="servicio" min="0" step="0.01"
-                                        id="servicio"class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="input-group">
-                                    <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR
-                                        PRODUCTO</label>
-                                    <span class="input-group-text" id="spanpreciototal"></span>
-                                    <input type="number" name="preciofinal" min="0" step="0.01"
-                                        id="preciofinal" readonly class="form-control " />
-                                </div>
-                            </div>
-                            <div class="col-md-8 mb-3">
-                                <label class="form-label " id="labelobservacionproducto">OBSERVACION(Nro Serie):</label>
-                                <input type="text" name="observacionproducto" id="observacionproducto"
-                                    class="form-control  gui-input" />
-                                <input type="hidden" name="idcotizacion" value="-1" required>
-                            </div>
-                            <button type="button" class="btn btn-info" id="addDetalleBatch"><i class="fa fa-plus"></i>
-                                Agregar Producto a la Venta</button>
-                            <div class="table-responsive">
-                                <table class="table table-row-bordered gy-5 gs-5" id="detallesVenta">
-                                    <thead class="fw-bold text-primary">
-                                        <tr>
-                                            <th>PRODUCTO</th>
-                                            <th>OBSERVACION</th>
-                                            <th>CANTIDAD</th>
-                                            <th>PRECIO UNITARIO(REFERENCIAL)</th>
-                                            <th>PRECIO UNITARIO</th>
-                                            <th>SERVICIO ADICIONAL</th>
-                                            <th>PRECIO FINAL DEL PRODUCTO</th>
-                                            <th>ELIMINAR</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
                             <hr>
                             <div class="col-md-12 mb-3">
                                 <button type="submit" id="btnguardar" name="btnguardar"
@@ -449,7 +564,6 @@
         });
 
         function clientesxempresa(idempresa) {
-            $('#cliente_id').removeAttr('disabled');
             $.get(urlclientexempresa + '/' + idempresa, function(data) {
                 var producto_select =
                     '<option value="" disabled selected>Seleccione una opción</option>'
@@ -458,7 +572,8 @@
                         .nombre +
                         '" >' + data[i].nombre + '</option>';
                 }
-                $("#cliente_id").html(producto_select);
+                $("#cliente_id").html(producto_select); 
+                $('#cliente_id').removeAttr('disabled');
             });
         }
 
@@ -579,7 +694,7 @@
                         success: function(data) {
                             if (data != 'x') {
                                 precioespecial = data.preciounitariomo;
-                            }  
+                            }
                         }
                     });
                     if (precioespecial != -1 && parseFloat(precioespecial, 10) < parseFloat($price, 10)) {
@@ -754,6 +869,12 @@
                     simbolomonedafactura = "S/.";
                 }
                 document.getElementById('spancostoventa').innerHTML = simbolomonedafactura;
+                document.getElementById('spanacuenta1').innerHTML = simbolomonedafactura;
+                document.getElementById('spanacuenta2').innerHTML = simbolomonedafactura;
+                document.getElementById('spanacuenta3').innerHTML = simbolomonedafactura;
+                document.getElementById('spansaldo').innerHTML = simbolomonedafactura;
+                document.getElementById('spanretencion').innerHTML = simbolomonedafactura;
+                document.getElementById('spanmontopagado').innerHTML = simbolomonedafactura;
 
                 if (monedaantigua = 0) {
                     monedafactura = $mimoneda;
