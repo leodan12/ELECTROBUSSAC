@@ -47,8 +47,8 @@
                                 <span class="menu-title">KITS</span>
                             </a>
                         </li>
-                    @endif 
-                   @if (auth()->user()->can('ver-inventario') ||
+                    @endif
+                    @if (auth()->user()->can('ver-inventario') ||
                             auth()->user()->can('crear-inventario') ||
                             auth()->user()->can('editar-inventario') ||
                             auth()->user()->can('eliminar-inventario'))
@@ -108,8 +108,7 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ventas" aria-expanded="false"
-                aria-controls="ventas">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ventas" aria-expanded="false" aria-controls="ventas">
                 <i class="mdi mdi-cart menu-icon"></i>
                 <span class="menu-title">FACTURACION</span>
                 <i class="menu-arrow"></i>
@@ -165,6 +164,10 @@
                                     class="mdi mdi-file-excel menu-icon"></i>DATOS VENTAS</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
                                     class="mdi mdi-timetable menu-icon"></i>ROTACION STOCK</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/pagocompras') }}"><i
+                                    class="mdi mdi-wallet menu-icon"></i>PAGO DE COMPRAS</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/cobrovent') }}"><i
+                                    class="mdi mdi-wallet menu-icon"></i>COBRO DE VENTAS</a></li>
                     </ul>
                 </div>
             </li>

@@ -114,7 +114,7 @@ function inicializartabla1(inicializart) {
 }
 //iniciar la tabla de reportes con botones
 function inicializartabladatos(btns, tabla, titulo) {
-    $(tabla).DataTable({
+    mitabladatos = $(tabla).DataTable({
         "language": {
             "sProcessing": "Procesando...",
             "sLengthMenu": "Mostrar _MENU_ registros",

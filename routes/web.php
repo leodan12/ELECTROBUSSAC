@@ -190,6 +190,12 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/reporte/datosrotacionstock/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datosrotacionstock');
             Route::get('/reporte/detallecompras/{fechainicio}/{fechafin}/{empresa}/{producto}', 'detallecompras');
             Route::get('/reporte/detalleventas/{fechainicio}/{fechafin}/{empresa}/{producto}', 'detalleventas');
+
+            Route::get('/reporte/cobrovent', 'cobroventas');
+            Route::get('/reporte/datoscobroventas/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datoscobroventas');
+            Route::get('/reporte/pagocompras', 'pagocompras');
+            Route::get('/reporte/datospagocompras/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datospagocompras');
+
         });
         //rutas de los roles
         Route::controller(App\Http\Controllers\Admin\RolController::class)->group(function () {

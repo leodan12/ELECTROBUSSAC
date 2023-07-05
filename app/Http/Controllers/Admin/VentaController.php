@@ -43,7 +43,6 @@ class VentaController extends Controller
     use HistorialTrait;
     public function index(Request $request)
     {
- 
         if ($request->ajax()) {
 
             $ventas = DB::table('ventas as v')
@@ -68,7 +67,6 @@ class VentaController extends Controller
                 ->rawColumns(['acciones'])
                 ->make(true);
         }
-
         return view('admin.venta.index');
     }
     public function index2()
@@ -79,12 +77,11 @@ class VentaController extends Controller
     {
         $fechahoy = date('Y-m-d');
         $fechalimite =  date("Y-m-d", strtotime($fechahoy . "+ 7 days"));
-
         $creditosxvencer = DB::table('ventas as v')
             ->join('companies as e', 'v.company_id', '=', 'e.id')
             ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
             ->where('v.fechav', '!=', null)
-            ->where('v.fechav', '<=', $fechalimite)
+            //->where('v.fechav', '<=', $fechalimite)
             ->where('v.pagada', '=', 'NO')
             ->select(
                 'v.id',
@@ -741,7 +738,7 @@ class VentaController extends Controller
             ->join('companies as e', 'v.company_id', '=', 'e.id')
             ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
             ->where('v.fechav', '!=', null)
-            ->where('v.fechav', '<=', $fechalimite)
+            //->where('v.fechav', '<=', $fechalimite)
             ->where('v.pagada', '=', 'NO')
             ->select(
                 'v.id',
@@ -756,8 +753,7 @@ class VentaController extends Controller
                 'v.formapago'
             )
             ->get();
-        //$nrocreditosvencidos =count($creditosvencidos);
-
+        
         return $creditosvencidos;
     }
 

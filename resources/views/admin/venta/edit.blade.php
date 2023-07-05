@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 @section('content')
-
     <div class="row">
         <div class="col-md-12">
             @php  $detalles = count($detallesventa) @endphp
@@ -488,8 +487,6 @@
             </div>
         </div>
     </div>
-
-
 @endsection
 
 @push('script')
@@ -543,7 +540,6 @@
                         producto_select += '<option value="' + data[i].id + '" data-name="' +
                             data[i].nombre + '" >' + data[i].nombre + '</option>';
                     }
-
                 }
                 $("#cliente_id").html(producto_select);
             });
@@ -576,7 +572,6 @@
             });
 
             $('.select2').select2({});
-
             document.getElementById("cantidad").onchange = function() {
                 var xcantidad = document.getElementById("cantidad").value;
                 if (micantidad2 != null) {
@@ -609,7 +604,6 @@
                             document.getElementById("preciounitariomo").value = miprecio;
                             document.getElementById('labelpreciounitario').innerHTML = mipreciounit;
                         } else {
-
                             var mipreciounit2 = "PRECIO UNITARIO: " + monedafactura;
                             if (precioespecial != -1 && parseFloat(preciomo, 10) < parseFloat(miprecio, 10)) {
                                 mipreciounit2 = "PRECIO UNITARIO: " + monedafactura + "(precio especial)";
@@ -643,7 +637,6 @@
             };
 
             function preciofinal() {
-
                 var cantidad = $('[name="cantidad"]').val();
                 var preciounit = $('[name="preciounitariomo"]').val();
                 var servicio = $('[name="servicio"]').val();
@@ -652,6 +645,65 @@
                         parseFloat(cantidad) * parseFloat(servicio)));
                     document.getElementById('preciofinal').value = preciototalI.toFixed(2);
                 }
+            }
+
+            //para los pagos
+            document.getElementById("acuenta1").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("acuenta2").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("acuenta3").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("saldo").onchange = function() {
+                montopagado();
+            };
+            document.getElementById("montopagado").onchange = function() {
+                saldo();
+            };
+
+            function pagocredito() {
+                var acuenta1 = $('[name="acuenta1"]').val();
+                var acuenta2 = $('[name="acuenta2"]').val();
+                var acuenta3 = $('[name="acuenta3"]').val();
+                var costoventa = $('[name="costoventa"]').val();
+                var montopagado = 0;
+                var saldo = 0;
+                if (parseFloat(acuenta1)) {
+                    montopagado += parseFloat(acuenta1);
+                }
+                if (parseFloat(acuenta2)) {
+                    montopagado += parseFloat(acuenta2);
+                }
+                if (parseFloat(acuenta3)) {
+                    montopagado += parseFloat(acuenta3);
+                }
+                if (parseFloat(costoventa)) {
+                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
+                }
+
+                document.getElementById('saldo').value = saldo.toFixed(2);
+                document.getElementById('montopagado').value = montopagado.toFixed(2);
+            }
+            function montopagado() {
+                var costoventa = $('[name="costoventa"]').val();
+                var saldo = $('[name="saldo"]').val();
+                var montopagado = 0;
+                if (parseFloat(costoventa) && parseFloat(saldo)) {
+                    montopagado = parseFloat(costoventa) - parseFloat(saldo);
+                }
+                document.getElementById('montopagado').value = montopagado.toFixed(2);
+            }
+            function saldo() {
+                var costoventa = $('[name="costoventa"]').val();
+                var montopagado = $('[name="montopagado"]').val();
+                var saldo = 0;
+                if (parseFloat(costoventa) && parseFloat(montopagado)) {
+                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
+                }
+                document.getElementById('saldo').value = saldo.toFixed(2);
             }
 
             $("#product").change(function() {
@@ -1073,7 +1125,6 @@
 
             var url3 = "{{ url('admin/venta/productosxempresa') }}";
             $.get(url3 + '/' + idcompany, function(data) {
-
                 var urlregistro = "{{ url('admin/venta/misdetallesventa') }}";
                 var misdatosdetalles;
                 $.ajax({
@@ -1104,7 +1155,6 @@
                     } else {
                         desabilitado = "";
                     }
-
                     producto_select += '<option ' + desabilitado + ' id="productoxempresa' + data[i].id +
                         '" value="' + data[i].id +
                         '" data-name="' + data[i].nombre + '" data-tipo="' + data[i].tipo +

@@ -71,7 +71,7 @@
                                 <label class="form-label is-required">Seleccionar Estado</label>
                                 <select name="status" class="form-select " required>
                                     <option value="" selected disabled>Seleccione Rol</option>
-                                    @if ($user->status == '1')
+                                    @if ($user->status == 'activo')
                                         <option value="activo" selected>Activo</option>
                                         <option value="inactivo">Inactivo</option>
                                     @else

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company;
 use App\Models\Product;
+use App\Models\Cliente;
 
 class ReportesController extends Controller
 {
@@ -775,10 +776,6 @@ class ReportesController extends Controller
     {
         $companies = Company::all();
         $productos = Product::all();
-
-
-        
-
 
         return view('admin.reporte.infoproductos', compact('companies', 'productos'));
     }
@@ -1722,7 +1719,7 @@ class ReportesController extends Controller
 
         return $resultado;
     }
-    
+
     public function obtenermisventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $productos = DB::table('ventas as v')
@@ -1824,8 +1821,8 @@ class ReportesController extends Controller
             ->join('products as p', 'di.product_id', '=', 'p.id')
             ->where('i.fecha', '<=', $fechafin)
             ->where('i.fecha', '>=', $fechainicio)
-            ->where('e.nombre', '=', $empresa)
-            ->where('p.nombre', '=', $producto)
+            ->where('e.id', '=', $empresa)
+            ->where('p.id', '=', $producto)
             ->select(
                 'e.nombre as empresa',
                 'p.nombre as producto',
@@ -1848,9 +1845,9 @@ class ReportesController extends Controller
             ->join('products as kp', 'k.kitproduct_id', '=', 'kp.id')
             ->where('i.fecha', '<=', $fechafin)
             ->where('i.fecha', '>=', $fechainicio)
-            ->where('e.nombre', '=', $empresa)
+            ->where('e.id', '=', $empresa)
             ->where('p.tipo', '=', "kit")
-            ->where('kp.nombre', '=', $producto)
+            ->where('kp.id', '=', $producto)
             ->select(
                 'e.nombre as empresa',
                 'p.nombre as producto',
@@ -1922,5 +1919,272 @@ class ReportesController extends Controller
             }
         }
         return $resultado;
+    }
+
+    // para mostrar los datos de los cobros de las ventas
+    public function cobroventas()
+    {
+        $companies = Company::all();
+        $clientes = Cliente::all();
+        return view('admin.reporte.cobroventas', compact('companies', 'clientes'));
+    }
+
+    public function datoscobroventas($fechainicio, $fechafin, $empresa, $cliente)
+    {
+        $ventas = "";
+        if ($empresa != "-1") {
+            if ($cliente != "-1") {
+                $ventas = DB::table('ventas as v')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('cl.id', '=', $cliente)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'v.factura',
+                        'v.nrooc',
+                        'v.fecha',
+                        'v.fechav',
+                        'v.guiaremision',
+                        'v.costoventa',
+                        'v.moneda',
+                        'v.acuenta1',
+                        'v.acuenta2',
+                        'v.acuenta3',
+                        'v.saldo',
+                        'v.constanciaretencion',
+                        'v.retencion',
+                        'v.montopagado',
+                        'v.fechapago',
+                        'v.formapago',
+                        'v.pagada'
+                    )
+                    ->get();
+            } else {
+                $ventas = DB::table('ventas as v')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'v.factura',
+                        'v.nrooc',
+                        'v.fecha',
+                        'v.fechav',
+                        'v.guiaremision',
+                        'v.costoventa',
+                        'v.moneda',
+                        'v.acuenta1',
+                        'v.acuenta2',
+                        'v.acuenta3',
+                        'v.saldo',
+                        'v.constanciaretencion',
+                        'v.retencion',
+                        'v.montopagado',
+                        'v.fechapago',
+                        'v.formapago',
+                        'v.pagada'
+                    )
+                    ->get();
+            }
+        } else {
+            if ($cliente != "-1") {
+                $ventas = DB::table('ventas as v')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->where('cl.id', '=', $cliente)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'v.factura',
+                        'v.nrooc',
+                        'v.fecha',
+                        'v.fechav',
+                        'v.guiaremision',
+                        'v.costoventa',
+                        'v.moneda',
+                        'v.acuenta1',
+                        'v.acuenta2',
+                        'v.acuenta3',
+                        'v.saldo',
+                        'v.constanciaretencion',
+                        'v.retencion',
+                        'v.montopagado',
+                        'v.fechapago',
+                        'v.formapago',
+                        'v.pagada'
+                    )
+                    ->get();
+            } else {
+                $ventas = DB::table('ventas as v')
+                    ->join('companies as e', 'v.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'v.cliente_id', '=', 'cl.id')
+                    ->where('v.fecha', '<=', $fechafin)
+                    ->where('v.fecha', '>=', $fechainicio)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'v.factura',
+                        'v.nrooc',
+                        'v.fecha',
+                        'v.fechav',
+                        'v.guiaremision',
+                        'v.costoventa',
+                        'v.moneda',
+                        'v.acuenta1',
+                        'v.acuenta2',
+                        'v.acuenta3',
+                        'v.saldo',
+                        'v.constanciaretencion',
+                        'v.retencion',
+                        'v.montopagado',
+                        'v.fechapago',
+                        'v.formapago',
+                        'v.pagada'
+                    )
+                    ->get();
+            }
+        }
+        $ventascredito = $ventas->where('formapago', 'credito');
+        $ventascontado = $ventas->where('formapago', 'contado');
+        $ventascontadoconretencion = $ventascontado->where('retencion','!=', null);
+        $concatenated = $ventascredito->concat($ventascontadoconretencion);
+        return $concatenated->values()->all();
+    }
+
+    // para mostrar los datos de los cobros de las ventas
+    public function pagocompras()
+    {
+        $companies = Company::all();
+        $clientes = Cliente::all();
+        return view('admin.reporte.pagocompras', compact('companies', 'clientes'));
+    }
+
+    public function datospagocompras($fechainicio, $fechafin, $empresa, $cliente)
+    {
+        $ventas = "";
+        if ($empresa != "-1") {
+            if ($cliente != "-1") {
+                $ventas = DB::table('ingresos as i')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->where('cl.id', '=', $cliente)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.factura',
+                        'i.nrooc',
+                        'i.fecha',
+                        'i.fechav',
+                        'i.guiaremision',
+                        'i.costoventa',
+                        'i.moneda',
+                        'i.acuenta1',
+                        'i.acuenta2',
+                        'i.acuenta3',
+                        'i.saldo',
+                        'i.montopagado',
+                        'i.fechapago',
+                        'i.formapago',
+                        'i.pagada'
+                    )
+                    ->get();
+            } else {
+                $ventas = DB::table('ingresos as i')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('e.id', '=', $empresa)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.factura',
+                        'i.nrooc',
+                        'i.fecha',
+                        'i.fechav',
+                        'i.guiaremision',
+                        'i.costoventa',
+                        'i.moneda',
+                        'i.acuenta1',
+                        'i.acuenta2',
+                        'i.acuenta3',
+                        'i.saldo', 
+                        'i.montopagado',
+                        'i.fechapago',
+                        'i.formapago',
+                        'i.pagada'
+                    )
+                    ->get();
+            }
+        } else {
+            if ($cliente != "-1") {
+                $ventas = DB::table('ingresos as i')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('cl.id', '=', $cliente)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.factura',
+                        'i.nrooc',
+                        'i.fecha',
+                        'i.fechav',
+                        'i.guiaremision',
+                        'i.costoventa',
+                        'i.moneda',
+                        'i.acuenta1',
+                        'i.acuenta2',
+                        'i.acuenta3',
+                        'i.saldo', 
+                        'i.montopagado',
+                        'i.fechapago',
+                        'i.formapago',
+                        'i.pagada'
+                    )
+                    ->get();
+            } else {
+                $ventas = DB::table('ingresos as i')
+                    ->join('companies as e', 'i.company_id', '=', 'e.id')
+                    ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->select(
+                        'e.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.factura',
+                        'i.nrooc',
+                        'i.fecha',
+                        'i.fechav',
+                        'i.guiaremision',
+                        'i.costoventa',
+                        'i.moneda',
+                        'i.acuenta1',
+                        'i.acuenta2',
+                        'i.acuenta3',
+                        'i.saldo', 
+                        'i.montopagado',
+                        'i.fechapago',
+                        'i.formapago',
+                        'i.pagada'
+                    )
+                    ->get();
+            }
+        }
+        $ventascredito = $ventas->where('formapago', 'credito');
+        return $ventascredito->values()->all();
     }
 }

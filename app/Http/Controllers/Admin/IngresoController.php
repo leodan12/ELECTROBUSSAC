@@ -80,7 +80,7 @@ class IngresoController extends Controller
             ->join('companies as e', 'i.company_id', '=', 'e.id')
             ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
             ->where('i.fechav', '!=', null)
-            ->where('i.fechav', '<=', $fechalimite)
+            //->where('i.fechav', '<=', $fechalimite)
             ->where('i.pagada', '=', 'NO')
             ->select(
                 'i.id',
@@ -620,7 +620,7 @@ class IngresoController extends Controller
             ->join('companies as e', 'i.company_id', '=', 'e.id')
             ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
             ->where('i.fechav', '!=', null)
-            ->where('i.fechav', '<=', $fechalimite)
+            //->where('i.fechav', '<=', $fechalimite)
             ->where('i.pagada', '=', 'NO')
             ->select(
                 'i.id',

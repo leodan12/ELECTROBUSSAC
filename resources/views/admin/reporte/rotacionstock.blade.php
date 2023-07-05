@@ -1,6 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
+<div class="row" style="text-align: center;">
+    <div class="col">
+        <h3>
+            ROTACION DE STOCK DE LOS PRODUCTOS
+        </h3>
+    </div>
+</div><br>
     <div class="row">
         <div class="col-md-12  ">
             <div class="row">

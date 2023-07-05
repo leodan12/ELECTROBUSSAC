@@ -357,7 +357,6 @@
             //para diferente comprador y vendedor
             $("#company_id").change(function() {
                 var company = $(this).val();
-                $('#cliente_id').removeAttr('disabled');
                 var miurl = "{{ url('admin/venta/comboempresacliente') }}";
                 $.get(miurl + '/' + company, function(data) {
                     var producto_select =
@@ -367,7 +366,8 @@
                             '" value="' + data[i].id + '" data-name="' + data[i].nombre +
                             '">' + data[i].nombre + '</option>';
                     }
-                    $("#cliente_id").html(producto_select);
+                    $("#cliente_id").html(producto_select); 
+                    $('#cliente_id').removeAttr('disabled');
                 });
             });
 
@@ -392,6 +392,66 @@
             document.getElementById("preciounitariomo").onchange = function() {
                 preciofinal();
             };
+
+            document.getElementById("acuenta1").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("acuenta2").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("acuenta3").onchange = function() {
+                pagocredito();
+            };
+            document.getElementById("saldo").onchange = function() {
+                montopagado();
+            };
+            document.getElementById("montopagado").onchange = function() {
+                saldo();
+            };
+
+            function pagocredito() {
+                var acuenta1 = $('[name="acuenta1"]').val();
+                var acuenta2 = $('[name="acuenta2"]').val();
+                var acuenta3 = $('[name="acuenta3"]').val();
+                var costoventa = $('[name="costoventa"]').val();
+                var montopagado = 0;
+                var saldo = 0;
+                if (parseFloat(acuenta1)) {
+                    montopagado += parseFloat(acuenta1);
+                }
+                if (parseFloat(acuenta2)) {
+                    montopagado += parseFloat(acuenta2);
+                }
+                if (parseFloat(acuenta3)) {
+                    montopagado += parseFloat(acuenta3);
+                }
+                if (parseFloat(costoventa)) {
+                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
+                }
+
+                document.getElementById('saldo').value = saldo.toFixed(2);
+                document.getElementById('montopagado').value = montopagado.toFixed(2);
+            }
+
+            function montopagado() {
+                var costoventa = $('[name="costoventa"]').val();
+                var saldo = $('[name="saldo"]').val();
+                var montopagado = 0;
+                if (parseFloat(costoventa) && parseFloat(saldo)) {
+                    montopagado = parseFloat(costoventa) - parseFloat(saldo);
+                }
+                document.getElementById('montopagado').value = montopagado.toFixed(2);
+            }
+
+            function saldo() {
+                var costoventa = $('[name="costoventa"]').val();
+                var montopagado = $('[name="montopagado"]').val();
+                var saldo = 0;
+                if (parseFloat(costoventa) && parseFloat(montopagado)) {
+                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
+                }
+                document.getElementById('saldo').value = saldo.toFixed(2);
+            }
 
             function preciofinal() {
                 var cantidad = $('[name="cantidad"]').val();
