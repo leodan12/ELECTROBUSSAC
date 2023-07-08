@@ -17,7 +17,7 @@ use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
 
 class ProductController extends Controller
-{
+{ //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-producto|editar-producto|crear-producto|eliminar-producto', ['only' => ['index', 'show']]);
@@ -27,6 +27,7 @@ class ProductController extends Controller
         $this->middleware('permission:recuperar-producto', ['only' => ['showrestore', 'restaurar']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         $datoseliminados = DB::table('products as c')
@@ -35,7 +36,6 @@ class ProductController extends Controller
             ->select('c.id')
             ->count();
         if ($request->ajax()) {
-
             $productos = DB::table('products as p')
                 ->join('categories as c', 'p.category_id', '=', 'c.id')
                 ->select(
@@ -57,28 +57,24 @@ class ProductController extends Controller
                 ->rawColumns(['acciones'])
                 ->make(true);
         }
-
         return view('admin.products.index', compact('datoseliminados'));
     }
-
+    //vista crear
     public function create()
     {
         $categories = Category::all()->where('status', '=', 0);
         return view('admin.products.create', compact('categories'));
     }
-
+    //funcion para guardar un registro
     public function store(ProductFormRequest $request)
-    {
+    {   //validamos y asignamos los datos a un registro nuevo
         $validatedData = $request->validated();
-
         $category = Category::findOrFail($validatedData['category_id']);
-
         $product = new Product;
         $product->category_id = $validatedData['category_id'];
         $product->nombre = $validatedData['nombre'];
         $product->codigo = $validatedData['codigo'];
         $product->unidad = $validatedData['unidad'];
-        // $product->und = $request->und;
         $product->tipo = "estandar";
         $product->unico = 0;
         $product->maximo = $validatedData['NoIGV'];
@@ -96,20 +92,19 @@ class ProductController extends Controller
                 $product->precio3 = $request->precio3;
             }
         }
-
+        //guardamos el registro y creamos un nuevo inventario
         $product->save();
         $inventario = new Inventario;
         $inventario->product_id = $product->id;
         $inventario->stockminimo = 5;
         $inventario->stocktotal = 0;
         $inventario->status = 0;
-
         $inventario->save();
         $this->crearhistorial('crear', $inventario->id, $product->nombre, null, 'inventarios');
         $this->crearhistorial('crear', $product->id, $product->nombre, null, 'productos');
         return redirect('admin/products')->with('message', 'Producto Agregado Satisfactoriamente');
     }
-
+    //vista editar
     public function edit(int $product_id)
     {
         $lascategorias = Category::all()->where('status', '=', 0);
@@ -122,9 +117,9 @@ class ProductController extends Controller
         }
         return view('admin.products.edit', compact('categories', 'product'));
     }
-
+    //funcion para actualizar un registro
     public function update(ProductFormRequest $request, int $product_id)
-    {
+    {   //validamos los datos y asignamos los nuevos datos al registro
         $validatedData = $request->validated();
         $categoria = Product::findOrFail($product_id);
         $product = Category::findOrFail($categoria->category_id)
@@ -134,7 +129,6 @@ class ProductController extends Controller
             $product->nombre = $validatedData['nombre'];
             $product->codigo = $request->codigo;
             $product->unidad = $validatedData['unidad'];
-            // $product->und = $request->und;
             $product->tipo = "estandar";
             $product->unico = 0;
             $product->maximo = $validatedData['maximo'];
@@ -166,7 +160,7 @@ class ProductController extends Controller
             return redirect('admin/products')->with('message', 'No se encontro el ID del Producto');
         }
     }
-
+    //funcion para eliminar un registro
     public function destroy(int $product_id)
     {
         $product = Product::find($product_id);
@@ -181,7 +175,7 @@ class ProductController extends Controller
             $ingreso = Detalleingreso::all()->where('product_id', '=', $product_id);
             $venta = Detalleventa::all()->where('product_id', '=', $product_id);
             $cotizacion = Detallecotizacion::all()->where('product_id', '=', $product_id);
-
+            //si el producto tiene algun registro , solo se oculta
             if (count($inventario) == 0 && count($ingreso) == 0 && count($venta) == 0  && count($cotizacion) == 0) {
                 if ($product->delete()) {
                     $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'productos');
@@ -202,6 +196,7 @@ class ProductController extends Controller
             return "2";
         }
     }
+    //funcion para mostrar los datos del producto en el modal
     public function show($id)
     {
         $product = DB::table('products as p')
@@ -224,10 +219,9 @@ class ProductController extends Controller
                 'p.precio3'
             )
             ->where('p.id', '=', $id)->first();
-
         return  $product;
     }
-
+    //funcion para mostrar los registros eliminados que se pueden restaurar
     public function showrestore()
     {
         $productos   = DB::table('products as p')
@@ -243,12 +237,10 @@ class ProductController extends Controller
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',
-            )->get();
-
-
+            )->get(); 
         return $productos->values()->all();
     }
-
+    //funcion para restaurar un registro eliminado
     public function restaurar($idregistro)
     {
         $producto = Product::find($idregistro);

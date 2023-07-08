@@ -17,7 +17,7 @@ use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
 
 class DetallekitController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-kit|editar-kit|crear-kit|eliminar-kit', ['only' => ['index', 'show']]);
@@ -27,6 +27,7 @@ class DetallekitController extends Controller
         $this->middleware('permission:recuperar-kit', ['only' => ['showrestore', 'restaurar']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         $datoseliminados = DB::table('products as c')
@@ -34,9 +35,7 @@ class DetallekitController extends Controller
             ->where('c.tipo', '=', 'kit')
             ->select('c.id')
             ->count();
-
         if ($request->ajax()) {
-
             $kits = DB::table('products as p')
                 ->join('categories as c', 'p.category_id', '=', 'c.id')
                 ->select(
@@ -61,7 +60,7 @@ class DetallekitController extends Controller
 
         return view('admin.kit.index', compact('datoseliminados'));
     }
-
+    //vista crear registro
     public function create()
     {
         $categories = Category::all()->where('status', '=', 0);
@@ -70,17 +69,15 @@ class DetallekitController extends Controller
             ->where('tipo', '=', 'estandar');
         return view('admin.kit.create', compact('categories', 'products'));
     }
-
+    //funcion para guardar un registro
     public function store(KitFormRequest $request)
     {
         $validatedData = $request->validated();
-
         $producto = new Product;
         $producto->category_id = $validatedData['category_id'];
         $producto->nombre = $validatedData['nombre'];
         $producto->codigo = $validatedData['codigo'];
         $producto->unidad = "unidad";
-        // $producto->und = "unidad";
         $producto->tipo = "kit";
         $producto->unico = 0;
         $producto->maximo = $validatedData['NoIGV'];
@@ -88,7 +85,7 @@ class DetallekitController extends Controller
         $producto->moneda = $validatedData['moneda'];
         $producto->NoIGV = $validatedData['NoIGV'];
         $producto->SiIGV = $validatedData['SiIGV'];
-        $producto->tasacambio = $request->tasacambio; 
+        $producto->tasacambio = $request->tasacambio;
         $producto->status =  '0';
         $producto->preciofob = $request->preciofob;
         if ($request->cantidad2 != null && $request->precio2 != null) {
@@ -99,7 +96,6 @@ class DetallekitController extends Controller
                 $producto->precio3 = $request->precio3;
             }
         }
-
         if ($producto->save()) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
@@ -108,7 +104,6 @@ class DetallekitController extends Controller
             $preciounitariomo = $request->Lpreciounitariomo;
             if ($product !== null) {
                 for ($i = 0; $i < count($product); $i++) {
-
                     $Detallekit = new Kit;
                     $Detallekit->product_id = $producto->id;
                     $Detallekit->kitproduct_id = $product[$i];
@@ -125,7 +120,7 @@ class DetallekitController extends Controller
             return redirect('admin/kits')->with('message', 'No se pudo agregar el kit');
         }
     }
-
+    //vista editar
     public function edit(int $kit_id)
     {
         $lascategorias = Category::all()->where('status', '=', 0);
@@ -155,16 +150,14 @@ class DetallekitController extends Controller
             ->where('k.product_id', '=', $kit_id)->get();
         return view('admin.kit.edit', compact('categories', 'product', 'kitdetalles', 'products'));
     }
-
+    //funcion para actualizar un registro
     public function update(Request $request, int $kit_id)
     {
-
         $producto = Product::findOrFail($kit_id);
         $producto->category_id = $request->category_id;
         $producto->nombre = $request->nombre;
         $producto->codigo = $request->codigo;
         $producto->unidad = "unidad";
-        // $producto->und = "unidad";
         $producto->tipo = "kit";
         $producto->unico = 0;
         $producto->maximo = $request->NoIGV;
@@ -198,7 +191,6 @@ class DetallekitController extends Controller
             $preciounitariomo = $request->Lpreciounitariomo;
             if ($product !== null) {
                 for ($i = 0; $i < count($product); $i++) {
-
                     $Detallekit = new Kit;
                     $Detallekit->product_id = $producto->id;
                     $Detallekit->kitproduct_id = $product[$i];
@@ -212,13 +204,12 @@ class DetallekitController extends Controller
             $this->crearhistorial('editar', $producto->id, $producto->nombre, null, 'kits');
             return redirect('admin/kits')->with('message', 'Kit de Productos Actualizado Satisfactoriamente');
         } else {
-            return redirect('admin/kits')->with('message', 'No se pudo agregar el kit');
+            return redirect('admin/kits')->with('message', 'No se pudo actualizar el kit');
         }
     }
-
+    //funcion para mstra el modal ve registro
     public function show($id)
     {
-
         $product = DB::table('products as p')
             ->join('categories as c', 'p.category_id', '=', 'c.id')
             ->join('kits as k', 'k.product_id', '=', 'p.id')
@@ -239,8 +230,7 @@ class DetallekitController extends Controller
                 'pk.maximo as kitproductmaximo',
                 'pk.minimo as kitproductminimo',
                 'pk.codigo as kitproductcodigo',
-                'pk.unidad as kitproductunidad',
-                //'pk.und as kitproductund',
+                'pk.unidad as kitproductunidad', 
                 'pk.moneda as kitproductmoneda',
                 'pk.NoIGV as kitproductnoigv',
                 'pk.SiIGV as kitproductsiigv',
@@ -251,18 +241,16 @@ class DetallekitController extends Controller
                 'k.preciofinal as kitpreciofinal'
             )
             ->where('p.id', '=', $id)->get();
-
         return  $product;
     }
+    //funcion para eliminar o solo ocultar un registro
     public function destroy(int $kit_id)
     {
         $product = Product::find($kit_id);
         if ($product) {
-
             $ingreso = Detalleingreso::all()->where('product_id', '=', $kit_id);
             $venta = Detalleventa::all()->where('product_id', '=', $kit_id);
             $cotizacion = Detallecotizacion::all()->where('product_id', '=', $kit_id);
-
             if (count($ingreso) == 0 && count($venta) == 0 && count($cotizacion) == 0) {
                 if ($product->delete()) {
                     $this->crearhistorial('eliminar', $product->id, $product->nombre, null, 'kits');
@@ -283,10 +271,9 @@ class DetallekitController extends Controller
             return "2";
         }
     }
-
+    //funcion para eliminar un detalle del registro
     public function destroydetallekit($id)
     {
-        //buscamos el registro con el id enviado por la URL
         $detallekit = Kit::find($id);
         $productoh = DB::table('products as p')
             ->join('kits as k', 'k.product_id', '=', 'p.id')
@@ -297,11 +284,9 @@ class DetallekitController extends Controller
                 ->join('products as p', 'dc.product_id', '=', 'p.id')
                 ->select('p.id', 'dc.preciofinal', 'p.NoIGV')
                 ->where('dc.id', '=', $id)->first();
-
             if ($detallekit->delete()) {
                 $costof = $kit->NoIGV;
                 $detalle = $kit->preciofinal;
-
                 $editprod = Product::findOrFail($kit->id);
                 $editprod->NoIGV = $costof - $detalle;
                 $editprod->SiIGV = round(($costof - $detalle) * 1.18, 2);
@@ -315,7 +300,7 @@ class DetallekitController extends Controller
             return 2;
         }
     }
-
+    //funcion para mostrar los registros eliminados que se pueden restaurar
     public function showrestore()
     {
         $productos   = DB::table('products as p')
@@ -332,11 +317,9 @@ class DetallekitController extends Controller
                 'p.NoIGV',
                 'p.SiIGV',
             )->get();
-
-
         return $productos->values()->all();
     }
-
+    //funcion para restaurar un registro eliminado
     public function restaurar($idregistro)
     {
         $registro = Product::find($idregistro);

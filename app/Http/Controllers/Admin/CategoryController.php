@@ -12,7 +12,7 @@ use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
 
 class CategoryController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-categoria|editar-categoria|crear-categoria|eliminar-categoria', ['only' => ['index']]);
@@ -23,7 +23,7 @@ class CategoryController extends Controller
     }
 
     use HistorialTrait;
-
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         $datoseliminados = DB::table('categories as c')
@@ -31,7 +31,6 @@ class CategoryController extends Controller
             ->select('c.id')
             ->count();
         if ($request->ajax()) {
-
             $categorias = DB::table('categories as c')
                 ->select(
                     'c.id',
@@ -48,14 +47,15 @@ class CategoryController extends Controller
 
         return view('admin.category.index', compact('datoseliminados'));
     }
+    //vista crear
     public function create()
     {
         return view('admin.category.create');
     }
+    //funcion para guardar un nuevo registro
     public function store(CategoryFormRequest $request)
     {
         $validatedData = $request->validated();
-
         $category = new Category;
         $category->nombre = $validatedData['nombre'];
         $category->status = '0';
@@ -65,23 +65,24 @@ class CategoryController extends Controller
 
         return redirect('admin/category')->with('message', 'Categoria Agregada Satisfactoriamente');
     }
+    //vista editar
     public function edit(Category $category)
     {
         return view('admin.category.edit', compact('category'));
     }
+    //funcion para actualizar el registro
     public function update(CategoryFormRequest $request, $category)
     {
         $validatedData = $request->validated();
         $category = Category::findOrFail($category);
-
         $category->nombre = $validatedData['nombre'];
         $category->status = '0';
         $category->update();
 
         $this->crearhistorial('editar', $category->id, $category->nombre, null, 'categorias');
-
         return redirect('admin/category')->with('message', 'Categoria Actualizada Satisfactoriamente');
     }
+    //funcion para eliminar o solo ocultar un registro 
     public function destroy(int $idcategoria)
     {
         $category = Category::find($idcategoria);
@@ -107,6 +108,7 @@ class CategoryController extends Controller
             return "2";
         }
     }
+    //funcion para mostrar los registros eliminados que se pueden restaurar
     public function showcategoryrestore()
     {
         $categorias =  Category::all()
@@ -114,6 +116,7 @@ class CategoryController extends Controller
 
         return $categorias->values()->all();
     }
+    //funcion para restaurar el registro eliminado
     public function restaurar($idregistro)
     {
         $categoria = Category::find($idregistro);

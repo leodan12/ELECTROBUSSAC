@@ -10,7 +10,7 @@ use App\Models\Product;
 use App\Models\Cliente;
 
 class ReportesController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware(
@@ -20,7 +20,7 @@ class ReportesController extends Controller
             ]]
         );
     }
-
+    //vista index datos para (datatables-yajra)
     public function index()
     {
         $companies = Company::all();
@@ -73,8 +73,27 @@ class ReportesController extends Controller
             )
         );
     }
+    //obtener los datos para las tarjetas de ventas, compras, y cotizacion
+    public function obtenerdatosgrafico($empresa)
+    {
+        $ventas = $this->ventasdelmes($empresa);
+        $compras = $this->comprasdelmes($empresa);
+        $cotizacions = $this->cotizacionesdelmes($empresa);
 
-    //obtener los datos para el reporte grafico
+        $fechas = $this->todasfechas($ventas, $compras, $cotizacions);
+        $datosventas = $this->misventas($fechas, $ventas);
+        $datoscompras = $this->misventas($fechas, $compras);
+        $datoscotizacions = $this->misventas($fechas, $cotizacions);
+
+        $misdatos = collect();
+        $misdatos->put('fechas', $fechas);
+        $misdatos->put('datosventas', $datosventas);
+        $misdatos->put('datoscompras', $datoscompras);
+        $misdatos->put('datoscotizacions', $datoscotizacions);
+
+        return $misdatos;
+    }
+    //---obtener los datos para el reporte grafico
     public function misventas($fechas, $ventas)
     {
         $datosventas = [];
@@ -93,7 +112,6 @@ class ReportesController extends Controller
         }
         return $datosventas;
     }
-
     //para compras , ventas y cotizaciones
     public function todasfechas($ventas, $compras, $cotizaciones)
     {
@@ -111,6 +129,7 @@ class ReportesController extends Controller
         asort($resultado);
         return array_values($resultado);
     }
+    //obtener las ventas del mes actual
     public function ventasdelmes($empresa)
     {
         $hoy = date('Y-m-d');
@@ -136,6 +155,7 @@ class ReportesController extends Controller
 
         return $ventas;
     }
+    //obtener las compras del mes actual
     public function comprasdelmes($empresa)
     {
         $hoy = date('Y-m-d');
@@ -161,6 +181,7 @@ class ReportesController extends Controller
 
         return $compras;
     }
+    //obtener las cotizaciones del mes
     public function cotizacionesdelmes($empresa)
     {
         $hoy = date('Y-m-d');
@@ -185,27 +206,7 @@ class ReportesController extends Controller
         }
         return $cotizaciones;
     }
-    public function obtenerdatosgrafico($empresa)
-    {
-        $ventas = $this->ventasdelmes($empresa);
-        $compras = $this->comprasdelmes($empresa);
-        $cotizacions = $this->cotizacionesdelmes($empresa);
-
-        $fechas = $this->todasfechas($ventas, $compras, $cotizacions);
-        $datosventas = $this->misventas($fechas, $ventas);
-        $datoscompras = $this->misventas($fechas, $compras);
-        $datoscotizacions = $this->misventas($fechas, $cotizacions);
-
-        $misdatos = collect();
-        $misdatos->put('fechas', $fechas);
-        $misdatos->put('datosventas', $datosventas);
-        $misdatos->put('datoscompras', $datoscompras);
-        $misdatos->put('datoscotizacions', $datoscotizacions);
-
-        return $misdatos;
-    }
-
-    //para los productos mas vendidos
+    //--------------para los productos mas vendidos para el grafico---------------
     public function obtenerproductosmasv($empresa, $traer)
     {
         $productos = $this->obtenerproductoscantidad($empresa);
@@ -216,6 +217,7 @@ class ReportesController extends Controller
         $separados = $this->prodseparados($ordenados20->values()->all());
         return $separados;
     }
+    //obtener los productos mas vendidos por cantidad
     public function obtenerproductoscantidad($empresa)
     {
         $hoy = date('Y-m-d');
@@ -245,6 +247,7 @@ class ReportesController extends Controller
 
         return $ventas;
     }
+    //obtener los productos de forma individual
     public function productosindividuales($productos)
     {
         $productosL = collect();
@@ -266,6 +269,7 @@ class ReportesController extends Controller
         }
         return $productosL;
     }
+    //obtener los productos de un kit
     public function productosxkit($kit_id)
     {
         $productosxkit = DB::table('products as p')
@@ -275,6 +279,7 @@ class ReportesController extends Controller
             ->get();
         return $productosxkit;
     }
+    //sumar la cantidad de los productos 
     public function sumaproductos($productos)
     {
         $misproductos = collect();
@@ -292,9 +297,9 @@ class ReportesController extends Controller
             $miprod->put('cantidad', $cont);
             $misproductos->push($miprod);
         }
-
         return $misproductos;
     }
+    //agregar los productos por separado a una coleccion
     public function prodseparados($productos)
     {
         $misdatos = collect();
@@ -306,10 +311,9 @@ class ReportesController extends Controller
         }
         $misdatos->put('productos', $prods);
         $misdatos->put('cantidades', $cant);
-
         return $misdatos;
-    }
-    //para los clientes con mas compras
+    } 
+    //------------- obtener los clientes con mas compras -----------------
     public function obtenerclientesmasc($empresa, $tipo, $traer)
     {
         $datoscliente = "";
@@ -317,8 +321,7 @@ class ReportesController extends Controller
             $clientescantidad = $this->clientescantidad($empresa);
             $ordenados =   $clientescantidad->sortByDesc('compras');
             $misclientes  = $ordenados->take($traer);
-            $clientes = $misclientes->values()->all();
-            //return $clientes;
+            $clientes = $misclientes->values()->all(); 
             $datoscliente = $this->devolverclientescant($clientes);
         } else {
             $clientes = $this->clientescosto($empresa);
@@ -330,6 +333,7 @@ class ReportesController extends Controller
         }
         return  $datoscliente;
     }
+    //obtener los clientes con mas compras por cantidad
     public function clientescantidad($empresa)
     {
         $hoy = date('Y-m-d');
@@ -354,9 +358,9 @@ class ReportesController extends Controller
                 ->select('c.nombre', DB::raw('count(v.id) as compras'))
                 ->get();
         }
-
         return $ventas;
     }
+    //obtener los clientes con mas compras pero por codto
     public function clientescosto($empresa)
     {
         $hoy = date('Y-m-d');
@@ -381,12 +385,12 @@ class ReportesController extends Controller
         }
         return $ventas;
     }
+    //obtener los clientes con mas compras por costo
     public function misclientescosto($clientes)
     {
         $unicos = $clientes->unique('nombre');
         $clientesunicos = $unicos->values()->all();
-        $misclientes = collect();
-
+        $misclientes = collect(); 
         for ($i = 0; $i < count($clientesunicos); $i++) {
             $sum = 0;
             for ($x = 0; $x < count($clientes); $x++) {
@@ -402,10 +406,10 @@ class ReportesController extends Controller
             $miclient->put('cliente', $clientesunicos[$i]->nombre);
             $miclient->put('costo', $sum);
             $misclientes->push($miclient);
-        }
-
+        } 
         return $misclientes;
     }
+    //devolverc la cantidad de los clientes
     public function devolverclientescant($clientes)
     {
         $misdatos = collect();
@@ -417,9 +421,9 @@ class ReportesController extends Controller
         }
         $misdatos->put('clientes', $cliente);
         $misdatos->put('costos', $cant);
-
         return $misdatos;
     }
+    //funcion para obtener los clientes con mas ventas
     public function devolverclientes($clientes)
     {
         $misdatos = collect();
@@ -431,11 +435,9 @@ class ReportesController extends Controller
         }
         $misdatos->put('clientes', $cliente);
         $misdatos->put('costos', $costo);
-
         return $misdatos;
-    }
-
-    //-----------------------para los 4 cuadros del index de reportes
+    } 
+    //-----------------------para los 4 cuadros del index de reportes--------------------
     public function obtenerbalance($idempresa)
     {
         $ingresomes = $this->obteneringresos($idempresa, date('d'));
@@ -471,10 +473,10 @@ class ReportesController extends Controller
 
         return $resultados;
     }
+    //obtener los ingresos  de una empresa
     public function obteneringresos($idempresa, $dia)
     {
-        $hoy = date('Y-m-d');
-        //$dia = date('d');
+        $hoy = date('Y-m-d'); 
         $inicio =  date("Y-m-d", strtotime($hoy . "- $dia days"));
         $ingresosmes = 0;
         if ($idempresa != -1) {
@@ -493,6 +495,7 @@ class ReportesController extends Controller
         }
         return   $ingresosmes;
     }
+    //obtener las ventas de una empresa
     public function obtenerventas($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -514,6 +517,7 @@ class ReportesController extends Controller
         }
         return   $ventasmes;
     }
+    //obtener las cotizaciones de una empresa
     public function obtenercotizaciones($idempresa, $dia)
     {
         $hoy = date('Y-m-d');
@@ -535,6 +539,7 @@ class ReportesController extends Controller
         }
         return   $cotizacionmes;
     }
+    //obtener los productos de una empresa
     public function obtenerproductos($idempresa, $stock)
     {
         $productos = 0;
@@ -601,6 +606,7 @@ class ReportesController extends Controller
         }
         return $productos;
     }
+    //sumar el costo de las ventas
     public function sumarcostoventa($ingresos, $c)
     {
         $costoventa = 0;
@@ -621,8 +627,8 @@ class ReportesController extends Controller
         }
         return  round($costoventa, 2);
     }
-
-    //------------------------para los cuadros de inicio de sesion
+    //------------------------para los cuadros de inicio de sesion-----------------
+    //balacen con los datos de compras, ventas y cotizaciones del inicio de sesion
     public function balancemensual()
     {
         $fecha = date('Y-m-d');
@@ -671,10 +677,9 @@ class ReportesController extends Controller
 
         return $datos;
     }
+    //obtener el numero de ventas realizadas a credito y contado
     public function numeroventas($formapago, $pagado, $inicio)
     {
-        $fecha = date('Y-m-d');
-
         $ventas = "";
         if ($formapago != '-1') {
             $ventas = DB::table('ventas as v')
@@ -689,6 +694,7 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
+    //numero de ingresos realizados a credito y contado
     public function numeroingresos($formapago, $pagado, $inicio)
     {
         $fecha = date('Y-m-d');
@@ -707,6 +713,7 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
+    //obtener el numero de cotizaciones vendidas y sin vender
     public function numerocotizaciones($formapago, $vendida)
     {
         $fecha = date('Y-m-d');
@@ -732,6 +739,7 @@ class ReportesController extends Controller
         }
         return   $ventas;
     }
+    //numero de productos que tienen estock minimo y sin stock
     public function numeroproductos($stock)
     {
         $productos = "";
@@ -769,16 +777,15 @@ class ReportesController extends Controller
         }
         return   $productos;
     }
-
     //----------para traer datos de las ventas y compras de los productos por empresa o producto y fechas-------------------------
-
+    //vista inicio de reporte de ventas y compras
     public function infoproductos()
     {
         $companies = Company::all();
         $productos = Product::all();
-
         return view('admin.reporte.infoproductos', compact('companies', 'productos'));
     }
+    //obtener los datos de las ventas y compras
     public function datosproductos($fechainicio, $fechafin, $empresa, $producto)
     {
         $miscompras = $this->obtenerdatosproductoscompra($fechainicio, $fechafin, $empresa, $producto);
@@ -797,6 +804,7 @@ class ReportesController extends Controller
 
         return $unidosensoles;
     }
+    //convertir el precio de las compras y ventas en soles
     public function ventasycomprasensoles($datos)
     {
         $todoslosdatos = collect();
@@ -827,6 +835,7 @@ class ReportesController extends Controller
         }
         return  $todoslosdatos;
     }
+    //obtener los datos de los productos comprados
     public function obtenerdatosproductoscompra($fechainicio, $fechafin, $empresa, $producto)
     {
         $compras = "";
@@ -929,6 +938,7 @@ class ReportesController extends Controller
         }
         return $compras;
     }
+    //obtener datos de los productos vendidos
     public function obtenerdatosproductosventa($fechainicio, $fechafin, $empresa, $producto)
     {
         $ventas = "";
@@ -1031,6 +1041,7 @@ class ReportesController extends Controller
         }
         return $ventas;
     }
+    //unir los datos de las venctas con las compras
     public function coninfocompleta($miscompras, $misventas)
     {
         $todoslosdatos = collect();
@@ -1069,6 +1080,7 @@ class ReportesController extends Controller
         }
         return $todoslosdatos;
     }
+    //obtener todos los kits de las compras y ventas
     public function todoskits($fechainicio, $fechafin, $empresa, $compraventa)
     {
         $registros = "";
@@ -1173,13 +1185,12 @@ class ReportesController extends Controller
         }
         return $registros;
     }
+    //pasar la lista de kits a productos estandar
     public function todosestandarkit($compras, $ventas, $idproducto)
     {
         $resultados = collect();
-
         for ($i = 0; $i < count($compras); $i++) {
             $prodkit = $this->productosxkit($compras[$i]->idproducto);
-
             $mikit = DB::table('products as p')
                 ->where('p.id', '=', $compras[$i]->idproducto)
                 ->select(
@@ -1190,7 +1201,6 @@ class ReportesController extends Controller
                     'p.NoIGV',
                 )
                 ->first();
-
             for ($k = 0; $k < count($prodkit); $k++) {
                 if ($prodkit[$k]->id == $idproducto) {
                     $preciounit = 0;
@@ -1223,10 +1233,8 @@ class ReportesController extends Controller
                 }
             }
         }
-
         for ($i = 0; $i < count($ventas); $i++) {
             $prodkit = $this->productosxkit($ventas[$i]->idproducto);
-
             $mikit = DB::table('products as p')
                 ->where('p.id', '=', $ventas[$i]->idproducto)
                 ->select(
@@ -1237,7 +1245,6 @@ class ReportesController extends Controller
                     'p.NoIGV',
                 )
                 ->first();
-
             for ($k = 0; $k < count($prodkit); $k++) {
                 if ($prodkit[$k]->id == $idproducto) {
                     $preciounit = 0;
@@ -1270,16 +1277,17 @@ class ReportesController extends Controller
                 }
             }
         }
-
         return $resultados;
     }
     //------------------------------para obtener la rotacion del inventario--------------------------------------------
+    //vista de rotacion del stock
     public function rotacionstock()
     {
         $companies = Company::all();
         $productos = Product::all()->where('tipo', '=', 'estandar');
         return view('admin.reporte.rotacionstock', compact('companies', 'productos'));
     }
+    //obtener los datos para la rotacion del stock de productos
     public function datosrotacionstock($fechainicio, $fechafin, $empresa, $producto)
     {
         $misventas = $this->misproductosvendidos($fechainicio, $fechafin, $empresa, $producto);
@@ -1294,6 +1302,7 @@ class ReportesController extends Controller
 
         return $resultadostotales;
     }
+    //obtener los productos vendidos
     public function misproductosvendidos($fechainicio, $fechafin, $empresa, $producto)
     {
         $misproductos = "";
@@ -1443,6 +1452,7 @@ class ReportesController extends Controller
         }
         return $misproductos;
     }
+    //psar los kits a productos estandar
     public function productosestandar($misventas, $producto)
     {
         $resultado = collect();
@@ -1502,22 +1512,19 @@ class ReportesController extends Controller
         }
         return $resultado;
     }
+    //obtener los datos finales de las ventas y compras unidas
     public function resultadoventas($misventas, $compraventa)
     {
         $resultado = collect();
-
         $unicas = $misventas->unique(function ($item) {
             return $item['empresa'] . $item['producto'];
         });
-
         $misventasunicas = $unicas->values()->all();
-
         for ($x = 0; $x < count($misventasunicas); $x++) {
             $sumcant = 0;
             $sumcosto = 0;
             $minimo = 100000;
-            $maximo = 0;
-            //el $misventas[$i]['preciofinal'] es el precio unirario
+            $maximo = 0; 
             for ($i = 0; $i < count($misventas); $i++) {
                 if (
                     $misventas[$i]['producto'] == $misventasunicas[$x]['producto'] &&
@@ -1559,6 +1566,7 @@ class ReportesController extends Controller
         }
         return $resultado;
     }
+    //obtener los productos comprados en una empresa,fecha
     public function misproductoscomprados($fechainicio, $fechafin, $empresa, $producto)
     {
         $misproductos = "";
@@ -1585,8 +1593,7 @@ class ReportesController extends Controller
                         'p.id as idproducto',
                         'e.id as idempresa'
                     )
-                    ->get();
-
+                    ->get(); 
                 $miskits = DB::table('ingresos as i')
                     ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
@@ -1709,17 +1716,15 @@ class ReportesController extends Controller
         }
         return $misproductos;
     }
-
-    //otros
+    //----------------obtener nuevos datos de ventas------------------
     public function detalleventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $misventas = $this->obtenermisventas($fechainicio, $fechafin,  $empresa, $producto);
         $misventasestandar = $this->productosestandar2($misventas, $producto);
         $resultado  = $this->sumarresultado($misventasestandar, 'venta');
-
         return $resultado;
     }
-
+    //obtener las ventas de los productos y kits de una empresa en una fecha
     public function obtenermisventas($fechainicio, $fechafin, $empresa, $producto)
     {
         $productos = DB::table('ventas as v')
@@ -1773,6 +1778,7 @@ class ReportesController extends Controller
         $misproductos = $productos->concat($miskits);
         return $misproductos;
     }
+    //sumar los precios de las ventas o compras y paasar a dolares
     public function sumarresultado($misventas, $compraventa)
     {
         $resultado = collect();
@@ -1804,6 +1810,7 @@ class ReportesController extends Controller
         }
         return $resultado;
     }
+    //-----------------obtener nuevos datos de las compras------------------
     public function detallecompras($fechainicio, $fechafin, $empresa, $producto)
     {
         $miscompras = $this->obtenermiscompras($fechainicio, $fechafin, $empresa, $producto);
@@ -1812,6 +1819,7 @@ class ReportesController extends Controller
 
         return $resultado;
     }
+    //obtener las compras de los prductos y kits de una empresa en una fecha
     public function obtenermiscompras($fechainicio, $fechafin, $empresa, $producto)
     {
         $productos = DB::table('ingresos as i')
@@ -1864,6 +1872,7 @@ class ReportesController extends Controller
         $misproductos = $productos->concat($miskits);
         return $misproductos;
     }
+    //pasar los kits comprados a productos estandar
     public function productosestandar2($misventas, $producto)
     {
         $resultado = collect();
@@ -1920,15 +1929,14 @@ class ReportesController extends Controller
         }
         return $resultado;
     }
-
-    // para mostrar los datos de los cobros de las ventas
+    // vista reporte de cobro de las ventas  
     public function cobroventas()
     {
         $companies = Company::all();
         $clientes = Cliente::all();
         return view('admin.reporte.cobroventas', compact('companies', 'clientes'));
     }
-
+    //obtener los datos sobre los cobros de las ventas para mostrar en la vista de reportes
     public function datoscobroventas($fechainicio, $fechafin, $empresa, $cliente)
     {
         $ventas = "";
@@ -2055,25 +2063,24 @@ class ReportesController extends Controller
         }
         $ventascredito = $ventas->where('formapago', 'credito');
         $ventascontado = $ventas->where('formapago', 'contado');
-        $ventascontadoconretencion = $ventascontado->where('retencion','!=', null);
+        $ventascontadoconretencion = $ventascontado->where('retencion', '!=', null);
         $concatenated = $ventascredito->concat($ventascontadoconretencion);
         return $concatenated->values()->all();
-    }
-
-    // para mostrar los datos de los cobros de las ventas
+    } 
+    // vista reporte del pago de las compras realizadas
     public function pagocompras()
     {
         $companies = Company::all();
         $clientes = Cliente::all();
         return view('admin.reporte.pagocompras', compact('companies', 'clientes'));
     }
-
+    //obtener los datos de los pagos de las compras para mostrar en el reporte
     public function datospagocompras($fechainicio, $fechafin, $empresa, $cliente)
     {
-        $ventas = "";
+        $ingresos = "";
         if ($empresa != "-1") {
             if ($cliente != "-1") {
-                $ventas = DB::table('ingresos as i')
+                $ingresos = DB::table('ingresos as i')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->where('i.fecha', '<=', $fechafin)
@@ -2101,7 +2108,7 @@ class ReportesController extends Controller
                     )
                     ->get();
             } else {
-                $ventas = DB::table('ingresos as i')
+                $ingresos = DB::table('ingresos as i')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->where('i.fecha', '<=', $fechafin)
@@ -2120,7 +2127,7 @@ class ReportesController extends Controller
                         'i.acuenta1',
                         'i.acuenta2',
                         'i.acuenta3',
-                        'i.saldo', 
+                        'i.saldo',
                         'i.montopagado',
                         'i.fechapago',
                         'i.formapago',
@@ -2130,7 +2137,7 @@ class ReportesController extends Controller
             }
         } else {
             if ($cliente != "-1") {
-                $ventas = DB::table('ingresos as i')
+                $ingresos = DB::table('ingresos as i')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->where('i.fecha', '<=', $fechafin)
@@ -2149,7 +2156,7 @@ class ReportesController extends Controller
                         'i.acuenta1',
                         'i.acuenta2',
                         'i.acuenta3',
-                        'i.saldo', 
+                        'i.saldo',
                         'i.montopagado',
                         'i.fechapago',
                         'i.formapago',
@@ -2157,7 +2164,7 @@ class ReportesController extends Controller
                     )
                     ->get();
             } else {
-                $ventas = DB::table('ingresos as i')
+                $ingresos = DB::table('ingresos as i')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
                     ->join('clientes as cl', 'i.cliente_id', '=', 'cl.id')
                     ->where('i.fecha', '<=', $fechafin)
@@ -2175,7 +2182,7 @@ class ReportesController extends Controller
                         'i.acuenta1',
                         'i.acuenta2',
                         'i.acuenta3',
-                        'i.saldo', 
+                        'i.saldo',
                         'i.montopagado',
                         'i.fechapago',
                         'i.formapago',
@@ -2184,7 +2191,7 @@ class ReportesController extends Controller
                     ->get();
             }
         }
-        $ventascredito = $ventas->where('formapago', 'credito');
-        return $ventascredito->values()->all();
+        $ingresoscredito = $ingresos->where('formapago', 'credito');
+        return $ingresoscredito->values()->all();
     }
 }

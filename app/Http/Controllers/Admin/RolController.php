@@ -11,7 +11,7 @@ use App\Traits\HistorialTrait;
 use Yajra\DataTables\DataTables;
 
 class RolController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-rol|editar-rol|crear-rol|eliminar-rol', ['only' => ['index']]);
@@ -20,6 +20,7 @@ class RolController extends Controller
         $this->middleware('permission:eliminar-rol', ['only' => ['destroy']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -39,13 +40,13 @@ class RolController extends Controller
         }
         return view('admin.roles.index');
     }
-
+    //vista crear
     public function create()
     {
         $permisos = Permission::get();
         return view('admin.roles.create', compact('permisos'));
     }
-
+    //funcion para guardar un registro de rol
     public function store(Request $request)
     {
 
@@ -55,9 +56,8 @@ class RolController extends Controller
         $role->syncPermissions($request->input('permission'));
         $this->crearhistorial('crear', $role->id, $role->name, null, 'roles');
         return redirect()->route('rol.index');
-    }
-
-
+    } 
+    //vista editar
     public function edit($id)
     {
         $role = Role::find($id);
@@ -70,7 +70,7 @@ class RolController extends Controller
         //return $rolePermission ;
         return view('admin.roles.edit', compact('role', 'permisos', 'rolePermission'));
     }
-
+    //funcion para actualizar un registro de rol
     public function update(Request $request, $id)
     {
         $this->validate($request, ['name' => 'required', 'permission' => 'required']);
@@ -82,6 +82,7 @@ class RolController extends Controller
         $this->crearhistorial('editar', $role->id, $role->name, null, 'roles');
         return redirect()->route('rol.index');
     }
+    //funcion para eliminar un rol
     public function destroy($id)
     {
         $role = Role::find($id);

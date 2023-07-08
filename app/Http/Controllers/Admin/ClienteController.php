@@ -16,7 +16,7 @@ use App\Traits\HistorialTrait;
 
 
 class ClienteController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-cliente|editar-cliente|crear-cliente|eliminar-cliente', ['only' => ['index', 'show']]);
@@ -27,7 +27,7 @@ class ClienteController extends Controller
     }
 
     use HistorialTrait;
-
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         $datoseliminados = DB::table('clientes as c')
@@ -57,12 +57,12 @@ class ClienteController extends Controller
 
         return view('admin.cliente.index', compact('datoseliminados'));
     }
-
+    //vista crear
     public function create()
     {
         return view('admin.cliente.create');
     }
-
+    //funcion para guardar un registro
     public function store(ClienteFormRequest $request)
     {
         $validatedData = $request->validated();
@@ -78,12 +78,12 @@ class ClienteController extends Controller
         $this->crearhistorial('crear', $cliente->id, $cliente->nombre, null, 'clientes');
         return redirect('admin/cliente')->with('message', 'Cliente Agregado Satisfactoriamente');
     }
-
+    //vista editar
     public function edit(Cliente $cliente)
     {
         return view('admin.cliente.edit', compact('cliente'));
     }
-
+    //vista para actualixar el registro
     public function update(ClienteFormRequest $request, $cliente)
     {
         $validatedData = $request->validated();
@@ -100,7 +100,7 @@ class ClienteController extends Controller
         $this->crearhistorial('editar', $cliente->id, $cliente->nombre, null, 'clientes');
         return redirect('admin/cliente')->with('message', 'Cliente Actualizado Satisfactoriamente');
     }
-
+    //funcion para mostrar el modal ver registro
     public function show($id)
     {
         $cliente = DB::table('clientes as c')
@@ -110,6 +110,7 @@ class ClienteController extends Controller
 
         return  $cliente;
     }
+    //funcion para eliminar el o solo ocultar el registro
     public function destroy(int $cliente_id)
     {
         $cliente = Cliente::find($cliente_id);
@@ -137,7 +138,7 @@ class ClienteController extends Controller
             return "2";
         }
     }
-
+    //funcion para ver los registros eliminados qu se pueden restaurar
     public function showrestore()
     {
         $empresas   = DB::table('clientes as c')
@@ -154,7 +155,7 @@ class ClienteController extends Controller
 
         return $empresas->values()->all();
     }
-
+    //funcion para restaurar el registro eliminado
     public function restaurar($idregistro)
     {
         $registro = Cliente::find($idregistro);

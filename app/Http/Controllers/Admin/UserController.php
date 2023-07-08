@@ -13,7 +13,7 @@ use App\Traits\HistorialTrait;
 use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
-{
+{ //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-usuario|editar-usuario|crear-usuario|eliminar-usuario', ['only' => ['index']]);
@@ -22,10 +22,10 @@ class UserController extends Controller
         $this->middleware('permission:eliminar-usuario', ['only' => ['destroy']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         if ($request->ajax()) {
-
             $usuarios = DB::table('users as u')
                 ->join('model_has_roles as mhr', 'mhr.model_id', '=', 'u.id')
                 ->join('roles as r', 'mhr.role_id', '=', 'r.id')
@@ -46,17 +46,15 @@ class UserController extends Controller
         }
         return view('admin.usuario.index');
     }
-
+    //vista crear usuario
     public function create()
     {
         $roles = Role::select('id', 'name')->get();
-
         return view('admin.usuario.create', compact('roles'));
     }
-
+    //funcion guardar registro de un usuario
     public function store(Request $request)
     {
-
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
@@ -64,9 +62,6 @@ class UserController extends Controller
             'roles' => 'required',
             'status' => 'required',
         ]);
-        //$input = $request->all();
-        //$input['password'] = Hash::make($input['password']);
-        //$user = User::create($input);
         $user =  new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -77,7 +72,7 @@ class UserController extends Controller
         $this->crearhistorial('crear', $user->id, $user->name, null, 'usuarios');
         return redirect()->route('usuario.index');
     }
-
+    //vista editar
     public function edit($id)
     {
         $user = User::find($id);
@@ -86,12 +81,10 @@ class UserController extends Controller
             ->join('model_has_roles as mhr', 'mhr.model_id', '=', 'ur.id')
             ->where('ur.id', '=', $id)
             ->select('mhr.role_id')
-            ->first();
-        //$userRole = $user->roles->pluck('name', 'name')->all();
-
+            ->first(); 
         return view('admin.usuario.edit', compact('user', 'roles', 'userRole'));
     }
-
+    //funcion para actualizar el registro de un usuario
     public function update(Request $request, $id)
     {
         $this->validate($request, [
@@ -101,7 +94,6 @@ class UserController extends Controller
             'status' => 'required',
         ]);
         $input = $request->all();
-
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
@@ -115,6 +107,7 @@ class UserController extends Controller
         $this->crearhistorial('editar', $user->id, $user->name, null, 'usuarios');
         return redirect()->route('usuario.index');
     }
+    //funcion para eliminar un usuario
     public function destroy($id)
     {
         $user = User::find($id);

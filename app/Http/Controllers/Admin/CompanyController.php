@@ -19,6 +19,7 @@ use App\Traits\HistorialTrait;
 
 class CompanyController extends Controller
 {
+    //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-empresa|editar-empresa|crear-empresa|eliminar-empresa', ['only' => ['index', 'show']]);
@@ -28,15 +29,14 @@ class CompanyController extends Controller
         $this->middleware('permission:recuperar-empresa', ['only' => ['showrestore', 'restaurar']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         $datoseliminados = DB::table('companies as c')
             ->where('c.status', '=', 1)
             ->select('c.id')
             ->count();
-
         if ($request->ajax()) {
-
             $empresas = DB::table('companies as c')
                 ->select(
                     'c.id',
@@ -55,34 +55,30 @@ class CompanyController extends Controller
 
         return view('admin.company.index', compact('datoseliminados'));
     }
-
+    //vista crear
     public function create()
     {
         return view('admin.company.create');
     }
-
+    //funcion para guardar un registro
     public function store(CompanyFormRequest $request)
     {
         $validatedData = $request->validated();
-
         $company = new Company;
         $company->nombre = $validatedData['nombre'];
         $company->ruc = $validatedData['ruc'];
         $company->direccion = $request->direccion;
         $company->telefono = $request->telefono;
         $company->email = $request->email;
-
         $company->tipocuentasoles = $request->tipocuentasoles;
         $company->numerocuentasoles = $request->numerocuentasoles;
         $company->ccisoles = $request->ccisoles;
         $company->tipocuentadolares = $request->tipocuentadolares;
         $company->numerocuentadolares = $request->numerocuentadolares;
         $company->ccidolares = $request->ccidolares;
-
         $company->status = '0';
 
         if ($request->hasFile('logo') && $request->file('logo')->isValid()) {
-
             $imagen = $request->file('logo');
             $nombreimagen = "logo" . Str::slug($validatedData['nombre']) . "." . $imagen->guessExtension();
             $ruta = public_path("logos");
@@ -94,12 +90,12 @@ class CompanyController extends Controller
         $this->crearhistorial('crear', $company->id, $company->nombre, null, 'empresas');
         return redirect('admin/company')->with('message', 'Compañia Agregada Satisfactoriamente');
     }
-
+    //vista editar
     public function edit(Company $company)
     {
         return view('admin.company.edit', compact('company'));
     }
-
+    //funcion para actualizar un registro
     public function update(CompanyFormRequest $request, $company)
     {
         $validatedData = $request->validated();
@@ -109,7 +105,6 @@ class CompanyController extends Controller
         $company->direccion = $request->direccion;
         $company->telefono = $request->telefono;
         $company->email = $request->email;
-
         $company->tipocuentasoles = $request->tipocuentasoles;
         $company->numerocuentasoles = $request->numerocuentasoles;
         $company->ccisoles = $request->ccisoles;
@@ -134,11 +129,10 @@ class CompanyController extends Controller
         $this->crearhistorial('editar', $company->id, $company->nombre, null, 'empresas');
         return redirect('admin/company')->with('message', 'Compañia Actualizado Satisfactoriamente');
     }
-
+    //funcion para mostrar el modeal ver registro
     public function show($id)
     {
         $company = DB::table('companies as c')
-
             ->select(
                 'c.nombre',
                 'c.ruc',
@@ -157,6 +151,7 @@ class CompanyController extends Controller
 
         return  $company;
     }
+    //funcion para eliminar o solo ocultar registro
     public function destroy(int $idempresa)
     {
         $company = Company::find($idempresa);
@@ -190,6 +185,7 @@ class CompanyController extends Controller
             return "2";
         }
     }
+    //funcion para mostrar el registro eliminado
     public function showrestore()
     {
         $empresas   = DB::table('companies as c')
@@ -200,11 +196,9 @@ class CompanyController extends Controller
                 'C.ruc',
                 'C.telefono',
             )->get();
-
-
         return $empresas->values()->all();
     }
-
+    //funcion para restaurar un registro eliminado
     public function restaurar($idregistro)
     {
         $registro = Company::find($idregistro);

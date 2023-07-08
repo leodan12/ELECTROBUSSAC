@@ -60,7 +60,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col-9" style="text-align: left">
@@ -103,7 +102,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col-9" style="text-align: left">
@@ -146,7 +144,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col-9" style="text-align: left">
@@ -172,8 +169,6 @@
                                         <h5 id="verCotizacionvendida"> </h5>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -192,7 +187,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="card-text">
                                 <div class="row">
                                     <div class="col-9" style="text-align: left">
@@ -294,7 +288,6 @@
         </div>
     </div>
 @endsection
-
 @push('script')
     <script type="text/javascript">
         $(document).ready(function() {

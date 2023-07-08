@@ -17,7 +17,7 @@ use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
 
 class CotizacionesController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware(
@@ -29,11 +29,10 @@ class CotizacionesController extends Controller
         $this->middleware('permission:eliminar-cotizacion', ['only' => ['destroy']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         if ($request->ajax()) {
-
-            // $cotizaciones = Cotizacion::orderBy('id', 'desc')->get();
             $cotizaciones = DB::table('cotizacions as c')
                 ->join('companies as e', 'c.company_id', '=', 'e.id')
                 ->join('clientes as cl', 'c.cliente_id', '=', 'cl.id')
@@ -57,9 +56,9 @@ class CotizacionesController extends Controller
                 ->rawColumns(['acciones'])
                 ->make(true);
         }
-
         return view('admin.cotizacion.index');
     }
+    //vista crear
     public function create()
     {
         $companies = Company::all();
@@ -67,6 +66,7 @@ class CotizacionesController extends Controller
         $products = Product::all();
         return view('admin.cotizacion.create', compact('companies', 'products', 'clientes'));
     }
+    //funcion para guardar un registro
     public function store(CotizacionFormRequest $request)
     {
         $fechahoy = date('Y-m-d');
@@ -74,11 +74,9 @@ class CotizacionesController extends Controller
         $mes = substr($fechahoy, -5, 2);;
         $dia = substr($fechahoy, -2, 2);
         $fechanum =  $año . $mes . $dia;
-
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
         $cliente = Cliente::findOrFail($validatedData['cliente_id']);
-
         $nrocotizaciones = DB::table('cotizacions as c')
             ->join('companies as e', 'c.company_id', '=', 'e.id')
             ->where('e.id', '=', $company->id)
@@ -94,21 +92,15 @@ class CotizacionesController extends Controller
                 ->first();
             global  $nroultimacotizacion;
             $nroultimacotizacion = substr($ultimacotizacion->numero, 12);
-
-            //return  $nroultimacotizacion;
-
         }
         $CotizacionesConCeros = str_pad($nroultimacotizacion + 1, 3, "0", STR_PAD_LEFT);
         $EmpresaConCeros = str_pad($company->id, 2, "0", STR_PAD_LEFT);
-
         // return $nrocotizaciones;
-
         $fecha = $validatedData['fecha'];
         $moneda = $validatedData['moneda'];
         $costoventasinigv = $validatedData['costoventasinigv'];
 
         $cotizacion = new Cotizacion;
-
         $cotizacion->company_id = $company->id;
         $cotizacion->cliente_id = $cliente->id;
         $cotizacion->fecha = $fecha;
@@ -172,9 +164,9 @@ class CotizacionesController extends Controller
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Agregar la Cotizacion');
     }
+    //vista editar
     public function edit(int $cotizacion_id)
     {
-
         $cotizacion = Cotizacion::findOrFail($cotizacion_id);
         //$companies = Company::all();
         $companies = DB::table('companies as c')
@@ -183,8 +175,6 @@ class CotizacionesController extends Controller
             ->where('ct.id', '=', $cotizacion_id)
             ->get();
         $clientes = Cliente::all();
-        //$products = Product::all();
-
         $products = DB::table('detalleinventarios as di')
             ->join('inventarios as i', 'di.inventario_id', '=', 'i.id')
             ->join('companies as c', 'di.company_id', '=', 'c.id')
@@ -193,8 +183,6 @@ class CotizacionesController extends Controller
             ->where('c.id', '=', $cotizacion->company_id)
             ->where('di.stockempresa', '>', 0)
             ->get();
-
-
         $detallescotizacion = DB::table('detallecotizacions as dc')
             ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
             ->join('products as p', 'dc.product_id', '=', 'p.id')
@@ -212,7 +200,6 @@ class CotizacionesController extends Controller
                 'p.nombre as producto'
             )
             ->where('c.id', '=', $cotizacion_id)->get();
-        //return $detallesventa;
         $detalleskit = DB::table('kits as k')
             ->join('products as p', 'k.kitproduct_id', '=', 'p.id')
             ->join('products as pv', 'k.product_id', '=', 'pv.id')
@@ -220,26 +207,23 @@ class CotizacionesController extends Controller
             ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
             ->select('k.cantidad', 'p.nombre as producto', 'k.product_id')
             ->where('c.id', '=', $cotizacion_id)->get();
-
         $condiciones = DB::table('condicions as cd')
             ->join('cotizacions as ct', 'cd.cotizacion_id', '=', 'ct.id')
             ->select('cd.id as idcondicion', 'cd.condicion')
             ->where('ct.id', '=', $cotizacion_id)->get();
-
         return view('admin.cotizacion.edit', compact('detalleskit', 'products', 'cotizacion', 'companies', 'clientes', 'detallescotizacion', 'condiciones'));
     }
+    //funcion para actualizar un registro
     public function update(CotizacionFormRequest $request, int $cotizacion_id)
     {
         $validatedData = $request->validated();
         $company = Company::findOrFail($validatedData['company_id']);
         $cliente = Cliente::findOrFail($validatedData['cliente_id']);
-
         $fecha = $validatedData['fecha'];
         $moneda = $validatedData['moneda'];
         $costoventasinigv = $validatedData['costoventasinigv'];
 
         $cotizacion =  Cotizacion::findOrFail($cotizacion_id);
-
         $cotizacion->company_id = $company->id;
         $cotizacion->cliente_id = $cliente->id;
         $cotizacion->fecha = $fecha;
@@ -249,7 +233,6 @@ class CotizacionesController extends Controller
         $cotizacion->moneda = $moneda;
         $cotizacion->numero = $request->numero;
         $cotizacion->vendida = "NO";
-
         //no obligatorios
         $observacion = $validatedData['observacion'];
         $tasacambio = $validatedData['tasacambio'];
@@ -262,7 +245,6 @@ class CotizacionesController extends Controller
         $cotizacion->observacion = $observacion;
         $cotizacion->fechav = $request->fechav;
         //guardamos la venta y los detalles
-
         if ($cotizacion->update()) {
             $product = $request->Lproduct;
             $cantidad = $request->Lcantidad;
@@ -273,7 +255,6 @@ class CotizacionesController extends Controller
             $preciounitariomo = $request->Lpreciounitariomo;
             if ($product !== null) {
                 for ($i = 0; $i < count($product); $i++) {
-
                     $Detallecotizacion = new Detallecotizacion;
                     $Detallecotizacion->cotizacion_id = $cotizacion->id;
                     $Detallecotizacion->product_id = $product[$i];
@@ -301,6 +282,7 @@ class CotizacionesController extends Controller
         }
         return redirect('admin/cotizacion')->with('message', 'No se pudo Actualizar la cotizacion');
     }
+    //funcion para mostrar un registro
     public function show($id)
     {
         $cotizacion = DB::table('cotizacions as c')
@@ -335,9 +317,9 @@ class CotizacionesController extends Controller
                 'p.id as idproducto',
             )
             ->where('c.id', '=', $id)->get();
-
         return  $cotizacion;
     }
+    //funcion para mostrar las condiciones dentro del modal vercondiciones
     public function showcondiciones($id)
     {
         $condicion = DB::table('cotizacions as c')
@@ -350,6 +332,7 @@ class CotizacionesController extends Controller
 
         return  $condicion;
     }
+    //funcion para eliminar un registro
     public function destroy(int $cotizacion_id)
     {
         $cotizacion = Cotizacion::find($cotizacion_id);
@@ -366,6 +349,7 @@ class CotizacionesController extends Controller
             return "2";
         }
     }
+    //funcion para eliminar una condicion dela cotizacion
     public function destroycondicion(int $condicion_id)
     {
         $condicion = Condicion::find($condicion_id);
@@ -386,9 +370,9 @@ class CotizacionesController extends Controller
             return 2;
         }
     }
+    //funcion para eliminar un detalle de la cotizacion
     public function destroydetallecotizacion($id)
     {
-        //buscamos el registro con el id enviado por la URL
         $detallecotizacion = Detallecotizacion::find($id);
         $cotizacionh = DB::table('cotizacions as c')
             ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
@@ -396,17 +380,14 @@ class CotizacionesController extends Controller
             ->select('c.id', 'c.company_id', 'c.cliente_id')->first();
         $companyh = Company::find($cotizacionh->company_id);
         $clienteh = Cliente::find($cotizacionh->cliente_id);
-
         if ($detallecotizacion) {
             $cotizacion = DB::table('detallecotizacions as dc')
                 ->join('cotizacions as c', 'dc.cotizacion_id', '=', 'c.id')
                 ->select('c.id', 'dc.preciofinal', 'c.costoventasinigv')
                 ->where('dc.id', '=', $id)->first();
-
             if ($detallecotizacion->delete()) {
                 $costof = $cotizacion->costoventasinigv;
                 $detalle = $cotizacion->preciofinal;
-
                 $editcotizacion = Cotizacion::findOrFail($cotizacion->id);
                 $editcotizacion->costoventasinigv = $costof - $detalle;
                 $editcotizacion->costoventaconigv = round(($costof - $detalle) * 1.18, 2);
@@ -420,13 +401,12 @@ class CotizacionesController extends Controller
             return 2;
         }
     }
+    //funcion para generar el pdf de la cotizacion
     public function generarcotizacionpdf($idcotizacion)
     {
-
         $coti = Cotizacion::findOrFail($idcotizacion);
         $empresa = Company::findOrFail($coti->company_id);
         $cliente = Cliente::findOrFail($coti->cliente_id);
-
         $cotizacion = DB::table('cotizacions as c')
             ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
             ->join('companies as e', 'c.company_id', '=', 'e.id')
@@ -458,7 +438,6 @@ class CotizacionesController extends Controller
                 'p.id as idproducto',
             )
             ->where('c.id', '=', $idcotizacion)->get();
-
         $detallekit = DB::table('cotizacions as c')
             ->join('detallecotizacions as dc', 'dc.cotizacion_id', '=', 'c.id')
             ->join('companies as e', 'c.company_id', '=', 'e.id')
@@ -472,10 +451,6 @@ class CotizacionesController extends Controller
                 'k.product_id as idkit',
             )
             ->where('c.id', '=', $idcotizacion)->get();
-
-        //return  $detallekit;
-
-        //$fechahoy = date('d-m-Y');
         $condiciones = Condicion::all()->where('cotizacion_id', '=', $idcotizacion);
         $fechaletra = $this->obtenerFechaEnLetra($cotizacion[0]->fecha);
         $pdf = PDF::loadView(
@@ -485,20 +460,18 @@ class CotizacionesController extends Controller
                 "cliente" => $cliente, "detallekit" => $detallekit, "condiciones" => $condiciones
             ]
         );
-        //$pdf->set_option('defaultFont', 'Courier');
-
         return $pdf->stream('venta.pdf');
     }
+    //funcion para cambiar la fecha de numeros a letras para poner en el pdf
     function obtenerFechaEnLetra($fecha)
-    {
-        //$dia= $this->conocerDiaSemanaFecha($fecha);
+    { 
         $num = date("j", strtotime($fecha));
         $anno = date("Y", strtotime($fecha));
         $mes = array('enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre');
         $mes = $mes[(date('m', strtotime($fecha)) * 1) - 1];
-        //return $dia.', '.$num.' de '.$mes.' del '.$anno;
         return $num . ' de ' . $mes . ' del ' . $anno;
     }
+    //funcion para saber el dia de la semana
     function conocerDiaSemanaFecha($fecha)
     {
         $dias = array('Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado');

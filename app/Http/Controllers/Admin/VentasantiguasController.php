@@ -9,21 +9,17 @@ use App\Models\Ventasantigua;
 use Illuminate\Support\Facades\DB;
 
 class VentasantiguasController extends Controller
-{
+{ //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-venta|eliminar-venta', ['only' => ['index']]);
         $this->middleware('permission:eliminar-venta', ['only' => ['destroy',]]);
     }
-
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
-
-            //$ventas = Ventasantigua::all();
             $ventas = DB::table('ventasantiguas');
-
             return DataTables::of($ventas)
                 ->addColumn('acciones', 'Acciones')
                 ->editColumn('acciones', function ($ventas) {
@@ -32,10 +28,9 @@ class VentasantiguasController extends Controller
                 ->rawColumns(['acciones'])
                 ->make(true);
         }
-
         return view('admin.ventaantigua.index');
     }
-
+    //funcion para eliminar un registro de venta
     public function destroy(int $venta_id)
     {
         $venta = Ventasantigua::find($venta_id);
@@ -49,7 +44,7 @@ class VentasantiguasController extends Controller
             return "2";
         }
     }
-
+    //funcion para mostrar el registro de una venta
     public function show($id)
     {
         $venta =  DB::table('ventasantiguas as va')
@@ -73,8 +68,6 @@ class VentasantiguasController extends Controller
                 'va.boletafactura'
             )
             ->get();
-        //Ventasantigua::find($id)->get();
-
         return  $venta;
     }
 }

@@ -12,7 +12,7 @@ use App\Models\Product;
 use App\Models\Listaprecio;
 
 class ListaprecioController extends Controller
-{
+{   //para asignar los permisos a las funciones
     function __construct()
     {
         $this->middleware('permission:ver-lista-precios|editar-lista-precios|crear-lista-precios|eliminar-lista-precios', ['only' => ['index']]);
@@ -21,10 +21,10 @@ class ListaprecioController extends Controller
         $this->middleware('permission:eliminar-lista-precios', ['only' => ['destroy']]);
     }
     use HistorialTrait;
+    //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
         if ($request->ajax()) {
-
             $listaprecios = DB::table('listaprecios as lp')
                 ->join('products as p', 'lp.product_id', '=', 'p.id')
                 ->join('clientes as c', 'lp.cliente_id', '=', 'c.id')
@@ -45,24 +45,22 @@ class ListaprecioController extends Controller
         }
         return view('admin.listaprecio.index');
     }
-
+    //vista crear
     public function create()
     {
         $product = Product::all()->where('status', '=', 0);
         $cliente = Cliente::all()->where('status', '=', 0);
-
         return view('admin.listaprecio.create', compact('product', 'cliente'));
     }
-
+    //funcion para guardar un registro
     public function store(Request $request)
-    {
+    {   //validamos los datos y guardamos el registro
         $this->validate($request, [
             'cliente_id' => 'required',
             'product_id' => 'required',
             'moneda' => 'required',
             'preciounitariomo' => 'required',
         ]);
-
         $listaprecio =  new Listaprecio;
         $listaprecio->cliente_id = $request->cliente_id;
         $listaprecio->product_id = $request->product_id;
@@ -74,36 +72,33 @@ class ListaprecioController extends Controller
         $this->crearhistorial('crear', $listaprecio->id, $prod->nombre, $cli->nombre,  'listaprecios');
         return redirect('/admin/listaprecios')->with('message', 'Precio Agregado Satisfactoriamente');
     }
-
+    //funcion para obtener los clientes con precio para un producto
     public function clientesxproducto($id)
-    {    
+    {
         $listaclientes = DB::table('clientes as c')
             ->join('listaprecios as lp', 'lp.cliente_id', '=', 'c.id')
-            ->select('c.id', 'c.nombre', 'c.ruc') 
-            ->where('lp.product_id', '=', $id) 
-            ->get(); 
- 
+            ->select('c.id', 'c.nombre', 'c.ruc')
+            ->where('lp.product_id', '=', $id)
+            ->get();
         return $listaclientes;
     }
-
+    // vista editar
     public function edit($id)
     {
         $precio = Listaprecio::find($id);
         $product = Product::all()->where('id', '=', $precio->product_id);
         $cliente = Cliente::all()->where('id', '=', $precio->cliente_id);
-
         return view('admin.listaprecio.edit', compact('product', 'cliente', 'precio'));
     }
-
+    //funcion para actualizar un registro
     public function update(Request $request, $id)
-    {
+    {   //validamos los datos y actualizamos el registro
         $this->validate($request, [
             'cliente_id' => 'required',
             'product_id' => 'required',
             'moneda' => 'required',
             'preciounitariomo' => 'required',
         ]);
-
         $listaprecio =  Listaprecio::find($id);
         $listaprecio->cliente_id = $request->cliente_id;
         $listaprecio->product_id = $request->product_id;
@@ -115,6 +110,7 @@ class ListaprecioController extends Controller
         $this->crearhistorial('editar', $listaprecio->id, $prod->nombre, $cli->nombre,  'listaprecios');
         return redirect('/admin/listaprecios')->with('message', 'Precio Actualizado Satisfactoriamente');
     }
+    //funcion para ver el registro de un precio
     public function show($id)
     {
         $product = DB::table('listaprecios as lp')
@@ -123,14 +119,14 @@ class ListaprecioController extends Controller
             ->select(
                 'lp.id',
                 'p.nombre as producto',
-                'c.nombre as cliente',   
+                'c.nombre as cliente',
                 'lp.moneda',
                 'lp.preciounitariomo'
             )
             ->where('lp.id', '=', $id)->first();
         return  $product;
     }
-    
+    //funcion para eliminar un registro
     public function destroy(int $idlista)
     {
         $listaprecio = Listaprecio::find($idlista);

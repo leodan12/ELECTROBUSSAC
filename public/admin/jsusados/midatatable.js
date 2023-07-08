@@ -154,7 +154,7 @@ function inicializartabladatos(btns, tabla, titulo) {
             exportOptions: {
                 columns: ':visible'
             }
-        }],
+        } ],
     });
 
 }

@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
+    //vista dashboard del inicio
     public function index()
     {
         $sinstock = $this->productossinstock();
         return view('admin.dashboard',compact('sinstock'));
     }
-
+    //funcion para obtener el numero de productos sin stock
     public function productossinstock()
     {
         $numerosinstock=0;
