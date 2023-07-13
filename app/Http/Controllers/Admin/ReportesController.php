@@ -312,7 +312,7 @@ class ReportesController extends Controller
         $misdatos->put('productos', $prods);
         $misdatos->put('cantidades', $cant);
         return $misdatos;
-    } 
+    }
     //------------- obtener los clientes con mas compras -----------------
     public function obtenerclientesmasc($empresa, $tipo, $traer)
     {
@@ -321,7 +321,7 @@ class ReportesController extends Controller
             $clientescantidad = $this->clientescantidad($empresa);
             $ordenados =   $clientescantidad->sortByDesc('compras');
             $misclientes  = $ordenados->take($traer);
-            $clientes = $misclientes->values()->all(); 
+            $clientes = $misclientes->values()->all();
             $datoscliente = $this->devolverclientescant($clientes);
         } else {
             $clientes = $this->clientescosto($empresa);
@@ -390,7 +390,7 @@ class ReportesController extends Controller
     {
         $unicos = $clientes->unique('nombre');
         $clientesunicos = $unicos->values()->all();
-        $misclientes = collect(); 
+        $misclientes = collect();
         for ($i = 0; $i < count($clientesunicos); $i++) {
             $sum = 0;
             for ($x = 0; $x < count($clientes); $x++) {
@@ -406,7 +406,7 @@ class ReportesController extends Controller
             $miclient->put('cliente', $clientesunicos[$i]->nombre);
             $miclient->put('costo', $sum);
             $misclientes->push($miclient);
-        } 
+        }
         return $misclientes;
     }
     //devolverc la cantidad de los clientes
@@ -436,7 +436,7 @@ class ReportesController extends Controller
         $misdatos->put('clientes', $cliente);
         $misdatos->put('costos', $costo);
         return $misdatos;
-    } 
+    }
     //-----------------------para los 4 cuadros del index de reportes--------------------
     public function obtenerbalance($idempresa)
     {
@@ -476,7 +476,7 @@ class ReportesController extends Controller
     //obtener los ingresos  de una empresa
     public function obteneringresos($idempresa, $dia)
     {
-        $hoy = date('Y-m-d'); 
+        $hoy = date('Y-m-d');
         $inicio =  date("Y-m-d", strtotime($hoy . "- $dia days"));
         $ingresosmes = 0;
         if ($idempresa != -1) {
@@ -1524,7 +1524,7 @@ class ReportesController extends Controller
             $sumcant = 0;
             $sumcosto = 0;
             $minimo = 100000;
-            $maximo = 0; 
+            $maximo = 0;
             for ($i = 0; $i < count($misventas); $i++) {
                 if (
                     $misventas[$i]['producto'] == $misventasunicas[$x]['producto'] &&
@@ -1593,7 +1593,7 @@ class ReportesController extends Controller
                         'p.id as idproducto',
                         'e.id as idempresa'
                     )
-                    ->get(); 
+                    ->get();
                 $miskits = DB::table('ingresos as i')
                     ->join('detalleingresos as di', 'di.ingreso_id', '=', 'i.id')
                     ->join('companies as e', 'i.company_id', '=', 'e.id')
@@ -2066,7 +2066,7 @@ class ReportesController extends Controller
         $ventascontadoconretencion = $ventascontado->where('retencion', '!=', null);
         $concatenated = $ventascredito->concat($ventascontadoconretencion);
         return $concatenated->values()->all();
-    } 
+    }
     // vista reporte del pago de las compras realizadas
     public function pagocompras()
     {
@@ -2193,5 +2193,102 @@ class ReportesController extends Controller
         }
         $ingresoscredito = $ingresos->where('formapago', 'credito');
         return $ingresoscredito->values()->all();
+    }
+
+    //----------para la vista de la lista de los precios de compra-------------------------
+    //vista inicio de reporte de precios de compras
+    public function listaprecioscompra()
+    {
+        $companies = Company::all();
+        $productos = Product::all();
+        return view('admin.reporte.listaprecioscompra', compact('companies', 'productos'));
+    }
+
+    public function datoslistaprecioscompra($fechainicio, $fechafin, $empresa, $producto)
+    {
+        $precios = "";
+        if ($empresa != "-1") {
+            if ($producto != "-1") {
+                $precios = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'i.id', '=', 'di.ingreso_id')
+                    ->join('companies as c', 'c.id', '=', 'i.company_id')
+                    ->join('clientes as cl', 'cl.id', '=', 'i.cliente_id')
+                    ->join('products as p', 'p.id', '=', 'di.product_id')
+                    ->where('c.id', '=', $empresa)
+                    ->where('p.id', '=', $producto)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->select(
+                        'p.nombre as producto',
+                        'i.fecha',
+                        'c.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.moneda',
+                        'di.cantidad',
+                        'di.preciounitariomo'
+                    )
+                    ->get();
+            } else {
+                $precios = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'i.id', '=', 'di.ingreso_id')
+                    ->join('companies as c', 'c.id', '=', 'i.company_id')
+                    ->join('clientes as cl', 'cl.id', '=', 'i.cliente_id')
+                    ->join('products as p', 'p.id', '=', 'di.product_id')
+                    ->where('c.id', '=', $empresa)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->select(
+                        'p.nombre as producto',
+                        'i.fecha',
+                        'c.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.moneda',
+                        'di.cantidad',
+                        'di.preciounitariomo'
+                    )
+                    ->get();
+            }
+        } else {
+            if ($producto != "-1") {
+                $precios = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'i.id', '=', 'di.ingreso_id')
+                    ->join('companies as c', 'c.id', '=', 'i.company_id')
+                    ->join('clientes as cl', 'cl.id', '=', 'i.cliente_id')
+                    ->join('products as p', 'p.id', '=', 'di.product_id')
+                    ->where('p.id', '=', $producto)
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->select(
+                        'p.nombre as producto',
+                        'i.fecha',
+                        'c.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.moneda',
+                        'di.cantidad',
+                        'di.preciounitariomo'
+                    )
+                    ->get();
+            } else {
+                $precios = DB::table('ingresos as i')
+                    ->join('detalleingresos as di', 'i.id', '=', 'di.ingreso_id')
+                    ->join('companies as c', 'c.id', '=', 'i.company_id')
+                    ->join('clientes as cl', 'cl.id', '=', 'i.cliente_id')
+                    ->join('products as p', 'p.id', '=', 'di.product_id')
+                    ->where('i.fecha', '>=', $fechainicio)
+                    ->where('i.fecha', '<=', $fechafin)
+                    ->select(
+                        'p.nombre as producto',
+                        'i.fecha',
+                        'c.nombre as empresa',
+                        'cl.nombre as cliente',
+                        'i.moneda',
+                        'di.cantidad',
+                        'di.preciounitariomo'
+                    )
+                    ->get();
+            }
+        }
+
+        return $precios;
     }
 }

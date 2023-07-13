@@ -27,12 +27,11 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
         Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'inicio']);
 
-        //Rutas de las Categorias
+        //Rutas de los Datos
         Route::controller(App\Http\Controllers\Admin\DatoController::class)->group(function () { 
             Route::get('/dato/vertasacambio', 'vertasacambio');
             Route::get('/dato/actualizartasacambio/{tasacambio}/{fecha}/{id}', 'actualizartasacambio');
         });
-
         //Rutas de las Categorias
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function () {
             Route::get('/category', 'index')->name("categorias.index");
@@ -202,6 +201,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/reporte/datoscobroventas/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datoscobroventas');
             Route::get('/reporte/pagocompras', 'pagocompras');
             Route::get('/reporte/datospagocompras/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datospagocompras');
+
+            Route::get('/reporte/listaprecioscompra', 'listaprecioscompra');
+            Route::get('/reporte/datoslistaprecioscompra/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datoslistaprecioscompra');
+
         });
         //rutas de los roles
         Route::controller(App\Http\Controllers\Admin\RolController::class)->group(function () {
@@ -225,7 +228,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/ventasantiguas/show/{id}', 'show'); //ver  
 
         });
-        //Rutas de lA Lista de precios
+        //Rutas de la Lista de precios
         Route::controller(App\Http\Controllers\Admin\ListaprecioController::class)->group(function () {
             Route::get('/listaprecios', 'index')->name('listaprecio.index');
             Route::get('/listaprecios/create', 'create');
@@ -249,7 +252,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/modelocarro/showmodelocarrorestore', 'showmodelocarrorestore');
             Route::get('/modelocarro/restaurar/{idregistro}', 'restaurar');
         });
-
         //Rutas de los Modelos de los carros
         Route::controller(App\Http\Controllers\Admin\CarroceriaController::class)->group(function () {
             Route::get('/carroceria', 'index')->name("carrocerias.index");

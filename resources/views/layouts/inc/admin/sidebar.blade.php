@@ -119,15 +119,35 @@
                             auth()->user()->can('crear-ingreso') ||
                             auth()->user()->can('editar-ingreso') ||
                             auth()->user()->can('eliminar-ingreso'))
-                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ingreso') }}"><i
-                                    class="mdi mdi-clipboard-arrow-down menu-icon"></i>INGRESO</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/ingreso') }}">
+                                <i class="menu-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 122.43 122.88"
+                                        style="enable-background:new 0 0 122.43 122.88">
+                                        <style type="text/css">
+                                            .st0 {
+                                                fill-rule: evenodd;
+                                                clip-rule: evenodd;
+                                            }
+                                        </style>
+                                        <path class="st0"
+                                            d="M22.63,12.6h93.3c6.1,0,5.77,2.47,5.24,8.77l-3.47,44.23c-0.59,7.05-0.09,5.34-7.56,6.41l-68.62,8.73 l3.63,10.53c29.77,0,44.16,0,73.91,0c1,3.74,2.36,9.83,3.36,14h-12.28l-1.18-4.26c-24.8,0-34.25,0-59.06,0 c-13.55-0.23-12.19,3.44-15.44-8.27L11.18,8.11H0V0h19.61C20.52,3.41,21.78,9.15,22.63,12.6L22.63,12.6z M63.49,23.76h17.76v18.02 h15.98L72.39,65.95L47.51,41.78h15.98V23.76L63.49,23.76z M53.69,103.92c5.23,0,9.48,4.25,9.48,9.48c0,5.24-4.24,9.48-9.48,9.48 c-5.24,0-9.48-4.24-9.48-9.48C44.21,108.17,48.45,103.92,53.69,103.92L53.69,103.92z M92.79,103.92c5.23,0,9.48,4.25,9.48,9.48 c0,5.24-4.25,9.48-9.48,9.48c-5.24,0-9.48-4.24-9.48-9.48C83.31,108.17,87.55,103.92,92.79,103.92L92.79,103.92z" />
+                                    </svg> 
+                                </i>
+                                INGRESO</a></li>
                     @endif
                     @if (auth()->user()->can('ver-venta') ||
                             auth()->user()->can('crear-venta') ||
                             auth()->user()->can('editar-venta') ||
                             auth()->user()->can('eliminar-venta'))
-                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}"><i
-                                    class="mdi mdi-clipboard-arrow-up menu-icon"></i>SALIDA</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="{{ url('admin/venta') }}">
+                                <i class="menu-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 122.43 122.88">
+                                        <path
+                                            d="M22.63 12.6h93.3c6.1 0 5.77 2.47 5.24 8.77l-3.47 44.23c-0.59 7.05-0.09 5.34-7.56 6.41l-68.62 8.73 l3.63 10.53c29.77 0 44.16 0 73.91 0c1 3.74 2.36 9.83 3.36 14h-12.28l-1.18-4.26c-24.8 0-34.25 0-59.06 0 c-13.55-0.23-12.19 3.44-15.44-8.27L11.18 8.11H0V0h19.61C20.52 3.41 21.78 9.15 22.63 12.6z M62.4 62.12h17.76V44.11 h15.98L71.3 19.93L46.43 44.11H62.4V62.12L62.4 62.12z M53.69 103.92c5.23 0 9.48 4.25 9.48 9.48c0 5.24-4.24 9.48-9.48 9.48 c-5.24 0-9.48-4.24-9.48-9.48C44.21 108.16 48.45 103.92 53.69 103.92L53.69 103.92z M92.79 103.92c5.23 0 9.48 4.25 9.48 9.48 c0 5.24-4.25 9.48-9.48 9.48c-5.24 0-9.48-4.24-9.48-9.48C83.31 108.16 87.55 103.92 92.79 103.92L92.79 103.92z" />
+                                    </svg>
+
+                                </i>
+                                SALIDA</a></li>
                     @endif
                     @if (auth()->user()->can('ver-cotizacion') ||
                             auth()->user()->can('crear-cotizacion') ||
@@ -168,6 +188,9 @@
                                     class="mdi mdi-wallet menu-icon"></i>PAGO DE COMPRAS</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/cobrovent') }}"><i
                                     class="mdi mdi-wallet menu-icon"></i>COBRO DE VENTAS</a></li>
+                        <li class="nav-item"> <a class="nav-link"
+                                href="{{ url('admin/reporte/listaprecioscompra') }}"><i
+                                    class="mdi mdi-format-list-bulleted menu-icon"></i>PRECIOS DE COMPRAS</a></li>
                     </ul>
                 </div>
             </li>
@@ -182,9 +205,9 @@
             <div class="collapse" id="production">
                 <ul class="flex-column sub-menu" style="list-style: none;">
                     @if (auth()->user()->can('ver-usuario') ||
-                            auth()->user()->can('crear-usuario') ||
-                            auth()->user()->can('editar-usuario') ||
-                            auth()->user()->can('eliminar-usuario'))
+    auth()->user()->can('crear-usuario') ||
+    auth()->user()->can('editar-usuario') ||
+    auth()->user()->can('eliminar-usuario'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin/modelocarro') }}">
                                 <i class="mdi mdi-account-multiple menu-icon"></i>
@@ -193,9 +216,9 @@
                         </li>
                     @endif
                     @if (auth()->user()->can('ver-rol') ||
-                            auth()->user()->can('crear-rol') ||
-                            auth()->user()->can('editar-rol') ||
-                            auth()->user()->can('eliminar-rol'))
+    auth()->user()->can('crear-rol') ||
+    auth()->user()->can('editar-rol') ||
+    auth()->user()->can('eliminar-rol'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin/carroceria') }}">
                                 <i class="mdi mdi-account-settings menu-icon"></i>
@@ -204,7 +227,7 @@
                         </li>
                     @endif
                     @if (auth()->user()->can('ver-historial') ||
-                            auth()->user()->can('eliminar-historial'))
+    auth()->user()->can('eliminar-historial'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin/produccioncarro') }}">
                                 <i class="mdi mdi-timetable menu-icon"></i>

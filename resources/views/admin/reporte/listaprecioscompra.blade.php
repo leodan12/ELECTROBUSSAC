@@ -40,10 +40,10 @@
                     <input type="date" class="form-control " id="fechafin" name="fechafin" />
                 </div>
 
-                <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
+                {{-- <div class="col-md-6 mb-3" id="cantidadcosto" name="cantidadcosto">
                     <button type="button" class="btn btn-warning" onclick="traertodos();">Traer todos los registros
                     </button>
-                </div>
+                </div> --}}
 
             </div>
             <div class="row">
@@ -53,15 +53,11 @@
                             <tr>
 
                                 <th>FECHA</th>
-                                <th>COMPRA O VENTA</th>
-                                <th>FACTURA</th>
                                 <th>EMPRESA</th>
-                                <th>CLIENTE/PROVEEDOR</th>
-                                <th>PRODUCTO</th>
-                                <th>TIPO</th>
+                                <th>PROVEEDOR</th>
+                                <th>PRODUCTO</th> 
                                 <th>CANTIDAD</th>
                                 <th>PRECIO UNITARIO</th>
-                                <th>PRECIO FINAL</th>
                                 <th>MONEDA</th>
 
                             </tr>
@@ -99,38 +95,14 @@
 
         });
 
-        function traertodos() {
-            Swal.fire({
-                title: "Obteniendo Datos...", 
-                imageUrl: '{{ asset('admin/images/loading2.gif') }}',
-                imageWidth: "150px",
-                imageHeight: "150px",  
-                showConfirmButton:false,
-                allowOutsideClick: false,
-
-            });
-            traertodosdatos();
-            
-        }
-        function traertodosdatos(){
-            var empresa = document.getElementById("company_id").value;
-            var producto = document.getElementById("producto").value;
-            var fechainicio = "01-01-2000"; //document.getElementById("fechainicio").value;
-            var fechafin = "31-12-2099"; //document.getElementById("fechafin").value;
-            var urldatosproductos = "{{ url('admin/reporte/datosproductos') }}";
-            $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
-                llenartabla(data);
-                Swal.close({});
-            });
-        }
-
+        
         function traerdatos() {
             var fechainicio = document.getElementById("fechainicio").value;
             var fechafin = document.getElementById("fechafin").value;
             var empresa = document.getElementById("company_id").value;
             var producto = document.getElementById("producto").value;
 
-            var urldatosproductos = "{{ url('admin/reporte/datosproductos') }}";
+            var urldatosproductos = "{{ url('admin/reporte/datoslistaprecioscompra') }}";
             $.get(urldatosproductos + '/' + fechainicio + '/' + fechafin + '/' + empresa + '/' + producto, function(data) {
                 llenartabla(data);
             });
@@ -146,16 +118,12 @@
             $('#mitablaprod tbody tr').slice().remove();
             for (var i = 0; i < datos.length; i++) {
                 filaDetalle =
-                    '<tr><td> ' + datos[i].fecha + '</td>' +
-                    '<td> ' + datos[i].compraventa + '</td>' +
-                    '<td> ' + datos[i].factura + '</td>' +
+                    '<tr><td> ' + datos[i].fecha + '</td>' +  
                     '<td> ' + datos[i].empresa + '</td>' +
                     '<td> ' + datos[i].cliente + '</td>' +
-                    '<td> ' + datos[i].producto + '</td>' +
-                    '<td> ' + datos[i].tipo + '</td>' +
+                    '<td> ' + datos[i].producto + '</td>' + 
                     '<td> ' + datos[i].cantidad + '</td>' +
-                    '<td> ' + datos[i].preciounitariomo + '</td>' +
-                    '<td> ' + datos[i].preciofinal + '</td>' +
+                    '<td> ' + datos[i].preciounitariomo + '</td>' + 
                     '<td> ' + datos[i].moneda + '</td>' +
                     '</tr>';
                 $("#mitablaprod>tbody").append(filaDetalle);
@@ -196,18 +164,18 @@
                 if (idproducto != "-1") {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
                     var nameproducto = producto[producto.selectedIndex].getAttribute('data-miproducto');
-                    mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + nameproducto + '_' + fechainicio + '_' +
+                    mitituloexcel = 'Precios de compras_' + namecompany_id + '_' + nameproducto + '_' + fechainicio + '_' +
                         fechafin;
                 } else {
                     var namecompany_id = company_id[company_id.selectedIndex].getAttribute('data-miempresa');
-                    mitituloexcel = 'Ventas y compras_' + namecompany_id + '_' + fechainicio + '_' + fechafin;
+                    mitituloexcel = 'Precios de compras_' + namecompany_id + '_' + fechainicio + '_' + fechafin;
                 }
             } else {
                 if (idproducto != "-1") {
                     var nameproducto = producto[producto.selectedIndex].getAttribute('data-miproducto');
-                    mitituloexcel = 'Ventas y compras_' + nameproducto + '_' + fechainicio + '_' + fechafin;
+                    mitituloexcel = 'Precios de compras_' + nameproducto + '_' + fechainicio + '_' + fechafin;
                 } else {
-                    mitituloexcel = 'Ventas y compras_' + fechainicio + '_' + fechafin;
+                    mitituloexcel = 'Precios de compras_' + fechainicio + '_' + fechafin;
                 }
             }
         }
