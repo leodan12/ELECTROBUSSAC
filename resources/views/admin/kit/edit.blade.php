@@ -54,7 +54,7 @@
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TASA DE CAMBIO</label>
                                 <input type="number" name="tasacambio" id="tasacambio" value="{{ $product->tasacambio }}"
-                                    min="0" step="0.001" class="form-control " required readonly />
+                                    min="0" step="0.0001" class="form-control " required readonly />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>
@@ -67,15 +67,24 @@
                                     @endif
                                 </select>
                             </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">PRECIO COMPRA</label>
+                                <input type="number" name="preciocompra" id="preciocompra" min="0" step="0.0001"
+                                    class="form-control " required value="{{ $product->preciocompra }}"
+                                    value="{{ old('preciocompra') }}" />
+                                @error('preciocompra')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO SIN IGV</label>
                                 <input type="number" name="NoIGV" id="NoIGV" value="{{ $product->NoIGV }}"
-                                    min="0" step="0.01" class="form-control " required />
+                                    min="0" step="0.0001" class="form-control " required />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">PRECIO CON IGV</label>
                                 <input type="number" name="SiIGV" id="SiIGV" value="{{ $product->SiIGV }}"
-                                    min="0" step="0.01" readonly class="form-control " required />
+                                    min="0" step="0.0001" readonly class="form-control " required />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <input class="form-check-input" type="checkbox" value="" id="precioxmayor"
@@ -91,7 +100,7 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
-                                <input type="number" name="precio2" id="precio2" min="0" step="0.01"
+                                <input type="number" name="precio2" id="precio2" min="0" step="0.0001"
                                     class="form-control " value="{{ $product->precio2 }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="saltodelinea1"> </div>
@@ -102,14 +111,14 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
-                                <input type="number" name="precio3" id="precio3" min="0" step="0.01"
+                                <input type="number" name="precio3" id="precio3" min="0" step="0.0001"
                                     class="form-control " value="{{ $product->precio3 }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="saltodelinea3"> </div>
                             @can('ver-preciofob')
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">PRECIO FOB</label>
-                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.01"
+                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.0001"
                                         class="form-control " value="{{ $product->preciofob }}" />
                                 </div>
                             @endcan
@@ -153,7 +162,7 @@
                                     <label class="form-label input-group" id="labelpreciounitarioref">PRECIO UNITARIO
                                         (REFERENCIAL):</label>
                                     <span class="input-group-text" id="spanpreciounitarioref"></span>
-                                    <input type="number" name="preciounitario" min="0" step="0.01"
+                                    <input type="number" name="preciounitario" min="0" step="0.0001"
                                         id="preciounitario" readonly class="form-control " />
                                 </div>
                             </div>
@@ -162,7 +171,7 @@
                                     <label class="form-label input-group" id="labelpreciounitario">PRECIO
                                         UNITARIO:</label>
                                     <span class="input-group-text" id="spanpreciounitario"></span>
-                                    <input type="number" name="preciounitariomo" min="0" step="0.01"
+                                    <input type="number" name="preciounitariomo" min="0" step="0.0001"
                                         id="preciounitariomo" class="form-control " />
                                 </div>
                             </div>
@@ -172,7 +181,7 @@
                                     <label class="form-label input-group" id="labelpreciototal">PRECIO TOTAL POR
                                         PRODUCTO:</label>
                                     <span class="input-group-text" id="spanpreciototal"></span>
-                                    <input type="number" name="preciofinal" min="0" step="0.01"
+                                    <input type="number" name="preciofinal" min="0" step="0.0001"
                                         id="preciofinal" readonly class="form-control " />
                                 </div>
                             </div>
@@ -297,7 +306,7 @@
             var preciounit = $('[name="preciounitariomo"]').val();
             if (cantidad >= 1 && preciounit >= 0) {
                 preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)));
-                document.getElementById('preciofinal').value = preciototalI.toFixed(2);
+                document.getElementById('preciofinal').value = parseFloat(preciototalI.toFixed(4));
             }
         }
 
@@ -311,7 +320,7 @@
                 document.getElementById('cantidad3').value = micantidad3;
                 document.getElementById('precio2').value = miprecio2;
                 document.getElementById('precio3').value = miprecio3;
-                document.getElementById('saltodelinea1').style.display = 'inline'; 
+                document.getElementById('saltodelinea1').style.display = 'inline';
                 document.getElementById('saltodelinea3').style.display = 'inline';
             } else {
                 document.getElementById('dcantidad2').style.display = 'none';
@@ -358,33 +367,37 @@
                 //var mimoneda1 = $('[name="moneda"]').val();
 
                 if ($price != null) {
-                    preciounit = ($price).toFixed(2);
+                    preciounit = parseFloat(($price).toFixed(4));
                     if (monedaproducto == "dolares" && monedafactura == "dolares") {
                         simbolomonedaproducto = "$";
-                        preciototalI = ($price).toFixed(2);
-                        document.getElementById('preciounitario').value = ($price).toFixed(2);
-                        document.getElementById('preciounitariomo').value = ($price).toFixed(2);
-                        document.getElementById('preciofinal').value = ($price).toFixed(2);
+                        preciototalI = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitario').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitariomo').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciofinal').value = parseFloat(($price).toFixed(4));
                     } else if (monedaproducto == "soles" && monedafactura == "soles") {
                         simbolomonedaproducto = "S/.";
-                        preciototalI = ($price).toFixed(2);
-                        document.getElementById('preciounitario').value = ($price).toFixed(2);
-                        document.getElementById('preciounitariomo').value = ($price).toFixed(2);
-                        document.getElementById('preciofinal').value = ($price).toFixed(2);
+                        preciototalI = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitario').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitariomo').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciofinal').value = parseFloat(($price).toFixed(4));
                     } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                         simbolomonedaproducto = "$";
-                        preciototalI = ($price * mitasacambio1).toFixed(2);
-                        document.getElementById('preciounitario').value = ($price).toFixed(2);
-                        document.getElementById('preciounitariomo').value = ($price * mitasacambio1)
-                            .toFixed(2);
-                        document.getElementById('preciofinal').value = ($price * mitasacambio1).toFixed(2);
+                        preciototalI = parseFloat(($price * mitasacambio1).toFixed(4));
+                        document.getElementById('preciounitario').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitariomo').value = parseFloat(($price *
+                                mitasacambio1)
+                            .toFixed(4));
+                        document.getElementById('preciofinal').value = parseFloat(($price * mitasacambio1)
+                            .toFixed(4));
                     } else if (monedaproducto == "soles" && monedafactura == "dolares") {
                         simbolomonedaproducto = "S/.";
-                        preciototalI = ($price / mitasacambio1).toFixed(2);;
-                        document.getElementById('preciounitario').value = ($price).toFixed(2);
-                        document.getElementById('preciounitariomo').value = ($price / mitasacambio1)
-                            .toFixed(2);
-                        document.getElementById('preciofinal').value = ($price / mitasacambio1).toFixed(2);
+                        preciototalI = parseFloat(($price / mitasacambio1).toFixed(4));
+                        document.getElementById('preciounitario').value = parseFloat(($price).toFixed(4));
+                        document.getElementById('preciounitariomo').value = parseFloat(($price /
+                                mitasacambio1)
+                            .toFixed(4));
+                        document.getElementById('preciofinal').value = parseFloat(($price / mitasacambio1)
+                            .toFixed(4));
                     }
                     document.getElementById('labelpreciounitarioref').innerHTML =
                         "PRECIO UNITARIO(REFERENCIAL): " + monedaproducto;
@@ -462,11 +475,11 @@
             indice++;
             //ventatotal =document.getElementById('NoIGV').value;
             //alert(ventatotal);
-            ventatotal = (parseFloat(ventatotal) + parseFloat(preciototalI)).toFixed(2);
+            ventatotal = (parseFloat(ventatotal) + parseFloat(preciototalI)).toFixed(4);
             //alert(ventatotal);
             limpiarinputs();
-            document.getElementById('NoIGV').value = ventatotal;
-            document.getElementById('SiIGV').value = (ventatotal * 1.18).toFixed(2);
+            document.getElementById('NoIGV').value = parseFloat(ventatotal);
+            document.getElementById('SiIGV').value = parseFloat((ventatotal * 1.18).toFixed(4));
             document.getElementById('miproducto' + product).disabled = true;
             var funcion = "agregar";
             botonguardar(funcion);
@@ -517,18 +530,16 @@
             ventatotal = ventatotal - resta;
             $('#fila' + ind).remove();
             indice--;
-            document.getElementById('NoIGV').value = (ventatotal).toFixed(2);
-            document.getElementById('SiIGV').value = (ventatotal * 1.18).toFixed(2);
+            document.getElementById('NoIGV').value = parseFloat((ventatotal).toFixed(4));
+            document.getElementById('SiIGV').value = parseFloat((ventatotal * 1.18).toFixed(4));
             var funcion = "eliminar";
             botonguardar(funcion);
             return false;
         }
 
         function eliminarTabla(ind) {
-
             $('#fila' + ind).remove();
             indice--;
-
             // damos el valor
             document.getElementById('NoIGV').value = 0
             document.getElementById('SiIGV').value = 0
@@ -540,7 +551,6 @@
             preciounit = 0;
             nameproduct = 0;
             preciototalI = 0;
-
             return false;
         }
 

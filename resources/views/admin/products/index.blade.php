@@ -33,7 +33,8 @@
                                     <th>NOMBRE</th>
                                     <th>CODIGO</th>
                                     <th>UNIDAD</th>
-                                    <th>MONEDA</th>
+                                    <th>MONEDA</th> 
+                                    <th>PRECIO COMPRA</th>
                                     <th>PRECIO SIN IGV</th>
                                     <th>PRECIO CON IGV</th>
                                     <th>ACCIONES</th>
@@ -153,7 +154,7 @@
                                                     <th>CODIGO</th>
                                                     <th>UNIDAD</th>
                                                     <th>MONEDA</th>
-                                                    <th>PRECIO SIN IGV</th>
+                                                    <th>PRECIO VENTA SIN IGV</th>
                                                     <th>PRECIO CON IGV</th>
                                                     <th>ACCION</th>
                                                 </tr>
@@ -209,6 +210,10 @@
                 {
                     data: 'moneda',
                     name: 'moneda'
+                },
+                {
+                    data: 'preciocompra',
+                    name: 'preciocompra'
                 },
                 {
                     data: 'NoIGV',

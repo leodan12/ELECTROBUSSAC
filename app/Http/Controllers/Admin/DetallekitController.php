@@ -47,6 +47,7 @@ class DetallekitController extends Controller
                     'p.moneda',
                     'p.NoIGV',
                     'p.SiIGV',
+                    'p.preciocompra',
                 )->where('p.status', '=', 0)
                 ->where('p.tipo', '=', 'kit');
             return DataTables::of($kits)
@@ -85,6 +86,7 @@ class DetallekitController extends Controller
         $producto->moneda = $validatedData['moneda'];
         $producto->NoIGV = $validatedData['NoIGV'];
         $producto->SiIGV = $validatedData['SiIGV'];
+        $producto->preciocompra = $validatedData['preciocompra'];
         $producto->tasacambio = $request->tasacambio;
         $producto->status =  '0';
         $producto->preciofob = $request->preciofob;
@@ -163,6 +165,7 @@ class DetallekitController extends Controller
         $producto->maximo = $request->NoIGV;
         $producto->minimo = $request->NoIGV;
         $producto->moneda = $request->moneda;
+        $producto->preciocompra = $request->preciocompra;
         $producto->tasacambio = $request->tasacambio;
         $producto->NoIGV = $request->NoIGV;
         $producto->SiIGV = $request->SiIGV;
@@ -230,7 +233,7 @@ class DetallekitController extends Controller
                 'pk.maximo as kitproductmaximo',
                 'pk.minimo as kitproductminimo',
                 'pk.codigo as kitproductcodigo',
-                'pk.unidad as kitproductunidad', 
+                'pk.unidad as kitproductunidad',
                 'pk.moneda as kitproductmoneda',
                 'pk.NoIGV as kitproductnoigv',
                 'pk.SiIGV as kitproductsiigv',

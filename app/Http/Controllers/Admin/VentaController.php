@@ -20,6 +20,7 @@ use Illuminate\Support\Collection;
 use PDF;
 use Yajra\DataTables\DataTables;
 use App\Traits\HistorialTrait;
+use Spatie\Backup\Tasks\Backup\Zip;
 
 class VentaController extends Controller
 {   //para asignar los permisos a las funciones
@@ -912,7 +913,8 @@ class VentaController extends Controller
                 'p.cantidad2',
                 'p.precio2',
                 'p.cantidad3',
-                'p.precio3'
+                'p.precio3',
+                'p.unidad'
             )
             ->where('c.id', '=', $id)
             ->where('p.status', '=', 0)
@@ -930,7 +932,8 @@ class VentaController extends Controller
                 'p.cantidad2',
                 'p.precio2',
                 'p.cantidad3',
-                'p.precio3'
+                'p.precio3',
+                'p.unidad'
             )
             ->get();
         $miskits = collect();
@@ -952,7 +955,8 @@ class VentaController extends Controller
                     'k.cantidad',
                     'k.preciounitario',
                     'k.preciounitariomo',
-                    'k.preciofinal'
+                    'k.preciofinal',
+                    'p.unidad'
                 )
                 ->get();
             for ($j = 0; $j < count($listakits); $j++) {
@@ -987,6 +991,8 @@ class VentaController extends Controller
                 $mikit->put('precio2', $kits[$i]->precio2);
                 $mikit->put('cantidad3', $kits[$i]->cantidad3);
                 $mikit->put('precio3', $kits[$i]->precio3);
+                $mikit->put('unidad', $kits[$i]->unidad);
+
                 $miskits->push($mikit);
             }
         }
@@ -1186,4 +1192,53 @@ class VentaController extends Controller
             return  'x';
         }
     }
+    //funcion para obtener los ultimos 5 compras de un producto en una empresa
+    public function listaprecioscompra($idproducto, $idempresa)
+    {
+        $lista = DB::table('detalleingresos as di')
+            ->join('products as p', 'p.id', '=', 'di.product_id')
+            ->join('ingresos as i', 'i.id', '=', 'di.ingreso_id')
+            ->join('companies as c', 'c.id', '=', 'i.company_id')
+            ->where('p.id', '=', $idproducto)
+            ->where('c.id', '=', $idempresa)
+            ->select(
+                'p.nombre',
+                'di.cantidad',
+                'di.preciounitariomo',
+                'i.fecha',
+                'i.moneda as monedafactura',
+                'p.moneda as monedaproducto',
+                'i.tasacambio'
+            )
+            ->take(5)
+            ->orderByDesc('i.fecha')
+            ->get();
+        $precioscompra = collect();
+        $precio = "";
+        $simboloP = "";
+        for ($i = 0; $i < count($lista); $i++) {
+
+            if ($lista[$i]->monedaproducto == "soles") {
+                $simboloP = "S/. ";
+            } else {
+                $simboloP = "$ ";
+            }
+            if ($lista[$i]->monedafactura == $lista[$i]->monedaproducto) {
+                $precio = $simboloP . $lista[$i]->preciounitariomo;
+            } else if ($lista[$i]->monedafactura == "soles" && $lista[$i]->monedaproducto == "dolares") {
+                $precio = $simboloP . (round(($lista[$i]->preciounitariomo / $lista[$i]->tasacambio), 2));
+            } else if ($lista[$i]->monedafactura == "dolares" && $lista[$i]->monedaproducto == "soles") {
+                $precio = $simboloP . (round(($lista[$i]->preciounitariomo * $lista[$i]->tasacambio), 2));
+            }
+            $compra = collect();
+            $compra->put('fecha', $lista[$i]->fecha);
+            $compra->put('cantidad', $lista[$i]->cantidad);
+            $compra->put('precio', $precio);
+            $compra->put('producto', $lista[$i]->nombre);
+            $precioscompra->push($compra);
+        }
+
+        return $precioscompra->values()->all();
+    }
+    
 }

@@ -30,10 +30,10 @@ class ProductController extends Controller
     //vista index datos para (datatables-yajra)
     public function index(Request $request)
     {
-        $datoseliminados = DB::table('products as c')
-            ->where('c.status', '=', 1)
-            ->where('c.tipo', '=', 'estandar')
-            ->select('c.id')
+        $datoseliminados = DB::table('products as p')
+            ->where('p.status', '=', 1)
+            ->where('p.tipo', '=', 'estandar')
+            ->select('p.id')
             ->count();
         if ($request->ajax()) {
             $productos = DB::table('products as p')
@@ -47,6 +47,7 @@ class ProductController extends Controller
                     'p.moneda',
                     'p.NoIGV',
                     'p.SiIGV',
+                    'p.preciocompra',
                 )->where('p.status', '=', 0)
                 ->where('p.tipo', '=', 'estandar');
             return DataTables::of($productos)
@@ -82,6 +83,7 @@ class ProductController extends Controller
         $product->moneda = $validatedData['moneda'];
         $product->NoIGV = $validatedData['NoIGV'];
         $product->SiIGV = $validatedData['SiIGV'];
+        $product->preciocompra = $validatedData['preciocompra'];
         $product->status =  '0';
         $product->preciofob =  $request->preciofob;
         if ($request->cantidad2 != null && $request->precio2 != null) {
@@ -136,6 +138,7 @@ class ProductController extends Controller
             $product->moneda = $validatedData['moneda'];
             $product->NoIGV = $validatedData['NoIGV'];
             $product->SiIGV = $validatedData['SiIGV'];
+            $product->preciocompra = $validatedData['preciocompra'];
             $product->status =  '0';
             $product->preciofob =  $request->preciofob;
             if ($request->cantidad2 != null && $request->precio2 != null) {
@@ -237,7 +240,7 @@ class ProductController extends Controller
                 'p.moneda',
                 'p.NoIGV',
                 'p.SiIGV',
-            )->get(); 
+            )->get();
         return $productos->values()->all();
     }
     //funcion para restaurar un registro eliminado

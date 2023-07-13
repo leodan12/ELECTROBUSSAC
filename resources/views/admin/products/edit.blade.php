@@ -1,5 +1,5 @@
 @extends('layouts.admin')
- 
+
 @section('content')
 
     <div class="row">
@@ -38,8 +38,8 @@
                             </div>
                             <div class="col-md-8 mb-3">
                                 <label class="form-label is-required">NOMBRE</label>
-                                <input type="text" name="nombre" value="{{ $product->nombre }}"
-                                    class="form-control  " required />
+                                <input type="text" name="nombre" value="{{ $product->nombre }}" class="form-control  "
+                                    required />
                                 @error('nombre')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -52,9 +52,9 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">UNIDAD</label>
-                                <input type="text" name="unidad" value="{{ $product->unidad }}"
-                                    class="form-control  " required />
-                            </div> 
+                                <input type="text" name="unidad" value="{{ $product->unidad }}" class="form-control  "
+                                    required />
+                            </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label is-required">TIPO DE MONEDA</label>
                                 <select name="moneda" class="form-select " required>
@@ -65,18 +65,27 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label is-required">PRECIO SIN IGV</label>
-                                <input type="number" name="NoIGV" id="cantidad" value="{{ $product->NoIGV }}"
-                                    min="0" step="0.01" class="form-control " required />
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">PRECIO COMPRA</label>
+                                <input type="number" name="preciocompra" id="preciocompra" min="0" step="0.0001"
+                                    class="form-control " required value="{{ $product->preciocompra }}"
+                                    value="{{ old('preciocompra') }}" />
+                                @error('preciocompra')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">PRECIO VENTA SIN IGV</label>
+                                <input type="number" name="NoIGV" id="cantidad" value="{{ $product->NoIGV }}"
+                                    min="0" step="0.0001" class="form-control " required />
+                            </div>
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label is-required">PRECIO CON IGV</label>
                                 <input type="number" name="SiIGV" id="SiIGV" value="{{ $product->SiIGV }}"
-                                    min="0" step="0.01" readonly class="form-control " required />
+                                    min="0" step="0.0001" readonly class="form-control " required />
                             </div>
 
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <input class="form-check-input" type="checkbox" value="" id="precioxmayor"
                                     @if ($product->cantidad2 != null) checked @endif>
                                 <label class="form-check-label" for="flexCheckDefault">
@@ -90,10 +99,10 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
-                                <input type="number" name="precio2" id="precio2" min="0" step="0.01"
+                                <input type="number" name="precio2" id="precio2" min="0" step="0.0001"
                                     class="form-control " value="{{ $product->precio2 }}" />
-                            </div> 
-                            <div class="col-md-4 mb-3" id="saltodelinea1"> </div> 
+                            </div>
+                            <div class="col-md-4 mb-3" id="saltodelinea1"> </div>
                             <div class="col-md-4 mb-3" id="dcantidad3" name="dcantidad3">
                                 <label class="form-label ">CANTIDAD 3</label>
                                 <input type="number" name="cantidad3" id="cantidad3" min="1" step="1"
@@ -101,26 +110,26 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
-                                <input type="number" name="precio3" id="precio3" min="0" step="0.01"
+                                <input type="number" name="precio3" id="precio3" min="0" step="0.0001"
                                     class="form-control " value="{{ $product->precio3 }}" />
-                            </div> 
-                            <div class="col-md-4 mb-3" id="saltodelinea2"> </div> 
+                            </div>
+                            <div class="col-md-4 mb-3" id="saltodelinea2"> </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">PRECIO MÍNIMO</label>
                                 <input type="number" name="minimo" id="minimo" value="{{ $product->minimo }}"
-                                    min="0" step="0.01" class="form-control "   />
+                                    min="0" step="0.0001" class="form-control " />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">PRECIO MÁXIMO</label>
                                 <input type="number" name="maximo" id="maximo" value="{{ $product->maximo }}"
-                                    min="0" step="0.01" class="form-control "   />
+                                    min="0" step="0.0001" class="form-control " />
                             </div>
-                            <div class="col-md-4 mb-3" id="saltodelinea3"> </div> 
+                            <div class="col-md-4 mb-3" id="saltodelinea3"> </div>
                             @can('ver-preciofob')
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">PRECIO FOB</label>
-                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.01"
-                                        class="form-control "  value="{{ $product->preciofob }}"/>
+                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.0001"
+                                        class="form-control " value="{{ $product->preciofob }}" />
                                 </div>
                             @endcan
                             <div class="col-md-12 mb-3">
@@ -132,9 +141,7 @@
             </div>
         </div>
     </div>
-
 @endsection
-
 @push('script')
     <script type="text/javascript">
         var micantidad2 = @json($product->cantidad2);
@@ -184,8 +191,7 @@
             if (cantidad.length != 0) {
                 //alert("final");
                 preciototal = parseFloat(cantidad) + (parseFloat(cantidad) * 0.18);
-                document.getElementById('SiIGV').value = preciototal.toFixed(2);
-
+                document.getElementById('SiIGV').value = parseFloat(preciototal.toFixed(4));
             }
         }
     </script>

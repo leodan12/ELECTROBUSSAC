@@ -100,7 +100,7 @@ class IngresoController extends Controller
         $companies = Company::all();
         $clientes = Cliente::all();
         $products = DB::table('products as p')
-            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo', 'p.NoIGV')
+            ->select('p.id', 'p.nombre', 'p.NoIGV', 'p.moneda', 'p.tipo', 'p.NoIGV', 'p.unidad', 'p.preciocompra')
             ->where('p.status', '=', 0)
             ->get();
         return view('admin.ingreso.create', compact('companies', 'products', 'clientes'));
@@ -153,6 +153,7 @@ class IngresoController extends Controller
             $servicio = $request->Lservicio;
             $preciofinal = $request->Lpreciofinal;
             $preciounitariomo = $request->Lpreciounitariomo;
+            $preciocompranuevo = $request->Lpreciocompranuevo;
             if ($product !== null) {
                 //recorremos los detalles
                 for ($i = 0; $i < count($product); $i++) {
@@ -167,6 +168,7 @@ class IngresoController extends Controller
                     $Detalleingreso->servicio = $servicio[$i];
                     $Detalleingreso->preciofinal = $preciofinal[$i];
                     if ($Detalleingreso->save()) {
+                        $this->actualizarprecio($preciocompranuevo[$i], $product[$i]);
                         $productb = Product::find($product[$i]);
                         //para cuanto el producto es un kit se busca los productos de ese kit
                         if ($productb && $productb->tipo == "kit") {
@@ -411,6 +413,7 @@ class IngresoController extends Controller
             $servicio = $request->Lservicio;
             $preciofinal = $request->Lpreciofinal;
             $preciounitariomo = $request->Lpreciounitariomo;
+            $preciocompranuevo = $request->Lpreciocompranuevo;
             if ($product !== null) {
                 //recorremos los detalles para guardarlos
                 for ($i = 0; $i < count($product); $i++) {
@@ -425,6 +428,7 @@ class IngresoController extends Controller
                     $Detalleingreso->servicio = $servicio[$i];
                     $Detalleingreso->preciofinal = $preciofinal[$i];
                     if ($Detalleingreso->save()) {
+                        $this->actualizarprecio($preciocompranuevo[$i], $product[$i]);
                         $productb = Product::find($product[$i]);
                         //pacar cuanto el producto es un kit
                         if ($productb && $productb->tipo == "kit") {
@@ -749,5 +753,14 @@ class IngresoController extends Controller
             ->select('p.id', 'p.nombre as producto', 'k.cantidad')
             ->get();
         return  $productosxkit;
+    }
+    //funcion para actualizar el precio de un producto al realizar una compra
+    public function actualizarprecio($precio, $producto_id)
+    {
+        $producto = Product::find($producto_id);
+        if ($producto) {
+            $producto->preciocompra = $precio;
+            $producto->update();
+        }
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('codigo')->nullable();
             $table->string('unidad');
-            // $table->string('und')->nullable();
+            //$table->string('und')->nullable();
             $table->string('tipo');
             $table->integer('unico')->nullable();
             $table->string('moneda');
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->integer('cantidad3')->nullable();
             $table->double('precio3')->nullable();
             $table->double('preciofob')->nullable();
+            $table->double('preciocompra')->nullable();
             $table->tinyInteger('status')->default('0')->comment('0=visible,1=oculto');
             $table->foreign('category_id')->references('id')->on('categories');//->onDelete('cascade');
             $table->timestamps();

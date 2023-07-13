@@ -75,23 +75,31 @@
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label is-required">PRECIO SIN IGV</label>
-                                <input type="number" name="NoIGV" id="cantidad" min="0" step="0.01"
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">PRECIO COMPRA</label>
+                                <input type="number" name="preciocompra" id="preciocompra" min="0" step="0.0001"
+                                    class="form-control " required value="{{ old('preciocompra') }}" />
+                                @error('preciocompra')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label is-required">PRECIO VENTA SIN IGV</label>
+                                <input type="number" name="NoIGV" id="cantidad" min="0" step="0.0001"
                                     class="form-control " required value="{{ old('NoIGV') }}" />
                                 @error('NoIGV')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label class="form-label is-required">PRECIO CON IGV</label>
-                                <input type="number" name="SiIGV" id="SiIGV" min="0" step="0.01" readonly
+                                <input type="number" name="SiIGV" id="SiIGV" min="0" step="0.0001" readonly
                                     class="form-control " required value="{{ old('SiIGV') }}" />
                                 @error('SiIGV')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <input class="form-check-input" type="checkbox" value="" name="precioxmayor"
                                     id="precioxmayor">
                                 <label class="form-check-label" for="flexCheckDefault">
@@ -106,7 +114,7 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio2" name="dprecio2">
                                 <label class="form-label">PRECIO SIN IGV 2</label>
-                                <input type="number" name="precio2" id="precio2" min="0" step="0.01"
+                                <input type="number" name="precio2" id="precio2" min="0" step="0.0001"
                                     class="form-control " value="{{ old('precio2') }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="saltodelinea1"> </div>
@@ -117,14 +125,14 @@
                             </div>
                             <div class="col-md-4 mb-3" id="dprecio3" name="dprecio3">
                                 <label class="form-label">PRECIO SIN IGV 3</label>
-                                <input type="number" name="precio3" id="precio3" min="0" step="0.01"
+                                <input type="number" name="precio3" id="precio3" min="0" step="0.0001"
                                     class="form-control " value="{{ old('precio3') }}" />
                             </div>
                             <div class="col-md-4 mb-3" id="saltodelinea"> </div>
                             @can('ver-preciofob')
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">PRECIO FOB</label>
-                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.01"
+                                    <input type="number" name="preciofob" id="preciofob" min="0" step="0.0001"
                                         class="form-control " value="{{ old('preciofob') }}" />
                                 </div>
                             @endcan
@@ -170,7 +178,6 @@
                 miprecio3 = document.getElementById('precio3').value;
             });
 
-
         });
 
         function miprecioxmayor() {
@@ -205,8 +212,7 @@
             if (cantidad.length != 0) {
                 //alert("final");
                 preciototal = parseFloat(cantidad) + (parseFloat(cantidad) * 0.18);
-                document.getElementById('SiIGV').value = preciototal.toFixed(2);
-
+                document.getElementById('SiIGV').value = parseFloat(preciototal.toFixed(4));
             }
         }
     </script>

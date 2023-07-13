@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-USE Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Permission;
 
 class PermisosSeeder extends Seeder
 {
@@ -18,7 +18,7 @@ class PermisosSeeder extends Seeder
             'ver-rol',
             'crear-rol',
             'editar-rol',
-            'eliminar-rol', 
+            'eliminar-rol',
             //para usuarios
             'ver-usuario',
             'crear-usuario',
@@ -43,7 +43,7 @@ class PermisosSeeder extends Seeder
             'ver-empresa',
             'crear-empresa',
             'editar-empresa',
-            'eliminar-empresa', 
+            'eliminar-empresa',
             //para clientes
             'ver-cliente',
             'crear-cliente',
@@ -74,6 +74,22 @@ class PermisosSeeder extends Seeder
             'crear-lista-precios',
             'editar-lista-precios',
             'eliminar-lista-precios',
+            //para modelo de carros---------------------------------
+            'ver-modelo-carro',
+            'crear-modelo-carro',
+            'editar-modelo-carro',
+            'eliminar-modelo-carro',
+            //para carrocerias
+            'ver-carroceria',
+            'crear-carroceria',
+            'editar-carroceria',
+            'eliminar-carroceria',
+            //para produccion de carros
+            'ver-produccion-carro',
+            'crear-produccion-carro',
+            'editar-produccion-carro',
+            'eliminar-produccion-carro',
+
             //para reportes
             'ver-reporte',
             //para recuperar los registros
@@ -83,15 +99,18 @@ class PermisosSeeder extends Seeder
             'recuperar-empresa',
             'recuperar-cliente',
             'recuperar-inventario',
+            'recuperar-modelo-carro',
+            'recuperar-carroceria',
             //para  HISTORIAL
-            'ver-historial', 
+            'ver-historial',
             'eliminar-historial',
             //para  PRECIO FOB
-            'ver-preciofob',  
+            'ver-preciofob',
+
         ];
 
-        foreach($permisos as $permiso){
-            Permission::create(['name'=>$permiso]);
+        foreach ($permisos as $permiso) {
+            Permission::create(['name' => $permiso]);
         }
     }
 }

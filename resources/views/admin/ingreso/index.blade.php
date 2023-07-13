@@ -172,28 +172,38 @@
                                                     aria-labelledby="nav-condiciones1-tab" tabindex="0">
                                                     <div class="row">
                                                         <div class="col-md-3 mb-3">
+                                                            <div class="input-group">
+                                                                <label class="input-group form-label">PRECIO DE LA VENTA
+                                                                    CON IGV</label>
+                                                                <span class="input-group-text"
+                                                                    id="1spanprecioventaconigv"></span>
+                                                                <input type="number" name="1precioventaconigv" readonly
+                                                                    id="1precioventaconigv"
+                                                                    class="input-group form-control " />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-3">
                                                             <label class="form-label">NRO OC</label>
                                                             <input type="text" name="1nrooc" id="1nrooc"
-                                                                class="form-control" />
+                                                                class="form-control" readonly/>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <label class="form-label input-group">GUIA DE REMISION</label>
                                                             <input type="text" name="1guiaremision" id="1guiaremision"
-                                                                class="form-control" />
+                                                                class="form-control" readonly/>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <label class="form-label input-group">FECHA DE PAGO</label>
-                                                            <input type="date" name="1fechapago" id="1fechapago"
+                                                            <input type="date" name="1fechapago" id="1fechapago" readonly
                                                                 class="form-control" />
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <div class="input-group">
                                                                 <label class="form-label input-group" id="1labelacuenta">A
-                                                                    CUENTA
-                                                                    1</label>
+                                                                    CUENTA 1</label>
                                                                 <span class="input-group-text" id="1spanacuenta1"></span>
                                                                 <input type="number" name="1acuenta1" min="0"
-                                                                    step="0.01" id="1acuenta1"
+                                                                    step="0.01" id="1acuenta1" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
@@ -201,21 +211,19 @@
                                                             <div class="input-group">
                                                                 <label class="form-label input-group"
                                                                     id="1labelacuenta2">A
-                                                                    CUENTA
-                                                                    2</label>
+                                                                    CUENTA 2</label>
                                                                 <span class="input-group-text" id="1spanacuenta2"></span>
                                                                 <input type="number" name="1acuenta2" min="0"
-                                                                    step="0.01" id="1acuenta2"
+                                                                    step="0.01" id="1acuenta2" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <div class="input-group">
                                                                 <label class="form-label input-group" id="labelacuenta3">A
-                                                                    CUENTA
-                                                                    3</label>
+                                                                    CUENTA 3</label>
                                                                 <span class="input-group-text" id="1spanacuenta3"></span>
-                                                                <input type="number" name="1acuenta3" min="0"
+                                                                <input type="number" name="1acuenta3" min="0" readonly
                                                                     step="0.01" id="1acuenta3"
                                                                     class="form-control " />
                                                             </div>
@@ -225,7 +233,7 @@
                                                                 <label class="form-label input-group"
                                                                     id="labelsaldo">SALDO</label>
                                                                 <span class="input-group-text" id="1spansaldo"></span>
-                                                                <input type="number" name="1saldo" min="0"
+                                                                <input type="number" name="1saldo" min="0" readonly
                                                                     step="0.01" id="1saldo"
                                                                     class="form-control " />
                                                             </div>
@@ -238,7 +246,7 @@
                                                                 <span class="input-group-text"
                                                                     id="1spanmontopagado"></span>
                                                                 <input type="number" name="1montopagado" min="0"
-                                                                    step="0.01" id="1montopagado"
+                                                                    step="0.01" id="1montopagado" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
@@ -408,19 +416,31 @@
                                                     aria-labelledby="nav-condiciones-tab" tabindex="0">
                                                     <div class="row">
                                                         <div class="col-md-3 mb-3">
+                                                            <div class="input-group">
+                                                                <label class="input-group form-label">PRECIO DE LA VENTA
+                                                                    CON
+                                                                    IGV</label>
+                                                                <span class="input-group-text"
+                                                                    id="2spanprecioventaconigv"></span>
+                                                                <input type="number" name="2precioventaconigv" readonly
+                                                                    id="2precioventaconigv"
+                                                                    class="input-group form-control " />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 mb-3">
                                                             <label class="form-label">NRO OC</label>
                                                             <input type="text" name="0nrooc" id="0nrooc"
-                                                                class="form-control" />
+                                                                class="form-control" readonly/>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <label class="form-label input-group">GUIA DE REMISION</label>
                                                             <input type="text" name="0guiaremision" id="0guiaremision"
-                                                                class="form-control" />
+                                                                class="form-control"readonly />
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <label class="form-label input-group">FECHA DE PAGO</label>
                                                             <input type="date" name="0fechapago" id="0fechapago"
-                                                                class="form-control" />
+                                                                class="form-control" readonly/>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <div class="input-group">
@@ -428,7 +448,7 @@
                                                                     CUENTA 1</label>
                                                                 <span class="input-group-text" id="0spanacuenta1"></span>
                                                                 <input type="number" name="0acuenta1" min="0"
-                                                                    step="0.01" id="0acuenta1"
+                                                                    step="0.01" id="0acuenta1" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
@@ -439,7 +459,7 @@
                                                                     CUENTA 2</label>
                                                                 <span class="input-group-text" id="0spanacuenta2"></span>
                                                                 <input type="number" name="0acuenta2" min="0"
-                                                                    step="0.01" id="0acuenta2"
+                                                                    step="0.01" id="0acuenta2" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
@@ -449,7 +469,7 @@
                                                                     CUENTA 3</label>
                                                                 <span class="input-group-text" id="0spanacuenta3"></span>
                                                                 <input type="number" name="0acuenta3" min="0"
-                                                                    step="0.01" id="0acuenta3"
+                                                                    step="0.01" id="0acuenta3" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
@@ -459,22 +479,22 @@
                                                                     id="labelsaldo">SALDO</label>
                                                                 <span class="input-group-text" id="0spansaldo"></span>
                                                                 <input type="number" name="0saldo" min="0"
-                                                                    step="0.01" id="0saldo"
+                                                                    step="0.01" id="0saldo" readonly
                                                                     class="form-control " />
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3 mb-3">
                                                             <div class="input-group">
                                                                 <label class="form-label input-group"
-                                                                    id="labelmontopagado">MONTO
+                                                                    id="labelmontopagado"> MONTO
                                                                     PAGADO</label>
                                                                 <span class="input-group-text"
                                                                     id="0spanmontopagado"></span>
                                                                 <input type="number" name="0montopagado" min="0"
-                                                                    step="0.01" id="0montopagado"
+                                                                    step="0.01" id="0montopagado" readonly
                                                                     class="form-control " />
                                                             </div>
-                                                        </div> 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -492,7 +512,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- fin del modal --}} 
+                    {{-- fin del modal --}}
                 </div>
             </div>
         </div>
@@ -509,7 +529,7 @@
         $(document).ready(function() {
             if (mostrar == "SI") {
                 $('#modalCreditos1').modal('show');
-            } 
+            }
             var tabla = "#mitabla";
             var ruta = "{{ route('ingreso.index') }}"; //darle un nombre a la ruta index
             var columnas = [{
@@ -641,6 +661,8 @@
                 document.getElementById("1acuenta3").value = midata[0].acuenta3;
                 document.getElementById("1saldo").value = midata[0].saldo;
                 document.getElementById("1montopagado").value = midata[0].montopagado;
+                document.getElementById("1precioventaconigv").value = parseFloat((midata[0].costoventa *
+                    1.18).toFixed(4));
 
                 if (midata[0].moneda == "dolares") {
                     document.getElementById('spancostoventa').innerHTML = "$";
@@ -649,13 +671,15 @@
                     document.getElementById('1spanacuenta3').innerHTML = "$";
                     document.getElementById('1spansaldo').innerHTML = "$";
                     document.getElementById('1spanmontopagado').innerHTML = "$";
+                    document.getElementById('1spanprecioventaconigv').innerHTML = "$";
                 } else if (midata[0].moneda == "soles") {
                     document.getElementById('spancostoventa').innerHTML = "S/.";
                     document.getElementById('1spanacuenta1').innerHTML = "S/.";
                     document.getElementById('1spanacuenta2').innerHTML = "S/.";
                     document.getElementById('1spanacuenta3').innerHTML = "S/.";
                     document.getElementById('1spansaldo').innerHTML = "S/.";
-                    document.getElementById('1spanmontopagado').innerHTML = "S/.";
+                    document.getElementById('1spanmontopagado').innerHTML = "S/."; 
+                    document.getElementById('1spanprecioventaconigv').innerHTML = "S/.";
                 }
 
                 if (midata[0].fechav == null) {
@@ -677,7 +701,6 @@
                         btnventa.style.display = 'none';
                     }
                 }
-
                 if (midata[0].observacion == null) {
                     document.getElementById('divobservacion').style.display = 'none';
                 } else {
@@ -694,7 +717,6 @@
                     simbolomonedafactura = "S/.";
                 }
 
-
                 var tabla = document.getElementById(detallesventa);
                 $('#detallesventa tbody tr').slice().remove();
                 for (var ite = 0; ite < midata.length; ite++) {
@@ -704,7 +726,6 @@
                     } else if (monedaproducto == "soles") {
                         simbolomonedaproducto = "S/.";
                     }
-
 
                     if (midata[ite].tipo == 'kit') {
                         var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -722,7 +743,6 @@
                                     var coma = '<br>';
                                     milista = milista + '-' + data1[j].cantidad + ' ' + data1[j]
                                         .producto + coma;
-
                                 }
                                 filaDetalle = '<tr id="fila' + ite +
                                     '"><td> <b>' + midata[ite].producto + '</b>' + puntos +
@@ -738,7 +758,6 @@
                                     .preciofinal +
                                     '</td></tr>';
                                 $("#detallesventa>tbody").append(filaDetalle);
-
                                 milista = '<br>';
                             }
                         });
@@ -757,9 +776,7 @@
                         $("#detallesventa>tbody").append(filaDetalle);
                     }
                 }
-
             });
-
         })
 
         //mostrar el modal de la lista de los creditos---------------------------
@@ -775,9 +792,11 @@
             // const id = button.getAttribute('data-id');
             var urlventa = "{{ url('admin/ingreso/showcreditos') }}";
             $.get(urlventa, function(data) {
+                if (inicializartabla > 0) {
+                    $("#mitabla1").dataTable().fnDestroy(); //eliminar el objeto datatables de la tabla  
+                }
                 const modalTitle = modallistacreditos.querySelector('.modal-title')
-                modalTitle.textContent = `Ingresos a credito por vencer: `;
-
+                modalTitle.textContent = `Ingresos a credito por vencer: `; 
                 var simbolomonedafact = "";
                 $('#mitabla1 tbody tr').slice().remove();
                 var miurl = "{{ url('/admin/ingreso/') }}";
@@ -852,27 +871,30 @@
 
                 document.getElementById("0nrooc").value = midata[0].nrooc;
                 document.getElementById("0guiaremision").value = midata[0].guiaremision;
-                document.getElementById("0fechapago").value = midata[0].fechapago; 
+                document.getElementById("0fechapago").value = midata[0].fechapago;
                 document.getElementById("0acuenta1").value = midata[0].acuenta1;
                 document.getElementById("0acuenta2").value = midata[0].acuenta2;
                 document.getElementById("0acuenta3").value = midata[0].acuenta3;
-                document.getElementById("0saldo").value = midata[0].saldo; 
+                document.getElementById("0saldo").value = midata[0].saldo;
                 document.getElementById("0montopagado").value = midata[0].montopagado;
+                document.getElementById("2precioventaconigv").value = parseFloat((midata[0].costoventa*1.18).toFixed(4));
 
                 if (midata[0].moneda == "dolares") {
                     document.getElementById('spancostoventa1').innerHTML = "$";
                     document.getElementById('0spanacuenta1').innerHTML = "$";
                     document.getElementById('0spanacuenta2').innerHTML = "$";
                     document.getElementById('0spanacuenta3').innerHTML = "$";
-                    document.getElementById('0spansaldo').innerHTML = "$"; 
+                    document.getElementById('0spansaldo').innerHTML = "$";
                     document.getElementById('0spanmontopagado').innerHTML = "$";
+                    document.getElementById('2spanprecioventaconigv').innerHTML = "$";
                 } else if (midata[0].moneda == "soles") {
                     document.getElementById('spancostoventa1').innerHTML = "S/.";
                     document.getElementById('0spanacuenta1').innerHTML = "S/.";
                     document.getElementById('0spanacuenta2').innerHTML = "S/.";
                     document.getElementById('0spanacuenta3').innerHTML = "S/.";
-                    document.getElementById('0spansaldo').innerHTML = "S/."; 
+                    document.getElementById('0spansaldo').innerHTML = "S/.";
                     document.getElementById('0spanmontopagado').innerHTML = "S/.";
+                    document.getElementById('2spanprecioventaconigv').innerHTML = "S/.";
                 }
 
                 if (midata[0].fechav == null) {

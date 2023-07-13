@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.001" class="form-control "
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.0001" class="form-control "
                                     min="1" />
                             </div>
                             <div class="col-md-4 mb-3">
@@ -331,6 +331,55 @@
         var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' + String(hoy
             .getDate()).padStart(2, '0');
 
+
+        $(document).ready(function() {
+            $('.toast').toast();
+            traertasacambio();
+            document.getElementById("fecha").value = fechaActual;
+            var validez = hoy;
+            validez.setDate(validez.getDate() + 15);
+            var fechavalidez = validez.getFullYear() + '-' + (String(validez.getMonth() + 1).padStart(2, '0')) +
+                '-' + String(validez.getDate()).padStart(2, '0');
+            document.getElementById("fechav").value = fechavalidez;
+            $('.select2').select2({});
+            $("#btnguardar").prop("disabled", true);
+
+            //agregamos una condicion 1 de precio por defecto
+            var igv = $('[name="igv"]').val();
+            var cond = "";
+            if (igv == "SI") {
+                cond = "El precio inclúye IGV";
+            }
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
+
+            //agregamos una condicion 2 de precio por defecto
+            var fechav1 = $('[name="fechav"]').val();
+            var fecha1 = $('[name="fecha"]').val();
+            var fechav = new Date(fechav1);
+            var fecha = new Date(fecha1);
+            var resta = fechav.getTime() - fecha.getTime();
+            var dias = resta / 1000 / 60 / 60 / 24;
+
+            //var fecha2 = fechav.setDate()
+
+            var cond = "";
+            cond = "La cotizacion es valida por " + dias + " días";
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
+
+            //agregamos la condicion numero 3 del tipo de pago
+            var tipo = $('[name="formapago"]').val();
+            var cond = "";
+            if (tipo == "contado") {
+                cond = "El pago se realizará al contado";
+            }
+            var LCondiciones = [];
+            LCondiciones.push(cond);
+            agregarCondicion(LCondiciones);
+        });
         document.getElementById('divdiascredito').style.display = 'none';
 
         document.getElementById("cantidad").onchange = function() {
@@ -516,7 +565,7 @@
                     });
                     if (precioespecial != -1 && parseFloat(precioespecial, 10) < parseFloat($price, 10)) {
                         preciomo = precioespecial;
-                    }else {
+                    } else {
                         preciomo = $price;
                     }
                     //mostramos la notificacion
@@ -596,7 +645,7 @@
                             "PRECIO UNITARIO(REFERENCIAL): " + monedaproducto;
                         var mipreciounitariot = "PRECIO UNITARIO: " + monedafactura;
                         if (precioespecial != -1 && parseFloat(precioespecial, 10) < parseFloat($price,
-                            10)) {
+                                10)) {
                             mipreciounitariot += "(precio especial)";
                         }
                         document.getElementById('labelpreciounitario').innerHTML = mipreciounitariot;
@@ -787,7 +836,6 @@
                 agregarFilasTabla(LVenta, puntos, milista);
             }
 
-
         });
 
         function agregarFilasTabla(LVenta, puntos, milista) {
@@ -825,55 +873,6 @@
             botonguardar(funcion);
             $('.toast').toast('hide');
         }
-
-        $(document).ready(function() {
-            $('.toast').toast();
-            document.getElementById("fecha").value = fechaActual;
-            document.getElementById('tasacambio').value = "3.71";
-            var validez = hoy;
-            validez.setDate(validez.getDate() + 15);
-            var fechavalidez = validez.getFullYear() + '-' + (String(validez.getMonth() + 1).padStart(2, '0')) +
-                '-' + String(validez.getDate()).padStart(2, '0');
-            document.getElementById("fechav").value = fechavalidez;
-            $('.select2').select2({});
-            $("#btnguardar").prop("disabled", true);
-
-            //agregamos una condicion 1 de precio por defecto
-            var igv = $('[name="igv"]').val();
-            var cond = "";
-            if (igv == "SI") {
-                cond = "El precio inclúye IGV";
-            }
-            var LCondiciones = [];
-            LCondiciones.push(cond);
-            agregarCondicion(LCondiciones);
-
-            //agregamos una condicion 2 de precio por defecto
-            var fechav1 = $('[name="fechav"]').val();
-            var fecha1 = $('[name="fecha"]').val();
-            var fechav = new Date(fechav1);
-            var fecha = new Date(fecha1);
-            var resta = fechav.getTime() - fecha.getTime();
-            var dias = resta / 1000 / 60 / 60 / 24;
-
-            //var fecha2 = fechav.setDate()
-
-            var cond = "";
-            cond = "La cotizacion es valida por " + dias + " días";
-            var LCondiciones = [];
-            LCondiciones.push(cond);
-            agregarCondicion(LCondiciones);
-
-            //agregamos la condicion numero 3 del tipo de pago
-            var tipo = $('[name="formapago"]').val();
-            var cond = "";
-            if (tipo == "contado") {
-                cond = "El pago se realizará al contado";
-            }
-            var LCondiciones = [];
-            LCondiciones.push(cond);
-            agregarCondicion(LCondiciones);
-        });
 
         function preciofinal() {
 

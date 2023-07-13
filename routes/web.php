@@ -28,6 +28,12 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('dashboard', [App\Http\Controllers\HomeController::class, 'inicio']);
 
         //Rutas de las Categorias
+        Route::controller(App\Http\Controllers\Admin\DatoController::class)->group(function () { 
+            Route::get('/dato/vertasacambio', 'vertasacambio');
+            Route::get('/dato/actualizartasacambio/{tasacambio}/{fecha}/{id}', 'actualizartasacambio');
+        });
+
+        //Rutas de las Categorias
         Route::controller(App\Http\Controllers\Admin\CategoryController::class)->group(function () {
             Route::get('/category', 'index')->name("categorias.index");
             Route::get('/category/create', 'create');
@@ -142,6 +148,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/venta/sinnumero', 'sinnumero');
             Route::get('/venta/creditosxvencer', 'creditosxvencer');
             Route::get('/venta/precioespecial/{idcliente}/{idproducto}', 'precioespecial');
+            Route::get('/venta/listaprecioscompra/{idproducto}/{idempresa}', 'listaprecioscompra');
         });
         //Ruta de ingresos
         Route::controller(App\Http\Controllers\Admin\IngresoController::class)->group(function () {
@@ -185,7 +192,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
             Route::get('/reporte/tabladatos', 'infoproductos');
             Route::get('/reporte/datosproductos/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datosproductos');
-            
+
             Route::get('/reporte/rotacionstock', 'rotacionstock');
             Route::get('/reporte/datosrotacionstock/{fechainicio}/{fechafin}/{empresa}/{producto}', 'datosrotacionstock');
             Route::get('/reporte/detallecompras/{fechainicio}/{fechafin}/{empresa}/{producto}', 'detallecompras');
@@ -195,7 +202,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::get('/reporte/datoscobroventas/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datoscobroventas');
             Route::get('/reporte/pagocompras', 'pagocompras');
             Route::get('/reporte/datospagocompras/{fechainicio}/{fechafin}/{empresa}/{cliente}', 'datospagocompras');
-
         });
         //rutas de los roles
         Route::controller(App\Http\Controllers\Admin\RolController::class)->group(function () {
@@ -229,6 +235,33 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             Route::put('/listaprecios/{product}', 'update');
             Route::get('/listaprecios/{product_id}/delete', 'destroy');
             Route::get('/listaprecios/show/{id}', 'show'); //ver   
+        });
+
+        //-------------------rutas para los modelos de produccion -----------------------------
+        //Rutas de los Modelos de los carros
+        Route::controller(App\Http\Controllers\Admin\ModelocarroController::class)->group(function () {
+            Route::get('/modelocarro', 'index')->name("modelocarros.index");
+            Route::get('/modelocarro/create', 'create');
+            Route::post('/modelocarro', 'store');
+            Route::get('/modelocarro/{id_registro}/edit', 'edit');
+            Route::put('/modelocarro/{id_registro}', 'update');
+            Route::get('/modelocarro/{id_registro}/delete', 'destroy');
+            Route::get('/modelocarro/showmodelocarrorestore', 'showmodelocarrorestore');
+            Route::get('/modelocarro/restaurar/{idregistro}', 'restaurar');
+        });
+
+        //Rutas de los Modelos de los carros
+        Route::controller(App\Http\Controllers\Admin\CarroceriaController::class)->group(function () {
+            Route::get('/carroceria', 'index')->name("carrocerias.index");
+            Route::get('/carroceria/create', 'create');
+            Route::post('/carroceria', 'store');
+            Route::get('/carroceria/{id_registro}/edit', 'edit');
+            Route::put('/carroceria/{id_registro}', 'update');
+            Route::get('/carroceria/{id_registro}/delete', 'destroy');
+            Route::get('/carroceria/showcarroceria/{id_registro}', 'show');
+            Route::get('/carroceria/showcarroceriarestore', 'showcarroceriarestore');
+            Route::get('/carroceria/restaurar/{idregistro}', 'restaurar');
+            Route::get('/carroceria/deletedetalle/{id_registro}', 'deletedetalle');
         });
     });
 });

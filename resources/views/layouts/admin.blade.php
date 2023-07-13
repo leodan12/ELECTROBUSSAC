@@ -31,6 +31,7 @@
 
 
 
+
     @livewireStyles
     @stack('css')
 </head>
@@ -45,7 +46,33 @@
             @include('layouts.inc.admin.sidebar')
             <div class="main-panel">
                 <div class="content-wrapper">
+                    {{-- ------------------ espacio content-------------------------- --}}
                     @yield('content')
+                    {{-- ------------------ espacio content -------------------------- --}}
+
+                    <div class="modal fade" id="modaltasacambio" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="modaltasacambioLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modaltasacambioLabel">ACTUALIZAR LA TASA CAMBIO</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label is-required">TASA CAMBIO</label>
+                                        <input type="number" name="tasacambiom" min="0" step="0.0001"
+                                            class="form-control " id="tasacambiom" />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" onclick="actualizartasa();"
+                                        class="btn btn-success">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,15 +96,101 @@
     </script> --}}
 
     <!-- js para la alerta-->
+
     <script src="{{ asset('admin/jsusados/sweetalert.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('admin/css/select2.min.css') }}" />
-    <script src="{{ asset('admin/js/select2.min.js') }}"></script> 
+    <script src="{{ asset('admin/js/select2.min.js') }}"></script>
 
-  
+    <script type="text/javascript">
+        var hoy = new Date();
+        var iddato = -1;
+        var fechaActual = hoy.getFullYear() + '-' + (String(hoy.getMonth() + 1).padStart(2, '0')) + '-' +
+            String(hoy.getDate()).padStart(2, '0');
+
+        function vertasacambio() {
+            var myModal = new bootstrap.Modal(document.getElementById('modaltasacambio'), {
+                keyboard: false
+            })
+            var urlvertasacambio = "{{ url('admin/dato/vertasacambio') }}";
+            $.ajax({
+                type: "GET",
+                url: urlvertasacambio,
+                async: false,
+                success: function(data) {
+                    if (fechaActual > data['fecha']) {
+                        myModal.show();
+                        iddato = data['id'];
+                        document.getElementById('tasacambiom').value = data['valor'];
+                    }
+                }
+            });
+        }
+
+        function actualizartasa() { 
+            var urlupdate = "{{ url('admin/dato/actualizartasacambio') }}";
+            var mitasacambio = document.getElementById('tasacambiom').value;
+            $.ajax({
+                type: "GET",
+                url: urlupdate + '/' + mitasacambio + '/' + fechaActual + '/' + iddato,
+                async: false,
+                success: function(data) {
+                    if (data == "1") {
+                        $('#modaltasacambio').modal('hide');
+                        Swal.fire({
+                            icon: "success",
+                            text: "Tasa de cambio Actualizada",
+                        });
+                    } else if (data == "0") {
+                        Swal.fire({
+                            icon: "error",
+                            text: "No se Actualizó la tasa de cambio",
+                        });
+                    } else if (data == "2") {
+                        Swal.fire({
+                            icon: "error",
+                            text: "No se Encontró la tasa de cambio",
+                        });
+                    }
+                }
+            });
+        }
+
+        function vertasa() {
+            var myModal = new bootstrap.Modal(document.getElementById('modaltasacambio'), {
+                keyboard: false
+            })
+            var urlpe = "{{ url('admin/dato/vertasacambio') }}";
+            $.ajax({
+                type: "GET",
+                url: urlpe,
+                async: false,
+                success: function(data) {
+                    myModal.show();
+                    iddato = data['id'];
+                    document.getElementById('tasacambiom').value = data['valor'];
+
+                }
+            });
+        }
+
+        function traertasacambio() {
+
+            var urlvertasacambio = "{{ url('admin/dato/vertasacambio') }}";
+            $.ajax({
+                type: "GET",
+                url: urlvertasacambio,
+                async: false,
+                success: function(data) {
+                    document.getElementById('tasacambio').value = data['valor'];
+                }
+            });
+        }
+    </script>
 
     @livewireScripts
     @stack('script')
     @yield('js')
+
 
 </body>
 

@@ -1,4 +1,5 @@
 var mitabla;
+var tablamodal;
 function iniciarTablaIndex(tabla, ruta, columnas, btns) {
     //para agregar un input de busqueda en cada columna
     $(tabla + ' thead th').each(function () {
@@ -64,8 +65,8 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
     mitabla.columns().every(function () {
         var table = this;
         $('input', this.header()).on('keyup change', function () {
-            if (table.search() !== this.value) { 
-                    table.search(this.value).draw(); 
+            if (table.search() !== this.value) {
+                table.search(this.value).draw();
             }
         });
     });
@@ -75,10 +76,9 @@ function iniciarTablaIndex(tabla, ruta, columnas, btns) {
 function recargartabla() {
     mitabla.ajax.reload(null, false);
 }
-//iniciar la tabla 2
-function inicializartabla1(inicializart) {
-    if (inicializart == 0) {
-        $('#mitabla1').DataTable({
+//iniciar la tabla 2 del modal 
+function inicializartabla1(inicializart) { 
+       $('#mitabla1').DataTable({
             "language": {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -108,10 +108,11 @@ function inicializartabla1(inicializart) {
             "order": [[0, "desc"]],
             "pageLength": 5,
             "aLengthMenu": [[5, 10, 25, 50], [5, 10, 25, 50]],
-            scrollX: true,
-        });
-    }
+            scrollX: true, 
+            autoFill: true,
+        }); 
 }
+
 //iniciar la tabla de reportes con botones
 function inicializartabladatos(btns, tabla, titulo) {
     mitabladatos = $(tabla).DataTable({
@@ -154,7 +155,7 @@ function inicializartabladatos(btns, tabla, titulo) {
             exportOptions: {
                 columns: ':visible'
             }
-        } ],
+        }],
     });
 
 }

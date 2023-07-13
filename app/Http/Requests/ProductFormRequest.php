@@ -51,6 +51,10 @@ class ProductFormRequest extends FormRequest
                 'min:0',
                 
             ],
+            'preciocompra' => [
+                'required',
+                'min:0',
+            ],
             'SiIGV' => [
                 'required',
                 'min:0',
@@ -61,8 +65,7 @@ class ProductFormRequest extends FormRequest
                 
             ],
             'minimo' => [
-                'nullable',
-                
+                'nullable', 
             ],
             
         ];

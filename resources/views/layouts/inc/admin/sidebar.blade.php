@@ -22,7 +22,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin/category') }}">
                                 <i class="mdi mdi-format-list-bulleted-type menu-icon"></i>
-                                <span class="menu-title">CATEGORIAS</span>
+                                <span class="menu-title">CATEGORÍAS</span>
                             </a>
                         </li>
                     @endif
@@ -110,7 +110,7 @@
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ventas" aria-expanded="false" aria-controls="ventas">
                 <i class="mdi mdi-cart menu-icon"></i>
-                <span class="menu-title">FACTURACION</span>
+                <span class="menu-title">FACTURACIÓN</span>
                 <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ventas">
@@ -136,7 +136,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('admin/cotizacion') }}">
                                 <i class="mdi mdi-currency-usd menu-icon"></i>
-                                <span class="menu-title">COTIZACION</span>
+                                <span class="menu-title">COTIZACIÓN</span>
                             </a>
                         </li>
                     @endif
@@ -159,11 +159,11 @@
                 <div class="collapse" id="ui-basic1">
                     <ul class="flex-column sub-menu" style="list-style: none;">
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte') }}"><i
-                                    class="mdi mdi-chart-line menu-icon"></i>GRAFICOS</a></li>
+                                    class="mdi mdi-chart-line menu-icon"></i>GRÁFICOS</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/tabladatos') }}"><i
                                     class="mdi mdi-file-excel menu-icon"></i>DATOS VENTAS</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/rotacionstock') }}"><i
-                                    class="mdi mdi-timetable menu-icon"></i>ROTACION STOCK</a></li>
+                                    class="mdi mdi-timetable menu-icon"></i>ROTACIÓN STOCK</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/pagocompras') }}"><i
                                     class="mdi mdi-wallet menu-icon"></i>PAGO DE COMPRAS</a></li>
                         <li class="nav-item"> <a class="nav-link" href="{{ url('admin/reporte/cobrovent') }}"><i
@@ -172,6 +172,49 @@
                 </div>
             </li>
         @endif
+        {{-- <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-toggle="collapse" href="#production" aria-expanded="false"
+                aria-controls="production">
+                <i class="mdi mdi-factory menu-icon"></i>
+                <span class="menu-title">PRODUCCIÓN</span>
+                <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="production">
+                <ul class="flex-column sub-menu" style="list-style: none;">
+                    @if (auth()->user()->can('ver-usuario') ||
+                            auth()->user()->can('crear-usuario') ||
+                            auth()->user()->can('editar-usuario') ||
+                            auth()->user()->can('eliminar-usuario'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/modelocarro') }}">
+                                <i class="mdi mdi-account-multiple menu-icon"></i>
+                                <span class="menu-title">MODELOS CARROS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-rol') ||
+                            auth()->user()->can('crear-rol') ||
+                            auth()->user()->can('editar-rol') ||
+                            auth()->user()->can('eliminar-rol'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/carroceria') }}">
+                                <i class="mdi mdi-account-settings menu-icon"></i>
+                                <span class="menu-title">CARROCERIAS</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (auth()->user()->can('ver-historial') ||
+                            auth()->user()->can('eliminar-historial'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin/produccioncarro') }}">
+                                <i class="mdi mdi-timetable menu-icon"></i>
+                                <span class="menu-title">PRODUCCION DE CARROS</span>
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </div>
+        </li> --}}
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-toggle="collapse" href="#auth" aria-expanded="false"
                 aria-controls="auth">
@@ -215,6 +258,8 @@
                 </ul>
             </div>
         </li>
+
+
 
 
     </ul>

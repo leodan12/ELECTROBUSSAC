@@ -45,7 +45,7 @@
                         @endif
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="row">
                 <div class="col-sm-3">
                     <div class="card ingresos borde">
@@ -287,9 +287,11 @@
             @endif
         </div>
     </div>
+ 
 @endsection
 @push('script')
     <script type="text/javascript">
+      
         $(document).ready(function() {
             var urlbalance = "{{ url('admin/reporte/balancemensualinicio') }}";
             $.get(urlbalance, function(data) {
@@ -313,6 +315,8 @@
                 document.getElementById('verProductominimo').innerHTML = (data.productominimo);
                 document.getElementById('verProductosin').innerHTML = (data.productosin);
             });
+
+            vertasacambio();
         });
     </script>
 @endpush

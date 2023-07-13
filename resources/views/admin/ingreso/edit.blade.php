@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label id="labeltasacambio" class="form-label is-required">TASA DE CAMBIO</label>
-                                <input type="number" name="tasacambio" id="tasacambio" step="0.001" readonly
+                                <input type="number" name="tasacambio" id="tasacambio" step="0.0001" readonly
                                     class="form-control " value="{{ $ingreso->tasacambio }}" />
                             </div>
                             <div class="col-md-6 mb-3">
@@ -185,7 +185,8 @@
                                                                     data-tipo="{{ $product->tipo }}"
                                                                     data-name="{{ $product->nombre }}"
                                                                     data-moneda="{{ $product->moneda }}"
-                                                                    data-price="{{ $product->NoIGV }}">
+                                                                    data-unidad="{{ $product->unidad }}"
+                                                                    data-price="{{ $product->preciocompra }}">
                                                                     {{ $product->nombre }}</option>
                                                             @else
                                                                 <option disabled id="productoxempresa{{ $product->id }}"
@@ -193,13 +194,19 @@
                                                                     data-tipo="{{ $product->tipo }}"
                                                                     data-name="{{ $product->nombre }}"
                                                                     data-moneda="{{ $product->moneda }}"
-                                                                    data-price="{{ $product->NoIGV }}">
+                                                                    data-unidad="{{ $product->unidad }}"
+                                                                    data-price="{{ $product->preciocompra }}">
                                                                     {{ $product->nombre }}</option>
                                                             @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="col-md-6 mb-3">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label" id="labelunidad">UNIDAD</label>
+                                                    <input type="text" name="unidadproducto" id="unidadproducto"
+                                                        class="form-control " />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
                                                     <label class="form-label">CANTIDAD</label>
                                                     <input type="number" name="cantidad" id="cantidad" min="1"
                                                         step="1" class="form-control " />
@@ -214,7 +221,7 @@
                                                             (REFERENCIAL)</label>
                                                         <span class="input-group-text" id="spanpreciounitarioref"></span>
                                                         <input type="number" name="preciounitario" min="0.1"
-                                                            step="0.01" id="preciounitario" readonly
+                                                            step="0.0001" id="preciounitario" readonly
                                                             class="form-control " />
                                                         @error('preciounitario')
                                                             <small class="text-danger">{{ $message }}</small>
@@ -227,7 +234,7 @@
                                                             id="labelpreciounitario">PRECIO UNITARIO</label>
                                                         <span class="input-group-text" id="spanpreciounitario"></span>
                                                         <input type="number" name="preciounitariomo" min="0.1"
-                                                            step="0.01" id="preciounitariomo" class="form-control " />
+                                                            step="0.0001" id="preciounitariomo" class="form-control " />
                                                         @error('preciounitariomo')
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
@@ -239,7 +246,7 @@
                                                             ADICIONAL</label>
                                                         <span class="input-group-text" id="spanservicio"></span>
                                                         <input type="number" name="servicio" min="0.1"
-                                                            step="0.01" id="servicio"class="form-control " />
+                                                            step="0.0001" id="servicio"class="form-control " />
                                                         @error('servicio')
                                                             <small class="text-danger">{{ $message }}</small>
                                                         @enderror
@@ -252,7 +259,7 @@
                                                             PRODUCTO:</label>
                                                         <span class="input-group-text" id="spanpreciototal"></span>
                                                         <input type="number" name="preciofinal" min="0.1"
-                                                            step="0.01" id="preciofinal" readonly
+                                                            step="0.0001" id="preciofinal" readonly
                                                             class="form-control " />
                                                         @error('preciofinal')
                                                             <small class="text-danger">{{ $message }}</small>
@@ -277,6 +284,7 @@
                                                         <thead class="fw-bold text-primary">
                                                             <tr>
                                                                 <th>PRODUCTO</th>
+                                                                <th>UNIDAD</th>
                                                                 <th>OBSERVACION</th>
                                                                 <th>CANTIDAD</th>
                                                                 <th>PRECIO UNITARIO(REFERENCIAL)</th>
@@ -302,6 +310,7 @@
                                                                             @endforeach
                                                                         @endif
                                                                     </td>
+                                                                    <td></td>
                                                                     <td> {{ $detalle->observacionproducto }}</td>
                                                                     <td> {{ $detalle->cantidad }}</td>
                                                                     <td>
@@ -338,13 +347,11 @@
                                                                         @endif
                                                                         {{ $detalle->preciofinal }}
                                                                     </td>
-
                                                                     <td><button type="button" class="btn btn-danger"
                                                                             onclick="eliminarFila( '{{ $ind }}' ,'{{ $datobd }}', '{{ $detalle->iddetalleingreso }}', '{{ $detalle->idproducto }}'  )"
                                                                             data-id="0"><i
                                                                                 class="bi bi-trash-fill"></i>ELIMINAR</button>
                                                                     </td>
-
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -355,6 +362,21 @@
                                         <div class="tab-pane fade  " id="nav-condiciones" role="tabpanel"
                                             aria-labelledby="nav-condiciones-tab" tabindex="0">
                                             <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="input-group form-label">PRECIO DE LA VENTA CON
+                                                            IGV</label>
+                                                        @if ($ingreso->moneda == 'dolares')
+                                                            <span class="input-group-text"
+                                                                id="spanprecioventaconigv">$</span>
+                                                        @elseif($ingreso->moneda == 'soles')
+                                                            <span class="input-group-text"
+                                                                id="spanprecioventaconigv">S/.</span>
+                                                        @endif
+                                                        <input type="number" name="precioventaconigv" readonly
+                                                            id="precioventaconigv" class="input-group form-control " />
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-3 mb-3">
                                                     <label class="form-label">NRO OC</label>
                                                     <input type="text" name="nrooc" id="nrooc"
@@ -380,7 +402,7 @@
                                                             <span class="input-group-text" id="spancuenta1">S/.</span>
                                                         @endif
                                                         <input type="number" name="acuenta1" min="0"
-                                                            step="0.01" id="acuenta1" class="form-control"
+                                                            step="0.0001" id="acuenta1" class="form-control"
                                                             value="{{ $ingreso->acuenta1 }}" />
                                                     </div>
                                                 </div>
@@ -394,7 +416,7 @@
                                                             <span class="input-group-text" id="spancuenta2">S/.</span>
                                                         @endif
                                                         <input type="number" name="acuenta2" min="0"
-                                                            step="0.01" id="acuenta2" class="form-control "
+                                                            step="0.0001" id="acuenta2" class="form-control "
                                                             value="{{ $ingreso->acuenta2 }}" />
                                                     </div>
                                                 </div>
@@ -408,7 +430,7 @@
                                                             <span class="input-group-text" id="spancuenta3">S/.</span>
                                                         @endif
                                                         <input type="number" name="acuenta3" min="0"
-                                                            step="0.01" id="acuenta3" class="form-control "
+                                                            step="0.0001" id="acuenta3" class="form-control "
                                                             value="{{ $ingreso->acuenta3 }}" />
                                                     </div>
                                                 </div>
@@ -422,7 +444,7 @@
                                                             <span class="input-group-text" id="spansaldo">S/.</span>
                                                         @endif
                                                         <input type="number" name="saldo" min="0"
-                                                            step="0.01" id="saldo" class="form-control "
+                                                            step="0.0001" id="saldo" class="form-control "
                                                             value="{{ $ingreso->saldo }}" />
                                                     </div>
                                                 </div>
@@ -436,7 +458,7 @@
                                                             <span class="input-group-text" id="spanmontopagado">S/.</span>
                                                         @endif
                                                         <input type="number" name="montopagado" min="0"
-                                                            step="0.01" id="montopagado" class="form-control "
+                                                            step="0.0001" id="montopagado" class="form-control "
                                                             value="{{ $ingreso->montopagado }}" />
                                                     </div>
                                                 </div>
@@ -496,7 +518,7 @@
         var idproducto = 0;
         var idcompany = 0;
         var idcliente = 0;
-
+        var precioventaconigv = @json($ingreso->costoventa);
         estadoguardar = @json($detalles);
         idcliente = @json($ingreso->cliente_id);
         idcompany = @json($ingreso->company_id);
@@ -524,6 +546,7 @@
                 }
                 $("#cliente_id").html(producto_select);
             });
+            document.getElementById("precioventaconigv").value = parseFloat((precioventaconigv * 1.18).toFixed(2));
             document.getElementById("cantidad").onchange = function() {
                 preciofinal();
             };
@@ -542,7 +565,7 @@
                 if (cantidad >= 1 && preciounit >= 0 && servicio >= 0) {
                     preciototalI = (parseFloat(parseFloat(cantidad) * parseFloat(preciounit)) + parseFloat(
                         parseFloat(cantidad) * parseFloat(servicio)));
-                    document.getElementById('preciofinal').value = preciototalI.toFixed(2);
+                    document.getElementById('preciofinal').value = parseFloat(preciototalI.toFixed(4));
                 }
             }
 
@@ -556,18 +579,13 @@
             document.getElementById("acuenta3").onchange = function() {
                 pagocredito();
             };
-            document.getElementById("saldo").onchange = function() {
-                montopagado();
-            };
-            document.getElementById("montopagado").onchange = function() {
-                saldo();
-            };
+
 
             function pagocredito() {
                 var acuenta1 = $('[name="acuenta1"]').val();
                 var acuenta2 = $('[name="acuenta2"]').val();
                 var acuenta3 = $('[name="acuenta3"]').val();
-                var costoventa = $('[name="costoventa"]').val();
+                var precioventaconigv = $('[name="precioventaconigv"]').val();
                 var montopagado = 0;
                 var saldo = 0;
                 if (parseFloat(acuenta1)) {
@@ -579,45 +597,26 @@
                 if (parseFloat(acuenta3)) {
                     montopagado += parseFloat(acuenta3);
                 }
-                if (parseFloat(costoventa)) {
-                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
+                if (parseFloat(precioventaconigv)) {
+                    saldo = parseFloat(precioventaconigv) - parseFloat(montopagado);
                 }
-                document.getElementById('saldo').value = saldo.toFixed(2);
-                document.getElementById('montopagado').value = montopagado.toFixed(2);
-            }
-
-            function montopagado() {
-                var costoventa = $('[name="costoventa"]').val();
-                var saldo = $('[name="saldo"]').val();
-                var montopagado = 0;
-                if (parseFloat(costoventa) && parseFloat(saldo)) {
-                    montopagado = parseFloat(costoventa) - parseFloat(saldo);
-                }
-                document.getElementById('montopagado').value = montopagado.toFixed(2);
-            }
-
-            function saldo() {
-                var costoventa = $('[name="costoventa"]').val();
-                var montopagado = $('[name="montopagado"]').val();
-                var saldo = 0;
-                if (parseFloat(costoventa) && parseFloat(montopagado)) {
-                    saldo = parseFloat(costoventa) - parseFloat(montopagado);
-                }
-                document.getElementById('saldo').value = saldo.toFixed(2);
+                document.getElementById('saldo').value = parseFloat(saldo.toFixed(4));
+                document.getElementById('montopagado').value = parseFloat(montopagado.toFixed(4));
             }
 
             //var tabla = document.getElementById(detallesVenta);
             $("#product").change(function() {
                 $("#product option:selected").each(function() {
                     var miproduct = $(this).val();
-                    if (miproduct) {
-                        $price = $(this).data("price");
-                        $named = $(this).data("name");
-                        $moneda = $(this).data("moneda");
-                        $tipo = $(this).data("tipo");
+                    if (miproduct) { 
+                        $moneda = $(this).data("moneda"); 
                         monedaproducto = $moneda;
+                        $named = $(this).data("name");
+                        $tipo = $(this).data("tipo");
+                        $unidad = $(this).data("unidad");
                         tipoproducto = $tipo;
-                        idproducto = miproduct;
+                        idproducto = miproduct; 
+                        $price = $(this).data("price");
                         monedafactura = $('[name="moneda"]').val();
                         //alert(tipo);
                         if ($tipo == "kit") {
@@ -651,42 +650,52 @@
                         var mitasacambio1 = $('[name="tasacambio"]').val();
                         var cant = document.getElementById('cantidad');
                         cant.setAttribute("min", 1);
-                        if ($price != null) {
-                            preciounit = ($price).toFixed(2);
+                        if ($price) {
+                            preciounit = parseFloat(($price).toFixed(4));
                             if (monedaproducto == "dolares" && monedafactura == "dolares") {
                                 simbolomonedaproducto = "$";
-                                preciototalI = ($price).toFixed(2);
-                                document.getElementById('preciounitario').value = ($price).toFixed(
-                                    2);
-                                document.getElementById('preciounitariomo').value = ($price)
-                                    .toFixed(2);
-                                document.getElementById('preciofinal').value = ($price).toFixed(2);
+                                preciototalI = parseFloat(($price).toFixed(4));
+                                document.getElementById('preciounitario').value = parseFloat((
+                                    $price).toFixed(
+                                    2));
+                                document.getElementById('preciounitariomo').value = parseFloat((
+                                        $price)
+                                    .toFixed(4));
+                                document.getElementById('preciofinal').value = parseFloat(($price)
+                                    .toFixed(4));
                             } else if (monedaproducto == "soles" && monedafactura == "soles") {
                                 simbolomonedaproducto = "S/.";
-                                preciototalI = ($price).toFixed(2);
-                                document.getElementById('preciounitario').value = ($price).toFixed(
-                                    2);
-                                document.getElementById('preciounitariomo').value = ($price)
-                                    .toFixed(2);
-                                document.getElementById('preciofinal').value = ($price).toFixed(2);
+                                preciototalI = parseFloat(($price).toFixed(4));
+                                document.getElementById('preciounitario').value = parseFloat((
+                                    $price).toFixed(
+                                    2));
+                                document.getElementById('preciounitariomo').value = parseFloat((
+                                        $price)
+                                    .toFixed(4));
+                                document.getElementById('preciofinal').value = parseFloat(($price)
+                                    .toFixed(4));
                             } else if (monedaproducto == "dolares" && monedafactura == "soles") {
                                 simbolomonedaproducto = "$";
-                                preciototalI = ($price * mitasacambio1).toFixed(2);
-                                document.getElementById('preciounitario').value = (($price).toFixed(
-                                    2));
-                                document.getElementById('preciounitariomo').value = ($price *
-                                    mitasacambio1).toFixed(2);
-                                document.getElementById('preciofinal').value = ($price *
-                                    mitasacambio1).toFixed(2);
+                                preciototalI = parseFloat(($price * mitasacambio1).toFixed(4));
+                                document.getElementById('preciounitario').value = parseFloat((
+                                    $price).toFixed(
+                                    4));
+                                document.getElementById('preciounitariomo').value = parseFloat((
+                                    $price *
+                                    mitasacambio1).toFixed(4));
+                                document.getElementById('preciofinal').value = parseFloat(($price *
+                                    mitasacambio1).toFixed(4));
                             } else if (monedaproducto == "soles" && monedafactura == "dolares") {
                                 simbolomonedaproducto = "S/.";
-                                preciototalI = ($price / mitasacambio1).toFixed(2);;
-                                document.getElementById('preciounitario').value = (($price).toFixed(
-                                    2));
-                                document.getElementById('preciounitariomo').value = ($price /
-                                    mitasacambio1).toFixed(2);
-                                document.getElementById('preciofinal').value = ($price /
-                                    mitasacambio1).toFixed(2);
+                                preciototalI = parseFloat(($price / mitasacambio1).toFixed(4));;
+                                document.getElementById('preciounitario').value = parseFloat((
+                                    $price).toFixed(
+                                    4));
+                                document.getElementById('preciounitariomo').value = parseFloat((
+                                    $price /
+                                    mitasacambio1).toFixed(4));
+                                document.getElementById('preciofinal').value = parseFloat(($price /
+                                    mitasacambio1).toFixed(4));
                             }
                             document.getElementById('labelpreciounitarioref').innerHTML =
                                 "PRECIO UNITARIO(REFERENCIAL): " + monedaproducto;
@@ -706,13 +715,31 @@
                                 simbolomonedafactura;
                             document.getElementById('cantidad').value = 1;
                             document.getElementById('servicio').value = 0;
+                            document.getElementById('unidadproducto').value = $unidad;
                             nameproduct = $named;
-                        } else if ($price == null) {
-                            document.getElementById('cantidad').value = "";
-                            document.getElementById('servicio').value = "";
-                            document.getElementById('preciofinal').value = "";
-                            document.getElementById('preciounitario').value = "";
-                            document.getElementById('preciounitariomo').value = "";
+                        } else {
+                            nameproduct = $named;
+                            document.getElementById('cantidad').value = 1;
+                            document.getElementById('servicio').value = 0;
+                            document.getElementById('preciofinal').value = 0;
+                            document.getElementById('preciounitario').value = 0;
+                            document.getElementById('preciounitariomo').value = 0;
+                            document.getElementById('unidadproducto').value = $unidad;
+
+                            var simbolomon = "";
+                            if (monedaproducto == "soles") {
+                                simbolomon = "S/.";
+                            }
+                            if (monedaproducto == "dolares") {
+                                simbolomon = "$";
+                            }
+                            document.getElementById('spanpreciounitarioref').innerHTML = simbolomon;
+                            document.getElementById('spanpreciounitario').innerHTML =
+                                simbolomonedafactura;
+                            document.getElementById('spanservicio').innerHTML =
+                                simbolomonedafactura;
+                            document.getElementById('spanpreciototal').innerHTML =
+                                simbolomonedafactura;
                         }
                     }
                 });
@@ -735,11 +762,6 @@
                     }
                 });
             });
-
-            //para cambiar la moneda de pago y deshabilitar la tasa de cambio
-
-
-
         });
 
         //funcion para agregar una fila
@@ -763,7 +785,7 @@
             var preciofinal = $('[name="preciofinal"]').val();
             var preciounitariomo = $('[name="preciounitariomo"]').val();
             var observacionproducto = $('[name="observacionproducto"]').val();
-
+            var unidadproducto = $('[name="unidadproducto"]').val();
             //alertas para los detallesBatch
             if (!product) {
                 alert("Seleccione un producto");
@@ -782,6 +804,16 @@
                 alert("Ingrese un precio");
                 return;
             }
+            var tasacambio = document.getElementById('tasacambio').value;;
+
+            var preciocompranuevo = 0;
+            if (monedaproducto == monedafactura) {
+                preciocompranuevo = preciounitariomo;
+            } else if (monedaproducto == "soles" && monedafactura == "dolares") {
+                preciocompranuevo = parseFloat((preciounitariomo * tasacambio).toFixed(4));
+            } else if (monedafactura == "soles" && monedaproducto == "dolares") {
+                preciocompranuevo = parseFloat((preciounitariomo / tasacambio).toFixed(4));
+            }
 
             var milista = '<br>';
             var puntos = '';
@@ -790,7 +822,7 @@
             var tam = LVenta.length;
             var datodb = "local";
             LVenta.push(product, nameproduct, cantidad, preciounitario, servicio, preciofinal, preciounitariomo,
-                observacionproducto);
+                observacionproducto, unidadproducto, preciocompranuevo);
             if (tipoproducto == "kit") {
                 puntos = ': ';
                 var urlventa = "{{ url('admin/venta/productosxkit') }}";
@@ -812,8 +844,6 @@
                 agregarFilasTabla(LVenta, puntos, milista);
             }
 
-
-
         }
 
         function modificarStock(idproducto, cantidad, operacion) {
@@ -831,19 +861,20 @@
         function agregarFilasTabla(LVenta, puntos, milista) {
             filaDetalle = '<tr id="fila' + indice +
                 '"><td><input  type="hidden" name="Lproduct[]" value="' + LVenta[0] + '"required><b>' + LVenta[1] + '</b>' +
-                puntos + milista +
+                puntos + milista + '</td><td><input  type="hidden" name="Lunidadprod[]" >' + LVenta[8] +
                 '</td><td><input  type="hidden" name="Lobservacionproducto[]" id="observacionproducto' + indice +
-                '" value="' + LVenta[7] + '"required>' + LVenta[7] +
+                '" value="' + LVenta[7] + '" required>' + LVenta[7] +
                 '</td><td><input  type="hidden" name="Lcantidad[]" id="cantidad' + indice + '" value="' + LVenta[2] +
-                '"required>' + LVenta[2] +
+                '" required>' + LVenta[2] +
                 '</td><td><input  type="hidden" name="Lpreciounitario[]" id="preciounitario' + indice + '" value="' +
-                LVenta[3] + '"required>' + simbolomonedaproducto + LVenta[3] +
+                LVenta[3] + '" required>' + simbolomonedaproducto + LVenta[3] +
                 '</td><td><input  type="hidden" name="Lpreciounitariomo[]" id="preciounitariomo' + indice + '" value="' +
-                LVenta[6] + '"required>' + simbolomonedafactura + LVenta[6] +
+                LVenta[6] + '" required>' + simbolomonedafactura + LVenta[6] +
                 '</td><td><input  type="hidden" name="Lservicio[]" id="servicio' + indice + '" value="' + LVenta[4] +
-                '"required>' + simbolomonedafactura + LVenta[4] +
+                '" required>' + simbolomonedafactura + LVenta[4] +
                 '</td><td ><input id="preciof' + indice + '"  type="hidden" name="Lpreciofinal[]" value="' + LVenta[5] +
-                '"required>' + simbolomonedafactura + LVenta[5] +
+                '" required> <input  type="hidden" name="Lpreciocompranuevo[]" value="' + LVenta[9] + '" required> ' +
+                simbolomonedafactura + LVenta[5] +
                 '</td><td> <button type="button" class="btn btn-danger" onclick="eliminarFila(' + indice + ',' + 0 + ',' +
                 0 + ',' + LVenta[0] + ')" data-id="0">ELIMINAR</button></td></tr>';
 
@@ -859,7 +890,6 @@
             botonguardar(funcion);
 
         }
-
 
         function eliminarFila(ind, lugardato, iddetalle, idproducto) {
             if (lugardato == "db") {
@@ -944,6 +974,7 @@
             document.getElementById('preciounitario').value = "";
             document.getElementById('preciounitariomo').value = "";
             document.getElementById('observacionproducto').value = "";
+            document.getElementById('unidadproducto').value = "";
             monedaproducto = "";
             simbolomonedaproducto = "";
         }
